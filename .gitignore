@@ -1,1 +1,17 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Vercel
 .vercel
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+
+# Editor
+.DS_Store
+*.local
