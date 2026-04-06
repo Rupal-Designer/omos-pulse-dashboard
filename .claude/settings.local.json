@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm init:*)",
+      "Bash(pnpm add:*)",
+      "Bash(grep -E \"\\\\.d\\\\.ts$|index\")",
+      "mcp__ddfd2dfc-29f3-47b3-a66a-050992a7326d__use_figma",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npm root:*)",
+      "Bash(export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\")",
+      "Bash(export PATH=\"/opt/homebrew/opt/node/bin:/opt/homebrew/bin:/usr/local/bin:$PATH\")",
+      "Bash(vercel whoami:*)",
+      "Bash(vercel --token vcp_7c083XdmgcGlM9QGigJovNsdss06ZyhE9VXMVehKP322ty6BAv0zxSpE --yes)",
+      "Bash(vercel --token vcp_7c083XdmgcGlM9QGigJovNsdss06ZyhE9VXMVehKP322ty6BAv0zxSpE --yes --name omos-pulse-dashboard)",
+      "Bash(pnpm run:*)",
+      "Bash(vercel --token vcp_7c083XdmgcGlM9QGigJovNsdss06ZyhE9VXMVehKP322ty6BAv0zxSpE --prod)"
+    ]
+  }
+}
