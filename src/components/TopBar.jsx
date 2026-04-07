@@ -42,10 +42,10 @@ export default function TopBar() {
         </div>
         <div>
           <div style={{ fontSize: 11, color: '#888', marginBottom: 2 }}>
-            Offsite Ads &gt; Onboarding
+            Analytics &gt; Sponsored Ads
           </div>
           <div style={{ fontSize: 16, fontWeight: 600, color: '#1A1A2E', lineHeight: 1 }}>
-            Analytics
+            Sponsored Ads
           </div>
         </div>
       </div>

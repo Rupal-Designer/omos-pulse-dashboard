@@ -1,6 +1,16 @@
 import React from 'react';
 import { TableCard, DataTable } from './DataTable';
 
+function CampaignIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+      stroke="#5B6EF5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 2L11 13"/>
+      <path d="M22 2L15 22l-4-9-9-4 19-7z"/>
+    </svg>
+  );
+}
+
 const COLUMNS = [
   { label: 'Advertiser Name', sort: true },
   { label: 'No. of Campaigns', info: true },
@@ -27,7 +37,7 @@ const TOTALS = ['', '49', '126', '1.1M', '8K', '6K', '$'];
 export default function CampaignsTable() {
   return (
     <TableCard
-      icon="🚀"
+      icon={<CampaignIcon />}
       title="Campaigns"
       searchPlaceholder="Search Brand Name"
     >

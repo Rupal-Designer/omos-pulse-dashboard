@@ -67,7 +67,12 @@ export function TableCard({ icon, title, searchPlaceholder, children, footerLeft
         borderBottom: '1px solid #F5F5F5',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 16 }}>{icon}</span>
+          <div style={{
+            width: 28, height: 28, background: '#F0F4FF', borderRadius: 6,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+          }}>
+            {icon}
+          </div>
           <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A2E' }}>{title}</span>
           <InfoIcon />
         </div>

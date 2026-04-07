@@ -80,11 +80,16 @@ export default function GeoTable() {
         borderBottom: '1px solid #F5F5F5',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="#E53E3E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-            <circle cx="12" cy="10" r="3"/>
-          </svg>
+          <div style={{
+            width: 28, height: 28, background: '#FFF0F0', borderRadius: 6,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+          }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="#E53E3E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
           <span style={{ fontSize: 14, fontWeight: 600, color: '#1A1A2E' }}>Geo Performance</span>
           <InfoIcon />
         </div>

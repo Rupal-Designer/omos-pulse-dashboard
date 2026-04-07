@@ -1,10 +1,10 @@
 import React from 'react';
 
 const STATS = [
-  { label: 'Link Clicks', value: '258.6 K', trend: 'down' },
-  { label: 'Total Product Views', value: '132.1 K', trend: 'down' },
-  { label: 'Add To Carts', value: '22.8 K', trend: 'down' },
-  { label: 'Orders', value: '12.8 K', trend: 'down' },
+  { label: 'Link Clicks',        value: '258.6 K', compValue: '281.3 K', pct: -8.1  },
+  { label: 'Total Product Views', value: '132.1 K', compValue: '158.4 K', pct: -16.6 },
+  { label: 'Add To Carts',        value: '22.8 K',  compValue: '26.1 K',  pct: -12.6 },
+  { label: 'Orders',              value: '12.8 K',  compValue: '14.2 K',  pct: -9.9  },
 ];
 
 function InfoIcon() {
@@ -30,25 +30,37 @@ function ChevronDown({ color = '#888' }) {
 export default function StatCards() {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16, marginBottom: 20 }}>
-      {STATS.map(stat => (
-        <div key={stat.label} style={{
-          background: '#fff', borderRadius: 8,
-          padding: '16px 20px',
-          display: 'flex', flexDirection: 'column', gap: 8,
-          border: '1px solid #F0F0F0',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <span style={{ fontSize: 12, color: '#444', fontWeight: 500 }}>{stat.label}</span>
-              <ChevronDown />
+      {STATS.map(stat => {
+        const isPositive = stat.pct >= 0;
+        return (
+          <div key={stat.label} style={{
+            background: '#fff', borderRadius: 8,
+            padding: '16px 20px',
+            display: 'flex', flexDirection: 'column', gap: 8,
+            border: '1px solid #F0F0F0',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ fontSize: 12, color: '#444', fontWeight: 500 }}>{stat.label}</span>
+                <ChevronDown />
+              </div>
+              <InfoIcon />
             </div>
-            <InfoIcon />
+            <div style={{ fontSize: 22, fontWeight: 700, color: '#1A1A2E', letterSpacing: '-0.5px' }}>
+              {stat.value}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ fontSize: 11, color: '#999' }}>{stat.compValue}</span>
+              <span style={{
+                fontSize: 11, fontWeight: 600,
+                color: isPositive ? '#22C55E' : '#EF4444',
+              }}>
+                {isPositive ? '↑' : '↓'} {Math.abs(stat.pct)}%
+              </span>
+            </div>
           </div>
-          <div style={{ fontSize: 22, fontWeight: 700, color: '#1A1A2E', letterSpacing: '-0.5px' }}>
-            {stat.value}
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

@@ -71,23 +71,22 @@ const CustomTooltip = ({ active, payload, label }) => {
   return (
     <div style={{
       background: '#fff', border: '1px solid #E8E8E8', borderRadius: 8,
-      padding: '10px 14px', boxShadow: '0 4px 16px rgba(0,0,0,0.10)', minWidth: 180,
+      padding: '10px 14px', boxShadow: '0 4px 16px rgba(0,0,0,0.10)', minWidth: 160,
     }}>
+      <div style={{ fontSize: 10, color: '#999', marginBottom: 8, fontWeight: 500 }}>{label}</div>
       {payload.map((p, i) => (
-        <div key={i} style={{ marginBottom: i < payload.length - 1 ? 10 : 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+        <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: i < payload.length - 1 ? 6 : 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 8, height: 2, background: p.color, borderRadius: 2 }}/>
             <span style={{ fontSize: 11, color: '#555' }}>{p.name}</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-            <span style={{ fontSize: 11, color: '#888' }}>15 Apr 25</span>
-            <span style={{ fontSize: 11, fontWeight: 600, color: '#222' }}>
-              ${(p.value / 1000).toFixed(1)}K
-            </span>
-          </div>
-          <div style={{ fontSize: 12, fontWeight: 700, color: i === 0 ? '#22C55E' : '#EF4444', marginTop: 2 }}>
-            {i === 0 ? '↑ $5,822 (89%)' : '↓ 0.11 (-6.48%)'}
-          </div>
+          <span style={{ fontSize: 11, fontWeight: 600, color: '#222' }}>
+            {p.value >= 1000000
+              ? `${(p.value / 1000000).toFixed(1)}M`
+              : p.value >= 1000
+              ? `${(p.value / 1000).toFixed(1)}K`
+              : p.value}
+          </span>
         </div>
       ))}
     </div>
@@ -150,7 +149,7 @@ export default function Charts() {
             <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
             <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#999' }} axisLine={false} tickLine={false} />
             <YAxis tickFormatter={formatYAxis} tick={{ fontSize: 10, fill: '#999' }} axisLine={false} tickLine={false} />
-            <Tooltip content={<div/>} />
+            <Tooltip content={<CustomTooltip />} />
             <Line type="monotone" dataKey="clicks" stroke="#5B6EF5" strokeWidth={2}
               dot={false} activeDot={{ r: 4, fill: '#5B6EF5' }} name="Link Clicks" />
             <Line type="monotone" dataKey="views" stroke="#F5A623" strokeWidth={2}
