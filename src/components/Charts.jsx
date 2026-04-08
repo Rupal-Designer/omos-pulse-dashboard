@@ -17,13 +17,13 @@ const clicksData = [
 ];
 
 const cartOrdersData = [
-  { date: '05/08', carts: 10000000, orders: 10000000 },
-  { date: '05/09', carts: 10000000, orders: 10000000 },
-  { date: '05/10', carts: 10000000, orders: 10000000 },
-  { date: '05/11', carts: 10100000, orders: 10000100 },
-  { date: '05/12', carts: 10050000, orders: 10000050 },
-  { date: '05/13', carts: 10020000, orders: 10000020 },
-  { date: '05/14', carts: 10000000, orders: 10000000 },
+  { date: '05/08', carts: 4200, orders: 1800 },
+  { date: '05/09', carts: 5100, orders: 2200 },
+  { date: '05/10', carts: 7800, orders: 3100 },
+  { date: '05/11', carts: 6500, orders: 2900 },
+  { date: '05/12', carts: 5200, orders: 2100 },
+  { date: '05/13', carts: 4100, orders: 1700 },
+  { date: '05/14', carts: 3800, orders: 1500 },
 ];
 
 function formatYAxis(val) {
@@ -32,7 +32,7 @@ function formatYAxis(val) {
 }
 
 function formatYAxisM(val) {
-  if (val >= 1000000) return `${(val/1000000).toFixed(0)}M`;
+  if (val >= 1000) return `${(val/1000).toFixed(1)}K`;
   return val;
 }
 
@@ -121,7 +121,7 @@ function ChartCard({ title, children, leftMetrics, rightMetric }) {
             {rightMetric}
           </div>
         </div>
-        <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
+        <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }} aria-label="Download chart data">
           <DownloadIcon />
         </button>
       </div>
@@ -144,15 +144,21 @@ export default function Charts() {
         leftMetrics={<MetricTag color="#5B6EF5" label="Link Clicks" />}
         rightMetric={<MetricTag color="#F5A623" label="Landing Page views" />}
       >
-        <ResponsiveContainer width="100%" height={220}>
-          <LineChart data={clicksData} margin={{ top: 4, right: 8, left: -10, bottom: 0 }}>
+        <ResponsiveContainer width="100%" height={200}>
+          <LineChart data={clicksData} margin={{ top: 4, right: 8, left: -10, bottom: 0 }}
+            aria-label="Line chart showing Link Clicks vs Landing Page Views over the selected date range">
             <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
-            <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#999' }} axisLine={false} tickLine={false} />
-            <YAxis tickFormatter={formatYAxis} tick={{ fontSize: 10, fill: '#999' }} axisLine={false} tickLine={false} />
+            <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#999' }} axisLine={false} tickLine={false} />
+            <YAxis tickFormatter={formatYAxis} tick={{ fontSize: 11, fill: '#999' }} axisLine={false} tickLine={false} />
             <Tooltip content={<CustomTooltip />} />
+            <Legend
+              verticalAlign="bottom" height={28} iconType="plainline"
+              formatter={(val) => <span style={{ fontSize: 11, color: '#555', fontFamily: "'Open Sans', sans-serif" }}>{val}</span>}
+            />
             <Line type="monotone" dataKey="clicks" stroke="#5B6EF5" strokeWidth={2}
               dot={false} activeDot={{ r: 4, fill: '#5B6EF5' }} name="Link Clicks" />
             <Line type="monotone" dataKey="views" stroke="#F5A623" strokeWidth={2}
+              strokeDasharray="5 3"
               dot={false} activeDot={{ r: 4, fill: '#F5A623' }} name="Landing Page views" />
           </LineChart>
         </ResponsiveContainer>
@@ -163,15 +169,21 @@ export default function Charts() {
         leftMetrics={<MetricTag color="#5B6EF5" label="Overall Add to Carts" />}
         rightMetric={<MetricTag color="#F5A623" label="Orders" />}
       >
-        <ResponsiveContainer width="100%" height={220}>
-          <LineChart data={cartOrdersData} margin={{ top: 4, right: 8, left: -10, bottom: 0 }}>
+        <ResponsiveContainer width="100%" height={200}>
+          <LineChart data={cartOrdersData} margin={{ top: 4, right: 8, left: -10, bottom: 0 }}
+            aria-label="Line chart showing Overall Add to Carts vs Orders over the selected date range">
             <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
-            <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#999' }} axisLine={false} tickLine={false} />
-            <YAxis tickFormatter={formatYAxisM} tick={{ fontSize: 10, fill: '#999' }} axisLine={false} tickLine={false} />
+            <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#999' }} axisLine={false} tickLine={false} />
+            <YAxis tickFormatter={formatYAxisM} tick={{ fontSize: 11, fill: '#999' }} axisLine={false} tickLine={false} />
             <Tooltip content={<CustomTooltip />} />
+            <Legend
+              verticalAlign="bottom" height={28} iconType="plainline"
+              formatter={(val) => <span style={{ fontSize: 11, color: '#555', fontFamily: "'Open Sans', sans-serif" }}>{val}</span>}
+            />
             <Line type="monotone" dataKey="carts" stroke="#5B6EF5" strokeWidth={2}
               dot={false} activeDot={{ r: 5, fill: '#5B6EF5' }} name="Overall Add to Carts" />
             <Line type="monotone" dataKey="orders" stroke="#F5A623" strokeWidth={2}
+              strokeDasharray="5 3"
               dot={false} activeDot={{ r: 5, fill: '#F5A623' }} name="Orders" />
           </LineChart>
         </ResponsiveContainer>

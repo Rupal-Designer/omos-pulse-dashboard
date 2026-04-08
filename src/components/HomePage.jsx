@@ -206,21 +206,34 @@ function ProjectsTable() {
       </div>
 
       {/* Empty state */}
-      <div style={{ padding: '60px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+      <div style={{ padding: '52px 20px 60px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
         <div style={{
           width: 56, height: 56, borderRadius: '50%',
-          background: '#F5F5F5', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: '#F0F4FF', display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          <Icon size={24} color={TEXT_LO}>
+          <Icon size={24} color={ACCENT}>
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
             <polyline points="14 2 14 8 20 8"/>
             <line x1="16" y1="13" x2="8" y2="13"/>
             <line x1="16" y1="17" x2="8" y2="17"/>
-            <polyline points="10 9 9 9 8 9"/>
-            <circle cx="12" cy="12" r="3" fill="none"/>
           </Icon>
         </div>
-        <span style={{ fontSize: 13, color: TEXT_MID, fontWeight: 500 }}>No Data Available</span>
+        <span style={{ fontSize: 13, color: TEXT_MID, fontWeight: 600 }}>No projects yet</span>
+        <span style={{ fontSize: 11, color: TEXT_LO, textAlign: 'center', maxWidth: 220 }}>
+          Projects you create will appear here. Get started by adding your first one.
+        </span>
+        <button style={{
+          marginTop: 4, height: 32, padding: '0 16px',
+          background: ACCENT, color: '#fff', border: 'none', borderRadius: 6,
+          fontSize: 12, fontWeight: 600, cursor: 'pointer',
+          fontFamily: "'Open Sans', sans-serif",
+          transition: 'opacity 0.12s',
+        }}
+          onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
+          onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+        >
+          + Add Project
+        </button>
       </div>
     </div>
   );

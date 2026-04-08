@@ -78,11 +78,15 @@ export function TableCard({ icon, title, searchPlaceholder, children, footerLeft
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {/* columns button */}
-          <button style={{
-            height: 32, padding: '0 10px', display: 'flex', alignItems: 'center', gap: 5,
+          <button aria-label="Toggle visible columns" style={{
+            height: 36, padding: '0 10px', display: 'flex', alignItems: 'center', gap: 5,
             background: '#fff', border: '1px solid #E0E0E0', borderRadius: 6,
             cursor: 'pointer', fontSize: 11, color: '#555', fontFamily: 'inherit',
-          }}>
+            transition: 'background 0.12s',
+          }}
+            onMouseEnter={e => e.currentTarget.style.background = '#F5F5F8'}
+            onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+          >
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
               stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -93,17 +97,17 @@ export function TableCard({ icon, title, searchPlaceholder, children, footerLeft
           </button>
           {/* search */}
           <div style={{
-            height: 32, padding: '0 10px',
+            height: 36, padding: '0 10px',
             display: 'flex', alignItems: 'center', gap: 6,
             border: '1px solid #E0E0E0', borderRadius: 6, background: '#fff',
           }}>
             <SearchIcon />
-            <input placeholder={searchPlaceholder || 'Search…'} style={{
+            <input placeholder={searchPlaceholder || 'Search…'} aria-label={searchPlaceholder || 'Search'} style={{
               border: 'none', outline: 'none', fontSize: 11, color: '#333',
               fontFamily: 'inherit', width: 120, background: 'transparent',
             }} />
           </div>
-          <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
+          <button aria-label="Download table data" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6 }}>
             <DownloadIcon />
           </button>
         </div>
@@ -151,12 +155,16 @@ export function DataTable({ columns, rows, totals }) {
         <thead>
           <tr style={{ background: '#FAFAFA', borderBottom: '1px solid #F0F0F0' }}>
             {columns.map((col, i) => (
-              <th key={i} style={{
-                padding: '10px 20px',
-                textAlign: i === 0 ? 'left' : 'right',
-                fontWeight: 500, color: '#888', fontSize: 11,
-                whiteSpace: 'nowrap',
-              }}>
+              <th key={i}
+                aria-sort={col.sort ? 'none' : undefined}
+                scope="col"
+                style={{
+                  padding: '10px 20px',
+                  textAlign: i === 0 ? 'left' : 'right',
+                  fontWeight: 500, color: '#888', fontSize: 11,
+                  whiteSpace: 'nowrap',
+                  cursor: col.sort ? 'pointer' : 'default',
+                }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: i === 0 ? 'flex-start' : 'flex-end' }}>
                   {col.label}
                   {col.info && <InfoIcon />}

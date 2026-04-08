@@ -46,12 +46,12 @@ export default function StatCards() {
               </div>
               <InfoIcon />
             </div>
-            <div style={{ fontSize: 22, fontWeight: 700, color: '#1A1A2E', letterSpacing: '-0.5px' }}>
+            <div className="tabular-nums" style={{ fontSize: 22, fontWeight: 700, color: '#1A1A2E', letterSpacing: '-0.5px' }}>
               {stat.value}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: 11, color: '#999' }}>{stat.compValue}</span>
-              <span style={{
+              <span className="tabular-nums" style={{ fontSize: 11, color: '#999' }}>{stat.compValue}</span>
+              <span className="tabular-nums" style={{
                 fontSize: 11, fontWeight: 600,
                 color: isPositive ? '#22C55E' : '#EF4444',
               }}>

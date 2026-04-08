@@ -4,7 +4,25 @@ body {
   font-family: 'Open Sans', sans-serif;
   background: #EDF0F5;
   color: #1a1a2e;
-  font-size: 13px;
+  font-size: 14px;
+}
+
+/* ── Global focus ring — keyboard nav ─────────────────────────── */
+:focus-visible {
+  outline: 2px solid #5B6EF5;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove focus ring for mouse/touch users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ── Tabular numbers for all stat values ──────────────────────── */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }

@@ -2,12 +2,19 @@ import React from 'react';
 
 function IconBtn({ children, title }) {
   return (
-    <button title={title} style={{
-      width: 36, height: 36,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: '#fff', border: '1px solid #DEDEDE',
-      borderRadius: 8, cursor: 'pointer', color: '#555', flexShrink: 0,
-    }}>
+    <button
+      title={title}
+      aria-label={title}
+      style={{
+        width: 36, height: 36,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: '#fff', border: '1px solid #DEDEDE',
+        borderRadius: 8, cursor: 'pointer', color: '#555', flexShrink: 0,
+        transition: 'background 0.12s',
+      }}
+      onMouseEnter={e => e.currentTarget.style.background = '#F5F5F8'}
+      onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+    >
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
         stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         {children}

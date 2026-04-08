@@ -168,10 +168,10 @@ function IconRail({ activeSection, onSelect, expanded }) {
         {NAV_SECTIONS.map(item => {
           const isActive = activeSection === item.id;
           return (
-            <button key={item.id} title={item.label}
+            <button key={item.id} title={item.label} aria-label={item.label}
               onClick={() => onSelect(item.id)}
               style={{
-                width: '100%', height: 40,
+                width: '100%', height: 44,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 background: isActive ? 'rgba(123,130,248,0.25)' : 'transparent',
                 border: 'none', borderRadius: 8, cursor: 'pointer',
@@ -194,12 +194,16 @@ function IconRail({ activeSection, onSelect, expanded }) {
         display: 'flex', flexDirection: 'column', gap: 2,
       }}>
         {BOTTOM_NAV.map(item => (
-          <button key={item.id} title={item.label} style={{
-            width: '100%', height: 38,
+          <button key={item.id} title={item.label} aria-label={item.label} style={{
+            width: '100%', height: 40,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             background: 'transparent', border: 'none', borderRadius: 8,
             color: 'rgba(255,255,255,0.45)', cursor: 'pointer',
-          }}>
+            transition: 'background 0.15s, color 0.15s',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = 'rgba(255,255,255,0.75)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.45)'; }}
+          >
             <Icon>{item.icon}</Icon>
           </button>
         ))}
@@ -254,7 +258,7 @@ function SubNavPanel({ section, onClose }) {
           <span style={{ fontSize: 15, fontWeight: 700, color: '#fff', letterSpacing: 0.1 }}>
             {section.label}
           </span>
-          <button onClick={onClose} style={{
+          <button onClick={onClose} aria-label="Close panel" style={{
             background: 'none', border: 'none', cursor: 'pointer',
             color: 'rgba(255,255,255,0.4)', padding: 2, borderRadius: 4,
           }}>
