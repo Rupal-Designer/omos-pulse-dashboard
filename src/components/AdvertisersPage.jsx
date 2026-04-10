@@ -628,72 +628,71 @@ export default function AdvertisersPage() {
 
         {/* Tab Bar */}
         <Tabs defaultValue="advertisers" variant="line" mb="4">
-          <Tabs.List>
-            <Tabs.Trigger value="advertisers">Advertisers</Tabs.Trigger>
-            <Tabs.Trigger value="onboard-code">Advertiser's Onboard Code</Tabs.Trigger>
+          <Tabs.List gap="4">
+            <Tabs.Trigger value="advertisers" px="3">Advertisers</Tabs.Trigger>
+            <Tabs.Trigger value="onboard-code" px="3">Advertiser's Onboard Code</Tabs.Trigger>
           </Tabs.List>
 
           <Tabs.Content value="advertisers">
             {/* Toolbar */}
-            <Flex
-              alignItems="center"
-              justifyContent="space-between"
-              bg="white"
-              p="4"
-              borderRadius="lg"
-              borderWidth="1px"
-              borderColor="border"
-              mb="4"
-              mt="4"
-            >
-              <Flex alignItems="center" gap="3">
-                <Select
-                  placeholder="Active"
-                  options={[
-                    { label: 'Active', value: 'active' },
-                    { label: 'Inactive', value: 'inactive' },
-                    { label: 'All', value: 'all' },
-                  ]}
-                  size="sm"
-                />
-                <Text fontSize="xs" color="fg.muted">
-                  {filtered.length} Active out of {ADVERTISERS.length} shown total
-                </Text>
-              </Flex>
-              <Flex gap="2">
-                <Box position="relative">
+            <Box mt="4" mb="4">
+              <Flex
+                alignItems="center"
+                justifyContent="space-between"
+                bg="white"
+                p="4"
+                borderRadius="lg"
+                borderWidth="1px"
+                borderColor="border"
+              >
+                <Flex alignItems="center" gap="3">
+                  <Select
+                    placeholder="Active"
+                    options={[
+                      { label: 'Active', value: 'active' },
+                      { label: 'Inactive', value: 'inactive' },
+                      { label: 'All', value: 'all' },
+                    ]}
+                    size="sm"
+                  />
                   <Input
                     placeholder="Search advertisers..."
                     size="sm"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                   />
-                </Box>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowBulkUpload(true)}
-                >
-                  <Icon size={14}>
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="17 8 12 3 7 8"/>
-                    <line x1="12" y1="3" x2="12" y2="15"/>
-                  </Icon>
-                  Bulk Upload
-                </Button>
-                <Button
-                  colorPalette="green"
-                  size="sm"
-                  onClick={() => setShowAddAdvertiser(true)}
-                >
-                  <Icon size={14} color="white">
-                    <line x1="12" y1="5" x2="12" y2="19"/>
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                  </Icon>
-                  Create Advertiser
-                </Button>
+                </Flex>
+                <Flex gap="2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowBulkUpload(true)}
+                  >
+                    <Icon size={14}>
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/>
+                      <line x1="12" y1="3" x2="12" y2="15"/>
+                    </Icon>
+                    Bulk Upload
+                  </Button>
+                  <Button
+                    colorPalette="green"
+                    size="sm"
+                    onClick={() => setShowAddAdvertiser(true)}
+                  >
+                    <Icon size={14} color="white">
+                      <line x1="12" y1="5" x2="12" y2="19"/>
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                    </Icon>
+                    Create Advertiser
+                  </Button>
+                </Flex>
               </Flex>
-            </Flex>
+              {/* Count sits cleanly below toolbar */}
+              <Text fontSize="xs" color="fg.muted" mt="2" pl="1">
+                Showing {filtered.length} of {ADVERTISERS.length} advertisers
+              </Text>
+            </Box>
 
             {/* Data Table */}
             <Box

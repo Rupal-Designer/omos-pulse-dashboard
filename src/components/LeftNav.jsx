@@ -287,14 +287,14 @@ function SubNavPanel({ section, onClose }) {
               </div>
               {group.items.map(item => (
                 <SubNavItem key={item.id} item={item} active={activeItem === item.id}
-                  onClick={() => setActiveItem(item.id)} />
+                  onClick={() => { setActiveItem(item.id); onClose(); }} />
               ))}
             </div>
           ))
         ) : (
           ungrouped.map(item => (
             <SubNavItem key={item.id} item={item} active={activeItem === item.id}
-              onClick={() => setActiveItem(item.id)} />
+              onClick={() => { setActiveItem(item.id); onClose(); }} />
           ))
         )}
       </div>

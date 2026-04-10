@@ -41,6 +41,7 @@ function DownloadIcon() {
 /* ── Stat card ────────────────────────────────────────────────── */
 function StatCard({ label, value, compValue, compPct, currency }) {
   const isPositive = compPct >= 0;
+  const isEmpty = value === '0' || value === '0%';
   return (
     <div style={{
       background: WHITE, borderRadius: 8, padding: '14px 16px',
@@ -56,19 +57,26 @@ function StatCard({ label, value, compValue, compPct, currency }) {
         <InfoIcon />
       </div>
       {/* Values row */}
-      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 }}>
-        <span style={{ fontSize: 18, fontWeight: 700, color: TEXT_HI, letterSpacing: '-0.3px' }}>
-          {currency && <span style={{ fontSize: 13 }}>{currency}</span>}{value}
-        </span>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-          <span style={{ fontSize: 12, color: TEXT_MID }}>
-            {currency && <span style={{ fontSize: 11 }}>{currency}</span>}{compValue}
-          </span>
-          <span style={{ fontSize: 11, fontWeight: 600, color: isPositive ? GREEN : RED }}>
-            ({isPositive ? '+' : ''}{compPct}%)
-          </span>
+      {isEmpty ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <span style={{ fontSize: 18, fontWeight: 700, color: '#D0D0D0', letterSpacing: '-0.3px' }}>—</span>
+          <span style={{ fontSize: 10, color: TEXT_LO }}>No data for period</span>
         </div>
-      </div>
+      ) : (
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 }}>
+          <span style={{ fontSize: 18, fontWeight: 700, color: TEXT_HI, letterSpacing: '-0.3px' }}>
+            {currency && <span style={{ fontSize: 13 }}>{currency}</span>}{value}
+          </span>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+            <span style={{ fontSize: 12, color: TEXT_MID }}>
+              {currency && <span style={{ fontSize: 11 }}>{currency}</span>}{compValue}
+            </span>
+            <span style={{ fontSize: 11, fontWeight: 600, color: isPositive ? GREEN : RED }}>
+              ({isPositive ? '+' : ''}{compPct}%)
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -90,6 +98,10 @@ function MetricPill({ color, label }) {
 }
 
 function ChartCard({ leftMetric, leftColor, rightMetric, rightColor, data, leftKey, rightKey, leftLabel, rightLabel }) {
+  const hasData = data.some(d =>
+    (typeof d[leftKey] === 'number' && d[leftKey] > 0) ||
+    (typeof d[rightKey] === 'number' && d[rightKey] > 0)
+  );
   return (
     <div style={{
       background: WHITE, borderRadius: 8, flex: 1,
@@ -113,16 +125,31 @@ function ChartCard({ leftMetric, leftColor, rightMetric, rightColor, data, leftK
       </div>
       {/* Chart */}
       <div style={{ padding: '12px 8px 4px' }}>
-        <ResponsiveContainer width="100%" height={200}>
-          <LineChart data={data} margin={{ top: 4, right: 8, left: -12, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
-            <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#999' }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 10, fill: '#999' }} axisLine={false} tickLine={false} domain={[0, 5]} ticks={[0,1,2,3,4,5]} />
-            <Tooltip />
-            <Line type="monotone" dataKey={leftKey} stroke={leftColor} strokeWidth={1.5} dot={false} name={leftLabel} />
-            <Line type="monotone" dataKey={rightKey} stroke={rightColor} strokeWidth={1.5} dot={false} name={rightLabel} />
-          </LineChart>
-        </ResponsiveContainer>
+        {hasData ? (
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={data} margin={{ top: 4, right: 8, left: -12, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
+              <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#999' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 10, fill: '#999' }} axisLine={false} tickLine={false} />
+              <Tooltip />
+              <Line type="monotone" dataKey={leftKey} stroke={leftColor} strokeWidth={1.5} dot={false} name={leftLabel} />
+              <Line type="monotone" dataKey={rightKey} stroke={rightColor} strokeWidth={1.5} dot={false} name={rightLabel} />
+            </LineChart>
+          </ResponsiveContainer>
+        ) : (
+          <div style={{
+            height: 200, display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center', gap: 10,
+          }}>
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+              stroke="#D8D8D8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 3v18h18"/>
+              <path d="M7 16l4-4 4 4 4-8" stroke="#D8D8D8"/>
+            </svg>
+            <span style={{ fontSize: 12, color: TEXT_LO, fontWeight: 500 }}>No data for selected period</span>
+            <span style={{ fontSize: 10, color: TEXT_LO }}>Connect a data source or adjust the date range</span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -300,7 +327,7 @@ function HomeTopBar() {
           <Icon size={17} color={TEXT_MID}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></Icon>
         </div>
         <div>
-          <div style={{ fontSize: 11, color: TEXT_LO, marginBottom: 1 }}>Home &gt; Home</div>
+          <div style={{ fontSize: 11, color: TEXT_LO, marginBottom: 1 }}>Dashboard &gt; Overview</div>
           <div style={{ fontSize: 17, fontWeight: 700, color: TEXT_HI, lineHeight: 1 }}>Home</div>
         </div>
       </div>
