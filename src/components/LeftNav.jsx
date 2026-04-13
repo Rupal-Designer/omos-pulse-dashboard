@@ -21,13 +21,10 @@ const NAV_SECTIONS = [
       </>
     ),
     subnav: [
-      { id: 'product-ads', label: 'Product Ads' },
-      { id: 'display-ads', label: 'Display Ads' },
-      { id: 'sponsored-ads', label: 'Sponsored Ads', active: true },
-      { id: 'byot', label: 'BYOT' },
-      { id: 'non-digital', label: 'Non-Digital Ads' },
-      { id: 'offsite', label: 'Offsite Ads' },
-      { id: 'product-contextual', label: 'Product Contextual' },
+      { id: 'live-insights',      label: 'Live Insights' },
+      { id: 'advertiser-insights', label: 'Advertiser Insights', active: true },
+      { id: 'scheduled-reports',  label: 'Scheduled Reports' },
+      { id: 'bu-analytics',       label: 'BU Analytics' },
     ],
   },
   {
@@ -220,7 +217,7 @@ function IconRail({ activeSection, onSelect, expanded }) {
 }
 
 /* ── Expanded sub-nav panel ───────────────────────────────────── */
-function SubNavPanel({ section, onClose }) {
+function SubNavPanel({ section, onClose, onPageChange }) {
   const [activeItem, setActiveItem] = useState(
     section?.subnav.find(i => i.active)?.id ?? section?.subnav[0]?.id
   );
@@ -287,14 +284,14 @@ function SubNavPanel({ section, onClose }) {
               </div>
               {group.items.map(item => (
                 <SubNavItem key={item.id} item={item} active={activeItem === item.id}
-                  onClick={() => { setActiveItem(item.id); onClose(); }} />
+                  onClick={() => { setActiveItem(item.id); onPageChange?.(item.id); onClose(); }} />
               ))}
             </div>
           ))
         ) : (
           ungrouped.map(item => (
             <SubNavItem key={item.id} item={item} active={activeItem === item.id}
-              onClick={() => { setActiveItem(item.id); onClose(); }} />
+              onClick={() => { setActiveItem(item.id); onPageChange?.(item.id); onClose(); }} />
           ))
         )}
       </div>
@@ -328,25 +325,34 @@ function SubNavItem({ item, active, onClick }) {
 }
 
 /* ── Root LeftNav ─────────────────────────────────────────────── */
+// Helper: given a page id (could be a section id OR a sub-nav id), find the owning section id
+function findSectionId(pageId) {
+  if (!pageId) return 'analytics';
+  const direct = NAV_SECTIONS.find(s => s.id === pageId);
+  if (direct) return direct.id;
+  const parent = NAV_SECTIONS.find(s => s.subnav?.some(i => i.id === pageId));
+  return parent?.id ?? 'analytics';
+}
+
 export default function LeftNav({ activePage, onPageChange }) {
-  const [activeSection, setActiveSection] = useState(activePage ?? 'analytics');
+  const [activeSection, setActiveSection] = useState(() => findSectionId(activePage));
   const [expanded, setExpanded] = useState(activePage !== 'home');
 
   const section = NAV_SECTIONS.find(s => s.id === activeSection);
   const hasSubnav = section?.subnav?.length > 0;
 
   function handleSelect(id) {
-    // Notify parent for page-level routing
-    onPageChange?.(id);
+    const s = NAV_SECTIONS.find(n => n.id === id);
+    const hasSub = s?.subnav?.length > 0;
 
     if (activeSection === id) {
-      // Same section — close if open, stay closed if already closed (no accidental reopen)
+      // Same section — toggle the panel
       if (expanded) setExpanded(false);
     } else {
-      // New section — navigate and auto-open panel if it has subnav
       setActiveSection(id);
-      const s = NAV_SECTIONS.find(n => n.id === id);
-      setExpanded(s?.subnav?.length > 0);
+      setExpanded(hasSub);
+      // Only route immediately for leaf sections (no sub-nav, e.g. Home)
+      if (!hasSub) onPageChange?.(id);
     }
   }
 
@@ -357,6 +363,7 @@ export default function LeftNav({ activePage, onPageChange }) {
         <SubNavPanel
           section={section}
           onClose={() => setExpanded(false)}
+          onPageChange={onPageChange}
         />
       )}
     </div>

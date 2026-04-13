@@ -188,6 +188,42 @@ Produce a structured audit report:
 5. Prioritize fixes by impact (accessibility first, then usability, then polish)
 6. Output the structured audit report
 
+## Figma Fidelity Check (8th Dimension — run before all others)
+
+Before scoring the Honeycomb, always verify implementation fidelity against the Figma source. This prevents the most common audit failure mode: scoring a screen that was **fabricated from assumptions** rather than built from the design.
+
+### What to check:
+
+| Item | How to verify |
+|------|--------------|
+| **Section presence** | Every top-level section in the Figma frame exists in the implementation |
+| **Table column schemas** | Column names, order, and types match exactly (do not invent columns) |
+| **Chart types** | Bar vs Line vs Combo vs Donut — match the Figma chart type, not a close substitute |
+| **Data labels / units** | Column headers include units where Figma shows them (e.g. "Last 7 days", "(SKU)") |
+| **Tab labels** | Tab strip items match Figma text exactly |
+| **Breadcrumb path** | TopBar breadcrumb reflects actual navigation path, not hardcoded text |
+| **Footer notes** | "1 Filter applicable: Date", "Comparison mode not applicable" — copy exact Figma text |
+
+### Fidelity Scoring:
+
+- **Pass** — All sections present, all column schemas match, chart types correct
+- **Warn** — 1–2 sections missing OR column names differ but structure is similar
+- **Fail** — Multiple sections missing, columns invented, wrong chart types used
+
+**If Fidelity = Fail, stop the audit and report the gaps first. Do not score the Honeycomb until the implementation matches the design.**
+
+### Lessons learned (from Advertiser Insights page, May 2025):
+
+The following gaps were found when comparing the first implementation to the Figma design. Use these as a checklist pattern for future pages:
+
+1. **Missing sections entirely** — "Advertiser Snapshot" and "Movers & Shakers" tables were not built because they were assumed absent. Always enumerate ALL sections from the Figma node before writing code.
+2. **Wrong campaign table columns** — ROAS, CTR, Spend were invented. Actual columns: Campaign Name, Campaign Type, Campaign Status, Daily Budget, Ad Impressions, Ad Clicks, Attributed GMV.
+3. **Wrong chart type** — Budget Utilization was built as an area chart. Figma shows a **bar + line combo** (bars for utilization %, line for CTR).
+4. **Wrong Ad Format layout** — Pie chart was used. Figma shows a **donut** with "$100 CPC" text in the center, paired with a separate Ad Format Preferences table.
+5. **Missing columns in multiple tables** — Channel Performance, Audience Performance, and Advertiser Dimension all had different/fewer columns than the Figma.
+6. **Advertiser Dimension missing columns** — First Topup Date, Last Topup Date, Last Feed Sync Time, Last Feed Sync Count, Last Login were all absent.
+7. **Hardcoded breadcrumb** — TopBar showed "Analytics > Sponsored Ads" regardless of active page. Breadcrumb must be dynamic.
+
 ## Important Rules
 
 - **Be specific** — "Add aria-label to row checkboxes" not "improve accessibility"
@@ -196,3 +232,4 @@ Produce a structured audit report:
 - **Connect to business value** — every recommendation should explain WHY it matters for retail media
 - **Reference the osmos-brand skill** for visual consistency checks
 - **Reference the design-skill** for the 99 UX guidelines
+- **Always run Figma Fidelity Check first** — never score UX Honeycomb on a screen that doesn't match the design

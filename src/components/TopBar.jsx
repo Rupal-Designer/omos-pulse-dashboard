@@ -27,7 +27,7 @@ function IconBtn({ children, title }) {
   );
 }
 
-export default function TopBar() {
+export default function TopBar({ section = 'Analytics', page = 'Dashboard' }) {
   return (
     <header style={{
       height: 72,
@@ -53,10 +53,10 @@ export default function TopBar() {
         </div>
         <div>
           <div style={{ fontSize: 11, color: '#888', marginBottom: 2 }}>
-            Analytics &gt; Sponsored Ads
+            {section} &gt; {page}
           </div>
           <div style={{ fontSize: 16, fontWeight: 600, color: '#1A1A2E', lineHeight: 1 }}>
-            Sponsored Ads
+            {page}
           </div>
         </div>
       </div>
