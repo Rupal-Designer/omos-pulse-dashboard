@@ -33,6 +33,43 @@ LINE icons from the Figma file are **outline/stroke icons** on a 24×24 viewBox 
 
 ## Phase 1 — Audit
 
+### Step 0 (run FIRST): Scan for emoji icons
+
+Emojis used as icons are a hard violation — they render as OS-native glyphs, are uncontrollable in size/color, and break visual consistency completely.
+
+```bash
+python3 -c "
+import os, re
+emoji_pattern = re.compile(
+    '[' '\U0001F300-\U0001F9FF' '\U00002600-\U000027BF'
+    '\U0000FE0F' '\U00002702-\U000027B0' ']+', flags=re.UNICODE)
+base = 'src/components'
+for fname in sorted(os.listdir(base)):
+    if not fname.endswith('.jsx'): continue
+    with open(os.path.join(base, fname), encoding='utf-8') as f:
+        for i, line in enumerate(f, 1):
+            if emoji_pattern.search(line):
+                print(f'{fname}:{i}: {line.rstrip()}')
+"
+```
+
+**For every emoji found, replace immediately with an SVG icon.** Common mappings:
+
+| Emoji | Intent | SVG replacement |
+|-------|--------|----------------|
+| 🗑 🗑️ | trash / delete | `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>` |
+| ✕ ✖ ✗ | close / dismiss | `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>` |
+| ✓ ✔ | check / success | `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>` |
+| 🔄 | refresh / change-log | `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>` |
+| ➕ ＋ | add / plus | `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>` |
+| 🔍 | search | `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>` |
+| ⚙️ | settings | Use Ico helper with settings path |
+| 📊 📈 | chart | Use Ico helper with chart path |
+
+Also remove any `fontSize` prop on the button/container wrapping the emoji — the SVG has its own `width`/`height`.
+
+---
+
 ### Step 1: Find all files with inline SVG
 
 ```bash
@@ -219,6 +256,32 @@ Build: ✅ Clean
 
 ---
 
+## ⛔ Negative Patterns — Always Flag, Always Fix
+
+These are **never acceptable** in this codebase:
+
+| Violation | Example | Why it's wrong |
+|-----------|---------|----------------|
+| Emoji used as icon | `🗑`, `✕`, `✓`, `🔄`, `➕`, `🔍`, `⚙️` | OS-rendered glyph — uncontrollable size/color, looks different on every OS/browser |
+| `<polygon>` for icons | `<polygon points="22 3 2 3..."/>` | Auto-closes shape, harder to reason about than `<path>` |
+| Inline `fontSize` on emoji container | `style={{ fontSize: 18 }}` around emoji | Leftover from emoji sizing — remove when replacing with SVG |
+| Raw string characters as icons | `▲`, `▼`, `▾`, `›`, `«` used as visual icons | Use SVG chevron paths instead |
+
+Detection command for emoji:
+```bash
+python3 -c "
+import os, re
+p = re.compile('[\\U0001F300-\\U0001F9FF\\U00002600-\\U000027BF\\U0000FE0F\\U00002702-\\U000027B0]+', flags=re.UNICODE)
+base = 'src/components'
+for f in sorted(os.listdir(base)):
+    if not f.endswith('.jsx'): continue
+    for i, ln in enumerate(open(os.path.join(base, f), encoding='utf-8'), 1):
+        if p.search(ln): print(f'{f}:{i}: {ln.rstrip()}')
+"
+```
+
+---
+
 ## Known Intentional Exceptions (Do NOT Replace)
 
 These SVG patterns are intentional and must be kept as-is:
@@ -226,6 +289,8 @@ These SVG patterns are intentional and must be kept as-is:
 | Pattern | Reason |
 |---------|--------|
 | Checkmark inside custom `<Checkbox>` component | Brand-specific 10×10 SVG, not a UI icon |
+| `▲` `▼` in table sort headers | Text sort indicator, not a standalone icon — acceptable |
+| `＋` in "＋ Add New User" button label text | Part of button label string, not a standalone icon — acceptable |
 | Heatmap cell SVGs | Generated/computed, not icons |
 | Chart SVGs rendered by recharts | Library-managed |
 | SVG logos or brand marks | Not icon replacements |
