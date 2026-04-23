@@ -1,56 +1,68 @@
 import React, { useState } from 'react';
 
-const PERSONAS = ['Platinum', 'Gold', 'Silver', 'Beta'];
-
-const PERSONA_COLORS = {
-  Platinum: { bg: '#f1f5f9', color: '#475569', dot: '#94a3b8' },
-  Gold: { bg: '#fef3c7', color: '#92400e', dot: '#f59e0b' },
-  Silver: { bg: '#f1f5f9', color: '#64748b', dot: '#94a3b8' },
-  Beta: { bg: '#ede9fe', color: '#5b21b6', dot: '#8b5cf6' },
-};
-
-const FEATURES = [
-  { id: 'smart_shopping', label: 'Smart Shopping Campaign', category: 'Campaign Type' },
-  { id: 'manual_cpc', label: 'Manual CPC Campaign', category: 'Campaign Type' },
-  { id: 'product_ads_search', label: 'Product Ads Search Campaign', category: 'Campaign Type' },
-  { id: 'display_ads', label: 'Display Ads', category: 'Campaign Type' },
-  { id: 'custom_ads', label: 'Custom Ads', category: 'Campaign Type' },
-  { id: 'video_ads', label: 'Video Ads', category: 'Campaign Type' },
-  { id: 'dayparting', label: 'Dayparting', category: 'Features' },
-  { id: 'audience_targeting', label: 'Audience Targeting', category: 'Features' },
-  { id: 'negative_keywords', label: 'Negative Keywords', category: 'Features' },
-  { id: 'bid_strategy', label: 'Bid Strategy', category: 'Features' },
-  { id: 'campaign_budget', label: 'Campaign Budget Optimization', category: 'Features' },
-  { id: 'segment_targeting', label: 'Segment Targeting', category: 'Features' },
-  { id: 'advanced_analytics', label: 'Advanced Analytics', category: 'Reporting' },
-  { id: 'roas_reporting', label: 'ROAS Reporting', category: 'Reporting' },
-  { id: 'competitor_insights', label: 'Competitor Insights', category: 'Reporting' },
+const PERSONAS = [
+  { key: 'Platinum', dot: '#94a3b8' },
+  { key: 'Gold',     dot: '#f59e0b' },
+  { key: 'Silver',   dot: '#64748b' },
+  { key: 'Beta',     dot: '#8b5cf6' },
 ];
 
-const DEFAULT_CONFIG = {
-  Platinum: Object.fromEntries(FEATURES.map(f => [f.id, true])),
-  Gold: Object.fromEntries(FEATURES.map(f => [f.id, !['custom_ads', 'competitor_insights'].includes(f.id)])),
-  Silver: Object.fromEntries(FEATURES.map(f => [f.id, ['smart_shopping', 'manual_cpc', 'dayparting', 'roas_reporting'].includes(f.id)])),
-  Beta: Object.fromEntries(FEATURES.map(f => [f.id, ['smart_shopping', 'display_ads', 'audience_targeting', 'advanced_analytics'].includes(f.id)])),
+const INITIAL_ROWS = [
+  { id: 'enable_announcement',      label: 'App Level Config > Enable Announcement',                                    group: 'App Level Config',        Platinum: true,  Gold: true,  Silver: false, Beta: false },
+  { id: 'enable_ask_rating',        label: 'App Level Config > Enable ask for rating',                                 group: 'App Level Config',        Platinum: true,  Gold: false, Silver: true,  Beta: false },
+  { id: 'enable_suggestions',       label: 'App Level Config > Enable Suggestions',                                    group: 'App Level Config',        Platinum: false, Gold: false, Silver: true,  Beta: true  },
+  { id: 'enable_hygiene',           label: 'App Level Config > Enable Hygiene',                                        group: 'App Level Config',        Platinum: false, Gold: true,  Silver: false, Beta: true  },
+  { id: 'enable_app_header',        label: 'App Level Config > Enable App Header',                                     group: 'App Level Config',        Platinum: true,  Gold: false, Silver: true,  Beta: false },
+  { id: 'hide_wallet_balance',      label: 'App Level Config > Hide wallet balance & promotional balance split',       group: 'App Level Config',        Platinum: false, Gold: true,  Silver: false, Beta: true  },
+  { id: 'enable_change_history',    label: 'App Level Config > Enable Change History For Billing',                    group: 'App Level Config',        Platinum: true,  Gold: false, Silver: true,  Beta: false },
+  { id: 'enable_sofie',             label: 'App Level Config > Enable Sofie Suggestions',                             group: 'App Level Config',        Platinum: false, Gold: false, Silver: false, Beta: true  },
+  { id: 'enable_perf_dashboard',    label: 'Performance Dashboard > Enable Performance Dashboard',                    group: 'Performance Dashboard',   Platinum: true,  Gold: true,  Silver: true,  Beta: false },
+  { id: 'enable_header',            label: 'Performance Dashboard > Dashboard Header > Enable Header',                 group: 'Performance Dashboard',   Platinum: true,  Gold: true,  Silver: false, Beta: false },
+  { id: 'enable_navigation',        label: 'Performance Dashboard > Dashboard Header > Enable Navigation',             group: 'Performance Dashboard',   Platinum: true,  Gold: false, Silver: true,  Beta: false },
+  { id: 'enable_global_date',       label: 'Performance Dashboard > Dashboard Header > Enable Global Date Selection', group: 'Performance Dashboard',   Platinum: false, Gold: true,  Silver: false, Beta: true  },
+  { id: 'enable_wallet_balance',    label: 'Performance Dashboard > Dashboard Header > Enable Wallet Balance',        group: 'Performance Dashboard',   Platinum: false, Gold: true,  Silver: false, Beta: true  },
+  { id: 'enable_transactions_log',  label: 'Performance Dashboard > Dashboard Header > Enable Transactions Log',      group: 'Performance Dashboard',   Platinum: true,  Gold: false, Silver: true,  Beta: false },
+  { id: 'enable_email_comm',        label: 'Performance Dashboard > Dashboard Header > Enable Email Communication Setting', group: 'Performance Dashboard', Platinum: true, Gold: true, Silver: true, Beta: true },
+  { id: 'enable_scheduled_reports', label: 'Performance Dashboard > Dashboard Header > Enable Scheduled Reports',    group: 'Performance Dashboard',   Platinum: true,  Gold: true,  Silver: true,  Beta: true  },
+];
+
+const GROUP_STYLES = {
+  'App Level Config':      { bg: '#fff',                  headerBg: '#f8fafc', headerColor: '#475569' },
+  'Performance Dashboard': { bg: '#fafbff',               headerBg: '#f0f4ff', headerColor: '#3b4ea6' },
 };
 
 function Ico({ d, size = 13, stroke = 'currentColor', sw = 1.8, fill = 'none' }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={stroke} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">{d}</svg>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={stroke}
+      strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">{d}</svg>
   );
 }
 
-function Toggle({ checked, onChange }) {
+function Checkbox({ checked, onChange }) {
   return (
-    <div onClick={onChange} style={{ width: 36, height: 20, borderRadius: 10, background: checked ? 'var(--osmos-brand-primary)' : '#d1d5db', cursor: 'pointer', position: 'relative', transition: 'background 0.2s', flexShrink: 0 }}>
-      <div style={{ position: 'absolute', top: 3, left: checked ? 19 : 3, width: 14, height: 14, borderRadius: '50%', background: '#fff', transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
+    <div
+      onClick={onChange}
+      style={{
+        width: 16, height: 16, borderRadius: 4, cursor: 'pointer', flexShrink: 0,
+        border: checked ? 'none' : '1.5px solid #cbd5e1',
+        background: checked ? 'var(--osmos-brand-primary)' : '#fff',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        transition: 'all 0.15s',
+      }}
+    >
+      {checked && (
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+          <path d="M2 5l2.5 2.5L8 3" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      )}
     </div>
   );
 }
 
 export default function PersonaConfigPage() {
-  const [activeTab, setActiveTab] = useState('Platinum');
-  const [config, setConfig] = useState(DEFAULT_CONFIG);
+  const [rows, setRows] = useState(INITIAL_ROWS);
+  const [search, setSearch] = useState('');
+  const [activeTab, setActiveTab] = useState('Auction Campaign');
   const [toast, setToast] = useState(null);
 
   function showToast(msg) {
@@ -58,77 +70,185 @@ export default function PersonaConfigPage() {
     setTimeout(() => setToast(null), 3000);
   }
 
-  function handleToggle(featureId) {
-    setConfig(c => ({
-      ...c,
-      [activeTab]: { ...c[activeTab], [featureId]: !c[activeTab][featureId] },
-    }));
+  function handleToggle(rowId, persona) {
+    setRows(prev => prev.map(r =>
+      r.id === rowId ? { ...r, [persona]: !r[persona] } : r
+    ));
   }
 
-  const categories = Array.from(new Set(FEATURES.map(f => f.category)));
-  const pc = PERSONA_COLORS[activeTab];
+  const filtered = rows.filter(r =>
+    r.label.toLowerCase().includes(search.toLowerCase())
+  );
+
+  // Group rows preserving order, inserting group headers when group changes
+  const grouped = [];
+  let lastGroup = null;
+  filtered.forEach(row => {
+    if (row.group !== lastGroup) {
+      grouped.push({ type: 'header', group: row.group });
+      lastGroup = row.group;
+    }
+    grouped.push({ type: 'row', ...row });
+  });
 
   return (
     <div style={{ padding: '20px 24px', fontFamily: "'Open Sans', sans-serif" }}>
       {toast && (
-        <div style={{ position: 'fixed', top: 20, right: 20, background: '#16a34a', color: '#fff', padding: '10px 16px', borderRadius: 8, fontSize: 13, zIndex: 9999, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>{toast}</div>
+        <div style={{
+          position: 'fixed', top: 20, right: 20, background: '#16a34a', color: '#fff',
+          padding: '10px 16px', borderRadius: 8, fontSize: 13, zIndex: 9999,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        }}>
+          {toast}
+        </div>
       )}
 
       <div style={{ background: '#fff', border: '1px solid var(--osmos-border)', borderRadius: 8, overflow: 'hidden' }}>
-        <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{ width: 28, height: 28, background: 'var(--osmos-brand-primary-muted)', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Ico stroke="var(--osmos-brand-primary)" d={<><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></>} />
-            </div>
-            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)' }}>Persona Configuration</span>
+
+        {/* Card Header */}
+        <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 28, height: 28, background: 'var(--osmos-brand-primary-muted)', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Ico stroke="var(--osmos-brand-primary)" d={<><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></>} />
           </div>
-          <button onClick={() => showToast('Configuration saved successfully')} style={{ background: 'var(--osmos-brand-primary)', color: '#fff', border: 'none', borderRadius: 6, padding: '7px 16px', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}>
-            Save Changes
-          </button>
+          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)' }}>Persona Configuration</span>
         </div>
 
-        {/* Persona Tabs */}
-        <div style={{ borderBottom: '1px solid var(--osmos-border)', display: 'flex' }}>
-          {PERSONAS.map(p => {
-            const color = PERSONA_COLORS[p];
-            return (
-              <button key={p} onClick={() => setActiveTab(p)} style={{
-                padding: '10px 20px', border: 'none', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
-                fontSize: 13, fontWeight: activeTab === p ? 700 : 400,
-                background: 'transparent',
-                color: activeTab === p ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)',
-                borderBottom: activeTab === p ? '2px solid var(--osmos-brand-primary)' : '2px solid transparent',
-                display: 'flex', alignItems: 'center', gap: 6,
+        {/* Toolbar */}
+        <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+          {/* Left: Tab group */}
+          <div style={{ display: 'flex', border: '1px solid var(--osmos-border)', borderRadius: 6, overflow: 'hidden' }}>
+            {['Auction Campaign', 'All'].map(tab => (
+              <button key={tab} onClick={() => setActiveTab(tab)} style={{
+                padding: '5px 14px', border: 'none', cursor: 'pointer',
+                fontSize: 12, fontWeight: activeTab === tab ? 700 : 400,
+                fontFamily: "'Open Sans', sans-serif",
+                background: activeTab === tab ? 'var(--osmos-brand-primary)' : '#fff',
+                color: activeTab === tab ? '#fff' : 'var(--osmos-fg-muted)',
+                borderRight: tab === 'Auction Campaign' ? '1px solid var(--osmos-border)' : 'none',
               }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', background: color.dot, display: 'inline-block' }} />
-                {p}
+                {tab}
               </button>
-            );
-          })}
-        </div>
-
-        {/* Feature Toggles */}
-        <div style={{ padding: '20px' }}>
-          <div style={{ padding: '10px 14px', borderRadius: 8, background: pc.bg, color: pc.color, fontSize: 12, fontWeight: 600, marginBottom: 20, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: pc.dot, display: 'inline-block' }} />
-            {activeTab} Persona — Feature Toggles
+            ))}
           </div>
 
-          {categories.map(cat => (
-            <div key={cat} style={{ marginBottom: 24 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--osmos-fg-subtle)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>{cat}</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 0, border: '1px solid var(--osmos-border)', borderRadius: 8, overflow: 'hidden' }}>
-                {FEATURES.filter(f => f.category === cat).map((feature, idx, arr) => (
-                  <div key={feature.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: idx < arr.length - 1 ? '1px solid var(--osmos-border)' : 'none', background: '#fff' }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'var(--osmos-bg-subtle)'}
-                    onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                    <span style={{ fontSize: 13, color: 'var(--osmos-fg)' }}>{feature.label}</span>
-                    <Toggle checked={config[activeTab][feature.id]} onChange={() => handleToggle(feature.id)} />
-                  </div>
-                ))}
-              </div>
+          {/* Right: Search + Change Log */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '0 10px', height: 30 }}>
+              <Ico d={<><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>} stroke="var(--osmos-fg-subtle)" />
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search Feature Name"
+                style={{ border: 'none', outline: 'none', fontSize: 12, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif", width: 180 }}
+              />
             </div>
-          ))}
+            <button style={{
+              display: 'flex', alignItems: 'center', gap: 5, height: 30, padding: '0 12px',
+              border: '1px solid var(--osmos-border)', borderRadius: 6, background: '#fff',
+              fontSize: 12, color: 'var(--osmos-fg-muted)', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
+            }}>
+              <Ico d={<><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></>} size={12} />
+              Change Log
+            </button>
+          </div>
+        </div>
+
+        {/* Matrix Table */}
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+            <thead>
+              <tr style={{ background: 'var(--osmos-bg-subtle)', borderBottom: '2px solid var(--osmos-border)' }}>
+                <th style={{
+                  padding: '10px 16px', textAlign: 'left', fontWeight: 600,
+                  color: 'var(--osmos-fg-muted)', fontSize: 11, minWidth: 340,
+                  position: 'sticky', left: 0, background: 'var(--osmos-bg-subtle)',
+                  borderRight: '1px solid var(--osmos-border)',
+                }}>
+                  Feature
+                </th>
+                {PERSONAS.map(p => (
+                  <th key={p.key} style={{
+                    padding: '10px 16px', textAlign: 'center', fontWeight: 600,
+                    color: 'var(--osmos-fg-muted)', fontSize: 11, width: 100, minWidth: 90,
+                    borderRight: '1px solid var(--osmos-border)',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                      <span style={{ width: 8, height: 8, borderRadius: '50%', background: p.dot, display: 'inline-block', flexShrink: 0 }} />
+                      {p.key}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {grouped.map((item, idx) => {
+                if (item.type === 'header') {
+                  const gs = GROUP_STYLES[item.group] || GROUP_STYLES['App Level Config'];
+                  return (
+                    <tr key={`header-${item.group}`} style={{ background: gs.headerBg }}>
+                      <td colSpan={5} style={{
+                        padding: '6px 16px',
+                        fontSize: 10, fontWeight: 700, letterSpacing: '0.07em',
+                        textTransform: 'uppercase', color: gs.headerColor,
+                        borderBottom: '1px solid var(--osmos-border)',
+                        borderTop: idx > 0 ? '2px solid var(--osmos-border)' : 'none',
+                      }}>
+                        {item.group}
+                      </td>
+                    </tr>
+                  );
+                }
+
+                const gs = GROUP_STYLES[item.group] || GROUP_STYLES['App Level Config'];
+                return (
+                  <tr
+                    key={item.id}
+                    style={{ borderBottom: '1px solid var(--osmos-border)', background: gs.bg }}
+                    onMouseEnter={e => e.currentTarget.style.background = 'var(--osmos-bg-subtle)'}
+                    onMouseLeave={e => e.currentTarget.style.background = gs.bg}
+                  >
+                    <td style={{
+                      padding: '10px 16px', color: 'var(--osmos-fg)', fontSize: 12,
+                      position: 'sticky', left: 0, background: 'inherit',
+                      borderRight: '1px solid var(--osmos-border)',
+                    }}>
+                      {item.label}
+                    </td>
+                    {PERSONAS.map(p => (
+                      <td key={p.key} style={{
+                        padding: '10px 16px', textAlign: 'center',
+                        borderRight: '1px solid var(--osmos-border)',
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                          <Checkbox
+                            checked={item[p.key]}
+                            onChange={() => handleToggle(item.id, p.key)}
+                          />
+                        </div>
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Footer */}
+        <div style={{
+          padding: '14px 16px', borderTop: '1px solid var(--osmos-border)',
+          display: 'flex', justifyContent: 'flex-end',
+        }}>
+          <button
+            onClick={() => showToast('Configuration saved successfully')}
+            style={{
+              background: 'var(--osmos-brand-primary)', color: '#fff', border: 'none',
+              borderRadius: 6, padding: '8px 24px', fontSize: 13, fontWeight: 600,
+              cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
+            }}
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>
