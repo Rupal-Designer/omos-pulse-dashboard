@@ -32,7 +32,7 @@ const ChevDown = ({ size = 11, color = TEXT_MID }) =>
 const InfoIcon = ({ color = TEXT_LO }) =>
   <Icon size={13} color={color}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></Icon>;
 const FilterIcon = () =>
-  <Icon size={13} color={TEXT_MID}><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></Icon>;
+  <Icon size={13} color={TEXT_MID}><path d="M4 6h16M7 12h10M10 18h4"/></Icon>;
 const SearchIcon = () =>
   <Icon size={13} color={TEXT_LO}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>;
 const DlIcon = () =>

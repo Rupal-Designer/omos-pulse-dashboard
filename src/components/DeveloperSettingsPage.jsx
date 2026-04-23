@@ -24,7 +24,7 @@ function Icon({ children, size = 16, color = 'currentColor', sw = 1.8 }) {
 const SearchIcon = () =>
   <Icon size={14} color={TEXT_LO}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>;
 const FilterIcon = () =>
-  <Icon size={14} color={TEXT_MID}><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></Icon>;
+  <Icon size={14} color={TEXT_MID}><path d="M4 6h16M7 12h10M10 18h4"/></Icon>;
 const RefreshIcon = () =>
   <Icon size={14} color={TEXT_MID}><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></Icon>;
 const DownloadIcon = () =>

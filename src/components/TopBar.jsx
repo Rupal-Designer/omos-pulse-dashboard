@@ -315,7 +315,7 @@ export default function TopBar({ section = 'Analytics', page = 'Dashboard', onNa
         </IconBtn>
         <UserViewDropdown />
         <IconBtn title="Filter">
-          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          <path d="M4 6h16M7 12h10M10 18h4"/>
         </IconBtn>
         <IconBtn title="Refresh">
           <polyline points="23 4 23 10 17 10"/>
