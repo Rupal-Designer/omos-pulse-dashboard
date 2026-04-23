@@ -333,7 +333,7 @@ export default function AdminUserPage() {
 
       <div style={s.topBar}>
         <button style={s.changeLogBtn} onClick={() => showToast("Opening change log...")}>
-          <span>🔄</span> Change Log
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Change Log
         </button>
         <div style={s.topBarRight}>
           <input
