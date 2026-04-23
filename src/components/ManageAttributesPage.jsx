@@ -95,7 +95,7 @@ function Toast({ msg, onDone }) {
       background:'var(--osmos-brand-green)', color:'#fff', fontFamily:FONT, fontSize:13,
       padding:'12px 20px', borderRadius:8, boxShadow:'0 4px 16px rgba(0,0,0,.18)',
       display:'flex', alignItems:'center', gap:10 }}>
-      <span>✓</span> {msg}
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}}><polyline points="20 6 9 17 4 12"/></svg> {msg}
     </div>
   );
 }

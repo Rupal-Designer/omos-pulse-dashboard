@@ -121,7 +121,7 @@ export default function SuperAdminUsersPage() {
                     </span>
                   </td>
                   <td style={{ padding: '10px 16px', textAlign: 'right' }}>
-                    <button onClick={() => handleDelete(row.id)} title="Delete user" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#ef4444', fontSize: 15, lineHeight: 1 }}>🗑</button>
+                    <button onClick={() => handleDelete(row.id)} title="Delete user" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#ef4444', lineHeight: 1 }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
                   </td>
                 </tr>
               ))}
@@ -136,7 +136,7 @@ export default function SuperAdminUsersPage() {
           <div onClick={e => e.stopPropagation()} style={{ background: 'var(--osmos-bg)', borderRadius: 10, width: 420, boxShadow: '0 20px 60px rgba(0,0,0,0.2)', overflow: 'hidden' }}>
             <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--osmos-fg)' }}>Add New User</span>
-              <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--osmos-fg-muted)', fontSize: 18, lineHeight: 1 }}>✕</button>
+              <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--osmos-fg-muted)', lineHeight: 1 }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
             </div>
             <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div>

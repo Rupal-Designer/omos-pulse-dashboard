@@ -98,7 +98,7 @@ export default function ProductCatalogPage() {
                   <td style={{ padding: '10px 14px' }}>
                     <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
                       <button style={{ background: 'none', border: '1px solid var(--osmos-border)', borderRadius: 5, color: 'var(--osmos-fg-muted)', fontSize: 11, padding: '3px 10px', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}>Edit</button>
-                      <button onClick={() => handleDelete(row.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#ef4444', fontSize: 14, lineHeight: 1 }}>🗑</button>
+                      <button onClick={() => handleDelete(row.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#ef4444', lineHeight: 1 }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
                     </div>
                   </td>
                 </tr>
