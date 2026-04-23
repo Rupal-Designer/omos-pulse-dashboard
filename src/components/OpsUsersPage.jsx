@@ -50,7 +50,7 @@ export default function OpsUsersPage() {
   return (
     <div style={{ padding: '20px 24px', fontFamily: "'Open Sans', sans-serif" }}>
       {toast && (
-        <div style={{ position: 'fixed', top: 20, right: 20, background: '#16a34a', color: '#fff', padding: '10px 16px', borderRadius: 8, fontSize: 13, zIndex: 9999, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>{toast}</div>
+        <div style={{ position: 'fixed', top: 20, right: 20, background: 'var(--osmos-brand-green)', color: '#fff', padding: '10px 16px', borderRadius: 8, fontSize: 13, zIndex: 9999, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>{toast}</div>
       )}
 
       <div style={{ background: '#fff', border: '1px solid var(--osmos-border)', borderRadius: 8, overflow: 'hidden' }}>
@@ -90,7 +90,7 @@ export default function OpsUsersPage() {
                   <td style={{ padding: '10px 14px', color: 'var(--osmos-fg-muted)' }}>{row.phone}</td>
                   <td style={{ padding: '10px 14px', color: 'var(--osmos-fg-muted)' }}>{row.email}</td>
                   <td style={{ padding: '10px 14px' }}>
-                    <span style={{ padding: '3px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600, background: row.access === 'Write' ? '#eff6ff' : '#f0fdf4', color: row.access === 'Write' ? '#2563eb' : '#16a34a' }}>
+                    <span style={{ padding: '3px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600, background: row.access === 'Write' ? '#eff6ff' : 'var(--osmos-brand-green-muted)', color: row.access === 'Write' ? '#2563eb' : 'var(--osmos-brand-green)' }}>
                       {row.access}
                     </span>
                   </td>
@@ -109,7 +109,7 @@ export default function OpsUsersPage() {
 
       {showModal && (
         <div onClick={() => setShowModal(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: 10, width: 420, boxShadow: '0 20px 60px rgba(0,0,0,0.2)', overflow: 'hidden' }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: 'var(--osmos-bg)', borderRadius: 10, width: 420, boxShadow: '0 20px 60px rgba(0,0,0,0.2)', overflow: 'hidden' }}>
             <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--osmos-fg)' }}>Add New Ops User</span>
               <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--osmos-fg-muted)' }}><Ico d={<><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>} size={16} /></button>

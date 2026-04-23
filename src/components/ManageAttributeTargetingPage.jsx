@@ -17,7 +17,7 @@ function Toast({ message, visible }) {
   return (
     <div style={{
       position: 'fixed', top: 20, right: 20, zIndex: 9999,
-      background: '#16A34A', color: '#fff',
+      background: 'var(--osmos-brand-green)', color: '#fff',
       padding: '10px 18px', borderRadius: 8,
       fontFamily: FONT, fontSize: 13, fontWeight: 500,
       boxShadow: '0 4px 16px rgba(0,0,0,0.15)',

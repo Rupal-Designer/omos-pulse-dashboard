@@ -16,8 +16,8 @@ const INITIAL_DATA = [
 ];
 
 const STATUS_COLORS = {
-  Active: { bg: '#f0fdf4', color: '#16a34a' },
-  Inactive: { bg: '#f1f5f9', color: '#64748b' },
+  Active: { bg: 'var(--osmos-brand-green-muted)', color: 'var(--osmos-brand-green)' },
+  Inactive: { bg: 'var(--osmos-bg-subtle)', color: 'var(--osmos-fg-muted)' },
   Suspended: { bg: '#fef2f2', color: '#dc2626' },
 };
 
@@ -60,7 +60,7 @@ export default function FinanceAdvertiserManagementPage() {
   return (
     <div style={{ padding: '20px 24px', fontFamily: "'Open Sans', sans-serif" }}>
       {toast && (
-        <div style={{ position: 'fixed', top: 20, right: 20, background: '#16a34a', color: '#fff', padding: '10px 16px', borderRadius: 8, fontSize: 13, zIndex: 9999, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>{toast}</div>
+        <div style={{ position: 'fixed', top: 20, right: 20, background: 'var(--osmos-brand-green)', color: '#fff', padding: '10px 16px', borderRadius: 8, fontSize: 13, zIndex: 9999, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>{toast}</div>
       )}
 
       <div style={{ background: '#fff', border: '1px solid var(--osmos-border)', borderRadius: 8, overflow: 'hidden' }}>

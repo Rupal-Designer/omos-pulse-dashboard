@@ -54,9 +54,9 @@ function StatusBadge({ s }) {
   return (
     <span style={{ display:'inline-flex', alignItems:'center', gap:5, padding:'3px 8px',
       borderRadius:12, fontSize:11, fontWeight:500,
-      background: active ? '#ECFDF5' : '#F1F5F9', color: active ? '#059669' : '#64748B' }}>
+      background: active ? 'var(--osmos-brand-green-muted)' : 'var(--osmos-bg-subtle)', color: active ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-muted)' }}>
       <span style={{ width:6, height:6, borderRadius:'50%',
-        background: active ? '#059669' : '#94A3B8', display:'inline-block' }} />
+        background: active ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-subtle)', display:'inline-block' }} />
       {s}
     </span>
   );
@@ -65,7 +65,7 @@ function StatusBadge({ s }) {
 function DataTypeBadge({ t }) {
   return (
     <span style={{ padding:'2px 8px', borderRadius:10, fontSize:11, fontWeight:500,
-      background:'#EFF6FF', color:'#2563EB' }}>{t}</span>
+      background:'var(--osmos-brand-primary-muted)', color:'var(--osmos-brand-primary)' }}>{t}</span>
   );
 }
 
@@ -73,7 +73,7 @@ function YesNoBadge({ v }) {
   const yes = v === 'Yes';
   return (
     <span style={{ padding:'2px 8px', borderRadius:10, fontSize:11, fontWeight:500,
-      background: yes ? '#ECFDF5' : '#F1F5F9', color: yes ? '#059669' : '#64748B' }}>{v}</span>
+      background: yes ? 'var(--osmos-brand-green-muted)' : 'var(--osmos-bg-subtle)', color: yes ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-muted)' }}>{v}</span>
   );
 }
 
@@ -92,7 +92,7 @@ function Toast({ msg, onDone }) {
   }, [onDone]);
   return (
     <div style={{ position:'fixed', top:20, right:20, zIndex:9999,
-      background:'#166534', color:'#fff', fontFamily:FONT, fontSize:13,
+      background:'var(--osmos-brand-green)', color:'#fff', fontFamily:FONT, fontSize:13,
       padding:'12px 20px', borderRadius:8, boxShadow:'0 4px 16px rgba(0,0,0,.18)',
       display:'flex', alignItems:'center', gap:10 }}>
       <span>✓</span> {msg}
@@ -134,7 +134,7 @@ function CreateAttributeDrawer({ onClose }) {
       <div onClick={onClose} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.35)', zIndex:800 }} />
       {/* panel */}
       <div style={{ position:'fixed', top:0, right:0, bottom:0, width:440, zIndex:801,
-        background:'#fff', display:'flex', flexDirection:'column', boxShadow:'-4px 0 24px rgba(0,0,0,.12)' }}>
+        background:'var(--osmos-bg)', display:'flex', flexDirection:'column', boxShadow:'-4px 0 24px rgba(0,0,0,.12)' }}>
         {/* header */}
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between',
           padding:'18px 24px', borderBottom:`1px solid ${BORDER}` }}>

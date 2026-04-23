@@ -42,7 +42,7 @@ function Toast({ message, visible }) {
   return (
     <div style={{
       position: 'fixed', top: 20, right: 20, zIndex: 9999,
-      background: '#16A34A', color: '#fff',
+      background: 'var(--osmos-brand-green)', color: '#fff',
       padding: '10px 18px', borderRadius: 8,
       fontFamily: FONT, fontSize: 13, fontWeight: 500,
       boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
@@ -275,10 +275,10 @@ export default function DeveloperSettingsPage() {
                       <span style={{
                         display: 'inline-block', padding: '2px 8px', borderRadius: 10,
                         fontSize: 11, fontWeight: 600,
-                        background: row.eventType === 'PageView' ? '#EFF6FF'
-                          : row.eventType === 'Purchase' ? '#F0FDF4' : '#FFF7ED',
-                        color: row.eventType === 'PageView' ? '#2563EB'
-                          : row.eventType === 'Purchase' ? '#16A34A' : '#EA580C',
+                        background: row.eventType === 'PageView' ? 'var(--osmos-brand-primary-muted)'
+                          : row.eventType === 'Purchase' ? 'var(--osmos-brand-green-muted)' : 'rgba(245,166,35,0.12)',
+                        color: row.eventType === 'PageView' ? 'var(--osmos-brand-primary)'
+                          : row.eventType === 'Purchase' ? 'var(--osmos-brand-green)' : 'var(--osmos-brand-amber)',
                       }}>
                         {row.eventType}
                       </span>

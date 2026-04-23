@@ -75,17 +75,17 @@ export default function AutomatedRulesPage() {
 
   const inputStyle = {
     width: '100%', padding: '8px 10px', border: '1px solid var(--osmos-border)', borderRadius: 6,
-    fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)', outline: 'none', boxSizing: 'border-box', background: '#fff',
+    fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)', outline: 'none', boxSizing: 'border-box', background: 'var(--osmos-bg)',
   };
   const labelStyle = { fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)', marginBottom: 4, display: 'block' };
 
   return (
     <div style={{ padding: '20px 24px', fontFamily: "'Open Sans', sans-serif" }}>
       {toast && (
-        <div style={{ position: 'fixed', top: 20, right: 20, background: '#16a34a', color: '#fff', padding: '10px 16px', borderRadius: 8, fontSize: 13, zIndex: 9999, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>{toast}</div>
+        <div style={{ position: 'fixed', top: 20, right: 20, background: 'var(--osmos-brand-green)', color: '#fff', padding: '10px 16px', borderRadius: 8, fontSize: 13, zIndex: 9999, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>{toast}</div>
       )}
 
-      <div style={{ background: '#fff', border: '1px solid var(--osmos-border)', borderRadius: 8, overflow: 'hidden' }}>
+      <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 8, overflow: 'hidden' }}>
         {/* Toolbar */}
         <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--osmos-border)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -95,7 +95,7 @@ export default function AutomatedRulesPage() {
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '0 10px', height: 30 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '0 10px', height: 30 }}>
               <Ico d={<><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>} stroke="var(--osmos-fg-subtle)" />
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search rules…" style={{ border: 'none', outline: 'none', fontSize: 12, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif", width: 160 }} />
             </div>
@@ -123,7 +123,7 @@ export default function AutomatedRulesPage() {
                   onMouseEnter={e => e.currentTarget.style.background = 'var(--osmos-bg-subtle)'}
                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                   <td style={{ padding: '10px 16px' }}>
-                    <span style={{ padding: '3px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600, background: row.status === 'Active' ? '#f0fdf4' : '#f3f4f6', color: row.status === 'Active' ? '#16a34a' : '#6b7280' }}>
+                    <span style={{ padding: '3px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600, background: row.status === 'Active' ? 'var(--osmos-brand-green-muted)' : '#f3f4f6', color: row.status === 'Active' ? 'var(--osmos-brand-green)' : '#6b7280' }}>
                       {row.status}
                     </span>
                   </td>
@@ -147,7 +147,7 @@ export default function AutomatedRulesPage() {
       {/* Drawer overlay */}
       {showDrawer && (
         <div onClick={() => setShowDrawer(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.35)', zIndex: 1000 }}>
-          <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: 480, background: '#fff', boxShadow: '-4px 0 24px rgba(0,0,0,0.12)', display: 'flex', flexDirection: 'column' }}>
+          <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: 480, background: 'var(--osmos-bg)', boxShadow: '-4px 0 24px rgba(0,0,0,0.12)', display: 'flex', flexDirection: 'column' }}>
             {/* Header */}
             <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
               <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--osmos-fg)' }}>{editRow ? 'Edit Rule' : 'Create Rule'}</span>
@@ -195,7 +195,7 @@ export default function AutomatedRulesPage() {
 
             {/* Footer */}
             <div style={{ padding: '14px 20px', borderTop: '1px solid var(--osmos-border)', display: 'flex', justifyContent: 'flex-end', gap: 10, flexShrink: 0 }}>
-              <button onClick={() => setShowDrawer(false)} style={{ padding: '8px 18px', border: '1px solid var(--osmos-border)', borderRadius: 6, background: '#fff', color: 'var(--osmos-fg-muted)', fontSize: 13, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}>Cancel</button>
+              <button onClick={() => setShowDrawer(false)} style={{ padding: '8px 18px', border: '1px solid var(--osmos-border)', borderRadius: 6, background: 'var(--osmos-bg)', color: 'var(--osmos-fg-muted)', fontSize: 13, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}>Cancel</button>
               <button onClick={handleSave} style={{ padding: '8px 18px', border: 'none', borderRadius: 6, background: 'var(--osmos-brand-primary)', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}>Save</button>
             </div>
           </div>

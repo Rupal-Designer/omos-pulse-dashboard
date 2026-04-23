@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 function InfoIcon() {
   return (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-      stroke="#BBBBBB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      stroke="var(--osmos-fg-subtle)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="10"/>
       <line x1="12" y1="8" x2="12" y2="12"/>
       <line x1="12" y1="16" x2="12.01" y2="16"/>
@@ -15,7 +15,7 @@ function InfoIcon() {
 function SortIcon() {
   return (
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-      stroke="#BBBBBB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      stroke="var(--osmos-fg-subtle)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <line x1="8" y1="6" x2="21" y2="6"/>
       <line x1="8" y1="12" x2="21" y2="12"/>
       <line x1="8" y1="18" x2="21" y2="18"/>
@@ -29,7 +29,7 @@ function SortIcon() {
 function SearchIcon() {
   return (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-      stroke="#BBBBBB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      stroke="var(--osmos-fg-subtle)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="11" cy="11" r="8"/>
       <line x1="21" y1="21" x2="16.65" y2="16.65"/>
     </svg>
@@ -84,7 +84,7 @@ export function TableCard({ icon, title, searchPlaceholder, children, footerLeft
             cursor: 'pointer', fontSize: 11, color: 'var(--osmos-fg-muted)', fontFamily: 'inherit',
             transition: 'background 0.12s',
           }}
-            onMouseEnter={e => e.currentTarget.style.background = '#F5F5F8'}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--osmos-bg-subtle)'}
             onMouseLeave={e => e.currentTarget.style.background = '#fff'}
           >
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
@@ -135,7 +135,7 @@ export function TableCard({ icon, title, searchPlaceholder, children, footerLeft
       {/* Footer */}
       {(footerLeft || footerRight) && (
         <div style={{
-          padding: '8px 16px', background: '#F6FBFF',
+          padding: '8px 16px', background: 'var(--osmos-bg-subtle)',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           fontSize: 10, color: 'var(--osmos-fg-subtle)',
         }}>
@@ -180,7 +180,7 @@ export function DataTable({ columns, rows, totals }) {
               borderBottom: '1px solid var(--osmos-border)',
               background: ri % 2 === 0 ? '#fff' : 'var(--osmos-bg-muted)',
             }}
-              onMouseEnter={e => e.currentTarget.style.background = '#F5F8FF'}
+              onMouseEnter={e => e.currentTarget.style.background = 'var(--osmos-bg-subtle)'}
               onMouseLeave={e => e.currentTarget.style.background = ri % 2 === 0 ? '#fff' : 'var(--osmos-bg-muted)'}
             >
               {row.map((cell, ci) => (

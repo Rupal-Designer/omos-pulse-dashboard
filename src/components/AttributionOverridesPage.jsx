@@ -145,7 +145,7 @@ const styles = {
     bottom: "32px",
     left: "50%",
     transform: "translateX(-50%)",
-    backgroundColor: "#1a7f4b",
+    backgroundColor: "var(--osmos-brand-green)",
     color: "#fff",
     padding: "12px 24px",
     borderRadius: "8px",

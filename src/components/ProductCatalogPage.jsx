@@ -42,7 +42,7 @@ export default function ProductCatalogPage() {
   return (
     <div style={{ padding: '20px 24px', fontFamily: "'Open Sans', sans-serif" }}>
       {toast && (
-        <div style={{ position: 'fixed', top: 20, right: 20, background: '#16a34a', color: '#fff', padding: '10px 16px', borderRadius: 8, fontSize: 13, zIndex: 9999, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>{toast}</div>
+        <div style={{ position: 'fixed', top: 20, right: 20, background: 'var(--osmos-brand-green)', color: '#fff', padding: '10px 16px', borderRadius: 8, fontSize: 13, zIndex: 9999, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>{toast}</div>
       )}
 
       <div style={{ background: '#fff', border: '1px solid var(--osmos-border)', borderRadius: 8, overflow: 'hidden' }}>
@@ -84,7 +84,7 @@ export default function ProductCatalogPage() {
                   onMouseEnter={e => e.currentTarget.style.background = 'var(--osmos-bg-subtle)'}
                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                   <td style={{ padding: '10px 14px' }}>
-                    <span style={{ padding: '3px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600, background: row.status === 'Active' ? '#f0fdf4' : '#f3f4f6', color: row.status === 'Active' ? '#16a34a' : '#6b7280' }}>
+                    <span style={{ padding: '3px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600, background: row.status === 'Active' ? 'var(--osmos-brand-green-muted)' : 'var(--osmos-bg-subtle)', color: row.status === 'Active' ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-muted)' }}>
                       {row.status}
                     </span>
                   </td>

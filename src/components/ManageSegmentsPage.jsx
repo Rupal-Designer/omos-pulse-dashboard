@@ -87,12 +87,12 @@ function StatusBadge({ value }) {
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 5,
       padding: '3px 9px', borderRadius: 20, fontSize: 11, fontWeight: 600,
-      background: active ? '#ECFDF5' : '#F1F5F9',
-      color: active ? '#059669' : '#64748B',
+      background: active ? 'var(--osmos-brand-green-muted)' : 'var(--osmos-bg-subtle)',
+      color: active ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-muted)',
     }}>
       <span style={{
         width: 6, height: 6, borderRadius: '50%',
-        background: active ? '#22C55E' : '#94A3B8', flexShrink: 0,
+        background: active ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-subtle)', flexShrink: 0,
       }} />
       {value}
     </span>
@@ -101,11 +101,11 @@ function StatusBadge({ value }) {
 
 function TypeBadge({ type }) {
   const map = {
-    'Custom List':     { bg: '#EFF6FF', color: '#2563EB' },
+    'Custom List':     { bg: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)' },
     'User Attributes': { bg: '#F5F3FF', color: '#7C3AED' },
     'User Activity':   { bg: '#FFF7ED', color: '#EA580C' },
   };
-  const s = map[type] || { bg: '#F1F5F9', color: '#64748B' };
+  const s = map[type] || { bg: 'var(--osmos-bg-subtle)', color: 'var(--osmos-fg-muted)' };
   return (
     <span style={{
       display: 'inline-block', padding: '3px 9px', borderRadius: 20,
@@ -122,8 +122,8 @@ function RuleBadge({ value }) {
     <span style={{
       display: 'inline-block', padding: '3px 9px', borderRadius: 20,
       fontSize: 11, fontWeight: 600,
-      background: yes ? '#ECFDF5' : '#F1F5F9',
-      color: yes ? '#059669' : '#64748B',
+      background: yes ? 'var(--osmos-brand-green-muted)' : 'var(--osmos-bg-subtle)',
+      color: yes ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-muted)',
     }}>
       {value || 'No'}
     </span>
@@ -235,7 +235,7 @@ function Toast({ message, onDone }) {
   return (
     <div style={{
       position: 'fixed', top: 20, right: 24, zIndex: 9999,
-      background: '#065F46', color: '#fff',
+      background: 'var(--osmos-brand-green)', color: '#fff',
       padding: '12px 20px', borderRadius: 8,
       fontSize: 13, fontWeight: 500, fontFamily: FONT,
       boxShadow: '0 4px 16px rgba(0,0,0,0.18)',
@@ -243,7 +243,7 @@ function Toast({ message, onDone }) {
     }}>
       <span style={{
         width: 18, height: 18, borderRadius: '50%',
-        background: '#22C55E', display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        background: 'var(--osmos-brand-green)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
       }}>
         <CheckIcon />
       </span>

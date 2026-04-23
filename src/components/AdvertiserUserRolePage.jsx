@@ -201,7 +201,7 @@ const s = {
     zIndex: 1000,
   },
   modal: {
-    background: "#fff",
+    background: "var(--osmos-bg)",
     borderRadius: "10px",
     padding: "28px 32px",
     width: "420px",

@@ -25,12 +25,12 @@ const TRANSACTIONS = [
 ];
 
 const STATUS_COLORS = {
-  Active: { bg: '#f0fdf4', color: '#16a34a' },
-  'Low Balance': { bg: '#fef3c7', color: '#92400e' },
+  Active: { bg: 'var(--osmos-brand-green-muted)', color: 'var(--osmos-brand-green)' },
+  'Low Balance': { bg: 'rgba(245,166,35,0.12)', color: 'var(--osmos-brand-amber)' },
   Exhausted: { bg: '#fef2f2', color: '#dc2626' },
-  Success: { bg: '#f0fdf4', color: '#16a34a' },
+  Success: { bg: 'var(--osmos-brand-green-muted)', color: 'var(--osmos-brand-green)' },
   Failed: { bg: '#fef2f2', color: '#dc2626' },
-  Pending: { bg: '#fef3c7', color: '#92400e' },
+  Pending: { bg: 'rgba(245,166,35,0.12)', color: 'var(--osmos-brand-amber)' },
 };
 
 function Ico({ d, size = 13, stroke = 'currentColor', sw = 1.8, fill = 'none' }) {
@@ -63,7 +63,7 @@ export default function FinanceDashboardPage() {
             <div style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>{card.label}</div>
             <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--osmos-fg)', marginBottom: 6 }}>{card.value}</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: 12, fontWeight: 600, color: card.positive ? '#16a34a' : '#dc2626' }}>{card.change}</span>
+              <span style={{ fontSize: 12, fontWeight: 600, color: card.positive ? 'var(--osmos-brand-green)' : '#dc2626' }}>{card.change}</span>
               <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)' }}>{card.sub}</span>
             </div>
           </div>

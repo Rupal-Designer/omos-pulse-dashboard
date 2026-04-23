@@ -38,7 +38,7 @@ const COLS = [
 
 /* ── rule type badge colors ───────────────────────────────────── */
 const RULE_COLORS = {
-  'User Attribute': { bg:'#EFF6FF', color:'#2563EB' },
+  'User Attribute': { bg:'var(--osmos-brand-primary-muted)', color:'var(--osmos-brand-primary)' },
   'User Activity':  { bg:'#FFF7ED', color:'#C2410C' },
   'User Segment':   { bg:'#FAF5FF', color:'#7C3AED' },
 };
@@ -62,8 +62,8 @@ const ChevDownIc = () => <Ic size={12}><polyline points="6 9 12 15 18 9"/></Ic>;
 function StatusBadge({ s }) {
   return (
     <span style={{ display:'inline-flex', alignItems:'center', gap:5, padding:'3px 8px',
-      borderRadius:12, fontSize:11, fontWeight:500, background:'#ECFDF5', color:'#059669' }}>
-      <span style={{ width:6, height:6, borderRadius:'50%', background:'#059669', display:'inline-block' }} />
+      borderRadius:12, fontSize:11, fontWeight:500, background:'var(--osmos-brand-green-muted)', color:'var(--osmos-brand-green)' }}>
+      <span style={{ width:6, height:6, borderRadius:'50%', background:'var(--osmos-brand-green)', display:'inline-block' }} />
       {s}
     </span>
   );
@@ -85,7 +85,7 @@ function Toast({ msg, onDone }) {
   }, [onDone]);
   return (
     <div style={{ position:'fixed', top:20, right:20, zIndex:9999,
-      background:'#166534', color:'#fff', fontFamily:FONT, fontSize:13,
+      background:'var(--osmos-brand-green)', color:'#fff', fontFamily:FONT, fontSize:13,
       padding:'12px 20px', borderRadius:8, boxShadow:'0 4px 16px rgba(0,0,0,.18)',
       display:'flex', alignItems:'center', gap:10, maxWidth:380 }}>
       <span>✓</span> {msg}
@@ -131,7 +131,7 @@ function CreateRuleDrawer({ onClose }) {
       <div onClick={onClose} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.35)', zIndex:800 }} />
       {/* panel */}
       <div style={{ position:'fixed', top:0, right:0, bottom:0, width:480, zIndex:801,
-        background:'#fff', display:'flex', flexDirection:'column', boxShadow:'-4px 0 24px rgba(0,0,0,.12)' }}>
+        background:'var(--osmos-bg)', display:'flex', flexDirection:'column', boxShadow:'-4px 0 24px rgba(0,0,0,.12)' }}>
         {/* header */}
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between',
           padding:'18px 24px', borderBottom:`1px solid ${BORDER}` }}>
@@ -251,11 +251,11 @@ function CreateRuleDrawer({ onClose }) {
                 <span>Too Broad</span>
               </div>
               <div style={{ height:6, borderRadius:3, position:'relative',
-                background:'linear-gradient(to right, #EF4444 0%, #F59E0B 25%, #22C55E 50%, #F59E0B 75%, #EF4444 100%)' }}>
+                background:'linear-gradient(to right, #EF4444 0%, var(--osmos-brand-amber) 25%, #22C55E 50%, var(--osmos-brand-amber) 75%, #EF4444 100%)' }}>
                 {/* indicator dot near middle */}
                 <div style={{ position:'absolute', left:'48%', top:'50%', transform:'translate(-50%, -50%)',
-                  width:14, height:14, borderRadius:'50%', background:'#fff',
-                  border:'2px solid #2563EB', boxShadow:'0 1px 4px rgba(0,0,0,.2)' }} />
+                  width:14, height:14, borderRadius:'50%', background:'var(--osmos-bg)',
+                  border:'2px solid var(--osmos-brand-primary)', boxShadow:'0 1px 4px rgba(0,0,0,.2)' }} />
               </div>
             </div>
           </div>
