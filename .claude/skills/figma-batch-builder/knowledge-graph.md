@@ -1,7 +1,7 @@
 # Figma Batch Builder — Knowledge Graph
 
 > Auto-updated every hour by a cron job that re-reads App.jsx, LeftNav.jsx, and src/components/.
-> Last updated: 2026-04-23 (auto-updated)
+> Last updated: 2026-04-24 (manual refresh — corrected manage-segments group, removed duplicate manage-cpm-rules, added apps section)
 
 ---
 
@@ -24,30 +24,35 @@ Every page that is currently routed in App.jsx + present in LeftNav.jsx.
 | ops-users | OpsUsersPage.jsx | Control Center | User Access Management | user-table |
 | advertiser-users | AdvertiserUsersPage.jsx | Control Center | User Access Management | user-table |
 | account-manager-mapping | AccountManagerMappingPage.jsx | Control Center | User Access Management | upload-page |
+| admin-user-role | AdminUserPage.jsx | Control Center | User Role Management | user-table |
+| advertiser-user-role | AdvertiserUserRolePage.jsx | Control Center | User Role Management | user-table |
 | persona-config | PersonaConfigPage.jsx | Control Center | Advertiser Persona Management | permission-matrix |
 | persona-allocation | PersonaAllocationPage.jsx | Control Center | Advertiser Persona Management | data-management-list |
-| wallet-rules | WalletRulesPage.jsx | Control Center | Advertiser Settings | data-management-list |
-| attribution-overrides | AttributionOverridesPage.jsx | Control Center | Advertiser Settings | upload-page |
-| debug-console | DeveloperSettingsPage.jsx | Control Center | Advertiser Settings | log-viewer |
 | manage-attributes | ManageAttributesPage.jsx | Control Center | Audience Manager | data-management-list |
 | manage-cpm-rules | ManageCPMRulesPage.jsx | Control Center | Audience Manager | data-management-list |
-| manage-segments | ManageSegmentsPage.jsx | Control Center | Audience Manager | data-management-list |
 | attribute-targeting | ManageAttributeTargetingPage.jsx | Control Center | Audience Manager | data-management-list |
-| activity-log | ActivityLogPage.jsx | Control Center | Activity Log | log-viewer |
+| manage-segments | ManageSegmentsPage.jsx | Control Center | Advertiser Settings | data-management-list |
+| attribution-overrides | AttributionOverridesPage.jsx | Control Center | Advertiser Settings | upload-page |
+| automated-rules | AutomatedRulesPage.jsx | Control Center | Advertiser Settings | data-management-list |
+| wallet-rules | WalletRulesPage.jsx | Control Center | Advertiser Settings | data-management-list |
+| debug-console | DeveloperSettingsPage.jsx | Control Center | Advertiser Settings | log-viewer |
+| product-catalog | ProductCatalogPage.jsx | Control Center | Product Catalog | data-management-list |
 | event-logs | ActivityLogPage.jsx | Control Center | Activity Log | log-viewer |
 | product-ads-request-logs | ActivityLogPage.jsx | Control Center | Activity Log | log-viewer |
 | display-ads-request-logs | ActivityLogPage.jsx | Control Center | Activity Log | log-viewer |
+| activity-log | ActivityLogPage.jsx | Control Center | Activity Log | log-viewer |
 | finance-dashboard | FinanceDashboardPage.jsx | Finance | — | dashboard |
 | wallet-topup | WalletTopUpPage.jsx | Finance | — | upload-page |
 | finance-advertisers | FinanceAdvertiserManagementPage.jsx | Finance | — | data-management-list |
 | overview | HealthReportPage.jsx | Health | — | dashboard |
 | budget-health | HealthReportPage.jsx | Health | — | dashboard |
 | delivery-health | HealthReportPage.jsx | Health | — | dashboard |
-| manage-cpm-rules | ManageCPMRulesPage.jsx | Control Center | Audience Manager | data-management-list |
-| admin-user-role | AdminUserPage.jsx | Control Center | User Role Management | user-table |
-| advertiser-user-role | AdvertiserUserRolePage.jsx | Control Center | User Role Management | user-table |
-| automated-rules | AutomatedRulesPage.jsx | Control Center | Advertiser Settings | data-management-list |
-| product-catalog | ProductCatalogPage.jsx | Control Center | Product Catalog | data-management-list |
+
+**Unwired (LeftNav present, no App.jsx case yet):**
+| Nav ID | Section | Notes |
+|--------|---------|-------|
+| app-store | Apps | No case in App.jsx — falls to default |
+| integrations | Apps | No case in App.jsx — falls to default |
 
 ---
 
@@ -59,10 +64,12 @@ All known nav IDs from LeftNav.jsx (NAV_SECTIONS). Use this to detect duplicates
 home, control-center, advertiser-insights, live-insights, demand-supply, scheduled-reports,
 bu-analytics, brand-onboarding, seller-onboarding, super-admin, ops-users, advertiser-users,
 account-manager-mapping, admin-user-role, advertiser-user-role, persona-config, persona-allocation,
-wallet-rules, attribution-overrides, automated-rules, debug-console, product-catalog,
-manage-attributes, manage-cpm-rules, manage-segments, attribute-targeting, event-logs,
-product-ads-request-logs, display-ads-request-logs, activity-log, finance-dashboard,
-wallet-topup, finance-advertisers, overview, budget-health, delivery-health
+manage-attributes, manage-cpm-rules, attribute-targeting, manage-segments,
+attribution-overrides, automated-rules, wallet-rules, debug-console, product-catalog,
+event-logs, product-ads-request-logs, display-ads-request-logs, activity-log,
+finance-dashboard, wallet-topup, finance-advertisers,
+overview, budget-health, delivery-health,
+app-store, integrations
 ```
 
 ---
@@ -74,19 +81,22 @@ control-center
   ├── User Access Management:  super-admin, ops-users, advertiser-users, account-manager-mapping
   ├── User Role Management:  admin-user-role, advertiser-user-role
   ├── Advertiser Persona Management:  persona-config, persona-allocation
-  ├── Audience Manager:  manage-attributes, manage-cpm-rules, manage-segments, attribute-targeting
-  ├── Advertiser Settings:  attribution-overrides, automated-rules, wallet-rules, debug-console
+  ├── Audience Manager:  manage-attributes, manage-cpm-rules, attribute-targeting
+  ├── Advertiser Settings:  manage-segments, attribution-overrides, automated-rules, wallet-rules, debug-console
   ├── Product Catalog:  product-catalog
   └── Activity Log:  event-logs, product-ads-request-logs, display-ads-request-logs, activity-log
 
 analytics
-  └── (no groups):  advertiser-insights, live-insights, demand-supply, scheduled-reports, bu-analytics
+  └── (no groups):  demand-supply, live-insights, advertiser-insights, scheduled-reports, bu-analytics
 
 finance
   └── (no groups):  finance-dashboard, wallet-topup, finance-advertisers
 
 health
   └── (no groups):  overview, budget-health, delivery-health
+
+apps
+  └── (no groups):  app-store, integrations
 ```
 
 ---
@@ -131,12 +141,13 @@ Learned from building the following screens in this session:
 **Examples:** SuperAdminUsersPage (Admin User), AdvertiserUsersPage (Advertiser User), OpsUsersPage  
 **Key elements:**
 - Optional "Select Advertiser:" filter row (Advertiser User only)
-- Top bar: "🔄 Change Log" blue link (left) + search "Search Name" + "＋ Add New User" blue button (right)
-- Table columns: **Name** (with ▲▼ sort toggle) | **Email** | **Access Role** (truncated, ▾ chevron) | trash icon
+- Top bar: SVG refresh icon + "Change Log" blue link (left) + search "Search Name" + "＋ Add New User" blue button (right)
+- Table columns: **Name** (with ▲▼ sort toggle) | **Email** | **Access Role** (truncated, ▾ chevron) | SVG trash icon
 - Access Role shows full text truncated at ~200px with ellipsis
 - "Add New User" modal: Name (required), Email (required), Access Role select
 - Delete: removes row from state + toast "User deleted"
 - Search: case-insensitive filter on name
+- **Icon rule:** Use SVG icons only — NO emoji (🗑 🔄 etc.)
 
 ### permission-matrix
 **Examples:** PersonaConfigPage  
@@ -155,7 +166,7 @@ Learned from building the following screens in this session:
 **Key elements:**
 - Toolbar: count badge (e.g. "Segments (11)") + search + icon buttons + primary action + secondary action
 - Table with Status badge column (Active=green pill, Inactive=gray, Paused=orange)
-- Right-aligned action icons per row (edit pencil, trash)
+- Right-aligned action icons per row (edit pencil, trash) — SVG only, no emoji
 - Create/Edit drawer (right side, 480px width): slides in on action button click
 - Drawer has header + scrollable body + sticky footer (Cancel + Save)
 - Multi-step drawers: numbered step indicators at top, Next/Back navigation
@@ -184,6 +195,9 @@ Learned from building the following screens in this session:
 | `var(--osmos-border)` | Table/card borders (#e2e8f0 approx) |
 | `var(--osmos-brand-primary)` | Buttons, links, active states (#3b4ea6 approx) |
 | `var(--osmos-brand-primary-muted)` | Icon backgrounds, hover tints (#eef0fb approx) |
+| `var(--osmos-brand-green)` | Success toasts, positive states |
+| `var(--osmos-brand-green-muted)` | Success badge backgrounds |
+| `var(--osmos-brand-amber)` | Warning states, paused badges |
 
 ---
 
@@ -216,6 +230,8 @@ These were identified as failure modes in this session and must be enforced:
 6. **Drawer widths** — create drawers are 480px; detail drawers can be 560px
 7. **TopBar receives `onNavigate={setActivePage}`** — every page case must pass this prop
 8. **Build verify always** — run `npx vite build --mode development` after every wiring session
+9. **No emoji as icons** — all icons must be inline SVG with `fill="none"`, `stroke`, `strokeWidth`, `strokeLinecap/Join` round. Emoji (🗑 🔄 ✕ ✓ etc.) are hard violations caught by lineicon-enforcer
+10. **No `<polygon>` for icons** — use `<path>` equivalents; polygon auto-closes and is harder to maintain
 
 ---
 
@@ -226,7 +242,7 @@ All files currently in `src/components/` that are page-level components:
 AccountManagerMappingPage.jsx, ActivityLogPage.jsx, AdminUserPage.jsx,
 AdvertiserInsightsPage.jsx, AdvertiserUserRolePage.jsx, AdvertiserUsersPage.jsx,
 AdvertisersPage.jsx, AttributionOverridesPage.jsx, AutomatedRulesPage.jsx,
-BrandAdvertiserOnboardingPage.jsx, Charts.jsx, CampaignsTable.jsx, DataTable.jsx,
+BrandAdvertiserOnboardingPage.jsx, CampaignsTable.jsx, Charts.jsx, DataTable.jsx,
 DemandSupplyPage.jsx, DeveloperSettingsPage.jsx, DeviceTable.jsx,
 FinanceAdvertiserManagementPage.jsx, FinanceDashboardPage.jsx,
 GeoTable.jsx, HealthReportPage.jsx, HomePage.jsx,
