@@ -216,7 +216,7 @@ function SearchInput({ placeholder }) {
       borderRadius="md"
       px="2"
       height="28px"
-      bg="white"
+      bg="bg"
       minW="220px"
     >
       <Box color="fg.muted">{IconSearch}</Box>
@@ -233,7 +233,7 @@ function PageToolbar() {
       justify="space-between"
       px="4"
       py="3"
-      bg="white"
+      bg="bg"
       borderBottom="1px solid"
       borderColor="border"
     >
@@ -247,7 +247,7 @@ function PageToolbar() {
         <IconBtn icon={IconSearch} aria-label="Search" />
         <IconBtn icon={IconFilter} aria-label="Filter" />
         <IconBtn icon={IconColumns} aria-label="Column settings" />
-        <Box width="1px" height="18px" background="var(--osmos-border)" />
+        <Box width="1px" height="18px" bg="border" />
         <DropdownPill label="All Pages" />
         <Flex
           align="center"
@@ -257,7 +257,7 @@ function PageToolbar() {
           borderRadius="md"
           px="2"
           height="28px"
-          bg="white"
+          bg="bg"
         >
           <Box color="fg.muted">{IconCalendar}</Box>
           <Text fontSize="xs" color="fg">08 May 26 - 14 May 26</Text>
@@ -377,7 +377,7 @@ export default function DemandSupplyPage() {
 
   const SeasonalityTabs = ({ value, onChange }) => (
     <Tabs value={value} onValueChange={(e) => onChange(e.value)} size="sm" variant="subtle">
-      <Tabs.List bg="#F4F5F8" borderRadius="md" p="2px">
+      <Tabs.List bg="bg.subtle" borderRadius="md" p="2px">
         <Tabs.Trigger value="days-hours" fontSize="xs" py="1" px="3">Days & Hours</Tabs.Trigger>
         <Tabs.Trigger value="days" fontSize="xs" py="1" px="3">Days</Tabs.Trigger>
         <Tabs.Trigger value="hours" fontSize="xs" py="1" px="3">Hours</Tabs.Trigger>
