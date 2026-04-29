@@ -1,0 +1,405 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Design System Colors from Figma - Light Mode */
+
+  /* Background Colors */
+  --screen-bg: #ffffff;
+  --screen-bg-2: #edf0f5;
+  --surface-1: #fafafa;
+  --surface-2: #efefef;
+
+  /* Text Colors */
+  --text-primary: #404040;
+  --text-secondary: #7b7b7b;
+  --text-grey-900: #262626;
+
+  /* Stroke/Border Colors */
+  --stroke: #dedede;
+  --stroke-table: #edf0f5;
+  --stroke-disable: #cccccc;
+  --stroke-info: #b3b3b3;
+
+  /* Blue Scale */
+  --blue-primary: #1970e1;
+  --blue-darker-1: #1766cd;
+  --blue-darker-2: #1250a0;
+  --blue-lighter-1: #b8d3f6;
+  --blue-lighter-2: #95bdf1;
+  --blue-bg: #e8f1fc;
+
+  /* Violet Scale */
+  --violet-bg: #f2efff;
+  --violet-icons: #7c69bf;
+  --violet-selected: #8d54ff;
+  --violet-primary: #3e266d;
+  --violet-hover: #4a3772;
+  --violet-selected-state: #4c249e;
+
+  /* Alerts */
+  --success-primary: #2e7d32;
+  --success-darker: #2a722e;
+  --success-lighter: #bed7bf;
+  --success-bg: #eaf2eb;
+
+  --error-primary: #c62828;
+  --error-darker: #b42424;
+  --error-lighter: #edbcbc;
+  --error-bg: #f9eaea;
+
+  --warning-primary: #ff8a00;
+  --warning-darker: #e87e00;
+  --warning-lighter: #ffdbb0;
+  --warning-bg: #fcf7ea;
+
+  /* Brand Colors */
+  --brand-primary: #636cff;
+  --brand-secondary: #3e266d;
+  --brand-accent: #87deca;
+
+  /* Left Nav */
+  --nav-main: #212563;
+  --nav-selected: #4249b1;
+  --nav-hover: #32378a;
+  --nav-separator: #7b82f8;
+
+  /* AI */
+  --ai-text: #7349a1;
+
+  /* Chart Colors */
+  --chart-royal-blue: #1680dd;
+  --chart-mint-green: #1ca678;
+  --chart-yellow: #f9a825;
+  --chart-crimson-red: #d32f2f;
+  --chart-deep-purple: #7b1fa2;
+  --chart-teal: #00796b;
+  --chart-burnt-orange: #ef6c00;
+  --chart-indigo: #303f9f;
+  --chart-olive-green: #689f38;
+  --chart-raspberry: #c2185b;
+  --chart-slate-grey: #455a64;
+  --chart-brown: #8d6e63;
+
+  /* Spacing */
+  --spacing-vsmall: 4px;
+  --spacing-small: 8px;
+  --spacing-medium: 12px;
+  --spacing-large: 16px;
+  --spacing-xlarge: 20px;
+  --spacing-xxlarge: 24px;
+  --spacing-xxxlarge: 32px;
+  --spacing-huge: 40px;
+
+  /* Corner Radius */
+  --radius-small: 4px;
+  --radius-medium: 8px;
+  --radius-large: 12px;
+
+  /* Drawer Widths */
+  --drawer-large: 1252px;
+  --drawer-medium: 1140px;
+  --drawer-small: 1028px;
+  --drawer-height: 960px;
+
+  /* Icon Sizes */
+  --icon-small: 12px;
+  --icon-medium: 16px;
+  --icon-large: 20px;
+  --icon-xlarge: 24px;
+
+  /* Shadcn compatibility */
+  --background: #ffffff;
+  --foreground: #404040;
+  --card: #ffffff;
+  --card-foreground: #404040;
+  --popover: #ffffff;
+  --popover-foreground: #404040;
+  --primary: #1970e1;
+  --primary-foreground: #ffffff;
+  --secondary: #fafafa;
+  --secondary-foreground: #404040;
+  --muted: #efefef;
+  --muted-foreground: #7b7b7b;
+  --accent: #f2efff;
+  --accent-foreground: #3e266d;
+  --destructive: #c62828;
+  --destructive-foreground: #ffffff;
+  --border: #dedede;
+  --input: #dedede;
+  --ring: #1970e1;
+  --radius: 0.5rem;
+
+  --sidebar: #212563;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #4249b1;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #32378a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #7b82f8;
+  --sidebar-ring: #636cff;
+}
+
+.dark {
+  /* Design System Colors from Figma - Dark Mode */
+
+  /* Background Colors */
+  --screen-bg: #212121;
+  --screen-bg-2: #1b1b1b;
+  --surface-1: #2f2f2f;
+  --surface-2: #2f2f2f;
+
+  /* Text Colors */
+  --text-primary: #f2f2f2;
+  --text-secondary: #b3b3b3;
+  --text-grey-900: #1e1e1e;
+
+  /* Stroke/Border Colors */
+  --stroke: #4d4d4d;
+  --stroke-table: #1c232d;
+  --stroke-disable: #7a7a7a;
+  --stroke-info: #565656;
+
+  /* Violet Scale - Dark Mode */
+  --violet-bg: #100639;
+  --violet-icons: #5b4b93;
+  --violet-selected: #4513a9;
+  --violet-primary: #a08acb;
+  --violet-hover: #9988bc;
+  --violet-selected-state: #8664cc;
+
+  /* Alerts - Dark Mode */
+  --success-primary: #3fab45;
+  --success-darker: #399c3f;
+  --success-lighter: #a7d8a9;
+  --success-bg: #ecf7ec;
+
+  --error-primary: #e37878;
+  --error-darker: #cf6d6d;
+  --error-lighter: #f2c1c1;
+  --error-bg: #fcf2f2;
+
+  /* AI - Dark Mode */
+  --ai-text: #9d78c4;
+
+  /* Chart Colors - Dark Mode specific */
+  --chart-deep-purple: #a631d8;
+  --chart-indigo: #5262cb;
+  --chart-raspberry: #d11a63;
+  --chart-slate-grey: #56717b;
+
+  /* Shadcn compatibility - Dark Mode */
+  --background: #212121;
+  --foreground: #f2f2f2;
+  --card: #2f2f2f;
+  --card-foreground: #f2f2f2;
+  --popover: #2f2f2f;
+  --popover-foreground: #f2f2f2;
+  --primary: #1970e1;
+  --primary-foreground: #ffffff;
+  --secondary: #2f2f2f;
+  --secondary-foreground: #f2f2f2;
+  --muted: #2f2f2f;
+  --muted-foreground: #b3b3b3;
+  --accent: #100639;
+  --accent-foreground: #a08acb;
+  --destructive: #e37878;
+  --destructive-foreground: #212121;
+  --border: #4d4d4d;
+  --input: #4d4d4d;
+  --ring: #1970e1;
+
+  --sidebar: #212563;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #4249b1;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #32378a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #7b82f8;
+  --sidebar-ring: #636cff;
+}
+
+@theme inline {
+  --font-sans: var(--font-sans);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-royal-blue);
+  --color-chart-2: var(--chart-mint-green);
+  --color-chart-3: var(--chart-yellow);
+  --color-chart-4: var(--chart-crimson-red);
+  --color-chart-5: var(--chart-deep-purple);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Design System Custom Colors for Tailwind */
+  --color-screen-bg: var(--screen-bg);
+  --color-screen-bg-2: var(--screen-bg-2);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-stroke: var(--stroke);
+  --color-stroke-table: var(--stroke-table);
+  --color-blue-primary: var(--blue-primary);
+  --color-blue-bg: var(--blue-bg);
+  --color-violet-bg: var(--violet-bg);
+  --color-violet-primary: var(--violet-primary);
+  --color-success-primary: var(--success-primary);
+  --color-success-bg: var(--success-bg);
+  --color-error-primary: var(--error-primary);
+  --color-error-bg: var(--error-bg);
+  --color-warning-primary: var(--warning-primary);
+  --color-warning-bg: var(--warning-bg);
+  --color-nav-main: var(--nav-main);
+  --color-nav-selected: var(--nav-selected);
+  --color-nav-hover: var(--nav-hover);
+}
+
+@keyframes enter {
+  from {
+    opacity: var(--tw-enter-opacity, 1);
+    transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0)
+      scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), var(--tw-enter-scale, 1))
+      rotate(var(--tw-enter-rotate, 0));
+  }
+}
+
+@keyframes exit {
+  to {
+    opacity: var(--tw-exit-opacity, 1);
+    transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0)
+      scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1))
+      rotate(var(--tw-exit-rotate, 0));
+  }
+}
+
+.animate-in {
+  animation-name: enter;
+  animation-duration: 150ms;
+  --tw-enter-opacity: initial;
+  --tw-enter-scale: initial;
+  --tw-enter-rotate: initial;
+  --tw-enter-translate-x: initial;
+  --tw-enter-translate-y: initial;
+}
+
+.animate-out {
+  animation-name: exit;
+  animation-duration: 150ms;
+  --tw-exit-opacity: initial;
+  --tw-exit-scale: initial;
+  --tw-exit-rotate: initial;
+  --tw-exit-translate-x: initial;
+  --tw-exit-translate-y: initial;
+}
+
+.fade-in {
+  --tw-enter-opacity: 0;
+}
+.fade-in-0 {
+  --tw-enter-opacity: 0;
+}
+.fade-out {
+  --tw-exit-opacity: 0;
+}
+.fade-out-0 {
+  --tw-exit-opacity: 0;
+}
+.fade-out-80 {
+  --tw-exit-opacity: 0.8;
+}
+.zoom-in-95 {
+  --tw-enter-scale: 0.95;
+}
+.zoom-out-95 {
+  --tw-exit-scale: 0.95;
+}
+.slide-in-from-top-2 {
+  --tw-enter-translate-y: -0.5rem;
+}
+.slide-in-from-bottom {
+  --tw-enter-translate-y: 100%;
+}
+.slide-in-from-bottom-2 {
+  --tw-enter-translate-y: 0.5rem;
+}
+.slide-in-from-left {
+  --tw-enter-translate-x: -100%;
+}
+.slide-in-from-left-2 {
+  --tw-enter-translate-x: -0.5rem;
+}
+.slide-in-from-right {
+  --tw-enter-translate-x: 100%;
+}
+.slide-in-from-right-2 {
+  --tw-enter-translate-x: 0.5rem;
+}
+.slide-out-to-top-2 {
+  --tw-exit-translate-y: -0.5rem;
+}
+.slide-out-to-bottom {
+  --tw-exit-translate-y: 100%;
+}
+.slide-out-to-bottom-2 {
+  --tw-exit-translate-y: 0.5rem;
+}
+.slide-out-to-left {
+  --tw-exit-translate-x: -100%;
+}
+.slide-out-to-left-2 {
+  --tw-exit-translate-x: -0.5rem;
+}
+.slide-out-to-right {
+  --tw-exit-translate-x: 100%;
+}
+.slide-out-to-right-2 {
+  --tw-exit-translate-x: 0.5rem;
+}
+.duration-200 {
+  animation-duration: 200ms;
+}
+.duration-300 {
+  animation-duration: 300ms;
+}
+.duration-500 {
+  animation-duration: 500ms;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
