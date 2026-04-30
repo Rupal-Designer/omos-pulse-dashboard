@@ -12,10 +12,10 @@ export function Toast({ visible, message, type = 'success' }) {
   if (!visible) return null;
 
   const BG = {
-    success: 'var(--osmos-brand-green)',
-    error: '#EF4444',
-    info: 'var(--osmos-brand-primary)',
-  }[type] || 'var(--osmos-brand-green)';
+    success: 'var(--alert-success-primary)',
+    error:   'var(--alert-error-primary)',
+    info:    'var(--brand-primary)',
+  }[type] || 'var(--alert-success-primary)';
 
   return (
     <div style={{

@@ -169,7 +169,7 @@ function RuleBuilder({ rules, onChange }) {
   return (
     <div>
       <div style={{ fontSize: 12, fontWeight: 600, color: TEXT_MID, marginBottom: 10 }}>
-        Apply Condition <span style={{ color: '#ef4444' }}>*</span>
+        Apply Condition <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
       </div>
 
       {rules.map((rule, ruleIdx) => (

@@ -86,32 +86,49 @@ const NAV_SECTIONS = [
       { id: 'catalog-status',                label: 'Catalog Status',                           group: 'Advertiser Persona Management' },
       { id: 'persona-config',                label: 'Persona Configuration',                    group: 'Advertiser Persona Management' },
       { id: 'persona-allocation',            label: 'Advertiser Persona Allocation',             group: 'Advertiser Persona Management' },
-      // ── Advertiser Settings (Figma: only Segment Manager here)
+      // ── Advertiser Settings
       { id: 'segment-manager',               label: 'Segment Manager',                          group: 'Advertiser Settings' },
       { id: 'attribution-overrides',         label: 'Attribution Overrides',                    group: 'Advertiser Settings' },
-      // ── Automated Rules (Figma: own section — header is clickable page, Wallet Rules sub-item)
+      // ── Automated Rules
       { id: 'automated-rules',               label: 'Automated Rules',                          group: 'Automated Rules',  isGroupHeader: true },
       { id: 'wallet-rules',                  label: 'Wallet Rules',                             group: 'Automated Rules' },
-      // ── Develop Settings (Figma: own section — header is clickable, sub-items below)
+      // ── Develop Settings
       { id: 'develop-settings',              label: 'Develop Settings',                         group: 'Develop Settings', isGroupHeader: true },
       { id: 'setup-details',                 label: 'Setup Details',                            group: 'Develop Settings' },
       { id: 'debug-console',                 label: 'Event Debugging',                          group: 'Develop Settings' },
-      // ── Activity Log (Figma: own section at bottom)
+      // ── Activity Log
       { id: 'activity-log',                  label: 'Activity Log',                             group: 'Activity Log',     isGroupHeader: true },
       { id: 'event-logs',                    label: 'Event Logs',                               group: 'Activity Log' },
       { id: 'product-ads-request-logs',      label: 'Product Ads Request Logs',                 group: 'Activity Log' },
       { id: 'display-ads-request-logs',      label: 'Display Ads Request Logs',                 group: 'Activity Log' },
-      // ── Onboarding (kept — referenced in App.jsx)
+      // ── Onboarding
       { id: 'seller-onboarding',             label: 'Seller Advertiser Onboarding',             group: 'Onboarding' },
       { id: 'brand-onboarding',              label: 'Brand Advertiser Onboarding',               group: 'Onboarding' },
-      // ── User Role Management (kept)
+      // ── User Role Management
       { id: 'admin-user-role',               label: 'Admin User',                               group: 'User Role Management' },
       { id: 'advertiser-user-role',          label: 'Advertiser User',                          group: 'User Role Management' },
     ],
   },
   {
+    id: 'apps',
+    label: 'Apps',
+    icon: (
+      <>
+        <rect x="3" y="3" width="7" height="7"/>
+        <rect x="14" y="3" width="7" height="7"/>
+        <rect x="14" y="14" width="7" height="7"/>
+        <rect x="3" y="14" width="7" height="7"/>
+      </>
+    ),
+    subnav: [
+      { id: 'app-store', label: 'App Store' },
+      { id: 'integrations', label: 'Integrations' },
+    ],
+  },
+  {
     id: 'product-ads',
     label: 'Product Ads',
+    dividerBefore: true,
     icon: (
       <>
         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
@@ -167,22 +184,6 @@ const NAV_SECTIONS = [
       { id: 'display-ads-targeting',    label: 'Build Your Own Targeting',   group: 'Setup' },
     ],
   },
-  {
-    id: 'apps',
-    label: 'Apps',
-    icon: (
-      <>
-        <rect x="3" y="3" width="7" height="7"/>
-        <rect x="14" y="3" width="7" height="7"/>
-        <rect x="14" y="14" width="7" height="7"/>
-        <rect x="3" y="14" width="7" height="7"/>
-      </>
-    ),
-    subnav: [
-      { id: 'app-store', label: 'App Store' },
-      { id: 'integrations', label: 'Integrations' },
-    ],
-  },
 ];
 
 const BOTTOM_NAV = [
@@ -214,105 +215,12 @@ function Icon({ children, size = 18, color = 'currentColor', strokeWidth = 1.8 }
   );
 }
 
-/* ── Collapsed icon sidebar (always visible) ──────────────────── */
-function IconRail({ activeSection, onSelect, expanded }) {
-  return (
-    <div style={{
-      width: 68,
-      minHeight: '100vh',
-      background: 'var(--osmos-nav-bg)',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      flexShrink: 0,
-    }}>
-      {/* Logo */}
-      <div style={{
-        width: '100%', height: 80,
-        display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center', gap: 3,
-        borderBottom: '1px solid var(--osmos-nav-border)',
-        marginBottom: 8,
-      }}>
-        <div style={{
-          width: 36, height: 36, borderRadius: 8,
-          background: 'rgba(255,255,255,0.12)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <Icon size={18} color="var(--osmos-nav-accent)">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-          </Icon>
-        </div>
-        <span style={{
-          fontSize: 8, fontWeight: 700, color: '#fff',
-          background: 'var(--osmos-brand-amber)', borderRadius: 3,
-          padding: '1px 4px', letterSpacing: 0.3,
-        }}>PRO</span>
-      </div>
-
-      {/* Main icons */}
-      <div style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', gap: 2, padding: '0 6px' }}>
-        {NAV_SECTIONS.map(item => {
-          const isActive = activeSection === item.id;
-          return (
-            <button key={item.id} title={item.label} aria-label={item.label}
-              onClick={() => onSelect(item.id)}
-              style={{
-                width: '100%', height: 44,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: isActive ? 'var(--osmos-nav-border)' : 'transparent',
-                border: 'none', borderRadius: 8, cursor: 'pointer',
-                color: isActive ? 'var(--osmos-nav-accent)' : 'rgba(255,255,255,0.5)',
-                transition: 'all 0.15s',
-              }}
-              onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
-              onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
-            >
-              <Icon>{item.icon}</Icon>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Bottom icons */}
-      <div style={{
-        width: '100%', padding: '8px 6px 16px',
-        borderTop: '1px solid var(--osmos-nav-border)',
-        display: 'flex', flexDirection: 'column', gap: 2,
-      }}>
-        {BOTTOM_NAV.map(item => (
-          <button key={item.id} title={item.label} aria-label={item.label} style={{
-            width: '100%', height: 40,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: 'transparent', border: 'none', borderRadius: 8,
-            color: 'rgba(255,255,255,0.45)', cursor: 'pointer',
-            transition: 'background 0.15s, color 0.15s',
-          }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = 'rgba(255,255,255,0.75)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.45)'; }}
-          >
-            <Icon>{item.icon}</Icon>
-          </button>
-        ))}
-        {/* User avatar */}
-        <div style={{
-          width: 34, height: 34, borderRadius: '50%',
-          background: 'var(--osmos-nav-accent)', margin: '4px auto 0',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 12, fontWeight: 700, color: '#fff',
-        }}>R</div>
-      </div>
-    </div>
-  );
-}
-
-/* ── Expanded sub-nav panel ───────────────────────────────────── */
+/* ── Sub-nav panel (pinned on click) ─────────────────────────── */
 function SubNavPanel({ section, activePage, onClose, onPageChange }) {
   if (!section) return null;
 
   const activeItem = activePage ?? section?.subnav.find(i => i.active)?.id ?? section?.subnav[0]?.id;
 
-  // Group sub-items
   const groups = [];
   const seenGroups = new Set();
   if (section.subnav.some(i => i.group)) {
@@ -338,6 +246,7 @@ function SubNavPanel({ section, activePage, onClose, onPageChange }) {
       <div style={{
         padding: '20px 16px 12px',
         borderBottom: '1px solid var(--osmos-nav-active-bg)',
+        flexShrink: 0,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span style={{ fontSize: 15, fontWeight: 700, color: '#fff', letterSpacing: 0.1 }}>
@@ -357,12 +266,10 @@ function SubNavPanel({ section, activePage, onClose, onPageChange }) {
 
       {/* Sub-nav items */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
-        {/* Ungrouped items always render first (e.g. Merchant Management, Product catalog Management) */}
         {ungrouped.map(item => (
           <SubNavItem key={item.id} item={item} active={activeItem === item.id}
-            onClick={() => { onPageChange?.(item.id); }} />
+            onClick={() => onPageChange?.(item.id)} />
         ))}
-        {/* Grouped items — group headers may be clickable if any item has isGroupHeader:true */}
         {groups.map(group => {
           const headerItem = group.items.find(i => i.isGroupHeader);
           const subItems   = group.items.filter(i => !i.isGroupHeader);
@@ -370,7 +277,6 @@ function SubNavPanel({ section, activePage, onClose, onPageChange }) {
           return (
             <div key={group.label} style={{ marginBottom: 4 }}>
               {headerItem ? (
-                // Clickable group header — navigates to the header item's page
                 <button
                   onClick={() => onPageChange?.(headerItem.id)}
                   style={{
@@ -392,7 +298,6 @@ function SubNavPanel({ section, activePage, onClose, onPageChange }) {
                   {group.label}
                 </button>
               ) : (
-                // Non-clickable group label
                 <div style={{
                   padding: '8px 16px 4px',
                   fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.35)',
@@ -403,7 +308,7 @@ function SubNavPanel({ section, activePage, onClose, onPageChange }) {
               )}
               {subItems.map(item => (
                 <SubNavItem key={item.id} item={item} active={activeItem === item.id}
-                  onClick={() => { onPageChange?.(item.id); }} />
+                  onClick={() => onPageChange?.(item.id)} />
               ))}
             </div>
           );
@@ -438,7 +343,7 @@ function SubNavItem({ item, active, onClick }) {
   );
 }
 
-/* ── Root LeftNav ─────────────────────────────────────────────── */
+/* ── Helpers ──────────────────────────────────────────────────── */
 function findSectionId(pageId) {
   if (!pageId) return 'analytics';
   const direct = NAV_SECTIONS.find(s => s.id === pageId);
@@ -447,19 +352,24 @@ function findSectionId(pageId) {
   return parent?.id ?? 'analytics';
 }
 
+/* ── Root LeftNav ─────────────────────────────────────────────── */
 export default function LeftNav({ activePage, onPageChange }) {
   const [activeSection, setActiveSection] = useState(() => findSectionId(activePage));
-  const [expanded, setExpanded] = useState(activePage !== 'home');
+  const [expanded, setExpanded]           = useState(activePage !== 'home');
+  const [isHovered, setIsHovered]         = useState(false);
 
-  const section = NAV_SECTIONS.find(s => s.id === activeSection);
-  const hasSubnav = section?.subnav?.length > 0;
+  const section      = NAV_SECTIONS.find(s => s.id === activeSection);
+  const hasSubnav    = section?.subnav?.length > 0;
+  const subnavPinned = expanded && hasSubnav;
+
+  // Sidebar wide only when hovered AND subnav panel not already pinned open
+  const wide = isHovered && !subnavPinned;
 
   function handleSelect(id) {
-    const s = NAV_SECTIONS.find(n => n.id === id);
+    const s      = NAV_SECTIONS.find(n => n.id === id);
     const hasSub = s?.subnav?.length > 0;
 
     if (activeSection === id && hasSub) {
-      // Same section — toggle panel open/closed
       setExpanded(prev => !prev);
     } else {
       setActiveSection(id);
@@ -470,8 +380,160 @@ export default function LeftNav({ activePage, onPageChange }) {
 
   return (
     <div style={{ display: 'flex', height: '100vh', flexShrink: 0 }}>
-      <IconRail activeSection={activeSection} onSelect={handleSelect} expanded={expanded} />
-      {expanded && hasSubnav && (
+
+      {/* ── Expanding sidebar ───────────────────────────────────── */}
+      <div
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        style={{
+          width: wide ? 256 : 68,
+          minHeight: '100vh',
+          background: 'var(--osmos-nav-bg)',
+          display: 'flex',
+          flexDirection: 'column',
+          flexShrink: 0,
+          overflow: 'hidden',
+          transition: 'width 0.25s ease',
+          fontFamily: "'Open Sans', sans-serif",
+        }}
+      >
+        {/* Logo */}
+        <div style={{
+          height: 80, flexShrink: 0,
+          display: 'flex', alignItems: 'center',
+          justifyContent: wide ? 'flex-start' : 'center',
+          padding: wide ? '0 16px' : 0,
+          gap: 10,
+          borderBottom: '1px solid var(--osmos-nav-border)',
+        }}>
+          <div style={{
+            width: 36, height: 36, borderRadius: 8, flexShrink: 0,
+            background: 'rgba(255,255,255,0.12)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <Icon size={18} color="var(--osmos-nav-accent)">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </Icon>
+          </div>
+          {wide && (
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', letterSpacing: 0.5, whiteSpace: 'nowrap' }}>
+                OSMOS
+              </div>
+              <span style={{
+                fontSize: 9, fontWeight: 700, color: '#fff',
+                background: 'var(--osmos-brand-amber)', borderRadius: 3,
+                padding: '1px 6px', letterSpacing: 0.3,
+              }}>PRO</span>
+            </div>
+          )}
+          {!wide && (
+            <span style={{
+              position: 'absolute',
+              fontSize: 8, fontWeight: 700, color: '#fff',
+              background: 'var(--osmos-brand-amber)', borderRadius: 3,
+              padding: '1px 3px', letterSpacing: 0.2,
+              top: 52, left: '50%', transform: 'translateX(-50%)',
+              whiteSpace: 'nowrap',
+            }}>PRO</span>
+          )}
+        </div>
+
+        {/* Main nav items */}
+        <div style={{ flex: 1, padding: '8px 6px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {NAV_SECTIONS.map(item => {
+            const isActive = activeSection === item.id;
+            const hasSub   = item.subnav?.length > 0;
+            return (
+              <React.Fragment key={item.id}>
+                {item.dividerBefore && (
+                  <div style={{ height: 1, background: 'var(--osmos-nav-border)', margin: '6px 0' }} />
+                )}
+                <button
+                  title={!wide ? item.label : undefined}
+                  onClick={() => handleSelect(item.id)}
+                  style={{
+                    width: '100%', height: 44, flexShrink: 0,
+                    display: 'flex', alignItems: 'center',
+                    justifyContent: wide ? 'flex-start' : 'center',
+                    gap: wide ? 12 : 0,
+                    padding: wide ? '0 12px' : 0,
+                    background: isActive ? 'var(--osmos-nav-active-bg)' : 'transparent',
+                    border: 'none', borderRadius: 8, cursor: 'pointer',
+                    transition: 'background 0.15s',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                  }}
+                  onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
+                  onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
+                >
+                  <Icon color={isActive ? 'var(--osmos-nav-accent)' : 'rgba(255,255,255,0.5)'}>
+                    {item.icon}
+                  </Icon>
+                  {wide && (
+                    <>
+                      <span style={{
+                        flex: 1, fontSize: 13, fontWeight: isActive ? 600 : 400,
+                        color: isActive ? '#fff' : 'rgba(255,255,255,0.75)',
+                      }}>
+                        {item.label}
+                      </span>
+                      {hasSub && (
+                        <Icon size={13} color={isActive ? 'var(--osmos-nav-accent)' : 'rgba(255,255,255,0.3)'}>
+                          <polyline points="9 18 15 12 9 6"/>
+                        </Icon>
+                      )}
+                    </>
+                  )}
+                </button>
+              </React.Fragment>
+            );
+          })}
+        </div>
+
+        {/* Bottom nav */}
+        <div style={{
+          padding: '8px 6px 12px', flexShrink: 0,
+          borderTop: '1px solid var(--osmos-nav-border)',
+          display: 'flex', flexDirection: 'column', gap: 2,
+        }}>
+          {BOTTOM_NAV.map(item => (
+            <button
+              key={item.id}
+              title={!wide ? item.label : undefined}
+              style={{
+                width: '100%', height: 40,
+                display: 'flex', alignItems: 'center',
+                justifyContent: wide ? 'flex-start' : 'center',
+                gap: wide ? 12 : 0,
+                padding: wide ? '0 12px' : 0,
+                background: 'transparent', border: 'none', borderRadius: 8,
+                cursor: 'pointer', whiteSpace: 'nowrap', overflow: 'hidden',
+                transition: 'background 0.15s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+            >
+              <Icon color="rgba(255,255,255,0.45)">{item.icon}</Icon>
+              {wide && (
+                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)' }}>{item.label}</span>
+              )}
+            </button>
+          ))}
+
+          {/* User avatar */}
+          <div style={{
+            width: 34, height: 34, borderRadius: '50%',
+            background: 'var(--osmos-nav-accent)',
+            margin: wide ? '4px 12px 2px' : '4px auto 2px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 12, fontWeight: 700, color: '#fff', flexShrink: 0,
+          }}>R</div>
+        </div>
+      </div>
+
+      {/* ── Pinned sub-nav panel ────────────────────────────────── */}
+      {subnavPinned && (
         <SubNavPanel
           section={section}
           activePage={activePage}

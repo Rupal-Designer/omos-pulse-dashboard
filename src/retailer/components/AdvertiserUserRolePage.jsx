@@ -275,7 +275,7 @@ const s = {
     cursor: "pointer",
   },
   errorText: {
-    color: "#dc2626",
+    color: "var(--alert-error-primary)",
     fontSize: "11px",
     marginTop: "-10px",
     marginBottom: "10px",

@@ -20,7 +20,7 @@ const INITIAL_DATA = [
 const STATUS_COLORS = {
   Active: { bg: 'var(--osmos-brand-green-muted)', color: 'var(--osmos-brand-green)' },
   Inactive: { bg: 'var(--osmos-bg-subtle)', color: 'var(--osmos-fg-muted)' },
-  Suspended: { bg: 'rgba(220,38,38,0.1)', color: '#dc2626' },
+  Suspended: { bg: 'rgba(220,38,38,0.1)', color: 'var(--alert-error-primary)' },
 };
 
 function Ico({ d, size = 13, stroke = 'currentColor', sw = 1.8 }) {

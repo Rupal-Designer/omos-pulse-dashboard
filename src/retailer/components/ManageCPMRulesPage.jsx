@@ -100,7 +100,7 @@ function CreateRuleDrawer({ onClose, showToast }) {
 
         <div style={{ flex:1, overflowY:'auto', padding:'24px' }}>
           <div style={field}>
-            <label style={fieldLabel}>Set Rule By <span style={{ color:'#EF4444' }}>*</span></label>
+            <label style={fieldLabel}>Set Rule By <span style={{ color:'var(--alert-error-primary)' }}>*</span></label>
             <div style={{ display:'flex', gap:20 }}>
               {['User Attributes','User Activity','Custom List'].map(opt => (
                 <label key={opt} style={{ display:'flex', alignItems:'center', gap:7, fontSize:13, fontFamily:FONT, color:FG_MUT, cursor:'pointer' }}>
@@ -113,19 +113,19 @@ function CreateRuleDrawer({ onClose, showToast }) {
           </div>
 
           <div style={field}>
-            <label style={fieldLabel}>Rule Name <span style={{ color:'#EF4444' }}>*</span></label>
+            <label style={fieldLabel}>Rule Name <span style={{ color:'var(--alert-error-primary)' }}>*</span></label>
             <input style={inputStyle} placeholder="Young Adults Audience" value={form.ruleName} onChange={e => set('ruleName', e.target.value)} />
             <span style={hint}>Help text here</span>
           </div>
 
           <div style={{ display:'flex', gap:14, marginBottom:18 }}>
             <div style={{ flex:1 }}>
-              <label style={fieldLabel}>CPM Premium % <span style={{ color:'#EF4444' }}>*</span></label>
+              <label style={fieldLabel}>CPM Premium % <span style={{ color:'var(--alert-error-primary)' }}>*</span></label>
               <input style={inputStyle} value={form.cpmPct} onChange={e => set('cpmPct', e.target.value)} />
               <span style={hint}>Help text here</span>
             </div>
             <div style={{ flex:1 }}>
-              <label style={fieldLabel}>CPC Premium % <span style={{ color:'#EF4444' }}>*</span></label>
+              <label style={fieldLabel}>CPC Premium % <span style={{ color:'var(--alert-error-primary)' }}>*</span></label>
               <input style={inputStyle} value={form.cpcPct} onChange={e => set('cpcPct', e.target.value)} />
               <span style={hint}>Help text here</span>
             </div>
@@ -139,7 +139,7 @@ function CreateRuleDrawer({ onClose, showToast }) {
           </div>
 
           <div style={field}>
-            <label style={fieldLabel}>Product Category <span style={{ color:'#EF4444' }}>*</span></label>
+            <label style={fieldLabel}>Product Category <span style={{ color:'var(--alert-error-primary)' }}>*</span></label>
             <div style={{ position:'relative' }}>
               <select style={{ ...inputStyle, appearance:'none', paddingRight:28, cursor:'pointer' }}
                 value={form.productCategory} onChange={e => set('productCategory', e.target.value)}>
@@ -162,7 +162,7 @@ function CreateRuleDrawer({ onClose, showToast }) {
           </div>
 
           <div style={field}>
-            <label style={fieldLabel}>Brand <span style={{ color:'#EF4444' }}>*</span></label>
+            <label style={fieldLabel}>Brand <span style={{ color:'var(--alert-error-primary)' }}>*</span></label>
             <div style={{ position:'relative' }}>
               <select style={{ ...inputStyle, appearance:'none', paddingRight:28, cursor:'pointer' }}
                 value={form.brand} onChange={e => set('brand', e.target.value)}>

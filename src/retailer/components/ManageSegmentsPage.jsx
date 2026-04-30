@@ -150,7 +150,7 @@ function Field({ label, required, children, hint }) {
   return (
     <div style={{ marginBottom: 18 }}>
       <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: FG, marginBottom: 6, fontFamily: FONT }}>
-        {label}{required && <span style={{ color: '#EF4444', marginLeft: 2 }}>*</span>}
+        {label}{required && <span style={{ color: 'var(--alert-error-primary)', marginLeft: 2 }}>*</span>}
       </label>
       {children}
       {hint && <div style={{ fontSize: 11, color: FG_LO, marginTop: 4, fontFamily: FONT }}>{hint}</div>}

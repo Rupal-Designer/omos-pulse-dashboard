@@ -156,7 +156,7 @@ export default function OpsUsersPage() {
                       onClick={() => handleRemove(row.id)}
                       style={{
                         background: 'none', border: '1px solid #ef4444',
-                        borderRadius: 5, color: '#ef4444',
+                        borderRadius: 5, color: 'var(--alert-error-primary)',
                         fontSize: 11, padding: '3px 10px',
                         cursor: 'pointer', fontFamily: FONT,
                       }}

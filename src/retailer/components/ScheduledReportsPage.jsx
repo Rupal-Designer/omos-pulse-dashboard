@@ -70,7 +70,7 @@ function CreateReportDrawer({ onClose }) {
               <div style={{ marginBottom: 20 }}>
                 <label style={{ fontSize: 12, fontWeight: 500, color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center', gap: 4, marginBottom: 6 }}>
                   Report Name
-                  <span style={{ color: '#EF4444' }}>*</span>
+                  <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
                   <Ico d={<><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>} size={12} stroke="var(--osmos-fg-subtle)" />
                 </label>
                 <div style={{ position: 'relative' }}>
@@ -123,7 +123,7 @@ function CreateReportDrawer({ onClose }) {
               <div style={{ marginBottom: 8 }}>
                 <label style={{ fontSize: 12, fontWeight: 500, color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center', gap: 4, marginBottom: 6 }}>
                   Report Time Period
-                  <span style={{ color: '#EF4444' }}>*</span>
+                  <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
                   <Ico d={<><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>} size={12} stroke="var(--osmos-fg-subtle)" />
                 </label>
                 <div style={{ position: 'relative' }}>
@@ -317,8 +317,8 @@ export default function ScheduledReportsPage() {
                 {/* Status */}
                 <td style={{ padding: '9px 12px', whiteSpace: 'nowrap' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: r.enabled ? '#22C55E' : '#EF4444' }} />
-                    <span style={{ fontSize: 9, fontWeight: 500, color: r.enabled ? '#22C55E' : '#EF4444' }}>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: r.enabled ? 'var(--alert-success-primary)' : 'var(--alert-error-primary)' }} />
+                    <span style={{ fontSize: 9, fontWeight: 500, color: r.enabled ? 'var(--alert-success-primary)' : 'var(--alert-error-primary)' }}>
                       {r.enabled ? 'Enabled' : 'Disabled'}
                     </span>
                   </div>

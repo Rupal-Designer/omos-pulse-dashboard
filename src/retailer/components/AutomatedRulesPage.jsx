@@ -267,7 +267,7 @@ export default function AutomatedRulesPage() {
                       </button>
                       <button onClick={() => handleDelete(row.id)}
                         style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex' }}>
-                        <TrashIcon size={13} color="#ef4444" />
+                        <TrashIcon size={13} color="var(--alert-error-primary)" />
                       </button>
                     </div>
                   </td>
@@ -298,7 +298,7 @@ export default function AutomatedRulesPage() {
         <div style={{ marginBottom: 16 }}>
           <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)',
                           display: 'flex', gap: 3, marginBottom: 6, fontFamily: FONT }}>
-            Name <span style={{ color: '#ef4444' }}>*</span>
+            Name <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
           </label>
           <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--osmos-border)',
                         borderRadius: 6, overflow: 'hidden', background: 'var(--osmos-bg)' }}>
@@ -323,7 +323,7 @@ export default function AutomatedRulesPage() {
         <div style={{ marginBottom: 16 }}>
           <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)',
                           display: 'flex', gap: 3, marginBottom: 6, fontFamily: FONT }}>
-            Description <span style={{ color: '#ef4444' }}>*</span>
+            Description <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
           </label>
           <textarea
             value={form.description}
@@ -411,7 +411,7 @@ export default function AutomatedRulesPage() {
           <div style={{ marginBottom: 8 }}>
             <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)',
                             display: 'flex', gap: 3, fontFamily: FONT }}>
-              Actions <span style={{ color: '#ef4444' }}>*</span>
+              Actions <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
             </label>
           </div>
           <select

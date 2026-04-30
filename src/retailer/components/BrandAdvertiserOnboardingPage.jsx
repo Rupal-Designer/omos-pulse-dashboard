@@ -60,7 +60,7 @@ const btnBase = {
   color: 'var(--osmos-fg-muted)',
 };
 const btnPrimary = { ...btnBase, background: 'var(--osmos-brand-primary)', color: '#fff', border: '1px solid var(--osmos-brand-primary)' };
-const btnDanger  = { ...btnBase, background: '#dc2626', color: '#fff', border: '1px solid #dc2626' };
+const btnDanger  = { ...btnBase, background: 'var(--alert-error-primary)', color: '#fff', border: '1px solid #dc2626' };
 
 const PERSONA_COLOR = { Platinum: '#6366f1', Gold: '#f59e0b', Silver: '#64748b', Beta: '#8b5cf6' };
 function PersonaBadge({ persona }) {
@@ -105,7 +105,7 @@ function Field({ label, required, hint, children }) {
   return (
     <div style={{ marginBottom: 14 }}>
       {label && <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 5 }}>
-        {label}{required && <span style={{ color: '#ef4444', marginLeft: 2 }}>*</span>}
+        {label}{required && <span style={{ color: 'var(--alert-error-primary)', marginLeft: 2 }}>*</span>}
       </label>}
       {children}
       {hint && <div style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', marginTop: 3 }}>{hint}</div>}
@@ -148,8 +148,8 @@ function ConditionRow({ cond, onChange, onRemove, showLogic, logic, onLogicChang
         <input value={cond.value} onChange={e => onChange({ ...cond, value: e.target.value })}
           placeholder="Enter value…"
           style={{ flex: 1.5, border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '5px 8px', fontSize: 12, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)', outline: 'none' }} />
-        <button onClick={onRemove} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444', padding: 2, flexShrink: 0 }}>
-          <Ico d={<><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>} size={14} stroke="#ef4444" />
+        <button onClick={onRemove} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--alert-error-primary)', padding: 2, flexShrink: 0 }}>
+          <Ico d={<><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>} size={14} stroke="var(--alert-error-primary)" />
         </button>
       </div>
     </div>
@@ -212,7 +212,7 @@ function RuleDrawer({ advertiser, editMode, existingConditions, onClose, onSave 
                   <td style={{ padding: '8px 10px', color: 'var(--osmos-fg-muted)' }}>{p.brandId}</td>
                   <td style={{ padding: '8px 10px', color: 'var(--osmos-fg-muted)', maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.category}</td>
                   <td style={{ padding: '8px 10px' }}>
-                    <span style={{ color: p.availability === 'In Stock' ? '#15803d' : '#dc2626', fontSize: 11, fontWeight: 500 }}>{p.availability}</span>
+                    <span style={{ color: p.availability === 'In Stock' ? '#15803d' : 'var(--alert-error-primary)', fontSize: 11, fontWeight: 500 }}>{p.availability}</span>
                   </td>
                   <td style={{ padding: '8px 10px', color: 'var(--osmos-fg-muted)' }}>{p.price}</td>
                   <td style={{ padding: '8px 10px', color: 'var(--osmos-fg-muted)' }}>{p.salePrice}</td>
@@ -255,7 +255,7 @@ function RuleDrawer({ advertiser, editMode, existingConditions, onClose, onSave 
 
       {/* Apply Condition label */}
       <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 10 }}>
-        Apply Condition <span style={{ color: '#ef4444' }}>*</span>
+        Apply Condition <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
       </div>
 
       {/* Condition rows */}

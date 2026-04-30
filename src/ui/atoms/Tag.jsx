@@ -4,29 +4,29 @@ const FONT = "'Open Sans', sans-serif";
 
 const COLOR_SCHEMES = {
   green: {
-    background: 'rgba(27, 168, 122, 0.10)',
-    color: 'var(--osmos-brand-green)',
-    border: '1px solid rgba(27, 168, 122, 0.30)',
+    background: 'var(--tag-bg-success)',
+    color:      'var(--tag-fg-success)',
+    border:     '1px solid var(--alert-success-lighter)',
   },
   amber: {
-    background: 'rgba(245, 166, 35, 0.10)',
-    color: 'var(--osmos-brand-amber)',
-    border: '1px solid rgba(245, 166, 35, 0.30)',
+    background: 'var(--tag-bg-warning)',
+    color:      'var(--tag-fg-warning)',
+    border:     '1px solid var(--alert-warning-lighter)',
   },
   blue: {
-    background: 'var(--osmos-brand-primary-muted)',
-    color: 'var(--osmos-brand-primary)',
-    border: '1px solid rgba(99, 108, 255, 0.30)',
+    background: 'var(--tag-bg-linked)',
+    color:      'var(--tag-fg-linked)',
+    border:     '1px solid var(--primary-tint-1)',
   },
   gray: {
-    background: 'var(--osmos-bg-subtle)',
-    color: 'var(--osmos-fg-muted)',
-    border: '1px solid var(--osmos-border)',
+    background: 'var(--surface-2)',
+    color:      'var(--text-muted)',
+    border:     '1px solid var(--border)',
   },
   red: {
-    background: 'rgba(239, 68, 68, 0.10)',
-    color: '#EF4444',
-    border: '1px solid rgba(239, 68, 68, 0.30)',
+    background: 'var(--tag-bg-error)',
+    color:      'var(--tag-fg-error)',
+    border:     '1px solid var(--alert-error-lighter)',
   },
 };
 

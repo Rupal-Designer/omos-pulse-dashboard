@@ -14,8 +14,8 @@ const ACCENT   = 'var(--osmos-brand-primary)';
 const TEXT_HI  = 'var(--osmos-fg)';
 const TEXT_MID = 'var(--osmos-fg-muted)';
 const TEXT_LO  = 'var(--osmos-fg-subtle)';
-const GREEN    = '#22C55E';        // semantic positive — keep
-const RED      = '#EF4444';        // semantic negative — keep
+const GREEN    = 'var(--alert-success-primary)';        // semantic positive — keep
+const RED      = 'var(--alert-error-primary)';        // semantic negative — keep
 const ORANGE   = 'var(--osmos-brand-amber)';
 
 /* ── local icon aliases (use imported Icon atom) ──────────────── */

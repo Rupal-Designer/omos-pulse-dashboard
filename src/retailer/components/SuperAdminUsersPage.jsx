@@ -183,9 +183,9 @@ export default function SuperAdminUsersPage() {
                     <button
                       onClick={() => handleDelete(row.id)}
                       title="Delete user"
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', color: '#ef4444' }}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', color: 'var(--alert-error-primary)' }}
                     >
-                      <TrashIcon size={14} color="#ef4444" />
+                      <TrashIcon size={14} color="var(--alert-error-primary)" />
                     </button>
                   </td>
                 </tr>

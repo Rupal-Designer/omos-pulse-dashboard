@@ -113,7 +113,7 @@ export default function ProductAdsYieldControlPage() {
   const fieldGroup = (label, key) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif", display: 'flex', alignItems: 'center' }}>
-        {label}&nbsp;<span style={{ color: '#dc2626' }}>*</span>
+        {label}&nbsp;<span style={{ color: 'var(--alert-error-primary)' }}>*</span>
         <InfoIcon />
       </label>
       <input

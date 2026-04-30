@@ -66,9 +66,9 @@ function StatusBadge({ status }) {
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12 }}>
       <span style={{
         width: 7, height: 7, borderRadius: '50%',
-        background: active ? '#22c55e' : '#ef4444', flexShrink: 0,
+        background: active ? '#22c55e' : 'var(--alert-error-primary)', flexShrink: 0,
       }} />
-      <span style={{ color: active ? '#15803d' : '#dc2626', fontWeight: 500 }}>{status}</span>
+      <span style={{ color: active ? '#15803d' : 'var(--alert-error-primary)', fontWeight: 500 }}>{status}</span>
     </span>
   );
 }
@@ -131,7 +131,7 @@ function Field({ label, required, children }) {
   return (
     <div style={{ marginBottom: 14 }}>
       <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 5 }}>
-        {label}{required && <span style={{ color: '#ef4444', marginLeft: 2 }}>*</span>}
+        {label}{required && <span style={{ color: 'var(--alert-error-primary)', marginLeft: 2 }}>*</span>}
       </label>
       {children}
     </div>

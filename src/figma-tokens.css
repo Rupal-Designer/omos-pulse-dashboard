@@ -1,0 +1,224 @@
+/* ---------------------------------------------------------
+ * Osmos Design Tokens — generated from Figma variables.
+ * DO NOT EDIT by hand. Re-run scripts/generate_tokens.py.
+ * --------------------------------------------------------- */
+
+:root {
+  /* ----- Colors (light mode) ----- */
+  --bg-screen: #ffffff;
+  --bg-screen-2: #edf0f5;
+  --primary: #1970e1;
+  --primary-pressed: #1250a0;
+  --primary-hover: #1766cd;
+  --primary-tint-2: #95bdf1;
+  --primary-tint-1: #b8d3f6;
+  --primary-bg: #e8f1fc;
+  --surface-1: #fafafa;
+  --surface-2: #efefef;
+  --border: #dedede;
+  --disabled: #cccccc;
+  --text-info: #b3b3b3;
+  --text-muted: #7b7b7b;
+  --text: #404040;
+  --text-strong: #262626;
+  --surface-3: #ffffff;
+  --border-table: #edf0f5;
+  --border-strong: #dedede;
+  --violet-bg: #f2efff;
+  --violet-icon: #7c69bf;
+  --violet-selected: #8d54ff;
+  --violet: #3e266d;
+  --violet-hover: #4a3772;
+  --violet-pressed: #4c249e;
+  --alert-warning-primary: #e67a00;
+  --alert-warning-darker: #d16f00;
+  --alert-warning-lighter: #f7d6b0;
+  --alert-warning-bg: #fef8f0;
+  --alert-error-primary: #c62828;
+  --alert-error-darker: #b42424;
+  --alert-error-lighter: #edbcbc;
+  --alert-error-bg: #f9eaea;
+  --alert-success-primary: #2e7d32;
+  --alert-success-darker: #2a722e;
+  --alert-success-lighter: #bed7bf;
+  --alert-success-bg: #eaf2eb;
+  --chart-royalblue: #1680dd;
+  --chart-mintgreen: #1ca678;
+  --chart-yellow: #f9a825;
+  --chart-crimsonred: #d32f2f;
+  --chart-deeppurple: #7b1fa2;
+  --chart-teal: #00796b;
+  --chart-bruntorange: #ef6c00;
+  --chart-indigo: #303f9f;
+  --chart-olivegreen: #689f38;
+  --chart-raspberry: #c2185b;
+  --chart-slategrey: #455a64;
+  --chart-brown: #8d6e63;
+  --ai-text: #7349a1;
+  --brand-primary: #636cff;
+  --brand-secondary: #3e266d;
+  --brand-accent: #87deca;
+  --nav-bg: #212563;
+  --nav-selected: #4249b1;
+  --nav-hover: #32378a;
+  --nav-separator: #7b82f8;
+  --tag-bg-recommended: #e6f2f0;
+  --tag-bg-linked: #e8f1fc;
+  --tag-bg-success: #eaf2eb;
+  --tag-bg-error: #f9eaea;
+  --tag-bg-warning: #fef8f0;
+  --tag-bg-auto: #f2efff;
+  --tag-bg-manual: #efefef;
+  --tag-fg-recommended: #00796b;
+  --tag-fg-linked: #1970e1;
+  --tag-fg-success: #2e7d32;
+  --tag-fg-error: #c62828;
+  --tag-fg-warning: #e67a00;
+  --tag-fg-auto: #7c69bf;
+  --tag-fg-manual: #404040;
+  --tab-bg: #e8f1fc;
+  --tab-selected: #ffffff;
+  --vtab-selected: #e8f1fc;
+  --alert-success-darkest: #18601c;
+  --alert-error-darkest: #a21c1c;
+  --step-text: #1970e1;
+  --heatmap-teal-1: #3a96a8;
+  --heatmap-teal-2: #5aa6b6;
+  --heatmap-teal-3: #71b2c0;
+  --heatmap-teal-4: #9ac6d2;
+  --heatmap-teal-5: #abced9;
+  --heatmap-teal-6: #cbdfe7;
+  --nav-second: #1b1e50;
+
+  /* ----- Corner radius ----- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* ----- Spacing: atomic (ONLY DS Spacing) ----- */
+  --space-xl: 20px;
+  --space-lg: 16px;
+  --space-md: 12px;
+  --space-sm: 8px;
+  --space-xs: 4px;
+  --space-3xl: 32px;
+  --space-xxl: 24px;
+  --space-4xl: 40px;
+  --space-0: 0px;
+
+  /* ----- Spacing: compositional (Inbetween) ----- */
+  --gap-xxl: 40px;
+  --gap-xl: 32px;
+  --gap-lg: 24px;
+  --gap-md: 16px;
+  --gap-sm: 8px;
+  --gap-xs: 4px;
+  --gap-0: 0px;
+
+  /* ----- Icon sizes ----- */
+  --icon-sm: 12px;
+  --icon-md: 16px;
+  --icon-lg: 20px;
+  --icon-xl: 24px;
+
+  /* ----- Drawer widths ----- */
+  --drawer-lg: 1252px;
+  --drawer-md: 1140px;
+  --drawer-sm: 1028px;
+  --drawer-h: 960px;
+
+  /* ----- Shadows ----- */
+  --shadow-button: 0 1px 2px 0 #40404029;
+  --shadow-card: 0 2px 8px 0 #4040401a;
+  --shadow-raised: 0 4px 16px 0 #40404014;
+  --shadow-sm: 0 1px 4px 0 #7b7b7b1a;
+  --shadow-table-scroll: 0 0 8px 0 #ffffff;
+}
+
+[data-theme="dark"] {
+  /* ----- Colors (dark mode) ----- */
+  --bg-screen: #212121;
+  --bg-screen-2: #1b1b1b;
+  --primary: #7aadf0;
+  --primary-pressed: #6893cc;
+  --primary-hover: #a9caf5;
+  --primary-tint-2: #597eaf;
+  --primary-tint-1: #2b3d54;
+  --primary-bg: #1f2a3a;
+  --surface-1: #2f2f2f;
+  --surface-2: #3e3e3e;
+  --border: #4d4d4d;
+  --disabled: #7a7a7a;
+  --text-info: #9b9b9b;
+  --text-muted: #b3b3b3;
+  --text: #f2f2f2;
+  --text-strong: #1e1e1e;
+  --surface-3: #1b1b1b;
+  --border-table: #2f2f2f;
+  --border-strong: #4d4d4d;
+  --violet-bg: #100639;
+  --violet-icon: #5b4b93;
+  --violet-selected: #8d54ff;
+  --violet: #a08acb;
+  --violet-hover: #9988bc;
+  --violet-pressed: #8664cc;
+  --alert-warning-primary: #ff8a00;
+  --alert-warning-darker: #e87e00;
+  --alert-warning-lighter: #ffdbb0;
+  --alert-warning-bg: #4a2300;
+  --alert-error-primary: #e37878;
+  --alert-error-darker: #cf6d6d;
+  --alert-error-lighter: #f2c1c1;
+  --alert-error-bg: #5c1f1f;
+  --alert-success-primary: #3fab45;
+  --alert-success-darker: #399c3f;
+  --alert-success-lighter: #a7d8a9;
+  --alert-success-bg: #0f3320;
+  --chart-royalblue: #1680dd;
+  --chart-mintgreen: #1ca678;
+  --chart-yellow: #f9a825;
+  --chart-crimsonred: #d32f2f;
+  --chart-deeppurple: #a631d8;
+  --chart-teal: #00796b;
+  --chart-bruntorange: #ef6c00;
+  --chart-indigo: #5262cb;
+  --chart-olivegreen: #689f38;
+  --chart-raspberry: #d11a63;
+  --chart-slategrey: #56717b;
+  --chart-brown: #8d6e63;
+  --ai-text: #9d78c4;
+  --brand-primary: #636cff;
+  --brand-secondary: #3e266d;
+  --brand-accent: #87deca;
+  --nav-bg: #212563;
+  --nav-selected: #4249b1;
+  --nav-hover: #32378a;
+  --nav-separator: #7b82f8;
+  --tag-bg-recommended: #003d30;
+  --tag-bg-linked: #0e2440;
+  --tag-bg-success: #0f3320;
+  --tag-bg-error: #5c1f1f;
+  --tag-bg-warning: #4a2300;
+  --tag-bg-auto: #1e1040;
+  --tag-bg-manual: #181818;
+  --tag-fg-recommended: #33d9b2;
+  --tag-fg-linked: #53b0f5;
+  --tag-fg-success: #3fab45;
+  --tag-fg-error: #e37878;
+  --tag-fg-warning: #ff8a00;
+  --tag-fg-auto: #b084f5;
+  --tag-fg-manual: #b3b3b3;
+  --tab-bg: #1b1b1b;
+  --tab-selected: #2f2f2f;
+  --vtab-selected: #3e3e3e;
+  --alert-success-darkest: #338d53;
+  --alert-error-darkest: #d16560;
+  --step-text: #f2f2f2;
+  --heatmap-teal-1: #3a96a8;
+  --heatmap-teal-2: #5aa6b6;
+  --heatmap-teal-3: #71b2c0;
+  --heatmap-teal-4: #9ac6d2;
+  --heatmap-teal-5: #abced9;
+  --heatmap-teal-6: #cbdfe7;
+  --nav-second: #1b1e50;
+}

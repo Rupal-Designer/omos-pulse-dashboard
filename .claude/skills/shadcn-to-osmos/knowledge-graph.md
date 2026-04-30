@@ -51,10 +51,10 @@ Tracks every file in `src/advertiser/` that needs migration from shadcn/Tailwind
 
 | Status | File | Lines | lucide | shadcn | className | Notes |
 |--------|------|-------|--------|--------|-----------|-------|
-| ⬜ | `drawers/create-campaign-drawer.jsx` | 552 | 1 | 2 | 145 | |
-| ⬜ | `drawers/create-ad-group-drawer.jsx` | 1581 | 1 | 2 | 211 | Large |
-| ⬜ | `drawers/inventory-details-drawer.jsx` | 305 | 1 | 1 | 58 | |
-| ⬜ | `drawers/product-selection-drawer.jsx` | 1256 | 1 | 3 | 190 | |
+| ✅ | `drawers/create-campaign-drawer.jsx` | 552 | 1 | 2 | 145 | SectionCard+EmptyState from ui. TrendingUpIcon hand-rolled. Status dot badge inline. IconBtn helper. Done 2026-04-29. |
+| ✅ | `drawers/create-ad-group-drawer.jsx` | 1581 | 1 | 2 | 211 | Stepper/Modal/RadioCard/RadioDot from ui. SparklesIcon hand-rolled. renderModalCheckboxRows DRY helper. RoundCheck local 20px. Done 2026-04-29. |
+| ✅ | `drawers/inventory-details-drawer.jsx` | 305 | 1 | 1 | 58 | SelectBox local (20px card checkbox). SummaryItem+MetricRow helpers. Viewability color thresholds. Done 2026-04-29. |
+| ✅ | `drawers/product-selection-drawer.jsx` | 1256 | 1 | 3 | 190 | RadioCard/RadioDot for mode+submode cards. Checkbox onChange (not onCheckedChange). EmptyState for preview. SectionCard for filter sidebar. SparklesIcon/PackageIcon/AlertCircleIcon/MinusIcon hand-rolled. INC=#22C55E/EXC=#EF4444 intentional. FilterSection+ExcludeBtn helpers. Done 2026-04-29. |
 | ⏭️ | `drawers/campaign-settings-drawer.jsx` | 8 | 0 | 0 | 0 | Stub only — no migration needed |
 
 ---
@@ -149,9 +149,13 @@ These are the shadcn wrapper files cloned from the upstream repo. Once every fil
 
 | | Count |
 |---|---|
-| ✅ Migrated | 9 |
+| ✅ Migrated | 13 |
 | ⏭️ Skip (no work needed) | 2 |
-| ⬜ Pending | 36 |
+| ⬜ Pending | 32 |
 | **Total files** | **47** |
+
+**New `src/ui/` additions (2026-04-29):**
+- `molecules/EmptyState.jsx` — centred icon circle + message + optional CTA
+- `molecules/SectionCard.jsx` — card with optional labeled header bar + body
 
 *Last updated: 2026-04-29*

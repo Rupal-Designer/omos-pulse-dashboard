@@ -28,9 +28,9 @@ const TRANSACTIONS = [
 const STATUS_COLORS = {
   Active: { bg: 'var(--osmos-brand-green-muted)', color: 'var(--osmos-brand-green)' },
   'Low Balance': { bg: 'rgba(245,166,35,0.12)', color: 'var(--osmos-brand-amber)' },
-  Exhausted: { bg: 'rgba(220,38,38,0.1)', color: '#dc2626' },
+  Exhausted: { bg: 'rgba(220,38,38,0.1)', color: 'var(--alert-error-primary)' },
   Success: { bg: 'var(--osmos-brand-green-muted)', color: 'var(--osmos-brand-green)' },
-  Failed: { bg: 'rgba(220,38,38,0.1)', color: '#dc2626' },
+  Failed: { bg: 'rgba(220,38,38,0.1)', color: 'var(--alert-error-primary)' },
   Pending: { bg: 'rgba(245,166,35,0.12)', color: 'var(--osmos-brand-amber)' },
 };
 
@@ -62,7 +62,7 @@ export default function FinanceDashboardPage() {
             <div style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>{card.label}</div>
             <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--osmos-fg)', marginBottom: 6 }}>{card.value}</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: 12, fontWeight: 600, color: card.positive ? 'var(--osmos-brand-green)' : '#dc2626' }}>{card.change}</span>
+              <span style={{ fontSize: 12, fontWeight: 600, color: card.positive ? 'var(--osmos-brand-green)' : 'var(--alert-error-primary)' }}>{card.change}</span>
               <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)' }}>{card.sub}</span>
             </div>
           </div>

@@ -408,7 +408,7 @@ function RuleModal({ open, onClose, editMode = false, initialConditions = null }
                     </div>
                     {conditions.length > 1 && (
                       <button onClick={() => removeCondition(idx)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '0 4px', marginBottom: 6 }}>
-                        <CloseIcon size={15} color="#dc2626" />
+                        <CloseIcon size={15} color="var(--alert-error-primary)" />
                       </button>
                     )}
                   </div>
@@ -444,7 +444,7 @@ function ChangeHistoryModal({ open, onClose }) {
               <div key={ei} style={{ display: 'flex', gap: 14 }}>
                 {/* Timeline indicator */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
-                  <div style={{ width: 12, height: 12, borderRadius: '50%', background: entry.status === 'Activated' ? 'var(--osmos-brand-green)' : '#dc2626', flexShrink: 0 }} />
+                  <div style={{ width: 12, height: 12, borderRadius: '50%', background: entry.status === 'Activated' ? 'var(--osmos-brand-green)' : 'var(--alert-error-primary)', flexShrink: 0 }} />
                   {ei < CHANGE_HISTORY.length - 1 && <div style={{ width: 2, flex: 1, background: 'var(--osmos-border)', minHeight: 20 }} />}
                 </div>
                 <div style={{ flex: 1, paddingBottom: 8 }}>
@@ -452,7 +452,7 @@ function ChangeHistoryModal({ open, onClose }) {
                     <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>{entry.date}</span>
                     <span style={{
                       background: entry.status === 'Activated' ? 'var(--osmos-brand-green-muted)' : 'rgba(220,38,38,0.1)',
-                      color: entry.status === 'Activated' ? 'var(--osmos-brand-green)' : '#dc2626',
+                      color: entry.status === 'Activated' ? 'var(--osmos-brand-green)' : 'var(--alert-error-primary)',
                       borderRadius: 20, padding: '2px 8px', fontSize: 11, fontWeight: 600, fontFamily: FONT,
                     }}>
                       {entry.status}

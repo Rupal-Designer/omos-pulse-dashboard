@@ -9,7 +9,7 @@ const STATUS_MAP = {
   Paused:   { bg: 'rgba(245,166,35,0.12)',             color: 'var(--osmos-brand-amber)' },
   Live:     { bg: 'var(--osmos-brand-green-muted)',    color: 'var(--osmos-brand-green)' },
   Draft:    { bg: 'var(--osmos-brand-primary-muted)',  color: 'var(--osmos-brand-primary)' },
-  Error:    { bg: 'rgba(239,68,68,0.10)',              color: '#EF4444' },
+  Error:    { bg: 'var(--tag-bg-error)',                color: 'var(--tag-fg-error)' },
 };
 
 const BASE_STYLE = {

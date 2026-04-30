@@ -15,7 +15,7 @@ const LOGS = [
 const STATUS_COLORS = {
   'Success': { bg: 'var(--osmos-brand-green-muted)', color: 'var(--osmos-brand-green)' },
   'Partial Success': { bg: 'rgba(245,166,35,0.12)', color: 'var(--osmos-brand-amber)' },
-  'Failed': { bg: 'rgba(220,38,38,0.1)', color: '#dc2626' },
+  'Failed': { bg: 'rgba(220,38,38,0.1)', color: 'var(--alert-error-primary)' },
   '—': { bg: 'transparent', color: 'var(--osmos-fg-muted)' },
 };
 

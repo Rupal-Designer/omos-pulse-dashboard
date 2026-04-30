@@ -1,34 +1,41 @@
+/* Import Figma design tokens (generated from Figma variables — do not edit) */
+@import './figma-tokens.css';
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── Brand tokens (extend Osmos design system) ─────────────────── */
+/* ── Osmos token aliases → resolve to Figma tokens ─────────────────────────
+ * All component code uses --osmos-* names. This layer maps them to the
+ * canonical Figma token names so: a) the values stay authoritative from
+ * Figma, and b) dark mode works automatically via [data-theme="dark"].
+ * ─────────────────────────────────────────────────────────────────────────*/
 :root {
-  /* Brand primary (#636CFF from Figma BrandColours/Primary) */
-  --osmos-brand-primary:       #636CFF;
-  --osmos-brand-primary-muted: rgba(99, 108, 255, 0.12);
+  /* Brand — maps to Figma BrandColours */
+  --osmos-brand-primary:        var(--brand-primary);           /* #636cff */
+  --osmos-brand-primary-muted:  rgba(99, 108, 255, 0.12);       /* no Figma token yet — keep custom */
+  --osmos-brand-green:          var(--chart-mintgreen);          /* #1ca678 */
+  --osmos-brand-green-muted:    var(--alert-success-bg);         /* #eaf2eb */
+  --osmos-brand-amber:          var(--chart-yellow);             /* #f9a825 */
 
-  /* Brand green (positive / success trend) */
-  --osmos-brand-green:         #1BA87A;
-  --osmos-brand-green-muted:   rgba(27, 168, 122, 0.10);
+  /* Surfaces & backgrounds */
+  --osmos-bg:                   var(--bg-screen);               /* #ffffff */
+  --osmos-bg-muted:             var(--surface-2);               /* #efefef */
+  --osmos-bg-subtle:            var(--bg-screen-2);             /* #edf0f5 */
 
-  /* Brand amber (secondary chart line, PRO badge) */
-  --osmos-brand-amber:         #F5A623;
+  /* Text */
+  --osmos-fg:                   var(--text);                    /* #404040 */
+  --osmos-fg-muted:             var(--text-muted);              /* #7b7b7b */
+  --osmos-fg-subtle:            var(--text-info);               /* #b3b3b3 */
 
-  /* Semantic aliases → resolves the actual library token names at runtime */
-  --osmos-border:              var(--osmos-colors-border-DEFAULT);
-  --osmos-border-muted:        var(--osmos-colors-border-muted);
-  --osmos-bg:                  var(--osmos-colors-bg-DEFAULT);
-  --osmos-bg-muted:            var(--osmos-colors-bg-muted);
-  --osmos-bg-subtle:           var(--osmos-colors-bg-subtle);
-  --osmos-fg:                  var(--osmos-colors-fg-DEFAULT);
-  --osmos-fg-muted:            var(--osmos-colors-fg-muted);
-  --osmos-fg-subtle:           var(--osmos-colors-fg-subtle);
+  /* Borders */
+  --osmos-border:               var(--border);                  /* #dedede */
+  --osmos-border-muted:         var(--border);                  /* same — no lighter border token in Figma yet */
 
-  /* Left-nav chrome */
-  --osmos-nav-bg:              #1e2266;
-  --osmos-nav-panel-bg:        #212563;
-  --osmos-nav-accent:          #7B82F8;
-  --osmos-nav-border:          rgba(123, 130, 248, 0.25);
-  --osmos-nav-active-bg:       rgba(123, 130, 248, 0.20);
+  /* Left-nav chrome — dark band, independent of page light/dark mode */
+  --osmos-nav-bg:               var(--nav-bg);                  /* #212563 */
+  --osmos-nav-panel-bg:         var(--nav-second);              /* #1b1e50 */
+  --osmos-nav-accent:           var(--nav-separator);           /* #7b82f8 */
+  --osmos-nav-border:           rgba(123, 130, 248, 0.25);      /* derived — no Figma token */
+  --osmos-nav-active-bg:        rgba(123, 130, 248, 0.20);      /* derived — no Figma token */
 }
 
 body {
@@ -38,19 +45,18 @@ body {
   font-size: 14px;
 }
 
-/* ── Global focus ring — keyboard nav ─────────────────────────── */
+/* ── Global focus ring — keyboard nav ──────────────────────────────────── */
 :focus-visible {
   outline: 2px solid var(--osmos-brand-primary);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* Remove focus ring for mouse/touch users */
 :focus:not(:focus-visible) {
   outline: none;
 }
 
-/* ── Tabular numbers for all stat values ──────────────────────── */
+/* ── Tabular numbers for stat values ──────────────────────────────────── */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
@@ -58,4 +64,4 @@ body {
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #cdd3e0; border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }

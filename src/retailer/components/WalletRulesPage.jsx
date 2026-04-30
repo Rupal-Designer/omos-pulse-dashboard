@@ -129,7 +129,7 @@ export default function WalletRulesPage() {
                         padding: '3px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600,
                         border: 'none', cursor: 'pointer', fontFamily: FONT,
                         background: row.actions === 'Enabled' ? 'var(--osmos-brand-green-muted)' : 'rgba(220,38,38,0.08)',
-                        color: row.actions === 'Enabled' ? 'var(--osmos-brand-green)' : '#dc2626',
+                        color: row.actions === 'Enabled' ? 'var(--osmos-brand-green)' : 'var(--alert-error-primary)',
                       }}
                     >
                       {row.actions}

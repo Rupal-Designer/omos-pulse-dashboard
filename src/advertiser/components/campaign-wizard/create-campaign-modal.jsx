@@ -1,474 +1,228 @@
-"use client";
-
-import { useState } from "react";
+import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
-  X,
-  Sparkles,
-  Copy,
-  FileText,
-  Search,
-  Check,
-  ArrowLeft,
-  Loader2,
-  ImageIcon,
-  Video,
-  Layers,
-  BookOpen,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { createPortal } from "react-dom";
+  Icon, CloseIcon, SearchIcon, CheckIcon, FileIcon,
+  ChevronLeftIcon, ChevronRightIcon,
+  Button, RadioCard, RadioDot,
+} from '../../../ui';
 
-const templates = [
-  {
-    id: "scratch",
-    label: "Start from scratch",
-    description: "Create a new campaign with default settings",
-    icon: FileText,
-  },
-  {
-    id: "copy",
-    label: "Copy existing campaign",
-    description: "Duplicate settings from a previous campaign",
-    icon: Copy,
-  },
-  {
-    id: "ai",
-    label: "AI-assisted setup",
-    description: "Let AI recommend optimal settings",
-    icon: Sparkles,
-    badge: "Beta",
-  },
+// ── hand-rolled icons ─────────────────────────────────────────────────────────
+const SparklesIcon = (props) => (
+  <Icon {...props}><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" /></Icon>
+);
+const CopyIcon = (props) => (
+  <Icon {...props}><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></Icon>
+);
+const ImageIcon = (props) => (
+  <Icon {...props}><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></Icon>
+);
+const VideoIcon = (props) => (
+  <Icon {...props}><path d="m22 8-6 4 6 4V8Z" /><rect width="14" height="12" x="2" y="6" rx="2" ry="2" /></Icon>
+);
+const LayersIcon = (props) => (
+  <Icon {...props}><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" /><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" /><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" /></Icon>
+);
+const BookIcon = (props) => (
+  <Icon {...props}><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" /></Icon>
+);
+const SpinnerIcon = ({ size = 24, color = '#fff' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'spin 0.8s linear infinite' }}>
+    <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
+    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+  </svg>
+);
+
+// ── design tokens ─────────────────────────────────────────────────────────────
+const FONT      = "'Open Sans', sans-serif";
+const BG        = 'var(--osmos-bg)';
+const BG_SUBTLE = 'var(--osmos-bg-subtle)';
+const BG_MUTED  = 'var(--osmos-bg-muted)';
+const BORDER    = 'var(--osmos-border)';
+const TEXT      = 'var(--osmos-fg)';
+const TEXT_MID  = 'var(--osmos-fg-muted)';
+const TEXT_SUB  = 'var(--osmos-fg-subtle)';
+const ACCENT    = 'var(--osmos-brand-primary)';
+const ACCENT_M  = 'var(--osmos-brand-primary-muted)';
+const GREEN     = 'var(--osmos-brand-green)';
+const VI        = '#7c3aed';   // AI violet — intentional
+
+// ── static data ───────────────────────────────────────────────────────────────
+const TEMPLATES = [
+  { id: 'scratch',    label: 'Start from scratch',      description: 'Create a new campaign with default settings',    Icon: FileIcon,      badge: null },
+  { id: 'copy',       label: 'Copy existing campaign',  description: 'Duplicate settings from a previous campaign',    Icon: CopyIcon,      badge: null },
+  { id: 'ai',         label: 'AI-assisted setup',       description: 'Let AI recommend optimal settings',              Icon: SparklesIcon,  badge: 'Beta' },
 ];
 
-const adFormats = [
-  {
-    id: "banner",
-    label: "Banner Ads",
-    description:
-      "Drive attention with impactful banners on your own site or app.",
-    icon: ImageIcon,
-    features: [
-      "Premium placements on owned inventory",
-      "Full control over brand experience",
-      "Real-time targeting and optimization",
-    ],
-    images: [
-      "/placeholder.svg?height=160&width=280",
-      "/placeholder.svg?height=160&width=280",
-    ],
-  },
-  {
-    id: "video",
-    label: "Video Ads",
-    description:
-      "Deliver engaging video experiences within your content ecosystem.",
-    icon: Video,
-    features: [
-      "Supports in-feed and pre-roll formats",
-      "Boosts engagement with autoplay delivery",
-      "High-yield, brand-safe video monetization",
-    ],
-    images: [
-      "/placeholder.svg?height=160&width=280",
-      "/placeholder.svg?height=160&width=280",
-    ],
-  },
-  {
-    id: "carousel",
-    label: "Carousel Ads",
-    description: "Showcase multiple creatives with swipeable ad units onsite.",
-    icon: Layers,
-    features: [
-      "Scrollable panels for deeper engagement",
-      "Great for multi-product storytelling",
-      "Seamlessly fits platform UI design",
-    ],
-    images: [
-      "/placeholder.svg?height=160&width=280",
-      "/placeholder.svg?height=160&width=280",
-    ],
-  },
-  {
-    id: "story",
-    label: "Story Ads",
-    description: "Create immersive, swipeable stories within your platform.",
-    icon: BookOpen,
-    features: [
-      "Familiar full-screen mobile format",
-      "Interactive storytelling with swipe gestures",
-      "Ideal for short-form promotional content",
-    ],
-    images: [
-      "/placeholder.svg?height=160&width=280",
-      "/placeholder.svg?height=160&width=280",
-    ],
-  },
+const EXISTING_CAMPAIGNS = [
+  { id: '1', name: 'Keyword Targeting Campaign',  budget: '$300K', status: 'active', performance: 'High' },
+  { id: '2', name: 'Email Campaign Automation',   budget: '$250K', status: 'active', performance: 'Medium' },
+  { id: '3', name: 'SEO Performance Analysis',    budget: '$350K', status: 'paused', performance: 'High' },
+  { id: '4', name: 'Social Media Engagement',     budget: '$150K', status: 'active', performance: 'Low' },
+  { id: '5', name: 'Influencer Partnership',      budget: '$450K', status: 'active', performance: 'High' },
+  { id: '6', name: 'Pay-Per-Click Advertising',   budget: '$400K', status: 'draft',  performance: 'Medium' },
 ];
 
-// Mock existing campaigns for copy feature
-const existingCampaigns = [
-  {
-    id: "1",
-    name: "Keyword Targeting Campaign",
-    budget: "$300K",
-    status: "active",
-    performance: "High",
-  },
-  {
-    id: "2",
-    name: "Email Campaign Automation",
-    budget: "$250K",
-    status: "active",
-    performance: "Medium",
-  },
-  {
-    id: "3",
-    name: "SEO Performance Analysis",
-    budget: "$350K",
-    status: "paused",
-    performance: "High",
-  },
-  {
-    id: "4",
-    name: "Social Media Engagement",
-    budget: "$150K",
-    status: "active",
-    performance: "Low",
-  },
-  {
-    id: "5",
-    name: "Influencer Partnership",
-    budget: "$450K",
-    status: "active",
-    performance: "High",
-  },
-  {
-    id: "6",
-    name: "Pay-Per-Click Advertising",
-    budget: "$400K",
-    status: "draft",
-    performance: "Medium",
-  },
-];
+const STATUS_CHIP = {
+  active: { bg: 'rgba(27,168,122,0.1)', color: 'var(--osmos-brand-green)' },
+  paused: { bg: 'rgba(245,166,35,0.12)', color: 'var(--osmos-brand-amber)' },
+  draft:  { bg: 'var(--osmos-bg-muted)', color: 'var(--osmos-fg-subtle)' },
+};
 
-export function CreateCampaignModal({
-  open,
-  onClose,
-  onContinue,
-  adType = "product",
-}) {
-  const [step, setStep] = useState("initial");
-  const [name, setName] = useState("");
-  const [template, setTemplate] = useState("scratch");
-  const [error, setError] = useState("");
-  const [adFormat, setAdFormat] = useState(null);
-  const [carouselIndex, setCarouselIndex] = useState({});
+// ── helpers ───────────────────────────────────────────────────────────────────
+function adTypeSubtitle(adType) {
+  if (adType === 'display')  return 'Set up your display advertising campaign';
+  if (adType === 'offsite')  return 'Set up your offsite advertising campaign';
+  if (adType === 'instore')  return 'Set up your in-store digital advertising campaign';
+  return 'Set up your product advertising campaign';
+}
 
-  // Copy campaign state
-  const [searchQuery, setSearchQuery] = useState("");
+function generateAiSuggestions(answers) {
+  const budgetMap = { small: { total: '$50,000', daily: '$1,500' }, medium: { total: '$150,000', daily: '$5,000' }, large: { total: '$500,000', daily: '$15,000' }, enterprise: { total: '$1,000,000', daily: '$30,000' } };
+  const budget = budgetMap[answers.budgetRange] || budgetMap.medium;
+  const goalStrategy = answers.goal === 'sales' ? 'CPA' : answers.goal === 'traffic' ? 'CPC' : 'CPM';
+  return {
+    budget: budget.total, dailyBudget: budget.daily, bidStrategy: goalStrategy,
+    priority: answers.timeline === 'urgent' ? 'High' : 'Standard',
+    pacing: answers.timeline === 'urgent' ? 'Accelerated' : 'Even',
+    reasoning: `Based on your ${answers.goal} goal and ${answers.budgetRange} budget, I recommend a ${goalStrategy} bidding strategy.`,
+  };
+}
+
+// ── main component ────────────────────────────────────────────────────────────
+export function CreateCampaignModal({ open, onClose, onContinue, adType = 'product' }) {
+  const [step, setStep]                   = useState('initial');
+  const [name, setName]                   = useState('');
+  const [template, setTemplate]           = useState('scratch');
+  const [error, setError]                 = useState('');
+  const [searchQuery, setSearchQuery]     = useState('');
   const [selectedCampaignId, setSelectedCampaignId] = useState(null);
+  const [aiAnswers, setAiAnswers]         = useState({ goal: '', audience: '', budgetRange: '', timeline: '' });
 
-  // AI questionnaire state
-  const [aiAnswers, setAiAnswers] = useState({
-    goal: "",
-    audience: "",
-    budgetRange: "",
-    timeline: "",
-  });
-
-  const filteredCampaigns = existingCampaigns.filter((c) =>
-    c.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
-
-  const selectedCampaign = existingCampaigns.find(
-    (c) => c.id === selectedCampaignId,
-  );
-
-  const handleAdFormatSelect = (formatId) => {
-    setAdFormat(formatId);
-  };
-
-  const handleAdFormatContinue = () => {
-    if (!adFormat) {
-      setError("Please select an ad format");
-      return;
-    }
-    setError("");
-    setStep("initial");
-  };
+  const filteredCampaigns = EXISTING_CAMPAIGNS.filter((c) => c.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  const selectedCampaign  = EXISTING_CAMPAIGNS.find((c) => c.id === selectedCampaignId);
 
   const handleContinue = () => {
-    if (!name.trim()) {
-      setError("Please enter a campaign name");
-      return;
-    }
-
-    if (template === "copy") {
-      setStep("copy-select");
-    } else if (template === "ai") {
-      setStep("ai-questionnaire");
-    } else {
-      onContinue({
-        name,
-        template,
-        adType: adType,
-        adFormat: adFormat,
-      });
-    }
+    if (!name.trim()) { setError('Please enter a campaign name'); return; }
+    setError('');
+    if (template === 'copy')      { setStep('copy-select'); return; }
+    if (template === 'ai')        { setStep('ai-questionnaire'); return; }
+    onContinue({ name, template, adType });
   };
 
   const handleCopyCampaign = () => {
-    if (!selectedCampaignId) {
-      setError("Please select a campaign to copy");
-      return;
-    }
-
-    const selectedCampaign = existingCampaigns.find(
-      (c) => c.id === selectedCampaignId,
-    );
-    if (selectedCampaign) {
-      onContinue({
-        name: name || `${selectedCampaign.name} (Copy)`,
-        template: "copy",
-        copiedFromId: selectedCampaignId,
-        adType: adType,
-        adFormat: adFormat,
-      });
-    }
+    if (!selectedCampaignId) { setError('Please select a campaign to copy'); return; }
+    onContinue({ name: name || `${selectedCampaign.name} (Copy)`, template: 'copy', copiedFromId: selectedCampaignId, adType });
   };
 
   const handleAiGenerate = () => {
-    if (
-      !aiAnswers.goal ||
-      !aiAnswers.audience ||
-      !aiAnswers.budgetRange ||
-      !aiAnswers.timeline
-    ) {
-      setError("Please answer all questions to generate AI recommendations");
-      return;
-    }
-
-    setStep("ai-generating");
-
-    // Simulate AI generation
-    setTimeout(() => {
-      const suggestions = generateAiSuggestions(aiAnswers);
-      onContinue({
-        name,
-        template: "ai",
-        aiSuggestions: suggestions,
-        adType: adType,
-        adFormat: adFormat,
-      });
-    }, 2000);
-  };
-
-  const generateAiSuggestions = (answers) => {
-    const budgetMap = {
-      small: { total: "$50,000", daily: "$1,500" },
-      medium: { total: "$150,000", daily: "$5,000" },
-      large: { total: "$500,000", daily: "$15,000" },
-      enterprise: { total: "$1,000,000", daily: "$30,000" },
-    };
-
-    const budget = budgetMap[answers.budgetRange] || budgetMap.medium;
-    const goalStrategy =
-      answers.goal === "sales"
-        ? "CPA"
-        : answers.goal === "traffic"
-          ? "CPC"
-          : "CPM";
-
-    return {
-      budget: budget.total,
-      dailyBudget: budget.daily,
-      bidStrategy: goalStrategy,
-      priority: answers.timeline === "urgent" ? "High" : "Standard",
-      pacing: answers.timeline === "urgent" ? "Accelerated" : "Even",
-      reasoning: `Based on your ${answers.goal} goal and ${answers.budgetRange} budget, I recommend a ${goalStrategy} bidding strategy. ${answers.timeline === "urgent" ? "Given your urgent timeline, accelerated pacing will help deliver impressions quickly." : "Even pacing will distribute your budget consistently throughout the campaign duration."}`,
-    };
+    if (!aiAnswers.goal || !aiAnswers.budgetRange || !aiAnswers.timeline) { setError('Please answer all required questions'); return; }
+    setStep('ai-generating');
+    setTimeout(() => { onContinue({ name, template: 'ai', aiSuggestions: generateAiSuggestions(aiAnswers), adType }); }, 2000);
   };
 
   const handleClose = () => {
-    setName("");
-    setTemplate("scratch");
-    setError("");
-    setStep("initial");
-    setSearchQuery("");
-    setSelectedCampaignId(null);
-    setAiAnswers({ goal: "", audience: "", budgetRange: "", timeline: "" });
-    setAdFormat(null);
-    setCarouselIndex({});
+    setName(''); setTemplate('scratch'); setError(''); setStep('initial');
+    setSearchQuery(''); setSelectedCampaignId(null);
+    setAiAnswers({ goal: '', audience: '', budgetRange: '', timeline: '' });
     onClose();
   };
 
-  const handleBack = () => {
-    if (step !== "initial") {
-      setStep("initial");
-    }
-    setError("");
-    setSelectedCampaignId(null);
-    setSearchQuery("");
-  };
-
-  const handleCarouselPrev = (formatId) => {
-    setCarouselIndex((prev) => ({
-      ...prev,
-      [formatId]: prev[formatId] === 0 ? 1 : 0,
-    }));
-  };
-
-  const handleCarouselNext = (formatId) => {
-    setCarouselIndex((prev) => ({
-      ...prev,
-      [formatId]: prev[formatId] === 1 ? 0 : 1,
-    }));
-  };
+  const handleBack = () => { setStep('initial'); setError(''); setSelectedCampaignId(null); setSearchQuery(''); };
 
   if (!open) return null;
 
+  const isInitial = step === 'initial';
+  const stepTitle = isInitial ? 'Create New Campaign'
+    : step === 'copy-select'      ? 'Select Campaign to Copy'
+    : step === 'ai-questionnaire' ? 'AI Campaign Setup'
+    : 'Generating Recommendations';
+  const stepSubtitle = isInitial ? adTypeSubtitle(adType)
+    : step === 'copy-select'      ? 'Choose an existing campaign to use as a template'
+    : step === 'ai-questionnaire' ? 'Answer a few questions and let AI configure your campaign'
+    : 'Please wait while we analyse your inputs…';
+
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+    <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT }}>
       {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/50 transition-opacity"
-        onClick={handleClose}
-      />
+      <div onClick={handleClose} style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)' }} />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-xl shadow-2xl mx-4 overflow-hidden w-full max-w-2xl">
+      <div style={{ position: 'relative', backgroundColor: BG, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.18)', width: '100%', maxWidth: 600, margin: '0 16px', overflow: 'hidden', display: 'flex', flexDirection: 'column', maxHeight: '90vh' }}>
+
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#efefef]">
-          <div className="flex items-center gap-3">
-            {step !== "initial" && step !== "ai-generating" && (
-              <button
-                onClick={handleBack}
-                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#f5f5f5] text-[#7b7b7b] transition-colors"
-              >
-                <ArrowLeft size={20} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 24px', borderBottom: `1px solid ${BORDER}`, flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            {step !== 'initial' && step !== 'ai-generating' && (
+              <button onClick={handleBack} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = BG_MUTED)}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}>
+                <ChevronLeftIcon size={18} color={TEXT_MID} />
               </button>
             )}
             <div>
-              <h2 className="text-lg font-semibold text-[#404040]">
-                {step === "initial" && "Create New Campaign"}
-                {step === "copy-select" && "Select Campaign to Copy"}
-                {step === "ai-questionnaire" && "AI Campaign Setup"}
-                {step === "ai-generating" && "Generating Recommendations"}
-              </h2>
-              <p className="text-sm text-[#7b7b7b] mt-0.5">
-                {step === "initial" &&
-                  (adType === "display"
-                    ? "Set up your display advertising campaign"
-                    : adType === "offsite"
-                      ? "Set up your offsite advertising campaign"
-                      : adType === "instore"
-                        ? "Set up your in-store digital advertising campaign"
-                        : "Set up your product advertising campaign")}
-                {step === "copy-select" &&
-                  "Choose an existing campaign to use as a template"}
-                {step === "ai-questionnaire" &&
-                  "Answer a few questions and let AI configure your campaign"}
-                {step === "ai-generating" &&
-                  "Please wait while we analyze your inputs..."}
-              </p>
+              <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: TEXT }}>{stepTitle}</h2>
+              <p style={{ margin: '2px 0 0', fontSize: 13, color: TEXT_MID }}>{stepSubtitle}</p>
             </div>
           </div>
-          <button
-            onClick={handleClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#f5f5f5] text-[#7b7b7b] transition-colors"
-          >
-            <X size={20} />
+          <button onClick={handleClose} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = BG_MUTED)}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}>
+            <CloseIcon size={18} color={TEXT_MID} />
           </button>
         </div>
 
-        {/* Content */}
-        <div className="p-6">
-          {step === "initial" && (
-            <div className="space-y-6">
-              {/* Campaign Name */}
-              <div className="space-y-2">
-                <Label
-                  htmlFor="campaign-name"
-                  className="text-sm font-medium text-[#404040]"
-                >
-                  Campaign Name <span className="text-[#d83c3b]">*</span>
-                </Label>
-                <Input
-                  id="campaign-name"
+        {/* Body */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: 24 }}>
+
+          {/* ── Step: initial ── */}
+          {step === 'initial' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+              {/* Campaign name */}
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: TEXT, marginBottom: 8 }}>
+                  Campaign Name <span style={{ color: '#EF4444' }}>*</span>
+                </label>
+                <input
                   placeholder="e.g., Summer Sale 2025, Black Friday Promotion"
                   value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                    setError("");
-                  }}
-                  className="h-11 border-[#dedede] focus:border-[#0097f0] focus:ring-[#0097f0]"
+                  onChange={(e) => { setName(e.target.value); setError(''); }}
+                  style={{ width: '100%', padding: '10px 14px', border: `1.5px solid ${name ? ACCENT : BORDER}`, borderRadius: 8, fontSize: 14, fontFamily: FONT, color: TEXT, backgroundColor: BG, outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.15s' }}
+                  onFocus={(e) => (e.target.style.borderColor = ACCENT)}
+                  onBlur={(e) => (e.target.style.borderColor = name ? ACCENT : BORDER)}
                 />
-
-                <p className="text-xs text-[#9a9a9a]">
-                  Choose a descriptive name to easily identify this campaign
-                  later
-                </p>
+                <p style={{ margin: '6px 0 0', fontSize: 12, color: TEXT_SUB }}>Choose a descriptive name to easily identify this campaign later</p>
               </div>
 
-              {/* Template Selection */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium text-[#404040]">
-                  How would you like to start?
-                </Label>
-                <div className="space-y-2">
-                  {templates.map((tpl) => {
-                    const Icon = tpl.icon;
-                    const isSelected = template === tpl.id;
+              {/* Template selector */}
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: TEXT, marginBottom: 12 }}>How would you like to start?</label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {TEMPLATES.map(({ id, label, description, Icon: TIcon, badge }) => {
+                    const sel = template === id;
+                    const iconColor = id === 'ai' ? VI : ACCENT;
                     return (
-                      <button
-                        key={tpl.id}
-                        onClick={() => setTemplate(tpl.id)}
-                        className={`
-                          w-full flex items-center gap-4 p-4 rounded-lg border-2 text-left transition-all
-                          ${
-                            isSelected
-                              ? "border-[#0097f0] bg-[#e8f4fd]"
-                              : "border-[#efefef] hover:border-[#dedede] hover:bg-[#fafafa]"
-                          }
-                        `}
-                      >
-                        <div
-                          className={`
-                          w-10 h-10 rounded-lg flex items-center justify-center shrink-0
-                          ${isSelected ? "bg-[#0097f0] text-white" : "bg-[#f5f5f5] text-[#7b7b7b]"}
-                        `}
-                        >
-                          <Icon size={20} />
+                      <button key={id} onClick={() => setTemplate(id)} style={{
+                        display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
+                        border: `1.5px solid ${sel ? (id === 'ai' ? VI : ACCENT) : BORDER}`,
+                        borderRadius: 10, cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
+                        backgroundColor: sel ? (id === 'ai' ? 'rgba(124,58,237,0.06)' : ACCENT_M) : BG,
+                        fontFamily: FONT,
+                      }}>
+                        <div style={{
+                          width: 40, height: 40, borderRadius: 10, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          backgroundColor: sel ? (id === 'ai' ? VI : ACCENT) : BG_MUTED,
+                          transition: 'all 0.15s',
+                        }}>
+                          <TIcon size={19} color={sel ? '#fff' : (id === 'ai' ? VI : TEXT_MID)} />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p
-                              className={`font-medium text-sm ${isSelected ? "text-[#0097f0]" : "text-[#404040]"}`}
-                            >
-                              {tpl.label}
-                            </p>
-                            {tpl.badge && (
-                              <span className="px-2 py-0.5 text-[10px] font-medium bg-[#7c3aed] text-white rounded-full">
-                                {tpl.badge}
-                              </span>
-                            )}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+                            <span style={{ fontSize: 14, fontWeight: 600, color: sel ? (id === 'ai' ? VI : ACCENT) : TEXT }}>{label}</span>
+                            {badge && <span style={{ padding: '2px 8px', fontSize: 10, fontWeight: 700, backgroundColor: VI, color: '#fff', borderRadius: 999, letterSpacing: '0.03em' }}>{badge}</span>}
                           </div>
-                          <p className="text-xs text-[#9a9a9a] mt-0.5">
-                            {tpl.description}
-                          </p>
+                          <p style={{ margin: 0, fontSize: 12, color: TEXT_MID }}>{description}</p>
                         </div>
-                        <div
-                          className={`
-                          w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0
-                          ${isSelected ? "border-[#0097f0] bg-[#0097f0]" : "border-[#dedede]"}
-                        `}
-                        >
-                          {isSelected && (
-                            <div className="w-2 h-2 rounded-full bg-white" />
-                          )}
-                        </div>
+                        <RadioDot selected={sel} size={18} />
                       </button>
                     );
                   })}
@@ -477,371 +231,191 @@ export function CreateCampaignModal({
             </div>
           )}
 
-          {/* Copy Campaign Selection Step */}
-          {step === "copy-select" && (
-            <div className="space-y-4">
-              {/* Search */}
-              <div className="relative">
-                <Search
-                  size={18}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9a9a9a]"
-                />
-                <Input
-                  placeholder="Search campaigns..."
+          {/* ── Step: copy-select ── */}
+          {step === 'copy-select' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div style={{ position: 'relative' }}>
+                <div style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+                  <SearchIcon size={16} color={TEXT_SUB} />
+                </div>
+                <input
+                  placeholder="Search campaigns…"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 h-11 border-[#dedede] focus:border-[#0097f0] focus:ring-[#0097f0]"
+                  style={{ width: '100%', padding: '10px 14px 10px 38px', border: `1.5px solid ${BORDER}`, borderRadius: 8, fontSize: 13, fontFamily: FONT, color: TEXT, backgroundColor: BG, outline: 'none', boxSizing: 'border-box' }}
+                  onFocus={(e) => (e.target.style.borderColor = ACCENT)}
+                  onBlur={(e) => (e.target.style.borderColor = BORDER)}
                 />
               </div>
 
-              {/* Campaign List */}
-              <div className="max-h-[400px] overflow-y-auto space-y-2">
+              <div style={{ maxHeight: 320, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {filteredCampaigns.map((campaign) => {
-                  const isSelected = selectedCampaignId === campaign.id;
+                  const sel = selectedCampaignId === campaign.id;
+                  const chip = STATUS_CHIP[campaign.status] || STATUS_CHIP.draft;
                   return (
-                    <button
-                      key={campaign.id}
-                      onClick={() => {
-                        setSelectedCampaignId(campaign.id);
-                        setError("");
-                      }}
-                      className={`
-                        w-full flex items-center gap-4 p-4 rounded-lg border-2 text-left transition-all
-                        ${isSelected ? "border-[#0097f0] bg-[#e8f4fd]" : "border-[#efefef] hover:border-[#dedede] hover:bg-[#fafafa]"}
-                      `}
-                    >
-                      <div
-                        className={`
-                        w-10 h-10 rounded-lg flex items-center justify-center shrink-0
-                        ${isSelected ? "bg-[#0097f0] text-white" : "bg-[#f5f5f5] text-[#7b7b7b]"}
-                      `}
-                      >
-                        <Copy size={18} />
+                    <button key={campaign.id} onClick={() => { setSelectedCampaignId(campaign.id); setError(''); }} style={{
+                      display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
+                      border: `1.5px solid ${sel ? ACCENT : BORDER}`, borderRadius: 10,
+                      cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
+                      backgroundColor: sel ? ACCENT_M : BG, fontFamily: FONT,
+                    }}>
+                      <div style={{ width: 40, height: 40, borderRadius: 10, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: sel ? ACCENT : BG_MUTED }}>
+                        <CopyIcon size={17} color={sel ? '#fff' : TEXT_MID} />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <p
-                            className={`font-medium text-sm ${isSelected ? "text-[#0097f0]" : "text-[#404040]"}`}
-                          >
-                            {campaign.name}
-                          </p>
-                          <span
-                            className={`
-                            px-2 py-0.5 text-[10px] font-medium rounded-full capitalize
-                            ${
-                              campaign.status === "active"
-                                ? "bg-[#dcfce7] text-[#16a34a]"
-                                : campaign.status === "paused"
-                                  ? "bg-[#fef3c7] text-[#d97706]"
-                                  : "bg-[#f3f4f6] text-[#6b7280]"
-                            }
-                          `}
-                          >
-                            {campaign.status}
-                          </span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                          <span style={{ fontSize: 13, fontWeight: 600, color: sel ? ACCENT : TEXT, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{campaign.name}</span>
+                          <span style={{ padding: '2px 8px', fontSize: 11, fontWeight: 500, borderRadius: 999, flexShrink: 0, backgroundColor: chip.bg, color: chip.color, textTransform: 'capitalize' }}>{campaign.status}</span>
                         </div>
-                        <div className="flex items-center gap-4 mt-1">
-                          <p className="text-xs text-[#9a9a9a]">
-                            Budget: {campaign.budget}
-                          </p>
-                          <p className="text-xs text-[#9a9a9a]">
-                            Performance: {campaign.performance}
-                          </p>
+                        <div style={{ display: 'flex', gap: 16 }}>
+                          <span style={{ fontSize: 12, color: TEXT_MID }}>Budget: {campaign.budget}</span>
+                          <span style={{ fontSize: 12, color: TEXT_MID }}>Performance: {campaign.performance}</span>
                         </div>
                       </div>
-                      <div
-                        className={`
-                        w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0
-                        ${isSelected ? "border-[#0097f0] bg-[#0097f0]" : "border-[#dedede]"}
-                      `}
-                      >
-                        {isSelected && (
-                          <Check size={14} className="text-white" />
-                        )}
+                      <div style={{ width: 22, height: 22, borderRadius: '50%', border: `2px solid ${sel ? ACCENT : BORDER}`, backgroundColor: sel ? ACCENT : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.15s' }}>
+                        {sel && <CheckIcon size={12} color="#fff" />}
                       </div>
                     </button>
                   );
                 })}
               </div>
 
-              {/* Selected Campaign Preview */}
               {selectedCampaign && (
-                <div className="p-4 bg-[#f8fafc] rounded-lg border border-[#e2e8f0]">
-                  <p className="text-xs font-medium text-[#64748b] uppercase tracking-wide mb-2">
-                    Preview
-                  </p>
-                  <p className="text-sm text-[#404040]">
-                    New campaign will be created as:{" "}
-                    <span className="font-medium">
-                      {name} (Copy of {selectedCampaign.name})
-                    </span>
-                  </p>
-                  <p className="text-xs text-[#9a9a9a] mt-1">
-                    All settings, ad groups, and configurations will be
-                    duplicated. You can modify them before launching.
-                  </p>
+                <div style={{ padding: 14, backgroundColor: BG_SUBTLE, borderRadius: 10, border: `1px solid ${BORDER}` }}>
+                  <p style={{ margin: '0 0 4px', fontSize: 11, fontWeight: 600, color: TEXT_SUB, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Preview</p>
+                  <p style={{ margin: 0, fontSize: 13, color: TEXT }}>New campaign: <span style={{ fontWeight: 600 }}>{name || `${selectedCampaign.name} (Copy)`}</span></p>
+                  <p style={{ margin: '4px 0 0', fontSize: 12, color: TEXT_MID }}>All settings, ad groups, and configurations will be duplicated. You can modify them before launching.</p>
                 </div>
               )}
             </div>
           )}
 
-          {/* AI Questionnaire Step */}
-          {step === "ai-questionnaire" && (
-            <div className="space-y-5">
-              <div className="p-4 bg-gradient-to-r from-[#7c3aed]/10 to-[#0097f0]/10 rounded-lg border border-[#7c3aed]/20">
-                <div className="flex items-center gap-2 mb-2">
-                  <Sparkles size={18} className="text-[#7c3aed]" />
-                  <p className="text-sm font-medium text-[#7c3aed]">
-                    AI-Powered Recommendations
-                  </p>
+          {/* ── Step: ai-questionnaire ── */}
+          {step === 'ai-questionnaire' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {/* AI intro banner */}
+              <div style={{ padding: 14, background: `linear-gradient(135deg, rgba(124,58,237,0.08), rgba(99,108,255,0.06))`, borderRadius: 10, border: `1px solid rgba(124,58,237,0.2)`, display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                <SparklesIcon size={18} color={VI} />
+                <div>
+                  <p style={{ margin: '0 0 4px', fontSize: 13, fontWeight: 600, color: VI }}>AI-Powered Recommendations</p>
+                  <p style={{ margin: 0, fontSize: 12, color: TEXT_MID }}>Answer a few questions and our AI will suggest optimal campaign settings based on your goals and industry best practices.</p>
                 </div>
-                <p className="text-xs text-[#64748b]">
-                  Answer a few questions and our AI will suggest optimal
-                  campaign settings based on your goals and industry best
-                  practices.
-                </p>
               </div>
 
-              {/* Question 1: Goal */}
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-[#404040]">
-                  What's your primary goal for this campaign?{" "}
-                  <span className="text-[#d83c3b]">*</span>
-                </Label>
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    {
-                      id: "sales",
-                      label: "Increase Sales",
-                      desc: "Drive more purchases",
-                    },
-                    {
-                      id: "leads",
-                      label: "Generate Leads",
-                      desc: "Capture customer info",
-                    },
-                    {
-                      id: "awareness",
-                      label: "Build Awareness",
-                      desc: "Reach new audiences",
-                    },
-                    {
-                      id: "engagement",
-                      label: "Boost Engagement",
-                      desc: "Increase interactions",
-                    },
-                  ].map((goal) => (
-                    <button
-                      key={goal.id}
-                      onClick={() =>
-                        setAiAnswers((prev) => ({ ...prev, goal: goal.id }))
-                      }
-                      className={`
-                        p-3 rounded-lg border-2 text-left transition-all
-                        ${aiAnswers.goal === goal.id ? "border-[#7c3aed] bg-[#7c3aed]/5" : "border-[#efefef] hover:border-[#dedede]"}
-                      `}
-                    >
-                      <p
-                        className={`text-sm font-medium ${aiAnswers.goal === goal.id ? "text-[#7c3aed]" : "text-[#404040]"}`}
-                      >
-                        {goal.label}
-                      </p>
-                      <p className="text-xs text-[#9a9a9a]">{goal.desc}</p>
-                    </button>
+              {/* Goal */}
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: TEXT, marginBottom: 10 }}>
+                  What's your primary goal? <span style={{ color: '#EF4444' }}>*</span>
+                </label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                  {[{ id: 'sales', label: 'Increase Sales', desc: 'Drive more purchases' }, { id: 'leads', label: 'Generate Leads', desc: 'Capture customer info' }, { id: 'awareness', label: 'Build Awareness', desc: 'Reach new audiences' }, { id: 'engagement', label: 'Boost Engagement', desc: 'Increase interactions' }].map((g) => (
+                    <AiChoiceBtn key={g.id} selected={aiAnswers.goal === g.id} onClick={() => setAiAnswers((p) => ({ ...p, goal: g.id }))} label={g.label} desc={g.desc} />
                   ))}
                 </div>
               </div>
 
-              {/* Question 2: Target Audience */}
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-[#404040]">
-                  Describe your target audience (optional)
-                </Label>
-                <Input
+              {/* Audience */}
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: TEXT, marginBottom: 8 }}>Describe your target audience <span style={{ fontWeight: 400, color: TEXT_SUB }}>(optional)</span></label>
+                <input
                   placeholder="e.g., Health-conscious millennials, tech enthusiasts, parents with young children"
                   value={aiAnswers.audience}
-                  onChange={(e) =>
-                    setAiAnswers((prev) => ({
-                      ...prev,
-                      audience: e.target.value,
-                    }))
-                  }
-                  className="h-11 border-[#dedede] focus:border-[#7c3aed] focus:ring-[#7c3aed]"
+                  onChange={(e) => setAiAnswers((p) => ({ ...p, audience: e.target.value }))}
+                  style={{ width: '100%', padding: '10px 14px', border: `1.5px solid ${BORDER}`, borderRadius: 8, fontSize: 13, fontFamily: FONT, color: TEXT, backgroundColor: BG, outline: 'none', boxSizing: 'border-box' }}
+                  onFocus={(e) => (e.target.style.borderColor = VI)}
+                  onBlur={(e) => (e.target.style.borderColor = BORDER)}
                 />
               </div>
 
-              {/* Question 3: Budget Range */}
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-[#404040]">
-                  What's your budget range?{" "}
-                  <span className="text-[#d83c3b]">*</span>
-                </Label>
-                <div className="grid grid-cols-4 gap-2">
-                  {[
-                    { id: "small", label: "Small", range: "$10K - $50K" },
-                    { id: "medium", label: "Medium", range: "$50K - $200K" },
-                    { id: "large", label: "Large", range: "$200K - $500K" },
-                    { id: "enterprise", label: "Enterprise", range: "$500K+" },
-                  ].map((budget) => (
-                    <button
-                      key={budget.id}
-                      onClick={() =>
-                        setAiAnswers((prev) => ({
-                          ...prev,
-                          budgetRange: budget.id,
-                        }))
-                      }
-                      className={`
-                        p-3 rounded-lg border-2 text-center transition-all
-                        ${aiAnswers.budgetRange === budget.id ? "border-[#7c3aed] bg-[#7c3aed]/5" : "border-[#efefef] hover:border-[#dedede]"}
-                      `}
-                    >
-                      <p
-                        className={`text-sm font-medium ${aiAnswers.budgetRange === budget.id ? "text-[#7c3aed]" : "text-[#404040]"}`}
-                      >
-                        {budget.label}
-                      </p>
-                      <p className="text-xs text-[#9a9a9a]">{budget.range}</p>
-                    </button>
+              {/* Budget */}
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: TEXT, marginBottom: 10 }}>
+                  Budget range <span style={{ color: '#EF4444' }}>*</span>
+                </label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+                  {[{ id: 'small', label: 'Small', range: '$10K–$50K' }, { id: 'medium', label: 'Medium', range: '$50K–$200K' }, { id: 'large', label: 'Large', range: '$200K–$500K' }, { id: 'enterprise', label: 'Enterprise', range: '$500K+' }].map((b) => (
+                    <AiChoiceBtn key={b.id} selected={aiAnswers.budgetRange === b.id} onClick={() => setAiAnswers((p) => ({ ...p, budgetRange: b.id }))} label={b.label} desc={b.range} center />
                   ))}
                 </div>
               </div>
 
-              {/* Question 4: Timeline */}
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-[#404040]">
-                  How soon do you need results?{" "}
-                  <span className="text-[#d83c3b]">*</span>
-                </Label>
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { id: "urgent", label: "ASAP", desc: "Within 1-2 weeks" },
-                    { id: "normal", label: "Standard", desc: "1-3 months" },
-                    { id: "longterm", label: "Long-term", desc: "3+ months" },
-                  ].map((timeline) => (
-                    <button
-                      key={timeline.id}
-                      onClick={() =>
-                        setAiAnswers((prev) => ({
-                          ...prev,
-                          timeline: timeline.id,
-                        }))
-                      }
-                      className={`
-                        p-3 rounded-lg border-2 text-center transition-all
-                        ${aiAnswers.timeline === timeline.id ? "border-[#7c3aed] bg-[#7c3aed]/5" : "border-[#efefef] hover:border-[#dedede]"}
-                      `}
-                    >
-                      <p
-                        className={`text-sm font-medium ${aiAnswers.timeline === timeline.id ? "text-[#7c3aed]" : "text-[#404040]"}`}
-                      >
-                        {timeline.label}
-                      </p>
-                      <p className="text-xs text-[#9a9a9a]">{timeline.desc}</p>
-                    </button>
+              {/* Timeline */}
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: TEXT, marginBottom: 10 }}>
+                  How soon do you need results? <span style={{ color: '#EF4444' }}>*</span>
+                </label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                  {[{ id: 'urgent', label: 'ASAP', desc: 'Within 1–2 weeks' }, { id: 'normal', label: 'Standard', desc: '1–3 months' }, { id: 'longterm', label: 'Long-term', desc: '3+ months' }].map((t) => (
+                    <AiChoiceBtn key={t.id} selected={aiAnswers.timeline === t.id} onClick={() => setAiAnswers((p) => ({ ...p, timeline: t.id }))} label={t.label} desc={t.desc} center />
                   ))}
                 </div>
               </div>
             </div>
           )}
 
-          {/* AI Generating Step */}
-          {step === "ai-generating" && (
-            <div className="py-16 flex flex-col items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-r from-[#7c3aed] to-[#0097f0] flex items-center justify-center mb-6">
-                <Loader2 size={32} className="text-white animate-spin" />
+          {/* ── Step: ai-generating ── */}
+          {step === 'ai-generating' && (
+            <div style={{ padding: '48px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: 64, height: 64, borderRadius: '50%', background: `linear-gradient(135deg, ${VI}, ${ACCENT})`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24 }}>
+                <SpinnerIcon size={30} color="#fff" />
               </div>
-              <h3 className="text-lg font-semibold text-[#404040] mb-2">
-                Generating AI Recommendations
-              </h3>
-              <p className="text-sm text-[#7b7b7b] text-center max-w-md">
-                Our AI is analyzing your requirements and generating optimized
-                campaign settings based on industry best practices and
-                historical performance data.
-              </p>
-              <div className="mt-8 space-y-2 w-full max-w-xs">
-                <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 rounded-full bg-[#16a34a] flex items-center justify-center">
-                    <Check size={10} className="text-white" />
+              <h3 style={{ margin: '0 0 8px', fontSize: 16, fontWeight: 600, color: TEXT }}>Generating AI Recommendations</h3>
+              <p style={{ margin: 0, fontSize: 13, color: TEXT_MID, textAlign: 'center', maxWidth: 360 }}>Our AI is analysing your requirements and generating optimised campaign settings based on industry best practices.</p>
+              <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 10, width: '100%', maxWidth: 280 }}>
+                {[['Analysing campaign goal', true], ['Processing budget constraints', true], ['Generating recommendations…', false]].map(([label, done]) => (
+                  <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    {done
+                      ? <div style={{ width: 18, height: 18, borderRadius: '50%', backgroundColor: GREEN, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><CheckIcon size={10} color="#fff" /></div>
+                      : <SpinnerIcon size={18} color={VI} />
+                    }
+                    <span style={{ fontSize: 13, color: done ? TEXT : TEXT_MID }}>{label}</span>
                   </div>
-                  <p className="text-sm text-[#404040]">
-                    Analyzing campaign goal
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 rounded-full bg-[#16a34a] flex items-center justify-center">
-                    <Check size={10} className="text-white" />
-                  </div>
-                  <p className="text-sm text-[#404040]">
-                    Processing budget constraints
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Loader2 size={16} className="text-[#7c3aed] animate-spin" />
-                  <p className="text-sm text-[#7b7b7b]">
-                    Generating recommendations...
-                  </p>
-                </div>
+                ))}
               </div>
             </div>
           )}
 
-          {/* Error Message */}
+          {/* Error */}
           {error && (
-            <div className="mt-4 px-4 py-3 bg-[#fef2f2] border border-[#fecaca] rounded-lg">
-              <p className="text-sm text-[#dc2626]">{error}</p>
+            <div style={{ marginTop: 16, padding: '10px 14px', backgroundColor: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: 8 }}>
+              <p style={{ margin: 0, fontSize: 13, color: '#dc2626' }}>{error}</p>
             </div>
           )}
         </div>
 
         {/* Footer */}
-        {step !== "ai-generating" && (
-          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-[#efefef] bg-[#fafafa]">
-            <Button
-              variant="outline"
-              onClick={
-                step === "initial" &&
-                adType !== "display" &&
-                adType !== "offsite" &&
-                adType !== "instore"
-                  ? handleClose
-                  : handleBack
-              }
-              className="border-[#dedede] text-[#7b7b7b] hover:bg-[#f5f5f5] bg-transparent"
-            >
-              {step === "initial" &&
-              adType !== "display" &&
-              adType !== "offsite" &&
-              adType !== "instore"
-                ? "Cancel"
-                : "Back"}
+        {step !== 'ai-generating' && (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10, padding: '16px 24px', borderTop: `1px solid ${BORDER}`, backgroundColor: BG_SUBTLE, flexShrink: 0 }}>
+            <Button variant="outline" onClick={step === 'initial' ? handleClose : handleBack}>
+              {step === 'initial' ? 'Cancel' : 'Back'}
             </Button>
             <Button
-              onClick={
-                step === "initial"
-                  ? handleContinue
-                  : step === "copy-select"
-                    ? handleCopyCampaign
-                    : handleAiGenerate
-              }
-              className={`
-                px-6 text-white
-                ${step === "ai-questionnaire" ? "bg-[#7c3aed] hover:bg-[#6d28d9]" : "bg-[#0097f0] hover:bg-[#2983d4]"}
-              `}
+              variant="primary"
+              onClick={step === 'initial' ? handleContinue : step === 'copy-select' ? handleCopyCampaign : handleAiGenerate}
+              style={step === 'ai-questionnaire' ? { backgroundColor: VI } : {}}
             >
-              {step === "initial" && "Continue to Setup"}
-              {step === "copy-select" && "Copy & Continue"}
-              {step === "ai-questionnaire" && (
-                <span className="flex items-center gap-2">
-                  <Sparkles size={16} />
-                  Generate Recommendations
-                </span>
-              )}
+              {step === 'initial'          && 'Continue to Setup'}
+              {step === 'copy-select'      && 'Copy & Continue'}
+              {step === 'ai-questionnaire' && <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}><SparklesIcon size={15} color="#fff" /> Generate Recommendations</span>}
             </Button>
           </div>
         )}
       </div>
     </div>,
     document.body,
+  );
+}
+
+// ── sub-component: AI choice button ──────────────────────────────────────────
+function AiChoiceBtn({ selected, onClick, label, desc, center }) {
+  return (
+    <button onClick={onClick} style={{
+      padding: '12px 14px', border: `1.5px solid ${selected ? VI : BORDER}`, borderRadius: 10,
+      cursor: 'pointer', textAlign: center ? 'center' : 'left', fontFamily: FONT, transition: 'all 0.15s',
+      backgroundColor: selected ? 'rgba(124,58,237,0.06)' : BG,
+    }}>
+      <p style={{ margin: '0 0 3px', fontSize: 13, fontWeight: 600, color: selected ? VI : TEXT }}>{label}</p>
+      <p style={{ margin: 0, fontSize: 11, color: TEXT_MID }}>{desc}</p>
+    </button>
   );
 }

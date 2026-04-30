@@ -37,7 +37,7 @@ const CLICKS_CPC_DATA = [
   { x: '05/08', clicks: 6, cpc: 8 },
 ];
 
-const DONUT_COLORS = ['#2563eb', '#f59e0b', '#16a34a', '#7c3aed', '#dc2626'];
+const DONUT_COLORS = ['#2563eb', '#f59e0b', '#16a34a', '#7c3aed', 'var(--alert-error-primary)'];
 const DONUT_DATA = [
   { name: 'Blue',   value: 55 },
   { name: 'Orange', value: 20 },
@@ -65,7 +65,7 @@ const LINE_COLORS = {
   category: '#7c3aed',
   custom:   '#f59e0b',
   home:     '#16a34a',
-  product:  '#dc2626',
+  product:  'var(--alert-error-primary)',
   purchase: '#2563eb',
   search:   '#0891b2',
 };

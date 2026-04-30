@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { ThemeDropdown, GlobalSearch } from '../../ui';
 
 const SEGMENTS = [
   { name: 'test',                                    count: 0   },
@@ -303,16 +304,8 @@ export default function TopBar({ section = 'Analytics', page = 'Dashboard', onNa
 
       {/* Right: action buttons */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-        <IconBtn title="Theme">
-          <circle cx="12" cy="12" r="5"/>
-          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </IconBtn>
-        <IconBtn title="Search">
-          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </IconBtn>
+        <ThemeDropdown />
+        <GlobalSearch />
         <UserViewDropdown />
         <IconBtn title="Filter">
           <path d="M4 6h16M7 12h10M10 18h4"/>

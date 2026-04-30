@@ -104,17 +104,17 @@ function CreateAttributeDrawer({ onClose, showToast }) {
 
         <div style={{ flex:1, overflowY:'auto', padding:'24px' }}>
           <div style={field}>
-            <label style={fieldLabel}>id <span style={{ color:'#EF4444' }}>*</span></label>
+            <label style={fieldLabel}>id <span style={{ color:'var(--alert-error-primary)' }}>*</span></label>
             <input style={input} value={form.id} maxLength={50} onChange={e => set('id', e.target.value)} />
             <span style={hint}>Help text here</span>
           </div>
           <div style={field}>
-            <label style={fieldLabel}>alias <span style={{ color:'#EF4444' }}>*</span></label>
+            <label style={fieldLabel}>alias <span style={{ color:'var(--alert-error-primary)' }}>*</span></label>
             <input style={input} value={form.alias} maxLength={50} onChange={e => set('alias', e.target.value)} />
             <span style={hint}>Help text here</span>
           </div>
           <div style={field}>
-            <label style={fieldLabel}>Type <span style={{ color:'#EF4444' }}>*</span></label>
+            <label style={fieldLabel}>Type <span style={{ color:'var(--alert-error-primary)' }}>*</span></label>
             <div style={{ position:'relative' }}>
               <select style={{ ...input, appearance:'none', paddingRight:28, cursor:'pointer' }}
                 value={form.type} onChange={e => set('type', e.target.value)}>
@@ -126,13 +126,13 @@ function CreateAttributeDrawer({ onClose, showToast }) {
             </div>
           </div>
           <div style={field}>
-            <label style={fieldLabel}>Advertiser Visibility <span style={{ color:'#EF4444' }}>*</span></label>
+            <label style={fieldLabel}>Advertiser Visibility <span style={{ color:'var(--alert-error-primary)' }}>*</span></label>
             <button style={{ height:36, padding:'0 14px', border:`1px solid ${BORDER}`, borderRadius:6, background:'var(--osmos-bg)', fontSize:13, fontFamily:FONT, color:FG_MUT, cursor:'pointer' }}>
               100 Advertisers
             </button>
           </div>
           <div style={field}>
-            <label style={fieldLabel}>Enable Dropdown <span style={{ color:'#EF4444' }}>*</span></label>
+            <label style={fieldLabel}>Enable Dropdown <span style={{ color:'var(--alert-error-primary)' }}>*</span></label>
             <div style={{ display:'flex', gap:20 }}>
               {['Fixed List','Input Value'].map(opt => (
                 <label key={opt} style={{ display:'flex', alignItems:'center', gap:7, fontSize:13, fontFamily:FONT, color:FG_MUT, cursor:'pointer' }}>
@@ -143,7 +143,7 @@ function CreateAttributeDrawer({ onClose, showToast }) {
             </div>
           </div>
           <div style={field}>
-            <label style={fieldLabel}>Values <span style={{ color:'#EF4444' }}>*</span></label>
+            <label style={fieldLabel}>Values <span style={{ color:'var(--alert-error-primary)' }}>*</span></label>
             <input style={input} placeholder="Enter here" value={form.values} onChange={e => set('values', e.target.value)} />
             <span style={hint}>Help text here</span>
           </div>

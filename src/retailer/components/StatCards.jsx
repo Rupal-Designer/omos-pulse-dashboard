@@ -53,7 +53,7 @@ export default function StatCards({ data = STATS }) {
               <span className="tabular-nums" style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)' }}>{stat.compValue}</span>
               <span className="tabular-nums" style={{
                 fontSize: 11, fontWeight: 600,
-                color: isPositive ? '#22C55E' : '#EF4444',
+                color: isPositive ? 'var(--alert-success-primary)' : 'var(--alert-error-primary)',
               }}>
                 {isPositive ? '↑' : '↓'} {Math.abs(stat.pct)}%
               </span>

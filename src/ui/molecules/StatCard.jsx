@@ -12,9 +12,9 @@ const FONT = "'Open Sans', sans-serif";
  */
 export function StatCard({ label, value, trend, trendDir = 'neutral', style }) {
   const trendColor =
-    trendDir === 'up' ? '#22C55E' :
-    trendDir === 'down' ? '#EF4444' :
-    'var(--osmos-fg-muted)';
+    trendDir === 'up'   ? 'var(--alert-success-primary)' :
+    trendDir === 'down' ? 'var(--alert-error-primary)'   :
+    'var(--text-muted)';
 
   return (
     <div style={{
