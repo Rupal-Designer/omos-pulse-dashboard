@@ -190,6 +190,7 @@ function NavRailItem({ item, active, wide, isOpen, onClick, muted = false }) {
           background: bg,
           border: 'none', borderRadius: 8, cursor: 'pointer',
           transition: 'background 0.15s',
+          textAlign: 'left',
           whiteSpace: 'nowrap', overflow: 'hidden',
         }}
       >
