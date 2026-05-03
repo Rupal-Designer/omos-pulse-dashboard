@@ -26,6 +26,7 @@ export { Modal } from './molecules/Modal';
 export { RadioCard, RadioDot } from './molecules/RadioCard';
 export { ThemeDropdown } from './molecules/ThemeDropdown';
 export { GlobalSearch } from './molecules/GlobalSearch';
+export { NavShell } from './molecules/NavShell';
 
 // Patterns
 export { UploadPage } from './patterns/UploadPage';

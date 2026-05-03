@@ -1,14 +1,9 @@
 import { useState } from 'react';
-import { Icon, ChevronRightIcon } from '../../ui';
+import { Icon, NavShell } from '../../ui';
 
-// ── Design tokens ────────────────────────────────────────────────────────────
-const FONT       = "'Open Sans', sans-serif";
-const WHITE      = '#fff';
-const WHITE70    = 'rgba(255,255,255,0.7)';
-const WHITE50    = 'rgba(255,255,255,0.5)';
-const WHITE10    = 'rgba(255,255,255,0.1)';
-const ACTIVE_BG  = 'var(--osmos-nav-active-bg)';
-const SUBNAV_ACT = 'var(--osmos-nav-accent)';
+// ── Design tokens (icon colour only — layout handled by NavShell) ─────────────
+const WHITE   = '#fff';
+const WHITE70 = 'rgba(255,255,255,0.7)';
 
 // ── Hand-rolled icon components (Lucide SVG paths, stroke-only) ──────────────
 const RocketNavIcon = ({ size = 20, color = WHITE70 }) => (
@@ -95,12 +90,6 @@ const SettingsNavIcon = ({ size = 20, color = WHITE70 }) => (
   </Icon>
 );
 
-const ChevUpNavIcon = ({ size = 16, color = WHITE50 }) => (
-  <Icon size={size} color={color}>
-    <path d="m18 15-6-6-6 6" />
-  </Icon>
-);
-
 // ── Sub-item data (component refs, not JSX — so NavItem controls icon color) ─
 const CAMPAIGN_SUB_ITEMS = [
   { IconComp: CartNavIcon,        label: 'Product Ads' },
@@ -118,173 +107,74 @@ const LinkNavIcon = ({ size = 20, color = WHITE70 }) => (
   </Icon>
 );
 
+// ── Advertiser logo ───────────────────────────────────────────────────────────
+const AdvertiserLogo = () => (
+  <>
+    <div style={{
+      width: 36, height: 36, flexShrink: 0,
+      background: 'rgba(255,255,255,0.2)', borderRadius: 8,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}>
+      <span style={{ color: WHITE, fontSize: 12, fontWeight: 500 }}>QA</span>
+    </div>
+    <span style={{ color: WHITE, fontWeight: 600, fontSize: 18, whiteSpace: 'nowrap' }}>QA</span>
+  </>
+);
+
 // ── Sidebar ───────────────────────────────────────────────────────────────────
 export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNavigate }) {
-  const [isExpanded, setIsExpanded]       = useState(false);
-  const [campaignsOpen, setCampaignsOpen] = useState(true);
   const currentRoute = window.location.hash.replace(/^#/, '') || '/';
 
-  return (
-    <div
-      onMouseEnter={() => setIsExpanded(true)}
-      onMouseLeave={() => setIsExpanded(false)}
-      style={{
-        width: isExpanded ? 256 : 68,
-        background: 'var(--osmos-nav-bg)',
-        display: 'flex', flexDirection: 'column',
-        padding: '16px 0',
-        height: '100vh', position: 'fixed', top: 0, left: 0, zIndex: 40,
-        overflowY: 'auto',
-        transition: 'width 0.25s ease',
-        fontFamily: FONT,
-      }}
-    >
-      {/* Brand logo */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 12,
-        padding: '0 16px', marginBottom: 24,
-        justifyContent: 'flex-start',
-      }}>
-        <div style={{
-          width: 40, height: 40, flexShrink: 0,
-          background: WHITE20, borderRadius: 8,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <span style={{ color: WHITE, fontSize: 12, fontWeight: 500 }}>QA</span>
-        </div>
-        {isExpanded && (
-          <span style={{ color: WHITE, fontWeight: 600, fontSize: 18 }}>QA</span>
-        )}
-      </div>
+  const NAV_ITEMS = [
+    {
+      id: 'campaigns',
+      label: 'Campaigns',
+      icon: <RocketNavIcon />,
+      subItems: CAMPAIGN_SUB_ITEMS.map(s => ({
+        id: s.label,
+        label: s.label,
+        icon: <s.IconComp />,
+        active: activeAdType === s.label,
+        onClick: () => {
+          onAdTypeChange?.(s.label);
+          if (onNavigate) onNavigate('/');
+        },
+      })),
+    },
+    {
+      id: 'byot',
+      label: 'BYOT',
+      icon: <LinkNavIcon />,
+      badge: 'Beta',
+      active: currentRoute === '/byot',
+    },
+    { id: 'packages',        label: 'Packages',        icon: <LayoutGridNavIcon />, hasSub: true, badge: 'Alpha' },
+    { id: 'finance',         label: 'Finance',         icon: <DollarNavIcon />,     hasSub: true },
+    { id: 'activity-center', label: 'Activity Center', icon: <ActivityNavIcon />,   hasSub: true },
+    { id: 'help-center',     label: 'Help Center',     icon: <HelpNavIcon />,       hasSub: true },
+  ];
 
-      {/* Nav items */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4, padding: '0 8px' }}>
-        {/* Campaigns (expandable) */}
-        <NavItem
-          IconComp={RocketNavIcon}
-          label="Campaigns"
-          expanded={isExpanded}
-          hasSubmenu
-          isOpen={campaignsOpen}
-          active={campaignsOpen}
-          onClick={() => setCampaignsOpen(!campaignsOpen)}
-        />
+  const BOTTOM_ITEMS = [
+    { id: 'settings', label: 'Settings', icon: <SettingsNavIcon />, hasSub: true },
+  ];
 
-        {/* Campaigns sub-items — only visible when sidebar and campaigns are open */}
-        {isExpanded && campaignsOpen && (
-          <div style={{ marginLeft: 8, display: 'flex', flexDirection: 'column', gap: 4, marginTop: 4 }}>
-            {CAMPAIGN_SUB_ITEMS.map((item) => (
-              <SubItem
-                key={item.label}
-                IconComp={item.IconComp}
-                label={item.label}
-                active={activeAdType === item.label}
-                onClick={() => {
-                  onAdTypeChange && onAdTypeChange(item.label);
-                  // Navigate to dashboard when changing ad type from a non-dashboard page (e.g. BYOT)
-                  if (onNavigate) onNavigate('/');
-                }}
-              />
-            ))}
-          </div>
-        )}
+  function handleSelect(id) {
+    if (id === 'byot') {
+      if (onNavigate) onNavigate('/byot');
+      else window.location.hash = '/byot';
+    }
+  }
 
-        <NavItem
-          IconComp={LinkNavIcon}
-          label="BYOT"
-          expanded={isExpanded}
-          active={currentRoute === '/byot'}
-          onClick={() => { if (onNavigate) onNavigate('/byot'); else window.location.hash = '/byot'; }}
-          badge="Beta"
-        />
-        <NavItem IconComp={LayoutGridNavIcon} label="Packages"        expanded={isExpanded} hasSubmenu badge="Alpha" />
-        <NavItem IconComp={DollarNavIcon}     label="Finance"         expanded={isExpanded} hasSubmenu />
-        <NavItem IconComp={ActivityNavIcon}   label="Activity Center" expanded={isExpanded} hasSubmenu />
-        <NavItem IconComp={HelpNavIcon}       label="Help Center"     expanded={isExpanded} hasSubmenu />
-      </div>
-
-      {/* Settings pinned to bottom */}
-      <div style={{ padding: '0 8px', marginTop: 'auto' }}>
-        <NavItem IconComp={SettingsNavIcon} label="Settings" expanded={isExpanded} hasSubmenu />
-      </div>
-    </div>
-  );
-}
-
-// ── NavItem ───────────────────────────────────────────────────────────────────
-function NavItem({ IconComp, label, active, expanded, hasSubmenu, isOpen, onClick, badge }) {
-  const [hover, setHover] = useState(false);
-  const iconColor = active ? WHITE : WHITE70;
+  const activeId = currentRoute === '/byot' ? 'byot' : 'campaigns';
 
   return (
-    <div
-      onClick={onClick}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      style={{
-        display: 'flex', alignItems: 'center', gap: 12,
-        padding: '0 12px', height: 44, borderRadius: 8,
-        cursor: 'pointer', transition: 'background 0.15s',
-        background: active ? ACTIVE_BG : (hover ? WHITE10 : 'transparent'),
-        justifyContent: 'flex-start',
-        overflow: 'hidden', whiteSpace: 'nowrap',
-      }}
-    >
-      {/* Icon */}
-      <div style={{ flexShrink: 0 }}>
-        <IconComp size={20} color={iconColor} />
-      </div>
-
-      {/* Label + badge + chevron (only when expanded) */}
-      {expanded && (
-        <>
-          <span style={{ flex: 1, fontSize: 13, fontWeight: active ? 600 : 400, color: iconColor }}>
-            {label}
-          </span>
-          {badge && (
-            <span style={{
-              padding: '2px 8px', background: 'var(--osmos-brand-amber)',
-              color: WHITE, fontSize: 11, borderRadius: 999, flexShrink: 0,
-            }}>
-              {badge}
-            </span>
-          )}
-          {hasSubmenu && (
-            <div>
-              {isOpen
-                ? <ChevUpNavIcon size={16} color={WHITE50} />
-                : <ChevronRightIcon size={16} color={WHITE50} />
-              }
-            </div>
-          )}
-        </>
-      )}
-    </div>
-  );
-}
-
-// ── SubItem ───────────────────────────────────────────────────────────────────
-function SubItem({ IconComp, label, active, onClick }) {
-  const [hover, setHover] = useState(false);
-  const bg    = active ? SUBNAV_ACT : (hover ? WHITE10 : 'transparent');
-  const color = active || hover ? WHITE : WHITE70;
-
-  return (
-    <div
-      onClick={onClick}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      style={{
-        display: 'flex', alignItems: 'center', gap: 12,
-        padding: '8px 12px', borderRadius: 8,
-        cursor: 'pointer', transition: 'all 0.15s',
-        background: bg,
-      }}
-    >
-      <div style={{ flexShrink: 0 }}>
-        <IconComp size={18} color={color} />
-      </div>
-      <span style={{ fontSize: 13, fontWeight: 500, color }}>{label}</span>
-    </div>
+    <NavShell
+      items={NAV_ITEMS}
+      bottomItems={BOTTOM_ITEMS}
+      activeId={activeId}
+      onSelect={handleSelect}
+      logo={<AdvertiserLogo />}
+      userInitial="A"
+    />
   );
 }
