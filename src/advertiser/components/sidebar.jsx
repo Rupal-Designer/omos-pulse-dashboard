@@ -107,13 +107,6 @@ const LinkNavIcon = ({ size = 20, color = WHITE70 }) => (
   </Icon>
 );
 
-// ── Advertiser logo ───────────────────────────────────────────────────────────
-const AdvertiserLogo = () => (
-  <>
-    <OsmosLogoMark size={36} />
-    <span style={{ color: WHITE, fontWeight: 700, fontSize: 15, whiteSpace: 'nowrap', letterSpacing: 0.5 }}>OSMOS</span>
-  </>
-);
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────
 export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNavigate }) {
@@ -167,7 +160,8 @@ export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNaviga
       bottomItems={BOTTOM_ITEMS}
       activeId={activeId}
       onSelect={handleSelect}
-      logo={<AdvertiserLogo />}
+      logoMark={<OsmosLogoMark size={36} />}
+      logoText="OSMOS"
       userInitial="A"
     />
   );

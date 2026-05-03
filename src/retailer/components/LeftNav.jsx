@@ -367,20 +367,6 @@ function findSectionId(pageId) {
   return parent?.id ?? 'analytics';
 }
 
-/* ── Retailer logo ────────────────────────────────────────────── */
-const RetailerLogo = () => (
-  <>
-    <OsmosLogoMark size={36} />
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 2, whiteSpace: 'nowrap' }}>
-      <span style={{ fontSize: 15, fontWeight: 700, color: '#fff', letterSpacing: 0.5 }}>OSMOS</span>
-      <span style={{
-        fontSize: 9, fontWeight: 700, color: '#fff',
-        background: 'var(--osmos-brand-amber)', borderRadius: 3,
-        padding: '1px 6px', letterSpacing: 0.3, alignSelf: 'flex-start',
-      }}>PRO</span>
-    </div>
-  </>
-);
 
 /* ── Root LeftNav ─────────────────────────────────────────────── */
 export default function LeftNav({ activePage, onPageChange }) {
@@ -415,7 +401,9 @@ export default function LeftNav({ activePage, onPageChange }) {
       bottomItems={BOTTOM_NAV}
       activeId={activeSection}
       onSelect={handleSelect}
-      logo={<RetailerLogo />}
+      logoMark={<OsmosLogoMark size={36} />}
+      logoText="OSMOS"
+      logoBadge="PRO"
       userInitial="R"
       subnavPanel={subnavPinned
         ? <SubNavPanel

@@ -15,7 +15,9 @@ import { Icon, ChevronRightIcon } from '../atoms/Icon';
  *   bottomItems   Item[]        — pinned above the avatar footer
  *   activeId      string        — currently highlighted top-level item
  *   onSelect      (id) => void  — called for items without subItems
- *   logo          ReactNode     — rendered in the 80px header slot (overflow clips it when narrow)
+ *   logoMark      ReactNode     — always visible (icon/mark), e.g. <OsmosLogoMark />
+ *   logoText      string        — wordmark shown only when expanded, e.g. "OSMOS"
+ *   logoBadge     string        — optional pill shown only when expanded, e.g. "PRO"
  *   userInitial   string        — shown in avatar circle (default 'U')
  *   subnavPanel   ReactNode     — rendered beside the rail (retailer side-panel pattern)
  */
@@ -24,7 +26,9 @@ export function NavShell({
   bottomItems = [],
   activeId,
   onSelect,
-  logo,
+  logoMark,
+  logoText,
+  logoBadge,
   userInitial = 'U',
   subnavPanel,
 }) {
@@ -69,7 +73,7 @@ export function NavShell({
           fontFamily: "'Open Sans', sans-serif",
         }}
       >
-        {/* Logo slot — always rendered; text is clipped by overflow when narrow */}
+        {/* Logo header */}
         <div style={{
           height: 80, flexShrink: 0,
           display: 'flex', alignItems: 'center',
@@ -77,9 +81,31 @@ export function NavShell({
           padding: '0 16px',
           gap: 10,
           borderBottom: '1px solid var(--osmos-nav-border)',
-          overflow: 'hidden',
         }}>
-          {logo}
+          {/* Mark — always visible */}
+          {logoMark}
+
+          {/* Wordmark + badge — only when expanded */}
+          {wide && logoText && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <span style={{
+                fontSize: 15, fontWeight: 700, color: '#fff',
+                letterSpacing: 0.5, whiteSpace: 'nowrap',
+              }}>
+                {logoText}
+              </span>
+              {logoBadge && (
+                <span style={{
+                  fontSize: 9, fontWeight: 700, color: '#fff',
+                  background: 'var(--osmos-brand-amber)', borderRadius: 3,
+                  padding: '1px 6px', letterSpacing: 0.3, alignSelf: 'flex-start',
+                  whiteSpace: 'nowrap',
+                }}>
+                  {logoBadge}
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Main items */}
