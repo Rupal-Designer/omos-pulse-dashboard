@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Icon, NavShell } from '../../ui';
+import { Icon, NavShell, OsmosLogoMark } from '../../ui';
 
 // ── Design tokens (icon colour only — layout handled by NavShell) ─────────────
 const WHITE   = '#fff';
@@ -110,14 +110,8 @@ const LinkNavIcon = ({ size = 20, color = WHITE70 }) => (
 // ── Advertiser logo ───────────────────────────────────────────────────────────
 const AdvertiserLogo = () => (
   <>
-    <div style={{
-      width: 36, height: 36, flexShrink: 0,
-      background: 'rgba(255,255,255,0.2)', borderRadius: 8,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-    }}>
-      <span style={{ color: WHITE, fontSize: 12, fontWeight: 500 }}>QA</span>
-    </div>
-    <span style={{ color: WHITE, fontWeight: 600, fontSize: 18, whiteSpace: 'nowrap' }}>QA</span>
+    <OsmosLogoMark size={36} />
+    <span style={{ color: WHITE, fontWeight: 700, fontSize: 15, whiteSpace: 'nowrap', letterSpacing: 0.5 }}>OSMOS</span>
   </>
 );
 

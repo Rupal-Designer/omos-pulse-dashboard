@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavShell } from '../../ui';
+import { NavShell, OsmosLogoMark } from '../../ui';
 
 /* ── Nav data ─────────────────────────────────────────────────── */
 const NAV_SECTIONS = [
@@ -370,15 +370,7 @@ function findSectionId(pageId) {
 /* ── Retailer logo ────────────────────────────────────────────── */
 const RetailerLogo = () => (
   <>
-    <div style={{
-      width: 36, height: 36, borderRadius: 8, flexShrink: 0,
-      background: 'rgba(255,255,255,0.12)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-    }}>
-      <Icon size={18} color="var(--osmos-nav-accent)">
-        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-      </Icon>
-    </div>
+    <OsmosLogoMark size={36} />
     <div style={{ display: 'flex', flexDirection: 'column', gap: 2, whiteSpace: 'nowrap' }}>
       <span style={{ fontSize: 15, fontWeight: 700, color: '#fff', letterSpacing: 0.5 }}>OSMOS</span>
       <span style={{

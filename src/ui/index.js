@@ -4,6 +4,7 @@ export { Icon, SearchIcon, FilterIcon, RefreshIcon, DownloadIcon, PlusIcon, Tras
   UploadIcon, FileIcon, CheckIcon, SortIcon, CalendarIcon, EyeIcon, ColumnsIcon,
   InfoIcon, MoreIcon } from './atoms/Icon';
 export { Button } from './atoms/Button';
+export { OsmosLogoMark } from './atoms/LogoMark';
 export { Badge, TypeBadge } from './atoms/Badge';
 export { Input, Select } from './atoms/Input';
 export { Checkbox } from './atoms/Checkbox';
