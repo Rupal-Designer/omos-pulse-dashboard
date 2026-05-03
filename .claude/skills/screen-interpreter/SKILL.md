@@ -3,6 +3,22 @@ name: screen-interpreter
 description: "Interpret any UI input — screenshot, sketch photo, Figma URL, or text brief — and produce a structured Screen Spec JSON. Use this skill whenever someone says 'interpret this screen', 'what components do I need', 'analyze this mockup', 'break down this UI', or provides an image/URL/description of a screen they want built. Also trigger when the design-orchestrator chains to this skill. This is always the FIRST step in the design-to-code pipeline."
 ---
 
+## ⚡ CARDINAL RULE — Figma is the Source of Truth
+
+> **Every label, structure, group name, column header, button text, nav item name, and data value in the implementation MUST match the Figma design verbatim.** No paraphrasing. No inventing. No "close enough."
+>
+> - If Figma says `"Manage CPM/CPC Rules"` → code says `"Manage CPM/CPC Rules"` (not "Manage CPM Rules")
+> - If Figma says `"Ops User"` (singular) → code says `"Ops User"` (not "Ops Users")
+> - If Figma says `"Super Admin users"` (lowercase u) → code says `"Super Admin users"`
+> - If Figma groups "Manage Segments" under **Audience Manager** → the nav puts it under Audience Manager (not Advertiser Settings)
+> - If a text node is unreadable → mark it `[UNREADABLE]` and surface it to the user before writing any code
+>
+> **Do not trust your own inference about what a label "should" be.** Read the Figma text node. Copy it. Done.
+>
+> This rule overrides all other heuristics, templates, and defaults in this skill.
+
+---
+
 # Screen Interpreter
 
 Takes any visual or textual description of a UI screen and produces a **structured Screen Spec JSON** that downstream skills (figma-wireframer, react-implementer) can consume.
@@ -48,30 +64,33 @@ Break the screen into zones. Every screen has some subset of:
 
 ### Step 3: Component Intent Mapping
 
-For each zone, identify the **intent** (what it does) and the **component type** from the `@rishikeshjoshi-morpheus/ui` library:
+For each zone, identify the **intent** (what it does) and the **`src/ui/` component** to use. All component names below are importable from `'../ui'`.
 
-| UI Pattern Detected | Component |
-|---------------------|-----------|
-| Data grid with rows/columns | `Table` (.Root .Header .Body .Row .Cell .ColumnHeader) |
-| Dialog/popup overlay | `Modal` (.Root .Content .Header .Body .Footer .Title .CloseTrigger) |
-| Side panel | `Drawer` (.Root .Content .Header .Body .Footer) |
-| Tab navigation | `Tabs` (.Root .List .Trigger .Content) |
-| Dropdown selector | `Select` (with options array) |
-| Text input field | `Input` (with label, helperText, errorText props) |
-| Toggle switch | `Switch` (with label prop) |
-| Action button | `Button` (variant: solid/outline/ghost, colorPalette) |
-| Status label | `Badge` (colorPalette, variant) |
-| Info/warning banner | `Alert` (status: info/warning/error/success) |
-| Navigation path | `Breadcrumb` (.Root .List .Item .Link) |
-| History/activity log | `Timeline` (.Root .Item .Indicator .Connector .Content) |
-| File upload area | `FileUpload` (.Dropzone .Trigger .ItemGroup) |
-| Multi-step process | `Steps` (.Root .List .Item .Content .NextTrigger .PrevTrigger) |
-| Checkable row | `Checkbox` (with label prop) |
-| Category label | `Tag` (colorPalette, variant) |
-| Page controls | `Pagination` (Root, Items, PrevTrigger, NextTrigger) |
-| Empty content area | `EmptyState` (Root, Indicator, Content, Title, Description) |
-| Hover info | `Tooltip` |
-| Context actions | `Menu` (.Root .Trigger .Content .Item) |
+| UI Pattern Detected | `src/ui/` Component | Key Props |
+|---------------------|---------------------|-----------|
+| Action button | `Button` | `variant`: primary\|outline\|ghost\|icon\|link |
+| Status pill | `Badge` | `status`: Active\|Inactive\|Paused\|Live\|Draft\|Error |
+| Custom type chip | `TypeBadge` | `type`, `colorMap` |
+| Coloured category tag | `Tag` | `colorScheme`: green\|amber\|blue\|gray\|red |
+| Text input with label | `Input` | `label`, `value`, `onChange`, `required`, `helperText` |
+| Dropdown selector | `Select` | `label`, `value`, `onChange`, `options`: [{value, label}] |
+| Checkbox cell / toggle | `Checkbox` | `checked`, `onChange`, `label` |
+| Search input with magnifier | `SearchBar` | `value`, `onChange`, `placeholder`, `width` |
+| Toolbar (left + right slots) | `Toolbar` | `left`, `right`, `noBorder` |
+| Right-side slide panel | `Drawer` | `open`, `onClose`, `title`, `footer`, `width` |
+| Toast notification | `Toast` + `useToast` | `const { toast, showToast } = useToast()` |
+| KPI metric card | `StatCard` | `label`, `value`, `trend`, `trendDir` |
+| Compact metric chip | `KPIChip` | `label`, `value` |
+| Table pagination controls | `Pagination` | `total`, `page`, `perPage`, `onChange`, `entityLabel` |
+| File download info bar | `InfoBanner` | `fileName`, `fileDesc`, `downloadText`, `onDownload` |
+| Dashed upload dropzone | `UploadDropzone` | `onFile`, `accept`, `label`, `successMessage` |
+| Full upload page | `UploadPage` | `fileName`, `fileDesc`, `downloadText`, `howItWorksBullets[]` |
+| Any SVG icon | Named icon export or `Icon` with SVG children | `SearchIcon`, `PlusIcon`, `EditIcon`, … |
+| Data grid / table | `raw-table` (use raw `<table>` HTML — no Table molecule in `src/ui/`) | — |
+| Centered dialog overlay | `hand-rolled-overlay` (fixed-position div — no Modal molecule in `src/ui/`) | — |
+| Tab navigation bar | `hand-rolled-tabs` (row of `Button` atoms) | — |
+| Activity log / timeline | `hand-rolled-timeline` (raw `<div>` list with CSS vars) | — |
+| Charts | `recharts` | `LineChart`, `BarChart`, `AreaChart` |
 
 ### Step 4: Output Screen Spec JSON
 
@@ -79,43 +98,44 @@ Produce a JSON object with this structure:
 
 ```json
 {
+  "componentLibrary": "src/ui/",
   "screenType": "data-management-list",
   "title": "Advertisers",
   "description": "Manage advertisers with CRUD, bulk upload, rules, and history",
   "zones": {
     "breadcrumb": {
-      "type": "Breadcrumb",
       "items": ["Online Ad Management", "Space World"]
     },
     "infoBanner": {
-      "type": "Alert",
-      "status": "info",
+      "component": "InfoBanner",
       "text": "Edit Advertiser info..."
     },
     "toolbar": {
-      "left": [{ "type": "Select", "purpose": "status-filter" }],
+      "component": "Toolbar",
+      "left": [{ "component": "Select", "purpose": "status-filter" }],
       "right": [
-        { "type": "Button", "variant": "outline", "label": "Bulk Upload" },
-        { "type": "Button", "colorPalette": "green", "label": "Create Advertiser" }
+        { "component": "Button", "variant": "outline", "label": "Bulk Upload" },
+        { "component": "Button", "variant": "primary", "label": "Create Advertiser" }
       ]
     },
     "dataTable": {
-      "type": "Table",
+      "component": "raw-table",
       "columns": ["checkbox", "Advertiser ID", "Store ID", "Name", "Persona", "Spend YTD", "Spend YoY", "Rules", "Actions"],
-      "features": ["row-selection", "sortable", "action-column"]
+      "features": ["row-selection", "sortable", "action-column"],
+      "statusColumn": { "component": "Badge", "prop": "status" }
     },
-    "pagination": { "type": "Pagination" }
+    "pagination": { "component": "Pagination" }
   },
-  "modals": [
+  "drawers": [
     {
       "name": "AddAdvertiser",
       "trigger": "Create Advertiser button",
-      "type": "Modal",
-      "size": "sm",
+      "component": "Drawer",
+      "width": 480,
       "fields": [
-        { "type": "Input", "label": "Store(s) ID", "required": true },
-        { "type": "Input", "label": "Advertiser Name", "required": true },
-        { "type": "Input", "label": "Persona", "required": true }
+        { "component": "Input", "label": "Store(s) ID", "required": true },
+        { "component": "Input", "label": "Advertiser Name", "required": true },
+        { "component": "Select", "label": "Persona", "required": true }
       ]
     }
   ],
@@ -128,14 +148,20 @@ Produce a JSON object with this structure:
 
 ### Step 5: Pass to Next Agent
 
-Output the Screen Spec JSON and announce: "Screen Spec ready. Pass this to `figma-wireframer` to create the Figma file, or to `react-implementer` to generate code directly."
+Output the Screen Spec JSON and announce:
+
+> "Screen Spec ready. All `"component"` values in this spec reference **`src/ui/`** exports — the import path is `import { X } from '../ui'`. Pass this spec to:
+> - **`figma-batch-builder`** — use the `screenType` field to select the correct template, then fill in verbatim content. All imports come from `'../ui'`.
+> - **`react-implementer`** — implement every `"component"` field using its `src/ui/` import. `"raw-table"` → use raw `<table>` HTML. `"hand-rolled-overlay"` → fixed-position div. `"hand-rolled-tabs"` → row of `Button` atoms."
 
 ## Important Rules
 
-- **Always use the component library names** — never say "dropdown", say `Select`. Never say "popup", say `Modal`.
-- **Identify ALL modals/drawers** — these are easily missed. Look for buttons that would trigger overlays.
-- **Capture data relationships** — note which fields are editable, which are display-only, which trigger actions.
-- **Note compound component structure** — always specify sub-components with dot notation (Table.Row, Modal.Body).
+- **Always use `src/ui/` component names** — never say "dropdown", say `Select`. Never say "popup", say `Drawer`. All component names in the spec must match a `src/ui/` export or one of the `hand-rolled-*` / `raw-table` / `recharts` fallback keywords.
+- **No compound dot-notation** — `src/ui/` has no compound sub-components. Never write `Table.Row`, `Modal.Body`, `Steps.Item`, etc. in the spec. Use the flat names (`raw-table`, `Drawer`, `Button`) instead.
+- **Identify ALL drawers** — this codebase uses right-side `Drawer` panels, not centered modals. Look for any button that opens a form or detail panel. Emit them in the `"drawers"` array (not `"modals"`).
+- **`"upload-page"` screenType** — always emit `"component": "UploadPage"` for the main zone. Do NOT decompose it into `InfoBanner` + `UploadDropzone` + how-it-works card separately — `UploadPage` already composes all three.
+- **Capture data relationships** — note which fields are editable vs. display-only, which columns trigger actions, and which buttons open drawers.
+- **`"componentLibrary": "src/ui/"` is mandatory** — always include this field at the top level of the output JSON so downstream skills know which library to import from.
 
 ---
 

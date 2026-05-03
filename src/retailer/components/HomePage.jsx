@@ -3,7 +3,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer,
 } from 'recharts';
-import { Icon } from '../../ui/atoms/Icon';
+import { Icon, StatCard, ChevronDownIcon, InfoIcon, DownloadIcon } from '../../ui';
 
 /* ── palette & tokens ─────────────────────────────────────────── */
 const BG       = 'var(--osmos-bg-subtle)';
@@ -18,60 +18,7 @@ const GREEN    = 'var(--alert-success-primary)';        // semantic positive —
 const RED      = 'var(--alert-error-primary)';        // semantic negative — keep
 const ORANGE   = 'var(--osmos-brand-amber)';
 
-/* ── local icon aliases (use imported Icon atom) ──────────────── */
-
-function ChevDown({ size = 11, color = TEXT_MID }) {
-  return <Icon size={size} color={color}><polyline points="6 9 12 15 18 9"/></Icon>;
-}
-function InfoIcon({ color = TEXT_LO }) {
-  return <Icon size={13} color={color}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></Icon>;
-}
-function DownloadIcon() {
-  return <Icon size={14} color={TEXT_MID}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></Icon>;
-}
-
-/* ── Stat card ────────────────────────────────────────────────── */
-function StatCard({ label, value, compValue, compPct }) {
-  const isPositive = compPct >= 0;
-  const isEmpty = value === '0' || value === '0%';
-  return (
-    <div style={{
-      background: WHITE, borderRadius: 8, padding: '14px 16px',
-      border: `1px solid ${BORDER}`, flex: 1, minWidth: 0,
-      display: 'flex', flexDirection: 'column', gap: 8,
-    }}>
-      {/* Label row */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <span style={{ fontSize: 12, color: TEXT_MID, fontWeight: 500 }}>{label}</span>
-          <ChevDown />
-        </div>
-        <InfoIcon />
-      </div>
-      {/* Values row */}
-      {isEmpty ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <span style={{ fontSize: 18, fontWeight: 700, color: '#D0D0D0', letterSpacing: '-0.3px' }}>—</span>
-          <span style={{ fontSize: 10, color: TEXT_LO }}>No data for period</span>
-        </div>
-      ) : (
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 }}>
-          <span style={{ fontSize: 18, fontWeight: 700, color: TEXT_HI, letterSpacing: '-0.3px' }}>
-            {value}
-          </span>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-            <span style={{ fontSize: 12, color: TEXT_MID }}>
-              {compValue}
-            </span>
-            <span style={{ fontSize: 11, fontWeight: 600, color: isPositive ? GREEN : RED }}>
-              ({isPositive ? '+' : ''}{compPct}%)
-            </span>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+// StatCard, ChevronDownIcon, InfoIcon, DownloadIcon imported from src/ui
 
 /* ── Chart data ───────────────────────────────────────────────── */
 const chartDates = ['03/31','04/01','04/02','04/03','04/04','04/05','04/06'];
@@ -84,7 +31,7 @@ function MetricPill({ color, label }) {
     <div style={{ display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer' }}>
       <div style={{ width: 10, height: 10, borderRadius: 2, background: color }}/>
       <span style={{ fontSize: 11, color: TEXT_HI, fontWeight: 500 }}>{label}</span>
-      <ChevDown size={10} />
+      <ChevronDownIcon size={10} />
     </div>
   );
 }
@@ -176,7 +123,7 @@ function ProjectsTable() {
             cursor: 'pointer', fontSize: 11, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif",
           }}>
             <Icon size={13} color="#666"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></Icon>
-            <ChevDown size={10} />
+            <ChevronDownIcon size={10} />
           </button>
           <div style={{
             height: 32, padding: '0 10px', display: 'flex', alignItems: 'center', gap: 6,
@@ -379,14 +326,14 @@ export default function HomePage() {
       <HomeTopBar />
       <CompareBanner />
 
-      <main style={{ flex: 1, padding: '24px 24px 0', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+      <main style={{ flex: 1, padding: '20px 24px 0', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
         {/* Stat cards — 6 across */}
-        <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
+        <div style={{ display: 'flex', gap: 20, marginBottom: 20, overflowX: 'auto', paddingBottom: 2 }}>
           {STATS.map(s => <StatCard key={s.label} {...s} />)}
         </div>
 
         {/* Charts */}
-        <div style={{ display: 'flex', gap: 16, marginBottom: 20 }}>
+        <div style={{ display: 'flex', gap: 20, marginBottom: 20 }}>
           <ChartCard
             leftMetric="Ad Revenue" leftColor={ACCENT} leftKey="revenue" leftLabel="Ad Revenue"
             rightMetric="CPC"       rightColor={ORANGE} rightKey="cpc"     rightLabel="CPC"

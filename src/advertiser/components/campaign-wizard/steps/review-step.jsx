@@ -1,120 +1,163 @@
-"use client";
+import { CalendarIcon, CheckIcon, Icon } from '../../../../ui';
 
-import { Check, Calendar, DollarSign, Target, Layers } from "lucide-react";
+const FONT      = "'Open Sans', sans-serif";
+const TEXT      = 'var(--osmos-fg)';
+const TEXT_MID  = 'var(--osmos-fg-muted)';
+const BORDER    = 'var(--osmos-border)';
+const BG        = 'var(--osmos-bg)';
+const BG_SUB    = 'var(--osmos-bg-subtle)';
+const ACCENT    = 'var(--osmos-brand-primary)';
+const ACCENT_M  = 'var(--osmos-brand-primary-muted)';
+const GREEN     = 'var(--osmos-brand-green)';
+const GREEN_M   = 'var(--osmos-brand-green-muted)';
+const AMBER     = 'var(--osmos-brand-amber)';
 
+// ── Icons ─────────────────────────────────────────────────────────────────────
+const DollarSignIcon = (props) => (
+  <Icon {...props}>
+    <line x1="12" x2="12" y1="2" y2="22"/>
+    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+  </Icon>
+);
+
+const TargetIcon = (props) => (
+  <Icon {...props}>
+    <circle cx="12" cy="12" r="10"/>
+    <circle cx="12" cy="12" r="6"/>
+    <circle cx="12" cy="12" r="2"/>
+  </Icon>
+);
+
+const LayersIcon = (props) => (
+  <Icon {...props}>
+    <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/>
+    <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/>
+    <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>
+  </Icon>
+);
+
+// ── ReviewStep ────────────────────────────────────────────────────────────────
 export function ReviewStep({ data }) {
   const totalBudget = Number.parseFloat(data.totalBudget) || 0;
   const dailyBudget = Number.parseFloat(data.dailyBudget) || 0;
 
+  const overviewItems = [
+    {
+      label:    'Schedule',
+      value:    `${data.startDate} ${data.endDate ? `- ${data.endDate}` : '(Ongoing)'}`,
+      IconComp: CalendarIcon,
+      iconBg:   ACCENT_M,
+      iconColor: ACCENT,
+    },
+    {
+      label:    'Budget',
+      value:    `$${totalBudget.toLocaleString()} total · $${dailyBudget.toLocaleString()}/day`,
+      IconComp: DollarSignIcon,
+      iconBg:   GREEN_M,
+      iconColor: GREEN,
+    },
+    {
+      label:    'Bidding',
+      value:    `${data.biddingStrategy} · ${data.pacing} pacing`.toUpperCase(),
+      IconComp: TargetIcon,
+      iconBg:   'var(--osmos-brand-amber-muted)',
+      iconColor: AMBER,
+    },
+    {
+      label:    'Ad Groups',
+      value:    `${data.adGroups.length} ad group(s) configured`,
+      IconComp: LayersIcon,
+      iconBg:   'var(--osmos-brand-violet-muted)',
+      iconColor: 'var(--osmos-brand-violet)',
+    },
+  ];
+
+  const checklistItems = [
+    'Campaign name and objective set',
+    'Schedule configured',
+    'Budget and wallet selected',
+    'Bidding strategy defined',
+    `${data.adGroups.length} ad group(s) created`,
+  ];
+
   return (
-    <div className="space-y-8">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: FONT }}>
       <div>
-        <h2 className="text-2xl font-semibold text-[#2d2d2d] mb-2">
-          Review & Launch
+        <h2 style={{ fontSize: 24, fontWeight: 600, color: TEXT, marginBottom: 8 }}>
+          Review &amp; Launch
         </h2>
-        <p className="text-[#6b7280]">
+        <p style={{ color: TEXT_MID }}>
           Review your campaign settings before launching.
         </p>
       </div>
 
       {/* Campaign Overview */}
-      <div className="bg-white rounded-xl border border-[#e5e7eb] overflow-hidden">
-        <div className="px-6 py-4 bg-[#f9fafb] border-b border-[#e5e7eb]">
-          <h3 className="font-semibold text-[#2d2d2d]">
-            {data.name || "Untitled Campaign"}
+      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, overflow: 'hidden' }}>
+        <div style={{ padding: '16px 24px', background: BG_SUB, borderBottom: `1px solid ${BORDER}` }}>
+          <h3 style={{ fontWeight: 600, color: TEXT }}>
+            {data.name || 'Untitled Campaign'}
           </h3>
-          <p className="text-sm text-[#6b7280] capitalize">
-            {data.objective.replace("_", " ")} Campaign
+          <p style={{ fontSize: 13, color: TEXT_MID, textTransform: 'capitalize' }}>
+            {data.objective.replace('_', ' ')} Campaign
           </p>
         </div>
 
-        <div className="p-6 grid grid-cols-2 gap-6">
-          {/* Schedule */}
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-lg bg-[#eff6ff] flex items-center justify-center">
-              <Calendar size={20} className="text-[#2563eb]" />
+        <div style={{ padding: 24, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
+          {overviewItems.map(({ label, value, IconComp, iconBg, iconColor }) => (
+            <div key={label} style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+              <div style={{
+                width: 40, height: 40, borderRadius: 8, flexShrink: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: iconBg,
+              }}>
+                <IconComp size={20} color={iconColor} />
+              </div>
+              <div>
+                <h4 style={{ fontWeight: 500, color: TEXT, marginBottom: 4 }}>{label}</h4>
+                <p style={{ fontSize: 13, color: TEXT_MID }}>{value}</p>
+              </div>
             </div>
-            <div>
-              <h4 className="font-medium text-[#2d2d2d] mb-1">Schedule</h4>
-              <p className="text-sm text-[#6b7280]">
-                {data.startDate}{" "}
-                {data.endDate ? `- ${data.endDate}` : "(Ongoing)"}
-              </p>
-            </div>
-          </div>
-
-          {/* Budget */}
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-lg bg-[#f0fdf4] flex items-center justify-center">
-              <DollarSign size={20} className="text-[#16a34a]" />
-            </div>
-            <div>
-              <h4 className="font-medium text-[#2d2d2d] mb-1">Budget</h4>
-              <p className="text-sm text-[#6b7280]">
-                ${totalBudget.toLocaleString()} total · $
-                {dailyBudget.toLocaleString()}/day
-              </p>
-            </div>
-          </div>
-
-          {/* Bidding */}
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-lg bg-[#fef3c7] flex items-center justify-center">
-              <Target size={20} className="text-[#d97706]" />
-            </div>
-            <div>
-              <h4 className="font-medium text-[#2d2d2d] mb-1">Bidding</h4>
-              <p className="text-sm text-[#6b7280] uppercase">
-                {data.biddingStrategy} · {data.pacing} pacing
-              </p>
-            </div>
-          </div>
-
-          {/* Ad Groups */}
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-lg bg-[#f3e8ff] flex items-center justify-center">
-              <Layers size={20} className="text-[#7c3aed]" />
-            </div>
-            <div>
-              <h4 className="font-medium text-[#2d2d2d] mb-1">Ad Groups</h4>
-              <p className="text-sm text-[#6b7280]">
-                {data.adGroups.length} ad group(s) configured
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 
       {/* Ad Groups Summary */}
       {data.adGroups.length > 0 && (
-        <div className="bg-white rounded-xl border border-[#e5e7eb] overflow-hidden">
-          <div className="px-6 py-4 border-b border-[#e5e7eb]">
-            <h3 className="font-semibold text-[#2d2d2d]">Ad Groups Summary</h3>
+        <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, overflow: 'hidden' }}>
+          <div style={{ padding: '16px 24px', borderBottom: `1px solid ${BORDER}` }}>
+            <h3 style={{ fontWeight: 600, color: TEXT }}>Ad Groups Summary</h3>
           </div>
-          <div className="divide-y divide-[#e5e7eb]">
+          <div>
             {data.adGroups.map((adGroup, index) => (
               <div
                 key={adGroup.id}
-                className="p-4 flex items-center justify-between"
+                style={{
+                  padding: 16,
+                  borderTop: index > 0 ? `1px solid ${BORDER}` : 'none',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                }}
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#eff6ff] flex items-center justify-center text-sm font-medium text-[#2563eb]">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{
+                    width: 32, height: 32, borderRadius: '50%',
+                    background: ACCENT_M,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 13, fontWeight: 500, color: ACCENT, flexShrink: 0,
+                  }}>
                     {index + 1}
                   </div>
                   <div>
-                    <h4 className="font-medium text-[#2d2d2d]">
-                      {adGroup.name}
-                    </h4>
-                    <p className="text-xs text-[#6b7280]">
-                      {adGroup.selectedPages.length} pages ·{" "}
-                      {adGroup.adFormat || "No format"} ·{" "}
+                    <h4 style={{ fontWeight: 500, color: TEXT }}>{adGroup.name}</h4>
+                    <p style={{ fontSize: 12, color: TEXT_MID }}>
+                      {adGroup.selectedPages.length} pages ·{' '}
+                      {adGroup.adFormat || 'No format'} ·{' '}
                       {adGroup.creatives.length} creative(s)
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Check size={16} className="text-[#16a34a]" />
-                  <span className="text-sm text-[#16a34a]">Ready</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <CheckIcon size={16} color={GREEN} />
+                  <span style={{ fontSize: 13, color: GREEN }}>Ready</span>
                 </div>
               </div>
             ))}
@@ -123,32 +166,25 @@ export function ReviewStep({ data }) {
       )}
 
       {/* Checklist */}
-      <div className="bg-[#f0fdf4] rounded-xl border border-[#bbf7d0] p-6">
-        <h3 className="font-semibold text-[#16a34a] mb-4 flex items-center gap-2">
-          <Check size={20} />
+      <div style={{
+        background: GREEN_M,
+        borderRadius: 12, border: `1px solid var(--alert-success-lighter)`,
+        padding: 24,
+      }}>
+        <h3 style={{
+          fontWeight: 600, color: GREEN, marginBottom: 16,
+          display: 'flex', alignItems: 'center', gap: 8,
+        }}>
+          <CheckIcon size={20} color={GREEN} />
           Ready to Launch
         </h3>
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-sm text-[#2d2d2d]">
-            <Check size={14} className="text-[#16a34a]" />
-            Campaign name and objective set
-          </div>
-          <div className="flex items-center gap-2 text-sm text-[#2d2d2d]">
-            <Check size={14} className="text-[#16a34a]" />
-            Schedule configured
-          </div>
-          <div className="flex items-center gap-2 text-sm text-[#2d2d2d]">
-            <Check size={14} className="text-[#16a34a]" />
-            Budget and wallet selected
-          </div>
-          <div className="flex items-center gap-2 text-sm text-[#2d2d2d]">
-            <Check size={14} className="text-[#16a34a]" />
-            Bidding strategy defined
-          </div>
-          <div className="flex items-center gap-2 text-sm text-[#2d2d2d]">
-            <Check size={14} className="text-[#16a34a]" />
-            {data.adGroups.length} ad group(s) created
-          </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {checklistItems.map((item) => (
+            <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: TEXT }}>
+              <CheckIcon size={14} color={GREEN} />
+              {item}
+            </div>
+          ))}
         </div>
       </div>
     </div>

@@ -12,9 +12,9 @@ const GREEN     = 'var(--osmos-brand-green)';
 const GREEN_M   = 'var(--osmos-brand-green-muted)';
 const AMBER     = 'var(--osmos-brand-amber)';
 const ERROR     = '#EF4444';     // intentional — critical alert color
-const VI        = '#7c3aed';     // violet-primary — AI brand, no osmos token
-const VI_BG     = 'rgba(124,58,237,0.12)';
-const VI_HOVER  = '#6d28d9';
+const VI        = 'var(--osmos-brand-violet)';     // violet-primary — AI brand
+const VI_BG     = 'var(--osmos-brand-violet-muted)';
+const VI_HOVER  = 'var(--osmos-brand-violet-hover)';
 const VI_ICONS  = '#8b5cf6';
 
 // ── Hand-rolled icons ─────────────────────────────────────────────────────────
@@ -140,7 +140,7 @@ const CATEGORY_ICONS = {
 
 const TYPE_STYLE = {
   critical: { bg: 'rgba(239,68,68,0.08)',  border: 'rgba(239,68,68,0.3)' },
-  warning:  { bg: 'rgba(245,166,35,0.12)', border: 'rgba(245,166,35,0.3)' },
+  warning:  { bg: 'var(--osmos-brand-amber-muted)', border: 'rgba(245,166,35,0.3)' },
   info:     { bg: BG_SUBTLE,               border: BORDER },
 };
 

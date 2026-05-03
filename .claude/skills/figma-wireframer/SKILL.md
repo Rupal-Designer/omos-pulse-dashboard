@@ -3,6 +3,22 @@ name: figma-wireframer
 description: "Create Figma wireframes and hi-fi mockups from a Screen Spec JSON or verbal description. Use this skill whenever someone says 'wireframe this', 'create a Figma mockup', 'design this screen in Figma', 'make a Figma file for this', or when the design-orchestrator or screen-interpreter chains to this skill. Requires Figma MCP tools (create_new_file, use_figma, search_design_system). Always check the Osmos design system library before creating components from scratch."
 ---
 
+## ⚡ CARDINAL RULE — Figma is the Source of Truth
+
+> **Every label, structure, group name, column header, button text, nav item name, and data value in the implementation MUST match the Figma design verbatim.** No paraphrasing. No inventing. No "close enough."
+>
+> - If Figma says `"Manage CPM/CPC Rules"` → code says `"Manage CPM/CPC Rules"` (not "Manage CPM Rules")
+> - If Figma says `"Ops User"` (singular) → code says `"Ops User"` (not "Ops Users")
+> - If Figma says `"Super Admin users"` (lowercase u) → code says `"Super Admin users"`
+> - If Figma groups "Manage Segments" under **Audience Manager** → the nav puts it under Audience Manager (not Advertiser Settings)
+> - If a text node is unreadable → mark it `[UNREADABLE]` and surface it to the user before writing any code
+>
+> **Do not trust your own inference about what a label "should" be.** Read the Figma text node. Copy it. Done.
+>
+> This rule overrides all other heuristics, templates, and defaults in this skill.
+
+---
+
 # Figma Wireframer
 
 Takes a Screen Spec JSON (from screen-interpreter) or a verbal description and builds a proper Figma file using the Figma MCP tools.

@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Icon } from '../../ui/atoms/Icon';
 import { Toast, useToast } from '../../ui/atoms/Toast';
+import { Button } from '../../ui/atoms/Button';
+import { Badge, TypeBadge } from '../../ui/atoms/Badge';
+import { Modal } from '../../ui/molecules/Modal';
+import { Drawer } from '../../ui/molecules/Drawer';
 
 /* ── Mock data ─────────────────────────────────────────────────── */
 const INITIAL_DATA = [
@@ -27,51 +31,12 @@ const ATTRIBUTION_TYPES   = ['Click-Through', 'View-Through', 'View-Click-Throug
 const ATTRIBUTION_WINDOWS = ['7 Days Click', '7 Days View', '14 Days Click', '14 Days View', '30 Days Click', '30 Days View'];
 const PERSONAS            = ['Platinum', 'Gold', 'Silver'];
 
-/* ── SVG icon helper ──────────────────────────────────────────── */
-function Ico({ d, size = 14, stroke = 'currentColor', sw = 1.8 }) {
-  return <Icon size={size} color={stroke} strokeWidth={sw}>{d}</Icon>;
-}
-
-/* ── Shared button styles ─────────────────────────────────────── */
-const btnBase = {
-  display: 'flex', alignItems: 'center', gap: 5,
-  border: '1px solid var(--osmos-border)', borderRadius: 6,
-  padding: '5px 10px', cursor: 'pointer', fontSize: 12,
-  fontFamily: "'Open Sans', sans-serif", background: 'var(--osmos-bg)',
-  color: 'var(--osmos-fg-muted)',
+/* ── Persona badge color map ──────────────────────────────────── */
+const PERSONA_COLORS = {
+  Platinum: { bg: '#6366f118', color: '#6366f1' },
+  Gold:     { bg: '#f59e0b18', color: '#f59e0b' },
+  Silver:   { bg: '#64748b18', color: '#64748b' },
 };
-const btnPrimary = {
-  ...btnBase, background: 'var(--osmos-brand-primary)',
-  color: '#fff', border: '1px solid var(--osmos-brand-primary)',
-};
-
-/* ── Persona badge ───────────────────────────────────────────── */
-const PERSONA_COLOR = { Platinum: '#6366f1', Gold: '#f59e0b', Silver: '#64748b' };
-function PersonaBadge({ persona }) {
-  return (
-    <span style={{
-      display: 'inline-flex', alignItems: 'center', gap: 4,
-      padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 600,
-      background: PERSONA_COLOR[persona] + '18',
-      color: PERSONA_COLOR[persona],
-      border: `1px solid ${PERSONA_COLOR[persona]}40`,
-    }}>{persona}</span>
-  );
-}
-
-/* ── Status badge ─────────────────────────────────────────────── */
-function StatusBadge({ status }) {
-  const active = status === 'Active';
-  return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12 }}>
-      <span style={{
-        width: 7, height: 7, borderRadius: '50%',
-        background: active ? '#22c55e' : 'var(--alert-error-primary)', flexShrink: 0,
-      }} />
-      <span style={{ color: active ? '#15803d' : 'var(--alert-error-primary)', fontWeight: 500 }}>{status}</span>
-    </span>
-  );
-}
 
 /* ── Inline editable select ───────────────────────────────────── */
 function InlineSelect({ value, options, onChange }) {
@@ -88,41 +53,6 @@ function InlineSelect({ value, options, onChange }) {
     >
       {options.map(o => <option key={o} value={o}>{o}</option>)}
     </select>
-  );
-}
-
-/* ── Modal wrapper ───────────────────────────────────────────── */
-function Modal({ title, onClose, children, footer, width = 420 }) {
-  return (
-    <div style={{
-      position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
-    }} onClick={e => e.target === e.currentTarget && onClose()}>
-      <div style={{
-        background: 'var(--osmos-bg)', borderRadius: 10, width, maxWidth: '95vw',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.18)', overflow: 'hidden',
-        fontFamily: "'Open Sans', sans-serif",
-      }}>
-        {/* Header */}
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '14px 18px', borderBottom: '1px solid var(--osmos-border)',
-        }}>
-          <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--osmos-fg)' }}>{title}</span>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--osmos-fg-subtle)', padding: 2 }}>
-            <Ico d={<><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>} size={16} />
-          </button>
-        </div>
-        {/* Body */}
-        <div style={{ padding: '18px 18px 8px' }}>{children}</div>
-        {/* Footer */}
-        {footer && (
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, padding: '12px 18px 16px', borderTop: '1px solid var(--osmos-border)' }}>
-            {footer}
-          </div>
-        )}
-      </div>
-    </div>
   );
 }
 
@@ -149,44 +79,6 @@ function TextInput({ value, onChange, placeholder, maxLength, type = 'text' }) {
         fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)',
       }}
     />
-  );
-}
-
-/* ── Drawer ──────────────────────────────────────────────────── */
-function Drawer({ title, subtitle, onClose, children, footer, width = 560 }) {
-  return (
-    <div style={{
-      position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.35)',
-      display: 'flex', justifyContent: 'flex-end', zIndex: 1000,
-    }} onClick={e => e.target === e.currentTarget && onClose()}>
-      <div style={{
-        width, maxWidth: '95vw', background: 'var(--osmos-bg)', height: '100%',
-        display: 'flex', flexDirection: 'column',
-        boxShadow: '-4px 0 24px rgba(0,0,0,0.12)',
-        fontFamily: "'Open Sans', sans-serif",
-      }}>
-        {/* Header */}
-        <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--osmos-border)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--osmos-fg)' }}>{title}</div>
-              {subtitle && <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', marginTop: 2 }}>{subtitle}</div>}
-            </div>
-            <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--osmos-fg-subtle)', padding: 4 }}>
-              <Ico d={<><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>} size={18} />
-            </button>
-          </div>
-        </div>
-        {/* Body */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>{children}</div>
-        {/* Footer */}
-        {footer && (
-          <div style={{ padding: '12px 20px', borderTop: '1px solid var(--osmos-border)', display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
-            {footer}
-          </div>
-        )}
-      </div>
-    </div>
   );
 }
 
@@ -314,7 +206,7 @@ export default function SellerAdvertiserOnboardingPage() {
         background: 'var(--osmos-brand-primary-muted)', border: '1px solid var(--osmos-border)', borderRadius: 8,
         padding: '10px 14px', marginBottom: 16, fontSize: 12, color: 'var(--osmos-brand-primary)',
       }}>
-        <Ico d={<><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>} size={15} stroke="var(--osmos-brand-primary)" />
+        <Icon size={15} color="var(--osmos-brand-primary)" strokeWidth={1.8}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></Icon>
         <span>
           Onboard advertisers, configure catalog rules, update configuration settings (persona, attribution, account manager) and manage bulk operations.{' '}
           <span style={{ textDecoration: 'underline', cursor: 'pointer', fontWeight: 600 }}>Learn more</span>
@@ -345,10 +237,10 @@ export default function SellerAdvertiserOnboardingPage() {
               ))}
             </div>
             {/* Add filter */}
-            <button style={btnBase}>
-              <Ico d={<><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></>} size={11} sw={2.5} />
+            <Button variant="outline" onClick={() => {}}>
+              <Icon size={11} color="currentColor" strokeWidth={2.5}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></Icon>
               Add a Filter
-            </button>
+            </Button>
           </div>
 
           {/* Right */}
@@ -357,17 +249,17 @@ export default function SellerAdvertiserOnboardingPage() {
               {filtered.length} Advertisers Onboarded
             </span>
             {/* Refresh */}
-            <button style={{ ...btnBase, padding: '5px 8px' }}>
-              <Ico d={<><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></>} size={13} />
-            </button>
+            <Button variant="outline" onClick={() => {}} style={{ padding: '5px 8px' }}>
+              <Icon size={13} color="currentColor" strokeWidth={1.8}><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></Icon>
+            </Button>
             {/* Columns */}
-            <button style={btnBase}>
-              <Ico d={<><rect x="3" y="4" width="18" height="16" rx="1"/><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/></>} size={13} />
+            <Button variant="outline" onClick={() => {}}>
+              <Icon size={13} color="currentColor" strokeWidth={1.8}><rect x="3" y="4" width="18" height="16" rx="1"/><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/></Icon>
               Columns
-            </button>
+            </Button>
             {/* Search */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '5px 10px', background: 'var(--osmos-bg)' }}>
-              <Ico d={<><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>} stroke="var(--osmos-fg-subtle)" size={13} />
+              <Icon size={13} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>
               <input
                 value={search} onChange={e => setSearch(e.target.value)}
                 placeholder="Search Merchant ID"
@@ -375,19 +267,19 @@ export default function SellerAdvertiserOnboardingPage() {
               />
             </div>
             {/* Download */}
-            <button style={{ ...btnBase, padding: '5px 8px' }}>
-              <Ico d={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></>} size={13} />
-            </button>
+            <Button variant="outline" onClick={() => {}} style={{ padding: '5px 8px' }}>
+              <Icon size={13} color="currentColor" strokeWidth={1.8}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></Icon>
+            </Button>
             {/* Bulk onboarding */}
-            <button onClick={() => setBulkDrawer(true)} style={btnBase}>
-              <Ico d={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></>} size={13} />
+            <Button variant="outline" onClick={() => setBulkDrawer(true)}>
+              <Icon size={13} color="currentColor" strokeWidth={1.8}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></Icon>
               Bulk Onboarding
-            </button>
+            </Button>
             {/* Create advertiser */}
-            <button onClick={() => setCreateOpen(true)} style={btnPrimary}>
-              <Ico d={<><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></>} size={12} stroke="#fff" />
+            <Button variant="primary" onClick={() => setCreateOpen(true)}>
+              <Icon size={12} color="#fff" strokeWidth={2.5}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></Icon>
               Create Advertiser
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -427,7 +319,7 @@ export default function SellerAdvertiserOnboardingPage() {
                   <td style={{ ...TD, fontWeight: 600, color: 'var(--osmos-brand-primary)' }}>{row.advertiserId}</td>
                   <td style={TD}>{row.merchantId}</td>
                   <td style={{ ...TD, fontWeight: 500 }}>{row.advertiserName}</td>
-                  <td style={TD}><StatusBadge status={row.retentionStatus} /></td>
+                  <td style={TD}><Badge status={row.retentionStatus} /></td>
                   <td style={TD}>
                     <InlineSelect
                       value={row.persona} options={PERSONAS}
@@ -486,7 +378,7 @@ export default function SellerAdvertiserOnboardingPage() {
                   </td>
                   <td style={{ ...TD, textAlign: 'center' }}>
                     <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--osmos-fg-subtle)' }}>
-                      <Ico d={<><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></>} size={15} />
+                      <Icon size={15} color="currentColor" strokeWidth={1.8}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></Icon>
                     </button>
                   </td>
                 </tr>
@@ -517,11 +409,12 @@ export default function SellerAdvertiserOnboardingPage() {
       {/* ── Edit Account Manager Modal ── */}
       {amModal && (
         <Modal
+          open={true}
           title="Edit Account Manager Details"
           onClose={() => setAmModal(null)}
           footer={<>
-            <button onClick={() => setAmModal(null)} style={btnBase}>Cancel</button>
-            <button onClick={saveAmChanges} style={btnPrimary}>Save Changes</button>
+            <Button variant="outline" onClick={() => setAmModal(null)}>Cancel</Button>
+            <Button variant="primary" onClick={saveAmChanges}>Save Changes</Button>
           </>}
         >
           <Field label="Account Manager Name" required>
@@ -538,20 +431,21 @@ export default function SellerAdvertiserOnboardingPage() {
       {/* ── Confirm Persona Change Modal ── */}
       {personaModal && (
         <Modal
+          open={true}
           title="Confirm Persona Change"
           onClose={() => setPersonaModal(null)}
           footer={<>
-            <button onClick={() => setPersonaModal(null)} style={btnBase}>Cancel</button>
-            <button onClick={confirmPersonaChange} style={btnPrimary}>Confirm</button>
+            <Button variant="outline" onClick={() => setPersonaModal(null)}>Cancel</Button>
+            <Button variant="primary" onClick={confirmPersonaChange}>Confirm</Button>
           </>}
         >
           <div style={{ fontSize: 13, color: 'var(--osmos-fg)', marginBottom: 6 }}>
             <strong>{personaModal.row.advertiserName}</strong> — Persona change:
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
-            <PersonaBadge persona={personaModal.row.persona} />
-            <Ico d={<polyline points="9 18 15 12 9 6"/>} size={16} stroke="var(--osmos-fg-muted)" />
-            <PersonaBadge persona={personaModal.newPersona} />
+            <TypeBadge type={personaModal.row.persona} colorMap={PERSONA_COLORS} />
+            <Icon size={16} color="var(--osmos-fg-muted)" strokeWidth={1.8}><polyline points="9 18 15 12 9 6"/></Icon>
+            <TypeBadge type={personaModal.newPersona} colorMap={PERSONA_COLORS} />
           </div>
           <div style={{ marginTop: 14, padding: '10px 12px', background: 'rgba(245,166,35,0.08)', borderRadius: 6, border: '1px solid rgba(245,166,35,0.3)', fontSize: 12, color: 'var(--osmos-brand-amber)' }}>
             This change will affect all campaigns and billing settings for this advertiser.
@@ -562,12 +456,13 @@ export default function SellerAdvertiserOnboardingPage() {
       {/* ── Confirm Attribution Change Modal ── */}
       {attrModal && (
         <Modal
+          open={true}
           title="Confirm Attribution Change"
           onClose={() => setAttrModal(null)}
-          width={460}
+          maxWidth={460}
           footer={<>
-            <button onClick={() => setAttrModal(null)} style={btnBase}>Cancel</button>
-            <button onClick={confirmAttrChange} style={btnPrimary}>Confirm</button>
+            <Button variant="outline" onClick={() => setAttrModal(null)}>Cancel</Button>
+            <Button variant="primary" onClick={confirmAttrChange}>Confirm</Button>
           </>}
         >
           <div style={{ fontSize: 13, color: 'var(--osmos-fg)', marginBottom: 14 }}>
@@ -590,13 +485,14 @@ export default function SellerAdvertiserOnboardingPage() {
       {/* ── Segments Drawer ── */}
       {segDrawer && (
         <Drawer
+          open={true}
           title={`Segments (0${segDrawer.advertiserSegmentsCount})`}
           subtitle={segDrawer.advertiserName}
           onClose={() => setSegDrawer(null)}
           width={640}
           footer={<>
-            <button onClick={() => setSegDrawer(null)} style={btnBase}>Cancel</button>
-            <button onClick={() => setSegDrawer(null)} style={btnBase}>Back</button>
+            <Button variant="outline" onClick={() => setSegDrawer(null)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setSegDrawer(null)}>Back</Button>
           </>}
         >
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
@@ -631,18 +527,20 @@ export default function SellerAdvertiserOnboardingPage() {
       {/* ── Create Advertiser Drawer ── */}
       {createOpen && (
         <Drawer
+          open={true}
           title="Create Advertiser"
           onClose={() => setCreateOpen(false)}
           width={480}
           footer={<>
-            <button onClick={() => setCreateOpen(false)} style={btnBase}>Cancel</button>
-            <button
+            <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
+            <Button
+              variant="primary"
               onClick={handleCreateAdvertiser}
-              style={{ ...btnPrimary, opacity: (!newMerchantId.trim() || !newAdvName.trim()) ? 0.5 : 1 }}
+              style={{ opacity: (!newMerchantId.trim() || !newAdvName.trim()) ? 0.5 : 1 }}
               disabled={!newMerchantId.trim() || !newAdvName.trim()}
             >
               Create Advertiser
-            </button>
+            </Button>
           </>}
         >
           <Field label="Merchant ID" required>
@@ -674,12 +572,13 @@ export default function SellerAdvertiserOnboardingPage() {
       {/* ── Bulk Onboarding Drawer ── */}
       {bulkDrawer && (
         <Drawer
+          open={true}
           title="Bulk Upload — Advertiser Persona Allocation"
           subtitle="All Merchants"
           onClose={() => setBulkDrawer(false)}
           width={500}
           footer={<>
-            <button onClick={() => setBulkDrawer(false)} style={btnBase}>Cancel</button>
+            <Button variant="outline" onClick={() => setBulkDrawer(false)}>Cancel</Button>
           </>}
         >
           {/* Download template */}
@@ -688,10 +587,10 @@ export default function SellerAdvertiserOnboardingPage() {
             <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', marginBottom: 10 }}>
               Excel template with sample data. Get the template file with the correct format and structure.
             </div>
-            <button style={{ ...btnBase, color: 'var(--osmos-brand-primary)', borderColor: 'var(--osmos-brand-primary)' }}>
-              <Ico d={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></>} size={13} stroke="var(--osmos-brand-primary)" />
+            <Button variant="outline" onClick={() => {}} style={{ color: 'var(--osmos-brand-primary)', borderColor: 'var(--osmos-brand-primary)' }}>
+              <Icon size={13} color="var(--osmos-brand-primary)" strokeWidth={1.8}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></Icon>
               Download
-            </button>
+            </Button>
           </div>
 
           {/* File upload dropzone */}
@@ -706,7 +605,7 @@ export default function SellerAdvertiserOnboardingPage() {
               marginBottom: 20, cursor: 'pointer', transition: 'all 0.15s',
             }}
           >
-            <Ico d={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></>} size={28} stroke="var(--osmos-fg-subtle)" />
+            <Icon size={28} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></Icon>
             <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginTop: 10 }}>Upload Your File</div>
             <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', marginTop: 4 }}>Upload your .xlsx file here</div>
             <div style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', marginTop: 4 }}>Up to 1,000 campaigns can be created at once</div>

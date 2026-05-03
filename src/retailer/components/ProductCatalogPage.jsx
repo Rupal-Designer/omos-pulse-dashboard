@@ -13,9 +13,6 @@ const INITIAL_PRODUCTS = [
   { id: 8, status: 'Inactive', productId: 'PRD008', name: 'Gillette Mach3 Razor', category: 'Grooming', brand: 'Gillette', mrp: '₹299', sellingPrice: '₹249', stock: '120' },
 ];
 
-function Ico({ d, size = 13, stroke = 'currentColor', sw = 1.8 }) {
-  return <Icon size={size} color={stroke} strokeWidth={sw}>{d}</Icon>;
-}
 
 export default function ProductCatalogPage() {
   const [data, setData] = useState(INITIAL_PRODUCTS);
@@ -47,7 +44,7 @@ export default function ProductCatalogPage() {
           </span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '0 10px', height: 30 }}>
-              <Ico d={<><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>} stroke="var(--osmos-fg-subtle)" />
+              <Icon size={13} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search products..." style={{ border: 'none', outline: 'none', fontSize: 12, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif", width: 180 }} />
             </div>
             <button style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'var(--osmos-bg)', color: 'var(--osmos-fg)', border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '7px 14px', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}>

@@ -15,7 +15,7 @@ const ACCENT     = 'var(--osmos-brand-primary)';
 const GREEN      = 'var(--osmos-brand-green)';
 const AMBER      = 'var(--osmos-brand-amber)';
 const AI_COLOR   = '#8b5cf6';
-const AI_BG      = 'rgba(124,58,237,0.12)';
+const AI_BG      = 'var(--osmos-brand-violet-muted)';
 
 // ── Hand-rolled Sparkles icon ─────────────────────────────────────────────────
 const SparklesIcon = ({ size = 14, color = AI_COLOR }) => (
@@ -42,7 +42,7 @@ const performanceData = {
       CTR:         { value: '1.58%',    color: '#4bae4f' },   // green
       'Ad Clicks': { value: '730.2 K',  color: '#ef6c00' },   // amber/orange
       Impressions: { value: '2.5 M',    color: '#1976d2' },   // blue
-      Conversions: { value: '15.2 K',   color: '#7c3aed' },   // violet
+      Conversions: { value: '15.2 K',   color: 'var(--osmos-brand-violet)' },
       Spend:       { value: '$8,920',   color: '#d32f2f' },   // red
     },
   },
@@ -60,7 +60,7 @@ const performanceData = {
       CTR:         { value: '3.21%',    color: '#4bae4f' },
       'Ad Clicks': { value: '2.1 M',    color: '#ef6c00' },
       Impressions: { value: '5.8 M',    color: '#1976d2' },
-      Conversions: { value: '42.5 K',   color: '#7c3aed' },
+      Conversions: { value: '42.5 K',   color: 'var(--osmos-brand-violet)' },
       Spend:       { value: '$12,580',  color: '#d32f2f' },
     },
   },
@@ -78,7 +78,7 @@ const performanceData = {
       CTR:         { value: '19.7%',    color: '#4bae4f' },
       'Ad Clicks': { value: '8.9 M',    color: '#ef6c00' },
       Impressions: { value: '18.5 M',   color: '#1976d2' },
-      Conversions: { value: '125.8 K',  color: '#7c3aed' },
+      Conversions: { value: '125.8 K',  color: 'var(--osmos-brand-violet)' },
       Spend:       { value: '$28,300',  color: '#d32f2f' },
     },
   },
@@ -91,7 +91,7 @@ const metricKeyMap = {
 };
 const metricColors = {
   CTR: '#4bae4f', 'Ad Clicks': '#ef6c00', Impressions: '#1976d2',
-  Conversions: '#7c3aed', Spend: '#d32f2f',
+  Conversions: 'var(--osmos-brand-violet)', Spend: '#d32f2f',
 };
 
 // ── PerformanceTrend ──────────────────────────────────────────────────────────
@@ -222,7 +222,7 @@ export function PerformanceTrend({
               {renderYAxes()}
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#354a67', border: 'none',
+                  backgroundColor: 'var(--osmos-tooltip-bg)', border: 'none',
                   borderRadius: 8, padding: '8px 12px',
                 }}
                 labelStyle={{ color: '#fff', fontSize: 12 }}

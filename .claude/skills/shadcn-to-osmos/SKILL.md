@@ -147,6 +147,16 @@ This is the bulk of the work. Most v0 pages have ~40–80 unique Tailwind classe
 | `space-y-N` | parent: `display: 'flex', flexDirection: 'column', gap: N*4` (cleaner than the negative-margin trick) |
 | `space-x-N` | parent: `display: 'flex', gap: N*4` |
 
+> **⚠️ Layout override — Figma-verified spacing (these take priority over Tailwind arithmetic):**
+> When migrating a page-level layout or KPI card grid, do NOT blindly convert `gap-4` → `gap: 16`. Apply the Osmos layout rules verified from Figma:
+> - KPI card grid → `gap: 20` (always, regardless of what Tailwind says)
+> - Section-to-section vertical gap → `gap: 20`
+> - Page outer wrapper → `padding: '20px 24px'`
+> - Drawer body → `padding: 20`
+> - Section card header → `padding: '14px 16px'`
+> - Table th → `padding: '9px 14px'`, td → `padding: '10px 14px'`
+> See `ia-patterns.md §5` for the full guide.
+
 #### Sizing
 | Tailwind | Inline equivalent |
 |---|---|
@@ -317,6 +327,7 @@ Before declaring a migration done, verify each:
 - [ ] All icons render via `Icon` from `'../../ui'` or our named `*Icon` exports
 - [ ] All buttons / inputs / badges / etc. import from `'../../ui'`
 - [ ] `pnpm build` passes with 0 errors
+- [ ] **Layout spacing compliant:** KPI card grid uses `gap: 20`, page wrapper uses `padding: '20px 24px'`, drawer body uses `padding: 20` — see `ia-patterns.md §5`
 - [ ] Visual check (if user wants it): `/advertiser.html#/<route>` matches pre-migration look
 
 ---

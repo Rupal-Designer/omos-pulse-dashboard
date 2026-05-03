@@ -44,7 +44,9 @@ const TEXT_SUB  = 'var(--osmos-fg-subtle)';
 const ACCENT    = 'var(--osmos-brand-primary)';
 const ACCENT_M  = 'var(--osmos-brand-primary-muted)';
 const GREEN     = 'var(--osmos-brand-green)';
-const VI        = '#7c3aed';   // AI violet — intentional
+const VI        = 'var(--osmos-brand-violet)';        // AI violet
+const VI_BG     = 'var(--osmos-brand-violet-muted)';  // AI violet muted (0.10)
+const VI_LIGHT  = 'rgba(124,58,237,0.06)';            // AI violet extra-light (no token yet)
 
 // ── static data ───────────────────────────────────────────────────────────────
 const TEMPLATES = [
@@ -64,7 +66,7 @@ const EXISTING_CAMPAIGNS = [
 
 const STATUS_CHIP = {
   active: { bg: 'rgba(27,168,122,0.1)', color: 'var(--osmos-brand-green)' },
-  paused: { bg: 'rgba(245,166,35,0.12)', color: 'var(--osmos-brand-amber)' },
+  paused: { bg: 'var(--osmos-brand-amber-muted)', color: 'var(--osmos-brand-amber)' },
   draft:  { bg: 'var(--osmos-bg-muted)', color: 'var(--osmos-fg-subtle)' },
 };
 
@@ -205,7 +207,7 @@ export function CreateCampaignModal({ open, onClose, onContinue, adType = 'produ
                         display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
                         border: `1.5px solid ${sel ? (id === 'ai' ? VI : ACCENT) : BORDER}`,
                         borderRadius: 10, cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
-                        backgroundColor: sel ? (id === 'ai' ? 'rgba(124,58,237,0.06)' : ACCENT_M) : BG,
+                        backgroundColor: sel ? (id === 'ai' ? VI_LIGHT : ACCENT_M) : BG,
                         fontFamily: FONT,
                       }}>
                         <div style={{
@@ -412,7 +414,7 @@ function AiChoiceBtn({ selected, onClick, label, desc, center }) {
     <button onClick={onClick} style={{
       padding: '12px 14px', border: `1.5px solid ${selected ? VI : BORDER}`, borderRadius: 10,
       cursor: 'pointer', textAlign: center ? 'center' : 'left', fontFamily: FONT, transition: 'all 0.15s',
-      backgroundColor: selected ? 'rgba(124,58,237,0.06)' : BG,
+      backgroundColor: selected ? VI_LIGHT : BG,
     }}>
       <p style={{ margin: '0 0 3px', fontSize: 13, fontWeight: 600, color: selected ? VI : TEXT }}>{label}</p>
       <p style={{ margin: 0, fontSize: 11, color: TEXT_MID }}>{desc}</p>

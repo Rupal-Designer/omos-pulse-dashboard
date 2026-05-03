@@ -1,9 +1,16 @@
-"use client";
+import { useState, useMemo } from 'react';
+import { Icon } from '../../../ui';
+import { MetricsCards } from '../metrics-cards';
+import { PerformanceTrend } from '../performance-trend';
 
-import { useState, useMemo } from "react";
-import { AlertCircle } from "lucide-react";
-import { MetricsCards } from "@/components/metrics-cards";
-import { PerformanceTrend } from "@/components/performance-trend";
+// AlertCircle — hand-rolled (replaced lucide-react)
+const AlertCircle = ({ size = 28, color = 'currentColor' }) => (
+  <Icon size={size} color={color}>
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
+  </Icon>
+);
 
 export function InteractiveDashboard({
   activeAdType = "Product Ads",
@@ -35,40 +42,37 @@ export function InteractiveDashboard({
   };
 
   const EmptyChartState = () => (
-    <div
-      className="rounded-lg border p-12 flex flex-col items-center justify-center min-h-[300px] transition-all duration-300"
-      style={{
-        backgroundColor: "var(--screen-bg)",
-        borderColor: "var(--stroke)",
-      }}
-    >
-      <div
-        className="w-16 h-16 rounded-lg flex items-center justify-center mb-4"
-        style={{ backgroundColor: "var(--violet-bg)" }}
-      >
-        <AlertCircle size={28} style={{ color: "var(--violet-primary)" }} />
+    <div style={{
+      borderRadius: 8,
+      border: '1px solid var(--osmos-border)',
+      padding: 48,
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      minHeight: 300,
+      background: 'var(--osmos-bg)',
+      transition: 'all 0.3s',
+    }}>
+      <div style={{
+        width: 64, height: 64, borderRadius: 8,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        marginBottom: 16, background: 'var(--osmos-brand-primary-muted)',
+      }}>
+        <AlertCircle size={28} color="var(--osmos-brand-primary)" />
       </div>
-      <h3
-        className="text-lg font-semibold mb-2"
-        style={{ color: "var(--text-primary)" }}
-      >
+      <h3 style={{ margin: '0 0 8px', fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)' }}>
         No Metrics Selected
       </h3>
-      <p
-        className="text-sm text-center max-w-md mb-6"
-        style={{ color: "var(--text-secondary)" }}
-      >
+      <p style={{ margin: '0 0 24px', fontSize: 13, textAlign: 'center', maxWidth: 400, color: 'var(--osmos-fg-muted)' }}>
         Select one or multiple metrics from the cards above to view performance
         trends and analyze their correlation.
       </p>
-      <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
+      <p style={{ fontSize: 12, margin: 0, color: 'var(--osmos-fg-subtle)' }}>
         Click on any metric card to get started
       </p>
     </div>
   );
 
   return (
-    <div className="space-y-2">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       {/* Metrics Selection Cards */}
       <div>
         <MetricsCards
@@ -80,16 +84,17 @@ export function InteractiveDashboard({
 
       {/* Performance Trend Chart - Conditional Rendering */}
       <div
-        className="overflow-hidden transition-all duration-500"
         style={{
+          overflow: 'hidden',
+          transition: 'all 0.5s',
           opacity: hasSelectedMetrics ? 1 : 0.5,
-          maxHeight: hasSelectedMetrics ? "500px" : "0px",
-          pointerEvents: hasSelectedMetrics ? "auto" : "none",
+          maxHeight: hasSelectedMetrics ? '500px' : '0px',
+          pointerEvents: hasSelectedMetrics ? 'auto' : 'none',
         }}
       >
         {hasSelectedMetrics ? (
           <div
-            className="animate-in fade-in slide-in-from-top-2 duration-500"
+            style={{ animation: 'fadeIn 0.5s ease' }}
             key={`trend-${selectedMetrics.join("-")}`}
           >
             <PerformanceTrend
@@ -105,14 +110,16 @@ export function InteractiveDashboard({
       {/* Metrics Summary Info */}
       {hasSelectedMetrics && (
         <div
-          className="rounded-lg border p-4 animate-in fade-in duration-500"
           style={{
-            backgroundColor: "var(--surface-1)",
-            borderColor: "var(--stroke)",
+            borderRadius: 8,
+            border: '1px solid var(--osmos-border)',
+            padding: 16,
+            backgroundColor: 'var(--osmos-bg-subtle)',
+            animation: 'fadeIn 0.5s ease',
           }}
         >
-          <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
-            <span style={{ color: "var(--text-primary)", fontWeight: 500 }}>
+          <p style={{ fontSize: 12, margin: 0, color: 'var(--osmos-fg-muted)' }}>
+            <span style={{ color: 'var(--osmos-fg)', fontWeight: 500 }}>
               Displaying {selectedMetrics.length}
             </span>{" "}
             metric{selectedMetrics.length !== 1 ? "s" : ""}:{" "}

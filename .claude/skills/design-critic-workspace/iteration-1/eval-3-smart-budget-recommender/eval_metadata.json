@@ -1,0 +1,37 @@
+{
+  "eval_id": 3,
+  "eval_name": "smart-budget-recommender-feature-critique",
+  "prompt": "I want to build a 'Smart Budget Recommender' feature on the campaign setup flow. When an advertiser is creating a campaign, after they choose their target audience and flight dates, we show them a suggested daily budget based on: historical performance of similar campaigns, seasonal trends for their category, and the retailer's current inventory levels. The recommendation appears as an inline card with a graph showing projected impressions at different budget tiers. Is this a good idea? What should we actually build?",
+  "assertions": [
+    {
+      "name": "feasibility_flags_ml_complexity",
+      "description": "Feasibility agent identifies the ML/data pipeline as a significant complexity risk",
+      "check": "file contains references to 'ML', 'machine learning', 'data pipeline', 'model', or 'historical data' in feasibility section"
+    },
+    {
+      "name": "delight_identifies_wow_moment",
+      "description": "Delight agent specifically evaluates whether the budget recommender creates a genuine wow moment",
+      "check": "file discusses wow moment presence or absence in Delight section"
+    },
+    {
+      "name": "produces_rigor_matrix_table",
+      "description": "Output contains the full Rigor Matrix with all four dimensions",
+      "check": "file contains '| Feasibility' AND '| UX' AND '| Business' AND '| Delight'"
+    },
+    {
+      "name": "has_verdict_section",
+      "description": "Output includes an actionable Verdict section",
+      "check": "file contains '## Verdict' or '**Verdict**' header"
+    },
+    {
+      "name": "verdict_addresses_scope",
+      "description": "Verdict recommends cutting scope or a phased approach given ML complexity",
+      "check": "qualitative — reviewer checks that verdict takes a position on scope (not just 'build it all')"
+    },
+    {
+      "name": "surfaces_agent_conflict",
+      "description": "Synthesis surfaces the tension between Feasibility (complex) and Business/Delight (high value)",
+      "check": "file contains 'conflict' or 'disagree' or 'tension' between agent findings in synthesis"
+    }
+  ]
+}

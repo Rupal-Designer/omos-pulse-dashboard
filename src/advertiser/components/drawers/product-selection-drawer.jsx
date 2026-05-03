@@ -38,7 +38,7 @@ const TEXT_MID  = 'var(--osmos-fg-muted)';
 const TEXT_SUB  = 'var(--osmos-fg-subtle)';
 const ACCENT    = 'var(--osmos-brand-primary)';
 const ACCENT_M  = 'var(--osmos-brand-primary-muted)';
-const VI        = '#7c3aed';   // AI/smart violet — intentional
+const VI        = 'var(--osmos-brand-violet)';   // AI/smart violet
 const INC       = 'var(--alert-success-primary)';   // include semantic green — intentional
 const EXC       = 'var(--alert-error-primary)';   // exclude semantic red — intentional
 

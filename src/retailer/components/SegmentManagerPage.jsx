@@ -96,7 +96,7 @@ function CreateSegmentDrawer({ onClose }) {
       }}>
         {/* Header */}
         <div style={{
-          padding: '18px 24px', borderBottom: '1px solid var(--osmos-border)',
+          padding: '16px 20px', borderBottom: '1px solid var(--osmos-border)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
           <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--osmos-fg)' }}>Create Segment</span>
@@ -108,7 +108,7 @@ function CreateSegmentDrawer({ onClose }) {
         </div>
 
         {/* Body */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: 20 }}>
           <div style={{ display: 'flex', gap: 24, marginBottom: 24 }}>
             {/* Left: form */}
             <div style={{ flex: 1 }}>
@@ -271,7 +271,7 @@ function CreateSegmentDrawer({ onClose }) {
         </div>
 
         {/* Footer */}
-        <div style={{ padding: '14px 24px', borderTop: '1px solid var(--osmos-border)', display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ padding: '14px 20px', borderTop: '1px solid var(--osmos-border)', display: 'flex', justifyContent: 'flex-end' }}>
           <button onClick={onClose} style={{
             height: 34, padding: '0 20px', borderRadius: 6,
             border: '1px solid var(--osmos-border)', background: '#fff',

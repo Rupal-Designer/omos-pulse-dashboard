@@ -1,5 +1,6 @@
 import React from 'react';
-import { Icon } from '../../ui/atoms/Icon';
+import { Icon, ChevronDownIcon, InfoIcon, FilterIcon, SearchIcon, DownloadIcon, ColumnsIcon, SortIcon } from '../../ui/atoms/Icon';
+import { Badge, TypeBadge } from '../../ui/atoms/Badge';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, ComposedChart, Bar, Area,
@@ -18,44 +19,14 @@ const RED    = 'var(--alert-error-primary)';          // semantic negative — k
 const ORANGE = 'var(--osmos-brand-amber)';
 const COLORS = ['var(--osmos-brand-primary)','#8B5CF6','#10B981','#F59E0B','#EC4899']; // chart palette
 
-/* ── Local icon aliases (use imported Icon atom) ─────────────── */
-const ChevDown = ({ size = 11, color = TEXT_MID }) =>
-  <Icon size={size} color={color}><polyline points="6 9 12 15 18 9"/></Icon>;
-const InfoIcon = ({ color = TEXT_LO }) =>
-  <Icon size={13} color={color}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></Icon>;
-const FilterIcon = () =>
-  <Icon size={13} color={TEXT_MID}><path d="M4 6h16M7 12h10M10 18h4"/></Icon>;
-const SearchIcon = () =>
-  <Icon size={13} color={TEXT_LO}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>;
-const DlIcon = () =>
-  <Icon size={13} color={TEXT_MID}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></Icon>;
-const ColIcon = () =>
-  <Icon size={13} color={TEXT_MID}><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></Icon>;
-const SortIcon = () =>
-  <Icon size={10} color={TEXT_LO}><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></Icon>;
 
-/* ── Badges ───────────────────────────────────────────────────── */
-function StatusBadge({ s }) {
-  const on = s === 'Active';
-  return (
-    <span style={{ display:'inline-flex', alignItems:'center', gap:4, padding:'2px 8px',
-      borderRadius:12, fontSize:11, fontWeight:500,
-      background: on ? '#ECFDF5' : '#FEF3C7', color: on ? '#059669' : '#D97706' }}>
-      <span style={{ width:5, height:5, borderRadius:'50%',
-        background: on ? '#059669' : '#D97706', display:'inline-block' }} />
-      {s}
-    </span>
-  );
-}
-function PersonaBadge({ p }) {
-  const map = { Silver:['#F1F5F9','#64748B'], Gold:['#FEF9C3','#CA8A04'],
-                Platinum:['#F3E8FF','#7C3AED'], Bronze:['#FEF3C7','#D97706'] };
-  const [bg,fg] = map[p] || map.Silver;
-  return (
-    <span style={{ display:'inline-block', padding:'2px 8px', borderRadius:10,
-      fontSize:11, fontWeight:600, background:bg, color:fg }}>{p}</span>
-  );
-}
+/* ── Persona color map ────────────────────────────────────────── */
+const PERSONA_COLORS = {
+  Silver:   { bg: '#F1F5F9', color: '#64748B' },
+  Gold:     { bg: '#FEF9C3', color: '#CA8A04' },
+  Platinum: { bg: 'var(--osmos-brand-violet-muted)', color: 'var(--osmos-brand-violet)' },
+  Bronze:   { bg: '#FEF3C7', color: '#D97706' },
+};
 
 /* ── Funnel cards ─────────────────────────────────────────────── */
 const FUNNEL = [
@@ -114,7 +85,7 @@ function Toolbar({ title, icon, count, countLabel }) {
     <div style={{ padding:'14px 20px', borderBottom:`1px solid var(--osmos-border)` }}>
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
         <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-          <div style={{ width:28, height:28, background:'#F0F4FF', borderRadius:6,
+          <div style={{ width:28, height:28, background:'var(--osmos-brand-primary-muted)', borderRadius:6,
             display:'flex', alignItems:'center', justifyContent:'center' }}>
             <Icon size={13} color={ACCENT}>{icon}</Icon>
           </div>
@@ -130,7 +101,7 @@ function Toolbar({ title, icon, count, countLabel }) {
               fontFamily:"'Open Sans',sans-serif", width:120, background:'transparent', color:'#333' }} />
           </div>
           <Btn icon={<FilterIcon />} label="Filter" />
-          <Btn icon={<DlIcon />} label="Export" />
+          <Btn icon={<DownloadIcon />} label="Export" />
           {/* D / W toggle */}
           <div style={{ display:'flex', borderRadius:6, border:`1px solid ${BORDER}`, overflow:'hidden' }}>
             {['D','W'].map((l,i) => (
@@ -188,7 +159,7 @@ function TD({ children, align='left', bold, accent, mono }) {
 }
 function TR({ children }) {
   return (
-    <tr onMouseEnter={e=>e.currentTarget.style.background='#FAFBFF'}
+    <tr onMouseEnter={e=>e.currentTarget.style.background='var(--osmos-bg-subtle)'}
         onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
       {children}
     </tr>
@@ -196,7 +167,7 @@ function TR({ children }) {
 }
 function TotalRow({ children }) {
   return (
-    <tr style={{ background:'#F8F9FC', fontWeight:600 }}>
+    <tr style={{ background:'var(--osmos-bg-subtle)', fontWeight:600 }}>
       {children}
     </tr>
   );
@@ -249,9 +220,9 @@ function CampaignTable() {
                 <TD accent>{r.name}</TD>
                 <TD>
                   <span style={{ padding:'2px 8px', borderRadius:4, fontSize:11,
-                    background:'#F0F4FF', color:ACCENT, fontWeight:500 }}>{r.type}</span>
+                    background:'var(--osmos-brand-primary-muted)', color:ACCENT, fontWeight:500 }}>{r.type}</span>
                 </TD>
-                <TD><StatusBadge s={r.status} /></TD>
+                <TD><Badge status={r.status} /></TD>
                 <TD align="right">{r.budget}</TD>
                 <TD align="right">{r.impr}</TD>
                 <TD align="right">{r.clicks}</TD>
@@ -340,9 +311,9 @@ function AdvertiserSnapshot() {
             ))}
             <TotalRow>
               <TD bold>Total</TD>
-              {[112,90,100,89,102,114,99,89].map((v,i) => <td key={i} style={{ padding:'9px 14px', textAlign:'right', fontSize:12, fontWeight:600, background:'#F8F9FC' }}>{v}</td>)}
-              <td style={{ padding:'9px 14px', textAlign:'right', fontSize:12, fontWeight:600, background:'#F8F9FC' }}>$3.5 B</td>
-              <td style={{ padding:'9px 14px', textAlign:'right', fontSize:12, fontWeight:600, background:'#F8F9FC' }}>$20 B</td>
+              {[112,90,100,89,102,114,99,89].map((v,i) => <td key={i} style={{ padding:'9px 14px', textAlign:'right', fontSize:12, fontWeight:600, background:'var(--osmos-bg-subtle)' }}>{v}</td>)}
+              <td style={{ padding:'9px 14px', textAlign:'right', fontSize:12, fontWeight:600, background:'var(--osmos-bg-subtle)' }}>$3.5 B</td>
+              <td style={{ padding:'9px 14px', textAlign:'right', fontSize:12, fontWeight:600, background:'var(--osmos-bg-subtle)' }}>$20 B</td>
             </TotalRow>
           </tbody>
         </table>
@@ -388,7 +359,7 @@ function BudgetChart() {
             <div style={{ width:12, height:2, background:ORANGE }}/>
             <span style={{ fontSize:10, color:TEXT_MID }}>CTR</span>
           </div>
-          <button style={{ background:'none', border:'none', cursor:'pointer', padding:4 }}><DlIcon /></button>
+          <button style={{ background:'none', border:'none', cursor:'pointer', padding:4 }}><DownloadIcon /></button>
         </div>
       </div>
       <div style={{ padding:'12px 8px 8px' }}>
@@ -500,13 +471,13 @@ function AdFormatSection() {
         <div style={{ padding:'14px 20px', borderBottom:`1px solid var(--osmos-border)`,
           display:'flex', alignItems:'center', justifyContent:'space-between' }}>
           <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-            <div style={{ width:28, height:28, background:'#F0F4FF', borderRadius:6,
+            <div style={{ width:28, height:28, background:'var(--osmos-brand-primary-muted)', borderRadius:6,
               display:'flex', alignItems:'center', justifyContent:'center' }}>
               <Icon size={13} color={ACCENT}><circle cx="12" cy="12" r="10"/></Icon>
             </div>
             <span style={{ fontSize:14, fontWeight:600, color:TEXT_HI }}>Ad Format Performance Report</span>
           </div>
-          <button style={{ background:'none', border:'none', cursor:'pointer', padding:4 }}><DlIcon /></button>
+          <button style={{ background:'none', border:'none', cursor:'pointer', padding:4 }}><DownloadIcon /></button>
         </div>
         <div style={{ padding:'16px', display:'flex', flexDirection:'column', alignItems:'center', gap:12 }}>
           {/* Donut chart with CPC in center */}
@@ -798,9 +769,9 @@ function AdvDimTable() {
               <TR key={i}>
                 <TD accent>{r.name}</TD>
                 <TD mono>{r.id}</TD>
-                <TD><PersonaBadge p={r.persona} /></TD>
+                <TD><TypeBadge type={r.persona} colorMap={PERSONA_COLORS} /></TD>
                 <TD>{r.login}</TD>
-                <TD><StatusBadge s={r.status} /></TD>
+                <TD><Badge status={r.status} /></TD>
                 <TD>{r.lastSpend}</TD>
                 <TD>{r.onboard}</TD>
                 <TD>{r.firstTopup}</TD>
@@ -844,7 +815,7 @@ function AdvDimTable() {
 ═══════════════════════════════════════════════════════════════ */
 export default function AdvertiserInsightsPage() {
   return (
-    <div style={{ padding:'24px', fontFamily:"'Open Sans',sans-serif" }}>
+    <div style={{ padding:'20px 24px', fontFamily:"'Open Sans',sans-serif" }}>
 
       {/* ── Funnel stat cards ── */}
       <div style={{ display:'flex', gap:0, marginBottom:20 }}>
@@ -864,7 +835,7 @@ export default function AdvertiserInsightsPage() {
             <div style={{ padding:'12px 16px', borderBottom:`1px solid var(--osmos-border)`,
               display:'flex', alignItems:'center', justifyContent:'space-between' }}>
               <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                <div style={{ width:26, height:26, background:'#F0F4FF', borderRadius:6,
+                <div style={{ width:26, height:26, background:'var(--osmos-brand-primary-muted)', borderRadius:6,
                   display:'flex', alignItems:'center', justifyContent:'center' }}>
                   <Icon size={13} color={ACCENT}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></Icon>
                 </div>
@@ -875,13 +846,13 @@ export default function AdvertiserInsightsPage() {
                       <div style={{ display:'flex', alignItems:'center', gap:4 }}>
                         <div style={{ width:10, height:10, borderRadius:2, background:m.color }}/>
                         <span style={{ fontSize:11, color:TEXT_HI, fontWeight:500 }}>{m.label}</span>
-                        <ChevDown size={10}/>
+                        <ChevronDownIcon size={10}/>
                       </div>
                     </React.Fragment>
                   ))}
                 </div>
               </div>
-              <button style={{ background:'none', border:'none', cursor:'pointer', padding:4 }}><DlIcon /></button>
+              <button style={{ background:'none', border:'none', cursor:'pointer', padding:4 }}><DownloadIcon /></button>
             </div>
             <div style={{ padding:'12px 8px 4px' }}>
               <ResponsiveContainer width="100%" height={200}>

@@ -42,7 +42,7 @@ export default function ManageAttributeTargetingPage() {
   );
 
   return (
-    <div style={{ fontFamily: FONT, background: 'var(--osmos-bg-subtle)', minHeight: '100vh', padding: 24 }}>
+    <div style={{ fontFamily: FONT, background: 'var(--osmos-bg-subtle)', minHeight: '100vh', padding: '20px 24px' }}>
       <Toast visible={toast.visible} message={toast.message} type={toast.type} />
 
       <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 10, overflow: 'hidden' }}>

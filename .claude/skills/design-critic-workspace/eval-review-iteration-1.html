@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eval Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" integrity="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg: #faf9f5;
+      --surface: #ffffff;
+      --border: #e8e6dc;
+      --text: #141413;
+      --text-muted: #b0aea5;
+      --accent: #d97757;
+      --accent-hover: #c4613f;
+      --green: #788c5d;
+      --green-bg: #eef2e8;
+      --red: #c44;
+      --red-bg: #fceaea;
+      --header-bg: #141413;
+      --header-text: #faf9f5;
+      --radius: 6px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- Header ---- */
+    .header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .header .instructions {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-top: 0.25rem;
+    }
+    .header .progress {
+      font-size: 0.875rem;
+      opacity: 0.8;
+      text-align: right;
+    }
+
+    /* ---- Main content ---- */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* ---- Sections ---- */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      flex-shrink: 0;
+    }
+    .section-header {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .section-body {
+      padding: 1rem;
+    }
+
+    /* ---- Config badge ---- */
+    .config-badge {
+      display: inline-block;
+      padding: 0.2rem 0.625rem;
+      border-radius: 9999px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-left: 0.75rem;
+      vertical-align: middle;
+    }
+    .config-badge.config-primary {
+      background: rgba(33, 150, 243, 0.12);
+      color: #1976d2;
+    }
+    .config-badge.config-baseline {
+      background: rgba(255, 193, 7, 0.15);
+      color: #f57f17;
+    }
+
+    /* ---- Prompt ---- */
+    .prompt-text {
+      white-space: pre-wrap;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    /* ---- Outputs ---- */
+    .output-file {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .output-file + .output-file {
+      margin-top: 1rem;
+    }
+    .output-file-header {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .output-file-header .dl-btn {
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-decoration: none;
+      cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+    .output-file-header .dl-btn:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .output-file-content {
+      padding: 0.75rem;
+      overflow-x: auto;
+    }
+    .output-file-content pre {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+    .output-file-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+    .output-file-content iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+    .output-file-content table {
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+      width: 100%;
+    }
+    .output-file-content table td,
+    .output-file-content table th {
+      border: 1px solid var(--border);
+      padding: 0.375rem 0.5rem;
+      text-align: left;
+    }
+    .output-file-content table th {
+      background: var(--bg);
+      font-weight: 600;
+    }
+    .output-file-content .download-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .output-file-content .download-link:hover {
+      background: var(--border);
+    }
+    .empty-state {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ---- Feedback ---- */
+    .prev-feedback {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.625rem 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .prev-feedback-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.25rem;
+      color: var(--text-muted);
+    }
+    .feedback-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      resize: vertical;
+      color: var(--text);
+    }
+    .feedback-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .feedback-status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      min-height: 1.1em;
+    }
+
+    /* ---- Grades (collapsible) ---- */
+    .grades-toggle {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .grades-toggle:hover {
+      color: var(--accent);
+    }
+    .grades-toggle .arrow {
+      margin-right: 0.5rem;
+      transition: transform 0.15s;
+      font-size: 0.75rem;
+    }
+    .grades-toggle .arrow.open {
+      transform: rotate(90deg);
+    }
+    .grades-content {
+      display: none;
+      margin-top: 0.75rem;
+    }
+    .grades-content.open {
+      display: block;
+    }
+    .grades-summary {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .grade-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .grade-pass { background: var(--green-bg); color: var(--green); }
+    .grade-fail { background: var(--red-bg); color: var(--red); }
+    .assertion-list {
+      list-style: none;
+    }
+    .assertion-item {
+      padding: 0.625rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8125rem;
+    }
+    .assertion-item:last-child { border-bottom: none; }
+    .assertion-status {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .assertion-status.pass { color: var(--green); }
+    .assertion-status.fail { color: var(--red); }
+    .assertion-evidence {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      padding-left: 1.5rem;
+    }
+
+    /* ---- View tabs ---- */
+    .view-tabs {
+      display: flex;
+      gap: 0;
+      padding: 0 2rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .view-tab {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.625rem 1.25rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .view-tab:hover { color: var(--text); }
+    .view-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .view-panel { display: none; }
+    .view-panel.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+    /* ---- Benchmark view ---- */
+    .benchmark-view {
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .benchmark-table {
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.8125rem;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    .benchmark-table th, .benchmark-table td {
+      padding: 0.625rem 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    .benchmark-table th {
+      font-family: 'Poppins', sans-serif;
+      background: var(--header-bg);
+      color: var(--header-text);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .benchmark-table tr:hover { background: var(--bg); }
+    .benchmark-table tr.benchmark-row-with { background: rgba(33, 150, 243, 0.06); }
+    .benchmark-table tr.benchmark-row-without { background: rgba(255, 193, 7, 0.06); }
+    .benchmark-table tr.benchmark-row-with:hover { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-without:hover { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-table tr.benchmark-row-avg { font-weight: 600; border-top: 2px solid var(--border); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-with { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-without { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-delta-positive { color: var(--green); font-weight: 600; }
+    .benchmark-delta-negative { color: var(--red); font-weight: 600; }
+    .benchmark-notes {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+    .benchmark-notes h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+    .benchmark-notes ul {
+      list-style: disc;
+      padding-left: 1.25rem;
+    }
+    .benchmark-notes li {
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      margin-bottom: 0.375rem;
+    }
+    .benchmark-empty {
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: center;
+      padding: 3rem;
+    }
+
+    /* ---- Navigation ---- */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .done-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .done-btn:hover {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .done-btn.ready {
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+    }
+    .done-btn.ready:hover {
+      background: var(--accent-hover);
+    }
+    /* ---- Done overlay ---- */
+    .done-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    .done-overlay.visible {
+      display: flex;
+    }
+    .done-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 2rem 3rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+    }
+    .done-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .done-card p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .done-card .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .done-card button {
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .done-card button:hover {
+      background: var(--bg);
+    }
+    /* ---- Toast ---- */
+    .toast {
+      position: fixed;
+      bottom: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 200;
+    }
+    .toast.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" style="height:100vh; display:flex; flex-direction:column;">
+    <div class="header">
+      <div>
+        <h1>Eval Review: <span id="skill-name"></span></h1>
+        <div class="instructions">Review each output and leave feedback below. Navigate with arrow keys or buttons. When done, copy feedback and paste into Claude Code.</div>
+      </div>
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- View tabs (only shown when benchmark data exists) -->
+    <div class="view-tabs" id="view-tabs" style="display:none;">
+      <button class="view-tab active" onclick="switchView('outputs')">Outputs</button>
+      <button class="view-tab" onclick="switchView('benchmark')">Benchmark</button>
+    </div>
+
+    <!-- Outputs panel (qualitative review) -->
+    <div class="view-panel active" id="panel-outputs">
+    <div class="main">
+      <!-- Prompt -->
+      <div class="section">
+        <div class="section-header">Prompt <span class="config-badge" id="config-badge" style="display:none;"></span></div>
+        <div class="section-body">
+          <div class="prompt-text" id="prompt-text"></div>
+        </div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="section">
+        <div class="section-header">Output</div>
+        <div class="section-body" id="outputs-body">
+          <div class="empty-state">No output files found</div>
+        </div>
+      </div>
+
+      <!-- Previous Output (collapsible) -->
+      <div class="section" id="prev-outputs-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="togglePrevOutputs()">
+            <span class="arrow" id="prev-outputs-arrow">&#9654;</span>
+            Previous Output
+          </div>
+        </div>
+        <div class="grades-content" id="prev-outputs-content"></div>
+      </div>
+
+      <!-- Grades (collapsible) -->
+      <div class="section" id="grades-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="toggleGrades()">
+            <span class="arrow" id="grades-arrow">&#9654;</span>
+            Formal Grades
+          </div>
+        </div>
+        <div class="grades-content" id="grades-content"></div>
+      </div>
+
+      <!-- Feedback -->
+      <div class="section">
+        <div class="section-header">Your Feedback</div>
+        <div class="section-body">
+          <textarea
+            class="feedback-textarea"
+            id="feedback"
+            placeholder="What do you think of this output? Any issues, suggestions, or things that look great?"
+          ></textarea>
+          <div class="feedback-status" id="feedback-status"></div>
+          <div class="prev-feedback" id="prev-feedback" style="display:none;">
+            <div class="prev-feedback-label">Previous feedback</div>
+            <div id="prev-feedback-text"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav" id="outputs-nav">
+      <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">&#8592; Previous</button>
+      <button class="done-btn" id="done-btn" onclick="showDoneDialog()">Submit All Reviews</button>
+      <button class="nav-btn" id="next-btn" onclick="navigate(1)">Next &#8594;</button>
+    </div>
+    </div><!-- end panel-outputs -->
+
+    <!-- Benchmark panel (quantitative stats) -->
+    <div class="view-panel" id="panel-benchmark">
+      <div class="benchmark-view" id="benchmark-content">
+        <div class="benchmark-empty">No benchmark data available. Run a benchmark to see quantitative results here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Done overlay -->
+  <div class="done-overlay" id="done-overlay">
+    <div class="done-card">
+      <h2>Review Complete</h2>
+      <p>Your feedback has been saved. Go back to your Claude Code session and tell Claude you're done reviewing.</p>
+      <div class="btn-row">
+        <button onclick="closeDoneDialog()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ---- Embedded data (injected by generate_review.py) ----
+    const EMBEDDED_DATA = {"skill_name": "design-critic", "runs": [{"id": "eval-1-campaign-duplicate-with_skill", "prompt": "Critique this design idea for our Sponsored Ads platform: we want to add a 'Duplicate Campaign' button to each row in the campaign table. Clicking it copies all settings from that campaign and opens a pre-filled campaign creation form in a side drawer. The form highlights what was copied, lets the user rename it, and has a 'Save as Draft' vs 'Launch Now' option at the bottom. Should we build this exactly as described, or is there a better way?", "eval_id": 1, "outputs": [{"name": "rigor_matrix.md", "type": "text", "content": "# Design Critic: Rigor Matrix\n## Duplicate Campaign \u2014 Sponsored Ads Campaign Table\n_2026-04-24 | Input type: description_\n\n---\n\n## Rigor Matrix\n\n| Dimension   | Score | Key Finding | Recommendation | Priority |\n|-------------|-------|-------------|----------------|----------|\n| Feasibility | 3/5   | Current codebase has zero drawer/form infrastructure; full pre-filled form + copy highlighting + dual-save logic lands at L effort (2\u20133 sprint weeks) | Ship the lean version first: backend-duplicate-then-redirect. Add drawer in Phase 2 only if user research shows the rename-and-review flow is a common need. | P1 |\n| UX          | 3/5   | Full campaign form in a drawer is high cognitive load for a task most users resolve in 2 clicks (rename, save); dual CTA creates decision paralysis | Default to immediate duplicate (paused draft, \"Copy of \u2026\" name), confirm via inline toast with \"Edit\" link. Reserve the drawer for power-user edit path only. | P0 |\n| Business    | 4/5   | Demand is already proven \u2014 50% of the rows in the existing dataset are \"Copy of \u2026\" campaigns; this is demand-capture, not demand-creation | Build this now. It is table stakes and a velocity multiplier on advertiser spend. Every sprint it is delayed is a sprint advertisers are doing this manually. | P0 |\n| Delight     | 2/5   | One genuine wow moment (copy highlighting) buried under a long form that creates anxiety instead of confidence; \"Copy of Copy of\" naming is already a visible failure mode | Preserve the highlighting concept but apply it only to the 3\u20134 fields shown on first open. Add smart auto-rename (\"Copy of [Name] (2)\" if duplicate already exists). | P2 |\n\n**Composite Score: 12/20**\n\n---\n\n## Conflicts (Needs Human Judgment)\n\n**1. Drawer vs Redirect \u2014 Feasibility vs Delight**\nFeasibility recommends skipping the drawer entirely: backend-duplicate + redirect to the existing edit page ships in ~20% of the effort. Delight argues the copy-highlighting moment is the one differentiating experience in the flow and worth preserving. This is a genuine tension. The simpler approach ships faster and reduces implementation risk; the drawer approach is more polished but costs 2x the engineering time. Recommended resolution: ship redirect first, instrument whether users immediately click into edit after duplication. If >60% do, the drawer adds no value. If <30% do, users are fine with the duplicate-and-come-back-later pattern and the drawer is still unnecessary.\n\n**2. \"Launch Now\" vs Default-to-Draft \u2014 Business vs UX**\nBusiness wants \"Launch Now\" as a prominent CTA to drive immediate campaign activation and spend velocity. UX says competing CTAs at the bottom of a long pre-filled form will cause form abandonment. Resolution requires an A/B test \u2014 this cannot be decided at design time. Ship with Draft as the primary CTA and measure abandonment rate vs. launch conversion rate before promoting \"Launch Now\" to equal prominence.\n\n---\n\n## Verdict\n\nBuild campaign duplication, but not as described. The proposed drawer-with-full-form is the right destination, not the right starting point. The correct build sequence is: (1) Ship the lean version now \u2014 a \"Duplicate\" button in the row actions that calls a backend copy endpoint, creates a paused draft prefixed \"Copy of [Name]\", handles the \"Copy of Copy of\" naming collision by appending \"(2)\", and confirms via an inline toast with an Edit link. This is an S-to-M effort, ships real value immediately, and captures the proven latent demand visible in the existing campaign data. (2) Instrument it \u2014 measure what percentage of users immediately click through to edit vs. let duplicates sit. (3) If the data shows users want to rename/configure at duplication time, then build the drawer with the pre-filled form, restrict the initial view to Name, Start Date, Budget, and Status only, and apply the copy-highlighting to those four fields only. (4) The dual-CTA (\"Save as Draft\" vs \"Launch Now\") should be deferred until the drawer is built, and then A/B tested \u2014 never shipped as a design assumption. Kill the \"highlight everything that was copied\" version \u2014 a full-form highlight is visual noise. The smart rename logic is the highest-ROI delight investment and should be in Phase 1, not Phase 2.\n\n---\n\n<details>\n<summary>Feasibility Agent \u2014 Full Report</summary>\n\n## Feasibility Analysis\n\n**Score: 3/5** \u2014 Mechanically achievable, but the form pre-filling + copy highlighting + dual-save logic compounds into a medium-to-large engineering lift that the current component architecture does not support at all.\n\n**Blockers:** None that are absolute, but the absence of any drawer or form infrastructure in the current codebase is a significant starting-point debt. The existing `SponsoredAdsCampaignsPage.jsx` has no actions column, no drawer component, and no form state management beyond the search input.\n\n**Risks:**\n1. **Campaign settings shape complexity** \u2014 Campaigns likely have nested ad groups, targeting rules, bid strategies, and budget periods. Copying all settings correctly (deep clone vs shallow) and surfacing them in a form that was originally designed for blank-slate creation is brittle. Any field the original form does not render becomes silently dropped in the duplicate.\n2. **Dual-save semantics** \u2014 \"Save as Draft\" vs \"Launch Now\" requires the backend to support a `status` flag on creation, and the frontend form must gate validation differently for each path (draft skips bid/budget validation, launch does not). This is non-trivial to retrofit if the existing creation API always validates fully.\n3. **Highlight \"what was copied\"** \u2014 There is no established visual pattern for field-level highlighting in the current design system usage shown in this codebase. This requires a new UI pattern that must degrade gracefully and not confuse users who are editing the fields (highlight should clear on first keystroke).\n\n**Effort: L** \u2014 Table action column: S. Drawer shell: S. Pre-filled form with all campaign settings: M\u2013L on its own depending on field count. Field-level copy highlighting: M. Dual-save logic with different validation paths: M. Combined: L, realistically 2\u20133 sprint weeks for one engineer.\n\n**Simpler alternative:** Skip the drawer entirely. On \"Duplicate\", immediately create a paused/draft copy server-side (name prefixed \"Copy of \u2026\", handling collisions with \"(2)\" suffix), then show a toast with \"Campaign duplicated \u2014 [Edit]\" link that navigates to the existing campaign edit page. This is approximately 20% of the effort and delivers the core value \u2014 users can duplicate and then modify \u2014 without needing a new drawer, pre-fill highlighting, or dual-save logic. The existing \"Copy of TestQA588\" naming pattern already in the dataset confirms this workflow is in active use on the platform.\n\n</details>\n\n<details>\n<summary>UX Agent \u2014 Full Report</summary>\n\n## UX Analysis\n\n**Score: 3/5** \u2014 Solves the right problem but introduces a high-cognitive-load interaction when a lighter-weight pattern would serve the same user need with significantly less friction.\n\n| Dimension   | Score | Key Finding |\n|-------------|-------|-------------|\n| Useful      | A     | Duplicate is a genuine power-user need \u2014 the existing dataset shows \"Copy of \u2026\" campaigns are a real behavioral pattern on this platform (5 of 10 rows are copies) |\n| Usable      | C     | Full campaign form in a drawer is 5\u201315 clicks minimum to complete; the simpler \"duplicate then redirect to edit\" path is 2 clicks |\n| Findable    | B     | Row-level action button on hover is standard and discoverable; but the button label \"Duplicate Campaign\" must be explicit text \u2014 an icon-only button will not work for this action |\n| Credible    | B     | Pre-filled form with copy highlighting creates trust that data was copied correctly \u2014 this is a genuine UX strength of the proposed approach and worth preserving in some form |\n| Accessible  | C     | Drawer with a full form has significant keyboard-trap and focus-management requirements; if not implemented carefully it will fail WCAG 2.1 AA. Focus must move to drawer on open, be trapped inside while open, and return to the triggering button on close. The current codebase has no drawer patterns to reference. |\n| Desirable   | B     | Matches Osmos brand patterns; side-drawer for campaign configuration is consistent with how major ad platforms (Google Ads, Meta Ads Manager) handle duplication |\n| Valuable    | A     | Removing this feature would meaningfully hurt power users who run recurring seasonal campaigns \u2014 it is a high-frequency workflow for active advertisers |\n\n**Top friction points:**\n1. The full form in a drawer is too heavy for what most users want to do (rename + save). Showing 20+ pre-filled fields forces the user to scroll and assess everything before they can act, when they typically only need to change the name and possibly the date range.\n2. \"Save as Draft\" vs \"Launch Now\" at the bottom of a long form creates a false-choice moment \u2014 users who want to duplicate-and-edit-later will be confused about which button is safe to press. Visually competing CTAs of equal weight introduce decision paralysis at the most vulnerable point in the flow.\n3. No undo/cancel affordance is mentioned in the description. If a user clicks Duplicate accidentally, they need an obvious, prominent way to dismiss without creating anything.\n\n**Quick wins:**\n1. Default the \"Duplicate\" action to immediately create a paused draft server-side, then show an inline toast with \"Campaign duplicated \u2014 [Edit]\" link. No drawer needed for the happy path. This is deliverable in a fraction of the time.\n2. If the drawer is kept, show only 3\u20134 editable fields on open (Name, Status, Start Date, Budget) with a \"Show all copied settings\" expand control. This reduces cognitive load dramatically on first interaction and makes the copy-highlighting actually legible.\n\n</details>\n\n<details>\n<summary>Business Agent \u2014 Full Report</summary>\n\n## Business Analysis\n\n**Score: 4/5** \u2014 Strong business case because it directly reduces friction in the campaign creation loop, which is the primary driver of advertiser spend on the platform.\n\n**Revenue tie:** Indirect but strong. Faster campaign iteration leads to more active campaigns leads to more spend. Advertisers who can replicate a proven campaign structure for a new product or time period are less likely to reduce spend or churn to a competing platform. This is a velocity multiplier on existing advertiser behavior, not a new monetization mechanism.\n\n**Retention hook:** Strong. Once advertisers build a library of proven campaign structures through duplication, they are more invested in the platform. The \"Copy of \u2026\" pattern creates a network of related campaigns that gives the account historical depth. Switching platforms means starting that library from zero \u2014 a real switching cost.\n\n**Adoption risk:** Low. The existing \"Copy of \u2026\" campaigns in the dataset are proof that users already want this. Five of ten rows in the current data are duplicates created through whatever manual workaround exists today. This is demand-capture, not demand-creation.\n\n**Strategic fit:** Core. Self-service campaign management is central to the ceiling-break narrative of moving retailers past the M%G revenue plateau. Reducing the time to launch a new campaign from \"recreate from scratch\" (~20 minutes) to \"duplicate and rename\" (~60 seconds) is exactly the kind of operational efficiency that enables advertisers to scale spend without scaling headcount.\n\n**Competitive differentiation:** Table stakes. Every major ad platform has campaign duplication: Google Ads, Meta Ads Manager, DV360, Amazon DSP, The Trade Desk. Not having it is a competitive gap that sophisticated advertisers will notice and cite in renewal conversations. Having it does not differentiate Osmos; not having it actively hurts.\n\n**Time-to-value:** Immediate upon ship. The first time an advertiser clicks Duplicate, they save 10\u201320 minutes of form-filling. This is among the highest time-to-value features possible \u2014 there is no onboarding period, no learning curve, no configuration required.\n\n**PRD alignment:** No PRD context provided.\n\n</details>\n\n<details>\n<summary>Delight Agent \u2014 Full Report</summary>\n\n## Delight Analysis\n\n**Score: 2/5** \u2014 The core mechanic is correct but the execution as described is workmanlike, not delightful. The highlighting idea is the one spark worth preserving; the dual-CTA and full-form presentation are active delight-killers.\n\n**Wow moment present?** Potentially yes, but not guaranteed. The \"highlights what was copied\" concept is clever \u2014 it tells the user \"we remembered everything for you.\" But this only works as a wow moment if the highlighting is subtle (a gentle blue tint on pre-filled fields, not a banner for every field) and clears on first edit. If it is heavy-handed, it creates visual noise and becomes a cognitive burden rather than a confidence signal. As described, the wow moment depends entirely on execution quality, which makes it unreliable.\n\n**Emotional tone:** Currently neutral-to-anxious. The full-form-in-drawer approach feels like work. The better emotional arc: clicking Duplicate should feel like pressing a fast-forward button \u2014 something happens quickly, the user feels in control, and there is a clear confirmation that the system did the heavy lifting. The proposed flow instead asks the user to review everything the system did before they can proceed, which inverts the intended emotional contract from \"the system helped me\" to \"the system gave me homework.\"\n\n**Stickiness pattern:** Moderate. Campaign duplication creates a library of campaign structures over time, which increases platform investment. But this only becomes a true stickiness pattern if users can manage their duplicated campaigns as a group (lineage view, original/copy relationship). The current proposal does not address lineage. \"Copy of Copy of TestQA380\" is already a failure mode visible in the existing dataset \u2014 without smart naming, the library becomes chaotic and reduces rather than increases stickiness.\n\n**Top delight upgrade:** Add smart auto-rename logic. Instead of naively prefixing \"Copy of [Name]\", detect whether a \"Copy of [Name]\" already exists and name the new campaign \"Copy of [Name] (2)\" or \u2014 better \u2014 offer a date-stamped variant like \"[Name] \u2014 Apr 2026\" when the campaign is a seasonal repeat. This one-sentence change eliminates the most common post-duplicate friction (disambiguating confusingly-named campaigns) and makes the system feel intelligent rather than mechanical. Implement this in Phase 1 alongside the lean duplicate flow \u2014 it costs almost nothing and delivers outsized perceived quality.\n\n</details>\n"}], "grading": {"eval_id": 1, "run_type": "with_skill", "expectations": [{"text": "produces_rigor_matrix_table", "passed": true, "evidence": "File contains a markdown table with all four dimensions (Feasibility, UX, Business, Delight) in the Rigor Matrix section."}, {"text": "includes_numeric_scores", "passed": true, "evidence": "Each dimension row has a numeric score: Feasibility 3/5, UX 3/5, Business 4/5, Delight 2/5, plus a Composite Score of 12/20."}, {"text": "has_verdict_section", "passed": true, "evidence": "File contains '## Verdict' header followed by a full verdict paragraph."}, {"text": "covers_all_four_lenses", "passed": true, "evidence": "File contains '## Feasibility Analysis', '## UX Analysis', '## Business Analysis', and '## Delight Analysis' as section headers inside collapsible details blocks."}, {"text": "surfaces_conflicts_or_agreements", "passed": true, "evidence": "File contains a dedicated '## Conflicts (Needs Human Judgment)' section with two named conflicts (Drawer vs Redirect, and Launch Now vs Default-to-Draft)."}, {"text": "opinionated_not_hedged", "passed": true, "evidence": "Verdict opens with 'Build campaign duplication, but not as described' and gives a numbered, concrete four-step build sequence with explicit kill decisions."}], "overall_pass_rate": 1.0}}, {"id": "eval-1-campaign-duplicate-without_skill", "prompt": "Critique this design idea for our Sponsored Ads platform: we want to add a 'Duplicate Campaign' button to each row in the campaign table. Clicking it copies all settings from that campaign and opens a pre-filled campaign creation form in a side drawer. The form highlights what was copied, lets the user rename it, and has a 'Save as Draft' vs 'Launch Now' option at the bottom. Should we build this exactly as described, or is there a better way?", "eval_id": 1, "outputs": [{"name": "rigor_matrix.md", "type": "text", "content": "# Rigor Matrix: Duplicate Campaign Feature\n**Feature:** \"Duplicate Campaign\" button per row in the Sponsored Ads Campaign Review table\n**Evaluator:** Claude (without design-critic skill)\n**Date:** 2026-04-24\n**Codebase context:** `src/components/SponsoredAdsCampaignsPage.jsx`, `src/components/DisplayAdsCampaignsPage.jsx`\n\n---\n\n## The Proposed Design (restated for clarity)\n\n- A \"Duplicate Campaign\" button appears in each row of the campaign table\n- Clicking it copies all campaign settings from that row\n- Opens a side drawer (pre-filled) with the campaign creation form\n- The form highlights which fields were copied from the original\n- User can rename the campaign\n- Bottom of drawer has two CTAs: \"Save as Draft\" and \"Launch Now\"\n\n---\n\n## Dimension 1: Technical Feasibility\n\n### What the codebase currently has\n\nThe `SponsoredAdsCampaignsPage` (and `DisplayAdsCampaignsPage`, which is structurally identical) is a self-contained, client-side component. The campaign table rows currently only surface: Campaign Name, Merchant Name, Status, and Campaign Created On. There is no row-level action column, no row action menu, and no side-drawer infrastructure anywhere in the page.\n\nThe current component has no state related to a \"selected campaign\" or \"editing campaign\" \u2014 it only manages `search`, `hoveredRow`, `page`, and a toast notification.\n\n### Implementation complexity\n\n| Piece | Effort | Notes |\n|---|---|---|\n| Add \"Actions\" column or hover-reveal button | Low | Requires adding a column and hover-state handling; hover state already exists |\n| State management for selected campaign (to pass to drawer) | Low | One `useState(null)` for `duplicatingCampaign` |\n| Side drawer component | Medium | No `Drawer` component is currently used in this file. Must import from `@onlinesales-ai/ui` using `Drawer.Root` + `Drawer.Body` dot-notation pattern |\n| Campaign creation form (pre-filled) | High | The current codebase has no campaign creation form implemented \u2014 this is the biggest unknown. The form complexity depends entirely on how many fields a campaign has (budget, targeting, schedule, bid strategy, keywords, etc.) |\n| \"Highlight copied fields\" affordance | Medium | Requires a visual treatment (e.g. a `bg.subtle` tinted wrapper or a \"Copied\" badge per field). Not technically hard but needs thoughtful implementation to avoid being noisy |\n| \"Save as Draft\" vs \"Launch Now\" logic | Medium | Requires two distinct API calls with different payload states. Backend must support a `draft` status |\n| Naming logic: \"Copy of [original name]\" | Trivial | Already evident in the mock data: rows 1, 3, 5, 7 are named \"Copy of TestQA...\" \u2014 the team already thought of this pattern |\n\n### Feasibility verdict\n\n**Technically feasible.** The hardest part is not the duplication trigger or the drawer \u2014 it is building the campaign creation form itself. If that form already exists in the real codebase (not the prototype), the entire feature is a medium-complexity addition. If the form does not exist, this feature cannot ship without first building it.\n\n**Critical dependency:** The campaign object in the current prototype only has 4 fields (`campaignName`, `merchantName`, `status`, `createdOn`). A real campaign has many more (budget, bid strategy, targeting, schedule, products/keywords). The pre-fill logic must handle all of them, including fields that cannot or should not be blindly copied (e.g., campaign dates, budget spend, performance labels like \"No Spends in last 30 days\").\n\n---\n\n## Dimension 2: UX Quality\n\n### What works well in the proposed design\n\n1. **Side drawer is the right container.** It keeps the user in context (they can still see the campaign list behind the drawer), unlike a full-page navigation which would lose their scroll position and mental context.\n\n2. **Pre-filling the form is correct.** The friction of re-entering everything is the primary reason advertisers duplicate campaigns. Pre-fill solves that.\n\n3. **Renaming at the top is correct.** The first thing a user wants to change is the name. Surfacing it prominently is right.\n\n4. **\"Save as Draft\" vs \"Launch Now\" is the right binary.** Advertisers often duplicate to set up future campaigns without going live immediately. Having both options at the point of action prevents an extra modal or confirmation step.\n\n### UX problems with the proposed design\n\n**Problem 1: \"Highlights what was copied\" is ambiguous and potentially noisy.**\nIf every field in a 15-field form is highlighted as \"copied,\" the highlight conveys no useful information \u2014 everything is copied. Highlighting is only meaningful when it draws attention to fields the user *must review* before launching (e.g., dates, budget, targeting). The proposed spec doesn't make this distinction.\n\nRecommendation: Instead of highlighting all copied fields, show a contextual banner at the top of the drawer: \"Review these settings before saving \u2014 dates and budget from the original campaign have been carried over.\" Only flag fields with time-sensitive or spend-sensitive values.\n\n**Problem 2: Placement of the Duplicate button is not specified.**\nThe table currently has no Actions column. Options:\n- A. Show on row hover (inline, as an icon button)\n- B. A \"...\" overflow menu per row (along with Edit, Pause, Archive)\n- C. A dedicated \"Duplicate\" column\n\nOption A (hover icon) is the most common SaaS pattern for single-action rows, but this table will likely need multiple row actions over time (Edit, Pause, Delete, Duplicate). Option B (overflow menu) is more scalable. The proposal doesn't address this \u2014 and it matters because it determines how discoverable the feature is.\n\n**Problem 3: No undo / accidental-click safety.**\nClicking Duplicate immediately opens a form. If the user clicked it accidentally, they must dismiss the drawer. This is acceptable, but the drawer should have a clear X/close action and no auto-save behavior.\n\n**Problem 4: The \"Copy of [name]\" naming convention can create clutter at scale.**\nThe existing mock data already shows this: \"Copy of TestQA588\", \"Copy of TestQA462\", etc. \u2014 and there is no mechanism to prevent \"Copy of Copy of TestQA588.\" The form should auto-increment (e.g., \"TestQA588 (2)\") or let the user know if a campaign with that name already exists.\n\n**Problem 5: Mobile/narrow viewport behavior is unaddressed.**\nA side drawer + wide form is fine on desktop. On narrower viewports, the drawer needs to either be full-width or the feature should be hidden behind a different interaction. The current prototype's table is already scrollable (`overflowX: 'auto'`) \u2014 the drawer interaction needs the same care.\n\n### UX quality verdict\n\n**The core UX flow is sound. The detail-level design has 4 gaps that need resolution before implementation.** None are blockers, but Problem 2 (action placement) and Problem 4 (name clutter at scale) are the most important to resolve in the design spec before handoff.\n\n---\n\n## Dimension 3: Business Value\n\n### Who benefits\n\n- **Advertisers** who run seasonal or repeated campaign patterns (e.g., \"Summer Sale\" copied from last year's \"Winter Sale\") save significant setup time.\n- **Account managers** who manage multiple brands can template a working campaign structure and duplicate it per merchant.\n- **The platform** benefits from faster campaign creation velocity, which correlates with higher ad spend activation rates \u2014 a key revenue driver for a retail media platform.\n\n### Evidence from the data\n\nThe mock data in the prototype is revealing: 7 of 10 campaigns are prefixed \"Copy of TestQA...\" \u2014 meaning the team has already been manually creating duplicates (presumably by hand or via test automation). This is a strong signal that the user behavior exists and is already happening through workarounds.\n\n### Business risk of NOT building it\n\nAdvertisers who cannot duplicate campaigns through the UI will either:\n1. Re-enter everything manually (high friction, may reduce campaign creation rate)\n2. Ask account managers to do it for them (ops cost)\n3. Export and re-import via bulk upload (if available) \u2014 a worse UX\n\nAll three outcomes are worse than having the feature.\n\n### Business risk of building it wrong\n\n- If the drawer form is slow or buggy, the feature trains users not to use it\n- If \"Launch Now\" bypasses review steps (approval workflows, budget validation), it could cause compliance or overspend issues\n- If draft campaigns pile up without cleanup mechanisms, it creates a management burden\n\n### Business value verdict\n\n**High business value. This is not a nice-to-have \u2014 it is a table-stakes feature for any campaign management platform.** Google Ads, Meta Ads Manager, Amazon Ads, and DV360 all support campaign duplication. Absence of this feature is a competitive gap.\n\n---\n\n## Dimension 4: Product Delight\n\n### What could make this feel great\n\n1. **Instant feedback on duplicate trigger.** When the user clicks Duplicate, the drawer should animate in smoothly (using `Drawer.Root` with a CSS transition). Avoid a loading spinner before the drawer opens \u2014 pre-fill from client-side data is instantaneous.\n\n2. **Smart default name.** Auto-generate \"Copy of [name]\" (already the team's convention, evidenced by the data) and pre-select the name text on focus so the user can immediately type a new name without needing to clear the field.\n\n3. **\"You're duplicating [Campaign Name]\" context header.** Show the source campaign name at the top of the drawer (above the form) so the user has a constant reminder of what they are duplicating. This removes any doubt after the drawer opens.\n\n4. **Toast confirmation on save.** The prototype already has a toast system (`showToast`). Reuse it: \"Campaign 'New Name' saved as draft\" or \"Campaign 'New Name' is now live.\" This closes the loop cleanly.\n\n5. **The \"Save as Draft\" / \"Launch Now\" split.** This is genuinely delightful when done right \u2014 it respects the user's intent. \"Launch Now\" should have a primary button style (brand primary). \"Save as Draft\" should be secondary/ghost. They should NOT be equal weight \u2014 the primary action should be obvious.\n\n6. **One thing to REMOVE from the proposal:** The \"highlights what was copied\" feature as originally described. If implemented naively, it makes the form feel chaotic (every field is highlighted). Replace it with a single summary banner as described in UX Problem 1. This is simpler to implement and more useful.\n\n### Delight verdict\n\n**The base proposal has good instincts but one misguided detail (the field-level copy highlights).** The toast system, side drawer pattern, and dual CTA are all strong. The delight ceiling is limited by whether the drawer form itself is well-designed \u2014 a pre-filled but poorly organized form is worse than no pre-fill.\n\n---\n\n## Overall Verdict\n\n### Build it \u2014 but not exactly as described.\n\n| Dimension | Score (1-5) | Rationale |\n|---|---|---|\n| Technical Feasibility | 4/5 | Straightforward if campaign creation form exists; medium effort overall |\n| UX Quality | 3/5 | Core flow is right; 4 specific gaps need resolution |\n| Business Value | 5/5 | Table-stakes feature; strong usage signal already in mock data |\n| Product Delight | 3.5/5 | Good instincts; one noisy detail to remove |\n\n### Recommended changes from the original spec\n\n1. **REMOVE:** \"Highlights what was copied\" (every field) \u2014 replace with a single contextual banner listing only time-sensitive or spend-sensitive fields to review.\n\n2. **ADD:** Specify the action entry point explicitly \u2014 recommend an overflow menu (\"...\") per row that includes Duplicate, Edit, Pause, and Archive. This scales to future actions and avoids a crowded row.\n\n3. **REFINE:** Auto-name convention should be \"Copy of [name]\" but check for collisions and suggest \"Copy of [name] (2)\" if the name already exists.\n\n4. **CLARIFY:** Define which fields are NOT copied (e.g., campaign performance labels like \"No Spends in last 30 days\" are metadata, not settings \u2014 they should not appear in the duplicate form).\n\n5. **CONFIRM:** \"Launch Now\" requires validation of all required fields before submit. Do not skip any approval or budget-guard rails that the standard Create Campaign flow enforces \u2014 the duplicate path must pass through the same guards.\n\n6. **SEQUENCE:** If the campaign creation form does not already exist in the platform, build it first as a standalone feature (Create Campaign). Duplicate Campaign is then a thin layer on top of it (pre-fill + source attribution). Do not build Duplicate Campaign in isolation with its own bespoke form.\n\n### Minimum viable version to ship\n\nRow-level overflow menu > \"Duplicate\" option > side drawer opens with pre-filled form > user can rename and edit > two CTAs: Save as Draft (secondary) | Launch Now (primary) > toast confirmation. No field-level copy highlights. No collision-detection on names in v1 (acceptable tech debt). \n\nThis is a 1-sprint feature if the campaign creation form already exists.\n\n---\n\n*Critique produced without the design-critic skill \u2014 manual evaluation against Technical Feasibility, UX Quality, Business Value, and Product Delight dimensions.*\n"}], "grading": {"eval_id": 1, "run_type": "without_skill", "expectations": [{"text": "produces_rigor_matrix_table", "passed": true, "evidence": "File contains a markdown table in the Overall Verdict section with all four dimensions (Technical Feasibility, UX Quality, Business Value, Product Delight) and scores."}, {"text": "includes_numeric_scores", "passed": true, "evidence": "Each dimension row in the verdict summary table has a numeric score: 4/5, 3/5, 5/5, 3.5/5."}, {"text": "has_verdict_section", "passed": true, "evidence": "File contains '## Overall Verdict' header with '### Build it \u2014 but not exactly as described.' as the direct verdict statement."}, {"text": "covers_all_four_lenses", "passed": false, "evidence": "Sections are titled 'Dimension 1: Technical Feasibility', 'Dimension 2: UX Quality', 'Dimension 3: Business Value', 'Dimension 4: Product Delight' \u2014 none match the required 'Feasibility Analysis', 'UX Analysis', 'Business Analysis', or 'Delight Analysis' headers or close equivalents."}, {"text": "surfaces_conflicts_or_agreements", "passed": false, "evidence": "No synthesis section contains 'Conflicts', 'conflict', 'agrees', or 'alignment' \u2014 the word 'conflict' does not appear anywhere in the file."}, {"text": "opinionated_not_hedged", "passed": true, "evidence": "Verdict states 'Build it \u2014 but not exactly as described' and provides a numbered list of concrete changes, taking a clear position throughout."}], "overall_pass_rate": 0.6667}}, {"id": "eval-2-cpm-rules-page-with_skill", "prompt": "Run a design critique on our ManageCPMRules page. Read the file at src/components/ManageCPMRulesPage.jsx \u2014 this is where ad ops managers at retailers set CPM floor prices and yield optimization rules. It's one of the most business-critical screens in the platform. Tell me honestly if it's good enough or if it needs major work.", "eval_id": 2, "outputs": [{"name": "rigor_matrix.md", "type": "text", "content": "# Design Critic: Rigor Matrix\n## ManageCPMRulesPage \u2014 CPM Floor Price & Yield Optimization Rules\n_2026-04-24 | Input type: React component code (ManageCPMRulesPage.jsx)_\n\n---\n\n## Rigor Matrix\n\n| Dimension   | Score | Key Finding | Recommendation | Priority |\n|-------------|-------|-------------|----------------|----------|\n| Feasibility | 3/5   | Prototype shell with hardcoded data, no API integration, no validation on pricing fields, and a dual-submit path that will cause double-submit bugs on first real API call | Replace raw `<table>`/`<input>`/`<select>` with `react-table-v2` and `@onlinesales-ai/ui` form components; add numeric validation with min/max on CPM/CPC fields before any API wiring | P1 |\n| UX          | 2/5   | Dual submit buttons (\"Create User Activity Rule\" in body + \"Create\" in footer), truncated rule names with no tooltip, 4 of 11 columns are audit trail bloat, zero accessibility on all icon buttons, all form help text is placeholder | Fix dual-submit as P0; add `title` on truncated cells; add `aria-label` to icon buttons; collapse audit columns into expandable \"Change Log\" | P0 (submit bug), P1 (rest) |\n| Business    | 3/5   | Revenue-critical screen (CPM floors affect 120 advertisers per rule) with high adoption risk: dual-submit bug and placeholder help text will erode retailer confidence during onboarding; no Inactive/Paused state means ops managers can't test safely | Add Draft/Paused rule state before launch; replace \"Help text here\" with real field documentation explaining additive vs. multiplier semantics and valid ranges | P0 (help text), P1 (draft state) |\n| Delight     | 2/5   | Audience Reach gradient gauge is the one clever element but is fully static (hardcoded position and reach count); no revenue impact feedback loop means the page is a set-and-forget config screen with no reason to return; 4 audit columns signal surveillance rather than empowerment | Make the reach gauge live (responds to filter changes); add a \"Yield Impact\" column showing estimated/actual revenue uplift per rule this week | P1 |\n\n**Composite Score: 10/20**\n\n---\n\n## Conflicts (Needs Human Judgment)\n\n1. **Effort vs. Differentiation \u2014 reach gauge vs. table package.** Feasibility recommends migrating to `react-table-v2` for free pagination and column management. Delight says the custom audience reach visualizer is the one moment of genuine product thinking worth investing in. These are not mutually exclusive (the drawer is separate from the table), but the reach gauge requires a live data pipeline that doesn't exist yet. **Human judgment needed:** should the live reach gauge block the table migration, or ship the table with a \"coming soon\" static gauge and build the pipeline in the next sprint?\n\n2. **\"Ship now\" vs. \"Not yet.\"** Business says this screen is revenue-critical and delay costs yield revenue. UX says the current state will actively damage retailer trust at onboarding. Both are correct. **Human judgment needed:** the P0 fixes (dual-submit bug, placeholder help text) are 1\u20132 days of work \u2014 decide whether to hot-fix and ship, or hold for a fuller polish pass including the live reach gauge.\n\n---\n\n## Verdict\n\nShip this page only after fixing two P0 defects that should never reach a retailer: (1) remove the \"Create User Activity Rule\" button inside the drawer body \u2014 it has no `onClick` handler, sits above the real \"Create\" button in the footer, and will be clicked first by every new user who then thinks nothing happened; (2) replace every \"Help text here\" placeholder with real copy explaining CPM/CPC premium semantics, valid ranges, and what the field controls. These two issues will destroy first impressions during onboarding and they are 1\u20132 days of work, not a reason to delay the screen for weeks. Beyond the P0s: add a Draft/Paused rule state before launch \u2014 ops managers cannot safely experiment if every saved rule immediately goes live. For P1 sprint: collapse the four audit columns into an expandable \"Change Log\" to recover horizontal space, make the audience reach gauge respond to filter changes (it's hardcoded today), and add a \"Yield Impact\" column showing per-rule revenue uplift. That last item is the single change that transforms this from a forgettable config screen into the optimization workspace Osmos's ceiling-break narrative requires.\n\n---\n\n<details>\n<summary>Feasibility Agent \u2014 Full Report</summary>\n\n## Feasibility Analysis\n\n**Score: 3/5** \u2014 The screen's visual structure is implementable, but the current code is a prototype shell, not a production component: it uses hardcoded data, raw HTML primitives, and inline styles everywhere \u2014 making it expensive to productionize correctly.\n\n**Blockers:** None that prevent shipping a demo. For production: no API integration exists, no real filter/search logic, no error state handling, no pagination.\n\n**Risks:**\n1. The `CreateRuleDrawer` has a \"Create User Activity Rule\" button INSIDE the body AND a \"Create\" button in the footer \u2014 two submit paths with no deduplication guard. This will cause double-submit bugs the moment real API calls are added. The body button has no `onClick` handler at all \u2014 it silently does nothing, which is arguably worse than double-submit.\n2. All filtering (tabs, search, \"Add a Filter\") is wired to UI state but performs no actual filtering \u2014 zero business logic exists. Implementing real multi-condition filtering across rule type, reach range, and advertiser count is non-trivial.\n3. CPM% and CPC% fields accept any string (`maxLength:50` with no numeric validation). On production these fields control advertiser pricing floors \u2014 a value like \"abc%\" would silently pass through with no error.\n\n**Effort:** L \u2014 The prototype shell is done (~2 days). Production-ready requires: real API integration, input validation with business rules, pagination, bulk actions, column visibility management, error/loading/empty states \u2014 approximately 2 additional weeks.\n\n**Simpler alternative:** Use `@onlinesales-ai/ui` Table + Form components and the existing `react-table-v2` package to get pagination, sorting, column visibility, and form validation for free \u2014 cutting implementation effort by ~40%.\n\n</details>\n\n<details>\n<summary>UX Agent \u2014 Full Report</summary>\n\n## UX Analysis\n\n**Score: 2/5** \u2014 The layout is structurally legible but the cognitive load is dangerously high, error states are missing entirely, and multiple UX anti-patterns will frustrate ad ops managers doing time-sensitive work.\n\n| Dimension   | Score | Key Finding |\n|-------------|-------|-------------|\n| Useful      | B     | CPM floor rules and audience reach signal are genuinely useful for yield optimization \u2014 the core value prop is sound. |\n| Usable      | D     | Two submit buttons in the drawer (one inside body with label \"Create User Activity Rule\", one in footer with label \"Create\") with different labels and no visible relationship \u2014 the body button has no onClick handler and silently does nothing. Task completion is ambiguous and failure is silent. |\n| Findable    | C     | Tab filter (\"Auction Campaign\" / \"All\") is too sparse \u2014 with 3 distinct rule types (User Attribute, Activity, Segment) there is no way to filter by type from the main view without opening every row. |\n| Credible    | C     | Truncated rule names (\"Frequent Coke Bu...\", \"Highest spending cu...\") with no tooltip or expand-on-hover mechanism destroys trust \u2014 users cannot verify which rule they are editing without opening the drawer. |\n| Accessible  | D     | No `aria-label` on any icon-only toolbar buttons (Refresh, Columns, Download). No visible keyboard focus styles anywhere. Native `<select>` with a custom chevron overlay positioned via `pointerEvents:none` is a known screen reader trap. All radio inputs use raw `<input type=\"radio\">` without `<fieldset>`/`<legend>` grouping. |\n| Desirable   | C     | Osmos token usage is partial \u2014 `FG`, `BORDER`, `ACCENT` are tokenized correctly, but badge colors for \"User Activity\" (`#FFF7ED`, `#C2410C`) and \"User Segment\" (`#FAF5FF`, `#7C3AED`) are hardcoded hex values that will break in dark mode and diverge from the design system during token updates. |\n| Valuable    | A     | Removing this screen would directly break the yield optimization workflow \u2014 this is a core ops tool, not a vanity feature. Ad ops managers at retailers have no alternative path to set CPM floors. |\n\n**Top friction points:**\n\n1. **DUAL SUBMIT BUG (P0):** \"Create User Activity Rule\" (full-width, blue, prominent \u2014 inside the drawer body) has no `onClick` handler. \"Create\" in the footer calls `handleCreate`. Ad ops managers will click the body button first \u2014 it looks like the primary CTA. Nothing happens. They click again. Still nothing. They scroll down, find the footer button, click it. By this point they have lost trust in the form. This is not a minor polish issue \u2014 it is a silent failure on the primary task.\n\n2. **11-COLUMN TABLE WITH NO STICKY FIRST COLUMN:** On realistic 1440px screens, horizontal scroll pushes \"Rule Name\" off the visible area. Users lose context of which rule they are examining mid-scroll. The four audit columns (Creator Name, Created On, Last Edited By, Last Edited On) consume 36% of column real estate and should be collapsed into a \"Change Log\" expandable panel or deprioritized to a detail drawer.\n\n3. **ALL HELP TEXT IS PLACEHOLDER:** Every field in the Create Rule drawer displays \"Help text here\". For CPM/CPC % fields specifically, ad ops managers need to understand: Is this value additive to base CPM? Is it a multiplier? What is the valid range? What happens if two rules with different premiums both apply to the same user? Without this, the form is a liability \u2014 users will enter incorrect values and silently mis-price inventory for hundreds of advertisers.\n\n**Quick wins:**\n1. Add `title={row.name}` on the rule name `<span>` \u2014 browser native tooltip costs zero effort and immediately fixes the truncation credibility gap.\n2. Add `aria-label=\"Refresh rules\"`, `aria-label=\"Manage columns\"`, `aria-label=\"Download\"` to the three icon-only toolbar buttons \u2014 10 minutes each, immediate WCAG 2.1 AA improvement.\n\n</details>\n\n<details>\n<summary>Business Agent \u2014 Full Report</summary>\n\n## Business Analysis\n\n**Score: 3/5** \u2014 The screen sits at the heart of Osmos's yield optimization story and directly controls advertiser CPM floors, making it revenue-critical \u2014 but the current implementation has gaps that make it a confidence liability rather than an asset for retailer adoption.\n\n**Revenue tie:** Direct \u2014 CPM and CPC Premium % fields literally set price floors for ad inventory. Incorrect values or user input errors here directly reduce retailer yield. The \"Advertisers Applicable to\" column (showing 120 advertisers for the top rules) means a single misconfigured rule simultaneously mis-prices inventory for 120 advertiser accounts. There is no confirmation dialog, no validation, and no undo mechanism.\n\n**Retention hook:** Strong in concept, weak in execution \u2014 ad ops teams who configure yield rules here become deeply embedded in the platform. However, the absence of rule conflict detection (no visual indicator when two rules overlap on the same audience), no performance feedback (no revenue lift shown per rule), and no safe experimentation mode (Draft/Paused state) means that confident power users may accidentally overwrite each other's rules without knowing it, creating churn-inducing trust damage at exactly the wrong moment.\n\n**Adoption risk:** High \u2014 despite being a core tool, adoption risk is HIGH for three compounding reasons: (a) the dual-submit bug will cause first-time users to abandon the Create Rule flow or submit incomplete rules; (b) \"Help text here\" placeholders throughout the form signal an unfinished product, which directly erodes retailer confidence during the onboarding window when first impressions matter most; (c) no Draft/Paused rule state means there is no safe way to stage a rule before it goes live \u2014 risk-averse ops managers will not experiment, which means fewer rules configured, which means lower yield optimization, which means the ceiling-break narrative stalls.\n\n**Strategic fit:** Core \u2014 yield optimization via CPM floors is Osmos's primary differentiation against basic retail media platforms that offer only flat CPM rates. This is not a nice-to-have.\n\n**Time-to-value:** Immediate \u2014 once rules are set, they affect the next auction cycle. This is one of the fastest time-to-value screens in the entire platform. The cost of delay or user abandonment here is measured in missed auction yield, not weeks of setup time.\n\n**PRD alignment:** No PRD context provided. However, the \"Rule Priority\" button's existence as a non-functional UI element strongly suggests a planned priority/stacking feature that is incomplete \u2014 this creates a dangerous gap where rule priority is implied by the UI but unenforceable in the system, meaning overlapping rules resolve with undefined behavior.\n\n</details>\n\n<details>\n<summary>Delight Agent \u2014 Full Report</summary>\n\n## Delight Analysis\n\n**Score: 2/5** \u2014 The Audience Reach visualizer is the one moment of genuine product thinking; everything else is functional scaffolding with no emotional design investment, and the reach gauge itself is fully static.\n\n**Wow moment present?** Barely \u2014 and it's broken. The Audience Reach gradient bar in the Create Rule drawer (Too Narrow \u2192 Too Broad with a colored gradient and an indicator dot) is conceptually the right idea. A live gauge that responds to audience filter changes and tells you whether your targeting will reach 10K or 10M users is exactly the kind of contextual intelligence that makes Osmos feel smarter than competitors. But in the current implementation the indicator is hardcoded to 48% position (`left:'48%'`) and the reach number is a hardcoded string (`1,231,664`) that never changes. A static gauge is not a wow moment \u2014 it is a mockup element that will feel actively broken in production when a user changes the Product Category or Brand filter and the gauge does not respond. Users will trust it less than if it weren't there at all.\n\n**Emotional tone:** Neutral, verging on frustrating \u2014 the density of audit columns (Creator Name, Created On, Last Edited By, Last Edited On: four of eleven visible columns) signals distrust rather than helpfulness. The product feels like it is watching users rather than empowering them. Ad ops managers who open this page want to see which rules are performing, not who created each rule 6 weeks ago. The information architecture communicates \"compliance and accountability\" when it should communicate \"optimize and grow.\"\n\n**Stickiness pattern:** None identified \u2014 there is no saved view, no per-rule performance metric visible in the table (no click-through-rate lift, no revenue uplift attributed to each rule), no insight that would give a manager a reason to return to this page weekly to optimize. Without a feedback loop showing \"this rule generated $4.2K in additional yield this week versus last week,\" the page becomes a set-and-forget configuration screen that users visit once during setup and then avoid. That is the opposite of a sticky pattern \u2014 it is an island.\n\n**Top delight upgrade:** Add a \"Yield Impact\" column to the table showing estimated or actual revenue uplift per rule (e.g., \"+$4.2K this week\" or \"+12% CPM lift\"). This single column transforms the page from a CRUD configuration screen into an active optimization workspace \u2014 it gives managers a reason to return weekly, compare rules against each other, pause underperforming rules, and amplify the ones working. It directly embeds the ceiling-break narrative (\"your rules are generating real yield\") into the daily workflow. This is also a strong competitive moat signal: no competitor shows per-rule revenue attribution inline in the rules table.\n\n</details>\n"}], "grading": {"eval_id": 2, "run_type": "with_skill", "expectations": [{"text": "reads_actual_source_file", "passed": true, "evidence": "Critique references specific JSX elements including 'CreateRuleDrawer', 'handleCreate', 'CPM%/CPC% fields accept any string (maxLength:50)', 'RULE_COLORS', hardcoded hex values, and 'left:48%' indicator \u2014 all specific to ManageCPMRulesPage.jsx."}, {"text": "produces_rigor_matrix_table", "passed": true, "evidence": "File contains a markdown Rigor Matrix table with all four dimensions (Feasibility, UX, Business, Delight) with scores, key findings, recommendations, and priorities."}, {"text": "has_verdict_section", "passed": true, "evidence": "File contains '## Verdict' header with a direct, detailed verdict paragraph."}, {"text": "ux_cites_specific_friction", "passed": true, "evidence": "UX section names specific patterns: dual submit buttons ('Create User Activity Rule' body button with no onClick handler vs 'Create' footer button), 11-column table with no sticky first column, hardcoded hex badge colors breaking dark mode, and missing aria-label on icon-only toolbar buttons."}, {"text": "business_connects_to_yield", "passed": true, "evidence": "Business section explicitly states 'CPM and CPC Premium % fields literally set price floors for ad inventory' and 'directly reduce retailer yield', with 'yield' appearing multiple times in a revenue/impact context."}, {"text": "covers_all_four_lenses", "passed": true, "evidence": "File contains '## Feasibility Analysis', '## UX Analysis', '## Business Analysis', and '## Delight Analysis' as section headers inside collapsible details blocks."}], "overall_pass_rate": 1.0}}, {"id": "eval-2-cpm-rules-page-without_skill", "prompt": "Run a design critique on our ManageCPMRules page. Read the file at src/components/ManageCPMRulesPage.jsx \u2014 this is where ad ops managers at retailers set CPM floor prices and yield optimization rules. It's one of the most business-critical screens in the platform. Tell me honestly if it's good enough or if it needs major work.", "eval_id": 2, "outputs": [{"name": "rigor_matrix.md", "type": "text", "content": "# Design Critique: ManageCPMRulesPage\n**Evaluated by:** Claude (without design-critic skill)\n**Date:** 2026-04-24\n**File:** `/Users/rishikeshjoshi/OMOS TEST/src/components/ManageCPMRulesPage.jsx`\n**Context:** Ad ops managers at retailers use this screen to set CPM floor prices and yield optimization rules. Business-critical.\n\n---\n\n## Verdict Up Front\n\n**Needs major work.** The screen is structurally sound \u2014 it has the right bones (table, drawer, badges, filters) \u2014 but it fails on several dimensions that matter significantly for a business-critical tool. The problems are not cosmetic; they are architectural, informational, and interaction-level. The most serious issues are the absence of row actions, incomplete form validation, hardcoded placeholder data, and a design-system compliance gap that will cause visual drift as the codebase scales.\n\n---\n\n## 1. Feasibility (Technical Quality)\n\n### What is here\n- Token-based CSS variables used consistently via constants (`BORDER`, `FG`, `BG_SUB`, etc.) \u2014 good discipline.\n- SVG icons are inlined as hand-rolled components (`RefreshIc`, `ColIc`, etc.) rather than an icon library \u2014 a known project pattern but redundant since `lineicon-enforcer` is available.\n- State is minimal and correct: `activeTab`, `search`, `showDrawer` are the right shape for the current feature surface.\n- The drawer uses a fixed-position overlay + panel pattern. Implementation is correct.\n- `onMouseEnter`/`onMouseLeave` inline style mutations on the `<tr>` are a React anti-pattern (direct DOM style writes). CSS class toggling or a `hoveredRow` state would be more idiomatic and less fragile.\n\n### Problems\n| Severity | Issue |\n|---|---|\n| High | **All data is hardcoded.** `ROWS` and `COLS` are static arrays. There is no data-fetching layer, loading state, empty state, or error boundary. For a business-critical page, this means the component cannot actually be used. |\n| High | **Search input is wired to state but never filters rows.** `search` is set but never applied \u2014 `ROWS.map(...)` always renders all 8 rows regardless of query. |\n| High | **Tab filter (\"Auction Campaign\" vs \"All\") does nothing.** `activeTab` state is set on click but never used to filter or segment data. |\n| Medium | **Form validation is absent.** Required fields (marked with red asterisk) have no validation logic. `handleCreate` fires the toast unconditionally \u2014 an empty rule name or zero CPM % would silently \"succeed.\" |\n| Medium | **Inline style objects** recreated on every render (`thStyle`, `tdStyle`, `btnOutline`, `btnPrimary` defined inside the component body). These should be `useMemo` or extracted to constants. |\n| Medium | **`RULE_COLORS` uses hardcoded hex values** (`#FFF7ED`, `#C2410C`, `#FAF5FF`, `#7C3AED`) instead of design tokens. Breaks dark mode and token governance. |\n| Medium | **`Toast` component hardcodes `background='var(--osmos-brand-green)'`** directly in a style prop rather than using a semantic token. |\n| Low | `onDone` reference in `Toast`'s `useEffect` dependency array will trigger on every render if the parent passes an inline arrow function \u2014 it should be `useCallback`-wrapped at the call site. |\n| Low | The `Ic` generic SVG wrapper is a micro-abstraction that saves 2 lines but makes icon naming opaque. The codebase has a `lineicon-enforcer` skill specifically to standardize this. |\n\n### Score: 4 / 10\nFundamentally incomplete as a real component. The shell is correct but the core behaviors (filtering, searching, validation) are stubbed out without even TODO comments.\n\n---\n\n## 2. UX Quality\n\n### Information Architecture\nThe table has 11 columns. At `minWidth: 1300px` this will overflow on most laptop viewports. Columns like \"Creator Name\", \"Created On\", \"Last Edited By\", \"Last Edited On\" are audit metadata \u2014 useful but not primary. They should be:\n- Hidden by default behind the column picker (the `ColIc` button exists but does nothing)\n- Or progressively disclosed on row expand\n\nThe \"Advertisers Applicable to\" column shows a raw integer (120, 20, 18). Without context \u2014 120 out of how many total? \u2014 this number means nothing to the ops manager.\n\n### Missing Row Actions\nThere are zero per-row actions. For a CPM rules management screen, the expected actions are:\n- Edit rule\n- Duplicate rule\n- Enable / Disable toggle\n- Delete\n- View affected advertisers\n\nNone of these exist. The \"Create Rules\" button creates new rules but there is no way to modify or delete existing ones. This is a critical UX gap for a management tool.\n\n### Rule Priority Button\n\"Rule Priority\" appears in the toolbar as a plain outline button. CPM floor rules often stack or conflict \u2014 priority ordering is one of the most consequential operations on this screen. It should not be a tertiary action buried in the toolbar at the same visual weight as Refresh and Download. It warrants a dedicated affordance (e.g., a drag-to-reorder mode or a numbered priority column in the table itself).\n\n### Drawer UX\nThe \"Create Rule\" drawer has two submit paths:\n1. A \"Create User Activity Rule\" button **inside the body scroll area** (line 264\u2013268)\n2. A \"Create\" button in the **footer** (line 278)\n\nThese are redundant and contradictory. The body button is always labeled \"Create User Activity Rule\" regardless of the `setRuleBy` radio selection (which can be \"User Attributes\" or \"Custom List\"). The footer \"Create\" button fires `handleCreate`. Having two action paths with different labels and potentially different behaviors is a serious usability error on a financial-configuration form.\n\n### Audience Reach Visualisation\nThe gradient bar (Too Narrow \u2192 Too Broad) is decorative \u2014 the indicator dot is hardcoded to `left: 48%` regardless of actual reach. The \"Potential Reach: 1,231,664\" text is static. On a screen where reach directly affects CPM pricing strategy, showing fake data is actively misleading.\n\n### Accessibility\n- No `aria-label` on icon-only buttons (Refresh, Column picker, Download).\n- Radio buttons use native `<input type=\"radio\">` which is acceptable, but the group lacks a `<fieldset>`/`<legend>` for screen reader context.\n- Table has no `scope=\"col\"` on `<th>` elements.\n- Search input has no `<label>` \u2014 only a placeholder.\n- Color-only status indication: `StatusBadge` uses green color + dot with no text differentiation beyond the label \"Active\". There is no \"Inactive\" state rendered to verify contrast.\n\n### Score: 3 / 10\nThe layout scaffolding is correct. The actual interaction model is broken: no row editing, non-functional search/filter, contradictory drawer submit paths, and static visualisation passed off as live data.\n\n---\n\n## 3. Business Value\n\n### What works\n- The three rule types (User Attribute, User Activity, User Segment) are visually distinguished with color-coded badges \u2014 good at a glance differentiation.\n- Showing both CPM% and CPC% side by side in the table is the right call \u2014 ops managers need to compare these simultaneously.\n- Estimated Reach in the table is high-value for bid strategy decisions.\n- The \"Advertisers Applicable to\" column gives a sense of blast radius per rule.\n\n### What is missing\n- **No rule effectiveness signal.** CPM rules affect revenue directly. The table should surface whether a rule is performing (e.g., impression uplift, spend attributed to the rule, win rate). Without it, ops managers cannot tell if a rule is working or should be removed.\n- **No conflict detection.** If two rules apply to overlapping audiences with different CPM%, which one wins? There is no indication. For yield optimization this is a first-class concern.\n- **No bulk actions.** With 8+ rules (and presumably many more in production), enabling/disabling groups of rules or bulk-editing CPM% across a segment type requires row selection + bulk action bar. Neither exists.\n- **No rule history / changelog.** \"Last Edited By\" and \"Last Edited On\" are shown but there is no way to see what was changed. For financial configuration, an audit trail viewer is expected.\n- **The \"Rule Priority\" action is present but unimplemented.** This is arguably the most business-critical operation on the page \u2014 priority determines which rule fires when multiple rules match. Its absence turns the screen into a read-only list with a create button.\n\n### Score: 4 / 10\nThe data model surfaces the right fields, but the page lacks the decision-support signals (performance, conflicts, history) that make it actionable for an ops manager.\n\n---\n\n## 4. Product Delight\n\n### Strengths\n- Token system is being used: `--osmos-border`, `--osmos-fg`, `--osmos-bg-subtle` etc. are correctly applied in most places.\n- Badge system (StatusBadge, RuleTypeBadge) is clean and visually consistent.\n- The \"and\" connector between Product Category and Brand in the drawer is a nice touch \u2014 it communicates compound logic without overwhelming the form.\n- Hover state on table rows gives appropriate interactive feedback.\n- The toast success message (\"Rule created successfully. You can now set rule priority.\") is well-written \u2014 it tells the user what to do next.\n\n### Weaknesses\n- **The page is a dead end.** After creating a rule, there is nothing to do except look at the list. No row-level interaction, no drill-down, no history, no performance data.\n- **Help text is \"Help text here\" throughout the drawer.** Every field has an identical placeholder hint. For a financial configuration form, contextual help is important \u2014 what is a valid CPM% range? What does \"User Activity\" vs \"User Attribute\" actually mean for floor pricing? These placeholders signal the UI is not ready for real users.\n- **Static data presented as live.** The audience reach bar with a hardcoded dot position, the \"Potential Reach: 1,231,664\" static number, and all 8 rows showing \"16 Jun 25, 01:25 PM\" or \"13 Jun 25, 12:24 PM\" as timestamps \u2014 these will be jarring the moment real data is connected and the carefully positioned dot jumps to a wrong position.\n- **No empty state.** If no rules match a filter or if the retailer has zero rules configured, the table renders an empty `<tbody>`. There should be an empty state with a clear call to action.\n- **Rule Name truncation is inconsistent.** Row 3 shows \"Frequent Coke Bu...\" in the data but the table renders all names with `textOverflow: ellipsis` \u2014 the truncation in the raw data string and the CSS truncation are both fighting each other. The data should be full strings; only CSS should truncate.\n\n### Score: 5 / 10\nThe visual design vocabulary is correct and the token usage is mostly disciplined. But delight requires polish in the details, and the details here \u2014 placeholder copy, static visuals, no row actions, dead-end navigation \u2014 are all unfinished.\n\n---\n\n## Rigor Matrix Summary\n\n| Dimension | Score | Key Finding |\n|---|---|---|\n| **Feasibility** | 4/10 | Search/filter/tab are wired but non-functional; no data layer; form submits without validation |\n| **UX** | 3/10 | No row actions, two conflicting submit buttons in drawer, static reach visualisation, accessibility gaps |\n| **Business Value** | 4/10 | Right fields surfaced but no performance signals, no conflict detection, rule priority unimplemented |\n| **Product Delight** | 5/10 | Token discipline and badge system are good; undermined by placeholder copy, dead-end UX, and static data |\n| **Overall** | **4/10** | Shell is solid. Feature is not shippable. |\n\n---\n\n## Priority Fix List (ordered)\n\n1. **Wire search and tab filters to actual row filtering** \u2014 30 min of work, highest visibility gap.\n2. **Add row action menu (Edit, Enable/Disable, Delete, Duplicate)** \u2014 this is the core of a management screen.\n3. **Remove the duplicate submit button from the drawer body** \u2014 replace with a single footer \"Create Rule\" button whose label reflects the current `setRuleBy` selection.\n4. **Add form validation** before firing `handleCreate` \u2014 at minimum: non-empty rule name, numeric CPM/CPC%, valid range.\n5. **Replace \"Help text here\" with real contextual copy** for each field.\n6. **Implement the column picker** (`ColIc` button) to hide audit columns by default.\n7. **Replace hardcoded hex colors** in `RULE_COLORS` with design tokens.\n8. **Add empty state component** for zero-results scenarios.\n9. **Make the reach bar dynamic** or remove it until real data is available \u2014 static visuals are misleading.\n10. **Implement Rule Priority** as a first-class interaction (drag-to-reorder or numbered column), not a toolbar button that goes nowhere.\n\n---\n\n## One-Line Verdict\n\nThe ManageCPMRulesPage has the right visual vocabulary and data schema, but it is an unfinished prototype \u2014 not a shippable screen. The non-functional filters, absent row actions, duplicate form submission paths, and static visualisations make it unsuitable for ad ops managers who need to act on live data with confidence.\n"}], "grading": {"eval_id": 2, "run_type": "without_skill", "expectations": [{"text": "reads_actual_source_file", "passed": true, "evidence": "Critique references specific JSX elements: 'ROWS' and 'COLS' static arrays, 'handleCreate', 'RULE_COLORS' hardcoded hex values, 'onMouseEnter'/'onMouseLeave' inline style mutations, 'RefreshIc'/'ColIc' SVG components, and cites specific line numbers (264\u2013268, 278)."}, {"text": "produces_rigor_matrix_table", "passed": true, "evidence": "File contains a Rigor Matrix Summary table at the end with all four dimensions (Feasibility, UX, Business Value, Product Delight) and scores."}, {"text": "has_verdict_section", "passed": true, "evidence": "File contains '## Verdict Up Front' at the top and '## One-Line Verdict' at the end, both containing direct verdict statements."}, {"text": "ux_cites_specific_friction", "passed": true, "evidence": "UX section names specific interactions: two submit paths (body 'Create User Activity Rule' button vs footer 'Create' button), missing row actions (Edit/Pause/Delete/Duplicate), hardcoded 'left: 48%' reach gauge indicator, and missing aria-label on icon-only buttons."}, {"text": "business_connects_to_yield", "passed": true, "evidence": "Business section states 'CPM rules affect revenue directly' and 'yield optimization this is a first-class concern', connecting CPM rule management directly to yield and revenue impact."}, {"text": "covers_all_four_lenses", "passed": true, "evidence": "File contains '## 1. Feasibility (Technical Quality)', '## 2. UX Quality', '## 3. Business Value', and '## 4. Product Delight' as section headers, covering all four lenses."}], "overall_pass_rate": 1.0}}, {"id": "eval-3-smart-budget-recommender-with_skill", "prompt": "I want to build a 'Smart Budget Recommender' feature on the campaign setup flow. When an advertiser is creating a campaign, after they choose their target audience and flight dates, we show them a suggested daily budget based on: historical performance of similar campaigns, seasonal trends for their category, and the retailer's current inventory levels. The recommendation appears as an inline card with a graph showing projected impressions at different budget tiers. Is this a good idea? What should we actually build?", "eval_id": 3, "outputs": [{"name": "rigor_matrix.md", "type": "text", "content": "# Design Critic: Rigor Matrix\n## Smart Budget Recommender \u2014 Campaign Setup Flow\n_2026-04-24 | Input type: description_\n\n---\n\n## Rigor Matrix\n\n| Dimension   | Score | Key Finding | Recommendation | Priority |\n|-------------|-------|-------------|----------------|----------|\n| Feasibility | 2/5   | Requires three distinct ML/data pipelines (similarity engine, seasonality model, live inventory API) \u2014 none currently exist; this is a new infrastructure build, not a UI feature | Ship a statistical \"Budget Range Benchmark\" (P25/median/P75 by category + flight duration) as v1; defer ML recommendation layer to v2 | P0 |\n| UX          | 3/5   | Core concept is well-placed and genuinely useful, but the inline graph risks cognitive overload at a high-stakes funnel step, and trust scaffolding (provenance, confidence, cold-start fallback) is entirely unspecified | Lead with the recommended number as hero text, graph behind progressive disclosure; add one-line data provenance; define explicit cold-start fallback state | P0 |\n| Business    | 4/5   | Directly targets the highest-leverage advertiser moment (budget commitment at creation); strong revenue tie via budget anchoring lift; genuine moat if live inventory signal is unique | Label v1 as \"Benchmark Range\" not \"AI Recommendation\" to set appropriate expectations and avoid trust cliff on launch | P1 |\n| Delight     | 3/5   | Latent wow moment exists but is not guaranteed by current spec; accuracy is the prerequisite for stickiness, and the feedback loop is too long without an explicit post-campaign accuracy reveal | Build a post-campaign \"Budget Accuracy Report\" micro-card (actual vs. projected impressions) as a phase-2 feature to close the trust loop and compound stickiness | P2 |\n\n**Composite Score: 12/20**\n\n---\n\n## Conflicts (Needs Human Judgment)\n\n**1. Feasibility says \"defer the tiered graph\" vs. Delight says \"the graph is the wow moment.\"**\nFeasibility argues the multi-tier projection chart adds engineering weight and in-flow cognitive load; the simpler alternative is a P25/median/P75 range display. Delight argues that the tiered graph \u2014 when fast and accurate \u2014 is exactly the memorable, differentiated moment that makes the feature worth building. These are not mutually exclusive across versions, but they are mutually exclusive in v1 scope. Human judgment required: prioritize launch speed and reliability (range in v1), or prioritize differentiated experience (graph in v1) and accept higher risk?\n\n**Recommended resolution:** Ship the number range in v1 as the budget anchor. Build the tiered projection graph for v2 once the data pipeline is validated at scale and the similarity model is proven accurate. This avoids a trust-destroying first impression if the graph shows inaccurate projections at launch.\n\n**2. Business says \"high revenue impact \u2014 ship now\" vs. Feasibility says \"XL effort \u2014 6\u201310 weeks.\"**\nThese are not in philosophical conflict \u2014 both agree the feature is worth building \u2014 but they imply different urgency levels. Business sees immediate revenue leverage; Feasibility sees a significant coordination cost across data, backend, and frontend teams. The benchmark-first alternative resolves this tension by enabling a shippable v1 in 2\u20133 weeks that captures most of the business value while the full ML stack is built in parallel.\n\n---\n\n## Verdict\n\nBuild this \u2014 but not the way it's currently specified. The Smart Budget Recommender concept is strategically correct: budget-setting is the highest-stakes, highest-abandonment moment in campaign creation, and a data-backed anchor has well-documented lift on initial spend commitment. However, the current spec packages three hard engineering problems (ML similarity matching, seasonal trend modeling, real-time inventory querying) inside what is described as a \"UI feature,\" which will either delay the ship date by a quarter or result in a low-confidence v1 that actively damages advertiser trust.\n\n**Ship now (v1 \u2014 2\u20133 weeks):** A \"Budget Range Benchmark\" card that shows P25/median/P75 daily budgets for campaigns with the same category and flight duration, sourced from aggregated historical data only. No ML inference. No real-time inventory. The card leads with the median as the hero number (\"$95/day is typical for campaigns like yours\"), offers a one-click \"Use this budget\" button that pre-fills the field, and includes a single-line provenance footnote (\"Based on 62 similar campaigns | Updated daily\"). Define explicit fallback states for cold-start (< 10 comparable campaigns: show a wider range or hide the card). Match Osmos design tokens throughout \u2014 this must not look like a widget bolted on.\n\n**Build next (v2 \u2014 parallel track, 6\u201310 weeks):** Layer the ML similarity engine and the tiered impression projection graph on top of the v1 benchmark card once the data pipelines are proven. Gate the graph behind progressive disclosure (\"See projections at different budgets \u2192\") so it enriches the experience for curious users without adding cognitive load for everyone.\n\n**Defer (v3 or later):** The live inventory signal. This is the genuine moat \u2014 no competitor can offer retailer-specific, real-time inventory as a budget input signal \u2014 but it requires a live API integration with the retailer's catalog system that does not exist today. Do not promise this in v1 copy or the roadmap will lie.\n\n**Kill:** The idea of shipping the full three-signal ML recommendation in v1. An inaccurate \"AI recommendation\" is worse than no recommendation \u2014 it triggers trust collapse with exactly the power users whose opinion shapes platform reputation across their retailer accounts.\n\n---\n\n<details>\n<summary>Feasibility Agent \u2014 Full Report</summary>\n\n## Feasibility Analysis\n\n**Score: 2/5** \u2014 The feature requires three distinct ML/data pipelines (historical similarity matching, seasonal trend detection, real-time inventory querying) plus a charting layer, none of which likely exist in their current form; this is a significant new infrastructure build, not a UI feature.\n\n**Blockers:**\n- No evidence of a \"similar campaigns\" similarity index or ML inference endpoint in the current codebase. Building one requires labeled campaign data, feature engineering, a model serving layer, and latency budgets under ~500ms to not break the campaign-creation flow.\n- Real-time inventory level access from the retailer's catalog system must be available as an API \u2014 if it's batch-synced (e.g., nightly), the \"current inventory levels\" signal is stale by definition and misleads advertisers.\n- Seasonal trend data requires at least 12\u201318 months of per-category spend history to be statistically meaningful. New retailer accounts on Osmos will have insufficient data, creating a cold-start problem that must be explicitly handled in UX and data logic.\n\n**Risks:**\n1. **ML model drift and trust collapse** \u2014 If the budget recommendation is wrong even a few times (over- or underestimates impressions by >30%), advertisers will stop trusting the feature entirely and it becomes a liability rather than an asset. Without a confidence interval displayed alongside the projection, every recommendation is an implicit false promise.\n2. **Inline graph performance** \u2014 Rendering a multi-tier impression projection chart inside an already-complex campaign creation flow adds rendering weight at a moment of high user task load. If the chart fetch takes >1s, it creates perceived slowness at the most critical conversion funnel step.\n3. **Data pipeline coupling** \u2014 The feature sits at the intersection of three data sources (campaign history, seasonal signals, inventory). Any one going stale or unavailable breaks the entire recommendation, with no graceful degradation currently specified.\n\n**Effort:** XL \u2014 The UI card + graph is M effort on its own; the three backend pipelines (similarity engine, seasonality model, live inventory API) each range M\u2013L individually. Total engineering effort across data, backend, and frontend is likely 6\u201310 weeks of coordinated work across multiple teams.\n\n**Simpler alternative:** Ship a \"Budget Range Benchmark\" first \u2014 a purely statistical lookup that shows P25/median/P75 daily budget for campaigns with the same category and flight duration, sourced from aggregated historical data only. No ML, no real-time inventory. This is an L\u2192M effort, delivers 60% of the value (a credible starting anchor), and can be built in 2\u20133 weeks. Add the ML recommendation layer in v2 once the data pipelines mature.\n\n</details>\n\n<details>\n<summary>UX Agent \u2014 Full Report</summary>\n\n## UX Analysis\n\n**Score: 3/5** \u2014 The core concept is genuinely useful and contextually placed, but the inline graph risks overloading an already-complex funnel step, and trust scaffolding (data freshness, confidence, explainability) is entirely unspecified.\n\n| Dimension   | Score | Key Finding |\n|-------------|-------|-------------|\n| Useful      | A | Advertisers genuinely struggle with budget-setting on new campaigns; a data-backed anchor directly addresses a top drop-off point in campaign creation funnels. |\n| Usable      | B | \"Inline card with a graph\" is one interaction, but it's unclear how the advertiser applies the recommendation \u2014 is it a one-click \"use this\" or do they manually key it in? The application action must be \u22641 click or it will be ignored. |\n| Findable    | B | Placed in-flow after audience + flight dates \u2014 correct placement. Risk: if buried below the fold in a long form, users miss it without scrolling. |\n| Credible    | C | Three data sources are cited but not surfaced to the user. Without \"Based on 47 similar campaigns in your category\" or \"Last updated: 2h ago,\" the recommendation reads as a made-up number. Data provenance is a critical trust signal for data-driven ad ops managers. |\n| Accessible  | C | Graph-heavy content is inherently difficult for screen readers. No specification for chart alt-text, keyboard-navigable tier selection, or color-blind safe palette. The multi-tier visualization must not rely on color alone to distinguish tiers. |\n| Desirable   | B | An inline projection card is on-brand for a data-forward platform. Risk: if the visual style doesn't match Osmos tokens (navy/blue-violet/mint), it will feel like a third-party widget bolted in. |\n| Valuable    | A | Removing this from a completed implementation would directly hurt campaign creation confidence; advertisers with a budget anchor convert at materially higher rates than those shown a blank input. |\n\n**Top friction points:**\n1. **No \"apply\" affordance specified.** The recommendation appears as a card with a graph, but the spec does not define how the advertiser accepts it. If they still have to type the number manually, the feature's utility collapses to \"decorative chart.\" There must be a \"Use $X/day\" button that pre-fills the budget field with one click.\n2. **Cold-start silent failure.** For new retailers or niche categories with <10 historical campaigns, the feature either shows no card (confusing absence) or shows a low-confidence recommendation that looks identical to a high-confidence one. This is a credibility landmine. The spec must define the fallback state explicitly.\n3. **Graph cognitive overload at funnel crunch point.** Campaign creation is already a multi-step, high-stakes flow. Adding a multi-tier projection graph here competes for attention with the primary task of setting the budget. If the chart requires >10 seconds to interpret, it adds friction rather than reducing it. Consider leading with the recommended number (large, prominent) and making the graph a progressive-disclosure toggle (\"See projections \u2192\").\n\n**Quick wins:**\n1. Lead with the number, not the chart \u2014 show \"$120/day recommended\" as the hero text, with the graph collapsed behind a \"see full breakdown\" toggle. This takes <1 day to implement and removes the cognitive overload risk immediately.\n2. Add a one-line data provenance footnote: \"Based on [N] similar campaigns | Updated daily.\" This is a single line of text that transforms credibility from C to A.\n\n</details>\n\n<details>\n<summary>Business Agent \u2014 Full Report</summary>\n\n## Business Analysis\n\n**Score: 4/5** \u2014 This directly addresses the single highest-leverage moment in the advertiser lifecycle (campaign creation budget commitment) and has a strong revenue tie, but adoption risk is real if the recommendation quality is poor at launch.\n\n**Revenue tie:** Direct \u2014 Budget anchoring at campaign creation is one of the most well-documented conversion levers in self-serve ad platforms. Advertisers who receive a credible \"start here\" recommendation commit higher initial budgets than those presented with a blank field (typical lift: 15\u201330% higher initial daily budget). This directly increases GMV on the platform in the first campaign cycle and sets a higher baseline for subsequent campaigns if the recommendation proves accurate.\n\n**Retention hook:** Strong \u2014 If the recommendation is accurate (impressions delivered match the projection within an acceptable range), advertisers will trust the model and use it on every future campaign. This creates a behavioral loop: advertiser sets budget \u2192 model prediction validates \u2192 advertiser returns to Osmos for next campaign with higher confidence. The feedback loop is the retention mechanism; accuracy is the prerequisite.\n\n**Adoption risk:** Medium \u2014 Two scenarios threaten adoption. First, if the ML recommendations are wrong at launch (plausible given cold-start and data quality concerns from Feasibility), early adopters who act on bad advice will churn and actively warn others. Second, sophisticated ad ops managers may distrust algorithmic recommendations on principle and ignore the card entirely. Mitigation: label v1 as \"Benchmark range\" (not \"Recommended budget\") to set lower expectations and avoid the trust cliff.\n\n**Strategic fit:** Core \u2014 This aligns directly with the ceiling-break narrative: replacing manual, trial-and-error budget calibration with data-driven self-service. It's differentiated from generic self-serve ad platforms because the signal includes retailer-specific inventory, which competitors (DV360, TTD) cannot access. This is a genuine moat if the inventory signal is live.\n\n**Time-to-value:** Weeks \u2014 Once shipped, an advertiser sees and can act on the recommendation in their first session. If the \"use this\" button pre-fills the budget, the time-to-value is immediate within that session. However, value validation (did the recommendation prove accurate?) takes the length of the campaign flight (days to weeks).\n\n**PRD alignment:** No PRD context provided.\n\n</details>\n\n<details>\n<summary>Delight Agent \u2014 Full Report</summary>\n\n## Delight Analysis\n\n**Score: 3/5** \u2014 There is a genuine \"oh, that's clever\" moment latent in this feature, but the current spec is built around data display rather than designed around the emotional peak \u2014 the moment an advertiser realizes the platform knows their business context and is actively helping them succeed.\n\n**Wow moment present?** Potentially yes, but not guaranteed by the current spec. The wow moment would be: \"I just picked my audience and dates, and the platform already knows what campaigns like mine have achieved \u2014 here's exactly what to expect at each spend level.\" That is compelling. But the wow moment is destroyed if: (a) the graph takes >1s to load, (b) the numbers feel generic rather than specific to the advertiser's context, or (c) the recommendation card is visually indistinct from the rest of the form. To guarantee the wow moment, the card needs a distinct visual treatment (not just another form section) and the recommendation must reference specific context (\"For home goods campaigns in Q4...\").\n\n**Emotional tone:** Helpful \u2014 when it works. The intent is collaborative intelligence, and that's the right emotional register for Osmos's power-user audience. Risk of tipping to \"frustrating\" if: the card shows no data (cold-start), the numbers are stale, or the graph is slow. Ad ops managers are highly attuned to data quality; a bad recommendation doesn't just get ignored \u2014 it actively damages trust in everything else on the platform.\n\n**Stickiness pattern:** Behavioral loop with validation delay. Advertiser uses recommendation \u2192 campaign runs \u2192 checks performance vs. projection \u2192 if accurate, returns with higher trust next cycle. This is a high-value loop, but it has a long feedback cycle (days to weeks per campaign). To accelerate stickiness, consider a \"How did we do?\" micro-card post-campaign that shows actual vs. projected impressions. This closes the loop explicitly and turns a passive feature into an active trust-builder.\n\n**Top delight upgrade:** After a campaign completes, send a \"Budget Accuracy Report\" \u2014 a single-stat card in the campaign dashboard that shows \"Your projected impressions: 240K | Actual: 228K (95% accuracy).\" This one post-hoc touchpoint transforms the recommender from a one-time tool into a trust-accumulating system that compounds with each campaign. It also creates a natural upsell moment (\"Your next campaign has 18% more inventory available \u2014 want to increase budget?\"). This is buildable as a separate phase and would raise delight from a 3 to a 4.\n\n</details>\n"}], "grading": {"eval_id": 3, "run_type": "with_skill", "expectations": [{"text": "feasibility_flags_ml_complexity", "passed": true, "evidence": "Feasibility Analysis explicitly identifies three ML/data pipelines required: 'historical similarity matching', 'seasonal trend detection', and 'real-time inventory querying', and states this is 'a significant new infrastructure build, not a UI feature.'"}, {"text": "delight_identifies_wow_moment", "passed": true, "evidence": "Delight Analysis contains 'Wow moment present? Potentially yes, but not guaranteed by the current spec' and describes the specific conditions under which the wow moment would or would not materialize."}, {"text": "produces_rigor_matrix_table", "passed": true, "evidence": "File contains a full Rigor Matrix table with all four dimensions (Feasibility 2/5, UX 3/5, Business 4/5, Delight 3/5), composite score 12/20, key findings, recommendations, and priorities."}, {"text": "has_verdict_section", "passed": true, "evidence": "File contains '## Verdict' header with a detailed multi-paragraph verdict covering v1, v2, deferred, and kill decisions."}, {"text": "verdict_addresses_scope", "passed": true, "evidence": "Verdict explicitly scopes the build into phases: 'Ship now (v1)' with benchmark-only card, 'Build next (v2)' for ML layer, and 'Defer (v3)' for live inventory, and 'Kill' the full three-signal v1."}, {"text": "surfaces_agent_conflict", "passed": true, "evidence": "Conflicts section contains 'Feasibility says defer the tiered graph vs. Delight says the graph is the wow moment' as the first named conflict, and explicitly states 'they are mutually exclusive in v1 scope.'"}], "overall_pass_rate": 1.0}}, {"id": "eval-3-smart-budget-recommender-without_skill", "prompt": "I want to build a 'Smart Budget Recommender' feature on the campaign setup flow. When an advertiser is creating a campaign, after they choose their target audience and flight dates, we show them a suggested daily budget based on: historical performance of similar campaigns, seasonal trends for their category, and the retailer's current inventory levels. The recommendation appears as an inline card with a graph showing projected impressions at different budget tiers. Is this a good idea? What should we actually build?", "eval_id": 3, "outputs": [{"name": "rigor_matrix.md", "type": "text", "content": "# Rigor Matrix: Smart Budget Recommender\n**Feature:** Smart Budget Recommender \u2014 inline budget suggestion card in the campaign setup flow\n**Evaluated by:** Claude Sonnet 4.6 (without design-critic skill)\n**Date:** 2026-04-24\n\n---\n\n## Executive Summary\n\nThe Smart Budget Recommender is a genuinely valuable feature idea with strong product-market fit for a retail media platform. However, the full vision as described \u2014 historical ML scoring, seasonal trend signals, inventory-aware recommendations, and a multi-tier projection graph \u2014 is substantially more complex to build correctly than it appears. The good news: a stripped-down version that delivers 70% of the value at 15% of the engineering risk is well within reach and should be the v1 target.\n\n**Verdict:** Build \u2014 but scope down hard for v1. Cut the inventory integration and seasonal modeling. Ship a budget range card with a simple projection line. Revisit the richer signals in v2 once you have signal-to-noise data on adoption.\n\n---\n\n## Lens 1: Technical Feasibility\n\n### What the Feature Actually Requires\n\nThe proposed feature decomposes into three distinct backend systems, each with its own complexity profile:\n\n**1. Historical Campaign Similarity Engine**\n- Requires defining \"similar campaigns\" \u2014 by category, audience overlap, flight duration, retailer vertical, or some weighted combination\n- Needs a corpus of completed campaigns with performance outcomes (impressions, CTR, spend pacing) to train or query against\n- Cold-start problem is real: new advertisers or new categories have no comparable history\n- Data quality risk: if historical campaigns were paused, budget-capped, or externally influenced, their performance data is biased\n\n**2. Seasonal Trend Model**\n- Category-level seasonality (Fragrance spikes around Diwali/Valentine's, Hair Care stable year-round) requires at minimum 12 months of impression data per category\n- Inference: the codebase shows category-level breakdowns in `DemandSupplyPage.jsx` (Body Care, Skin Care, Hair Care, Fragrance, etc.) which means category taxonomy is already established \u2014 a positive signal\n- However, \"seasonal trends\" computed server-side and surfaced in real-time during a form flow requires an API call on the critical path of campaign creation \u2014 adding latency to a user action that should feel instant\n\n**3. Retailer Inventory Level Integration**\n- This is the highest-risk dependency. Inventory levels require a live or near-live data feed from the retailer's catalog/ERP system\n- Looking at the codebase: `ProductCatalogPage.jsx`, `CatalogStatusPage.jsx`, and `AdvertiserOnboardingCatalogPage.jsx` exist, suggesting product feeds are already ingested \u2014 but ad-serving inventory availability (how many impression slots exist for a given SKU or category) is a different concept from product catalog completeness\n- Inventory-aware budget suggestions require the platform to model: available ad slots \u00d7 estimated fill rate \u00d7 competitive pressure \u2014 this is effectively a first-price auction simulation\n- Assessment: Do not build for v1. This is 6-8 weeks of backend work for a signal that may add marginal improvement over the historical similarity baseline\n\n### Data Infrastructure Readiness\n\nBased on codebase evidence:\n- Budget tracking exists: `computedDailyBudget` column appears in `DemandSupplyPage.jsx` gap analysis table \u2014 the platform already computes daily budget figures per category\n- Impression metrics exist: `ProductAdsAnalyticsPage.jsx` shows Ad Impression, Ad Clicks, CTR, CPC, and Ad Revenue KPIs\n- The recharts library is already in use for line and donut charts \u2014 the projection graph is feasible to render with existing dependencies\n- No existing budget recommendation or prediction endpoint was found in the component code\n\n### API Latency Risk\n\nThe inline card renders \"after they choose their target audience and flight dates\" \u2014 meaning the recommendation fires mid-form-flow. If the recommendation API takes >800ms, the user stalls. Mitigation options:\n- Pre-fetch budget ranges when flight dates are selected (optimistic loading)\n- Cache recommendations by category \u00d7 flight duration bucket (e.g., 7-day, 14-day, 30-day) rather than computing per-request\n- Show skeleton state immediately; fill in the specific numbers asynchronously\n\n**Feasibility Rating: Medium** \u2014 achievable for a simplified version; full three-signal model is high risk for v1.\n\n---\n\n## Lens 2: UX Quality\n\n### What Works Well\n\nThe inline card placement is correct. Showing the recommendation at the moment of budget decision \u2014 after audience and dates are set but before the user commits to a number \u2014 respects the natural mental model of \"I know what I want, now tell me what it costs.\" This follows established patterns from Google Ads's budget guidance and Meta's Advantage Campaign Budget.\n\nThe projected impressions graph at different budget tiers is the right visualization choice. A user asking \"what do I get for $500/day?\" wants a curve, not a table. The recharts line chart already used in `ProductAdsAnalyticsPage.jsx` (with `ResponsiveContainer`, `LineChart`, `Tooltip`) provides the component foundation.\n\n### What Could Fail Badly\n\n**1. Anchoring bias risk.** If the recommendation is $500/day and the advertiser was going to spend $200/day, you may increase their spend (good for revenue). But if they had budget for $1,000/day and your anchor is $500, you leave money on the table. The card framing matters enormously: present it as a \"suggested starting point\" with an explicit range, not as \"the right answer.\"\n\n**2. Confidence opacity.** A recommendation based on 3 similar campaigns is very different from one based on 300. If you don't surface confidence signals (sample size, how closely the comparable campaigns match), power users will distrust the feature and dismiss it as marketing fluff.\n\n**3. Flow interruption.** An inline card that requires the user to interpret a graph, weigh three budget tiers, and then make a decision adds cognitive load to an already multi-step form. If the card isn't dismissible, it becomes an obstacle. If it's too easy to dismiss, it gets ignored.\n\n**4. Misalignment between recommendation and actual results.** If an advertiser follows the recommendation and gets materially different results than projected, the trust damage compounds \u2014 they'll distrust the platform more than if no recommendation had been shown.\n\n### UX Recommendations\n\n- Make the card collapsible and remember the preference per advertiser (if they always dismiss it, stop showing it)\n- Show exactly three budget tiers: Conservative (P25 of similar campaigns), Recommended (P50-P75), and Aggressive (P90)\n- For each tier, show a single number (projected daily impressions), not a range \u2014 ranges feel hedged and unhelpful\n- Add a \"How this was calculated\" tooltip that lists: N similar campaigns, date range, category\n- Pre-populate the budget input with the recommended tier when the user clicks \"Use this budget\" \u2014 don't just show the card and leave the user to type\n- On mobile/narrow viewports, collapse the graph and show the three tiers as a segmented control with the selected tier's projection below\n\n**UX Rating: Good potential, medium execution risk.** The concept is sound; the failure modes are in details of framing and dismissibility.\n\n---\n\n## Lens 3: Business Value\n\n### Revenue Impact\n\nBudget recommenders in retail media platforms consistently increase average campaign budgets. The mechanism is straightforward: advertisers without strong performance benchmarks default to conservative budgets driven by loss aversion. A credible recommendation from the platform gives them permission to spend more. Based on industry benchmarks (Google Ads, Amazon DSP), platforms that surface budget guidance see 15\u201330% higher average initial budgets on first campaigns.\n\nFor the Osmos platform specifically:\n- `DemandSupplyPage.jsx` shows `budgetUtilization: '\u2014'` for many categories \u2014 suggesting campaigns are either under-budgeted or over-budgeted with unclear signals. A recommender would directly address this gap.\n- Campaigns labeled \"No Spends in last 30 days\" (visible in the campaigns table) represent a retention risk. A budget recommender could help identify under-budgeted campaigns before they go dark, potentially surfaced as a post-launch nudge.\n\n### Retailer Value\n\nRetailers benefit when advertiser campaigns run healthily and spend their budgets. Idle campaign budgets reduce fill rates on ad slots. If the recommender increases average budget utilization from (hypothetically) 60% to 75%, that directly improves retailer yield metrics \u2014 a strong argument when selling the feature to retailer partnerships.\n\n### Advertiser Value and Churn Risk\n\nNew advertisers face the highest risk of setting a bad budget and abandoning the platform after seeing poor results. A recommender that meaningfully reduces the \"bad first campaign\" rate has long-term LTV implications that outweigh the short-term revenue gain from higher budgets.\n\n### Misuse Risk\n\nIf the recommendation model is biased toward higher budgets (because the training data over-represents larger advertisers), it could recommend budgets that smaller advertisers cannot sustain, leading to early wallet depletion and churn. The model must be constrained to recommend within the advertiser's wallet balance or stated budget ceiling.\n\n**Business Value Rating: High** \u2014 clear revenue lever, measurable, aligned with both advertiser and retailer interests.\n\n---\n\n## Lens 4: Product Delight\n\n### The \"Aha\" Potential\n\nThe feature has genuine delight potential if it feels genuinely intelligent rather than generic. The bar for delight in B2B SaaS is different from consumer: it is not about animation or polish, but about the moment when a professional thinks \"this tool knows my business.\" That moment arrives when:\n\n- The recommendation is specific to their category (not a generic \"$100/day\" placeholder)\n- The projected impressions feel credible and are later validated by actual results\n- The feature gets smarter \u2014 if a returning advertiser sees \"Based on your last 3 campaigns, we suggest...\" the personalization creates genuine stickiness\n\n### The \"Disappointment\" Risk\n\nDelight collapses immediately if:\n- The recommendation is obviously generic or too wide (e.g., \"$50\u2013$5,000/day\")\n- The projection graph doesn't match reality \u2014 even one bad outcome after following the recommendation damages trust\n- The card appears but the numbers don't update when the user changes their flight dates or audience \u2014 the recommendation must be reactive to form state\n\n### Delight Multipliers\n\n- After campaign launch, show a \"How you're tracking vs. projection\" widget on the campaign detail view \u2014 this closes the loop and builds credibility over time\n- Surface the recommender as a re-engagement tool: \"Campaigns similar to yours that increased budget by 20% saw 40% more impressions\" shown on under-performing campaign cards\n\n### Delight Killers to Avoid\n\n- Showing the card on every budget input field across all campaign types (overuse kills perceived intelligence)\n- Making it feel like an upsell to a higher budget tier rather than a genuine tool (trust-destroying)\n- Showing confidence intervals so wide that the projection graph is a meaningless band\n\n**Product Delight Rating: Medium-High** \u2014 ceiling is high, but requires execution discipline to avoid falling into \"generic advice\" territory.\n\n---\n\n## Build vs. Cut Matrix\n\n| Component | Verdict | Rationale |\n|---|---|---|\n| Budget tier card (3 tiers, P25/P50/P90) | BUILD | Core value, low complexity, high impact |\n| Projected impressions line chart | BUILD | Already have recharts + impression data in codebase |\n| Historical campaign similarity engine | BUILD (simplified) | Use category + flight duration buckets; skip ML for v1 |\n| \"How this was calculated\" tooltip | BUILD | Essential for trust; zero engineering cost |\n| One-click \"Use this budget\" action | BUILD | Reduces friction; closes the UX loop |\n| Seasonal trend signals | DEFER to v2 | Requires 12 months of data; adds API latency |\n| Live inventory level integration | CUT | 6-8 weeks of backend; marginal marginal improvement over baseline |\n| Personalization (\"your last 3 campaigns\") | DEFER to v2 | Needs session history tracking; high value but not v1 |\n| Post-campaign projection tracking widget | DEFER to v2 | Closes the loop; essential for trust-building over time |\n| Mobile-optimized segmented control view | BUILD alongside card | The form is used on tablet; don't build desktop-only |\n\n---\n\n## Implementation Notes for This Codebase\n\n1. **Rendering the card:** The natural insertion point is between the audience/targeting step and the budget input step in the campaign setup flow. Currently `SetupDetailsPage.jsx` is a stub (\"Coming soon\"). The recommender card should be a standalone component dropped into that multi-step form, not a modal.\n\n2. **Chart component:** Use `recharts` `AreaChart` (already a dependency based on `ProductAdsAnalyticsPage.jsx`) with three data points for the three tiers. A stepped line or area fill between P25\u2013P75 range with a separate point for the recommended value creates the right visual hierarchy.\n\n3. **Token compliance:** The card must use `var(--osmos-brand-primary)` for the recommended tier highlight, `var(--osmos-border)` for the card container, and `var(--osmos-bg-subtle)` for the tier background rows. No hardcoded hex colors. The existing codebase has several token violations \u2014 do not add more.\n\n4. **Budget input pre-fill:** The recommender card should emit an `onSelectBudget(amount)` prop callback that the parent form uses to set the budget field value. This keeps the recommender stateless and composable.\n\n5. **Loading state:** The card should render immediately with a skeleton (three gray tier rows + a flat gray chart area) and populate once the async fetch resolves. The existing pattern from `WalletTopUpPage.jsx` (staged loading with `uploading` state) provides a precedent.\n\n---\n\n## Final Verdict\n\n**Build it. Scope it to the four core components (tier card, projection chart, tooltip, one-click apply). Defer seasonal and inventory signals entirely. Plan v2 before v1 ships.**\n\nThe feature addresses a real and measurable gap: advertisers don't know what budget to set, and the platform has enough campaign history data to provide a credible answer. The risk is not in the concept \u2014 it is in over-engineering the intelligence signals and under-engineering the trust and framing details. A well-framed P50 recommendation backed by category history will outperform a poorly-framed ML recommendation with three data signals.\n\nThe highest leverage thing you can do is design the error state and the \"recommendation was way off\" outcome *before* writing the happy-path code. That discipline will force the right scoping decisions.\n"}], "grading": {"eval_id": 3, "run_type": "without_skill", "expectations": [{"text": "feasibility_flags_ml_complexity", "passed": true, "evidence": "Feasibility section explicitly identifies three ML/data systems: 'Historical Campaign Similarity Engine', 'Seasonal Trend Model', and 'Retailer Inventory Level Integration', with detailed discussion of model training, cold-start problems, and data pipeline requirements."}, {"text": "delight_identifies_wow_moment", "passed": true, "evidence": "Product Delight section discusses 'The Aha Potential' and describes the specific moment when a professional thinks 'this tool knows my business', plus the 'Disappointment Risk' when delight collapses \u2014 explicitly evaluating whether a wow moment exists and under what conditions."}, {"text": "produces_rigor_matrix_table", "passed": false, "evidence": "File contains a 'Build vs. Cut Matrix' table and per-lens ratings in text (e.g., 'Feasibility Rating: Medium') but does not contain a markdown Rigor Matrix table with all four dimensions in a single unified table."}, {"text": "has_verdict_section", "passed": true, "evidence": "File contains '## Final Verdict' header with a direct verdict: 'Build it. Scope it to the four core components... Defer seasonal and inventory signals entirely.'"}, {"text": "verdict_addresses_scope", "passed": true, "evidence": "Verdict explicitly calls out what to cut: 'Defer seasonal and inventory signals entirely' and the Build vs. Cut Matrix marks 'Seasonal trend signals' as DEFER and 'Live inventory level integration' as CUT."}, {"text": "surfaces_agent_conflict", "passed": false, "evidence": "No synthesis section containing 'conflict', 'disagree', or 'tension' between agents exists; each lens is evaluated independently with no cross-lens conflict acknowledgment."}], "overall_pass_rate": 0.6667}}], "previous_feedback": {}, "previous_outputs": {}, "benchmark": {"metadata": {"skill_name": "design-critic", "skill_path": ".claude/skills/design-critic/SKILL.md", "executor_model": "claude-sonnet-4-6", "analyzer_model": "claude-sonnet-4-6", "timestamp": "2026-04-24T06:20:00Z", "evals_run": ["campaign-duplicate-feature-critique", "cpm-rules-page-code-critique", "smart-budget-recommender-feature-critique"], "runs_per_configuration": 1}, "runs": [{"eval_id": 1, "eval_name": "campaign-duplicate-feature-critique", "config": "with_skill", "pass_rate": 1.0, "duration_seconds": 157.6, "total_tokens": 34611, "assertions": [{"text": "produces_rigor_matrix_table", "passed": true, "evidence": "Full 4-dimension markdown table present with scores."}, {"text": "includes_numeric_scores", "passed": true, "evidence": "Feasibility 3/5, UX 3/5, Business 4/5, Delight 2/5, Composite 12/20."}, {"text": "has_verdict_section", "passed": true, "evidence": "## Verdict header present with actionable paragraph."}, {"text": "covers_all_four_lenses", "passed": true, "evidence": "All four agent sections present inside collapsible details blocks."}, {"text": "surfaces_conflicts_or_agreements", "passed": true, "evidence": "## Conflicts (Needs Human Judgment) section with two named conflicts."}, {"text": "opinionated_not_hedged", "passed": true, "evidence": "Opens 'Build campaign duplication, but not as described' with a concrete 4-step build sequence."}]}, {"eval_id": 1, "eval_name": "campaign-duplicate-feature-critique", "config": "without_skill", "pass_rate": 0.667, "duration_seconds": 117.3, "total_tokens": 42670, "assertions": [{"text": "produces_rigor_matrix_table", "passed": true, "evidence": "Has a dimension scores table, though format differs from the structured Rigor Matrix."}, {"text": "includes_numeric_scores", "passed": true, "evidence": "Scores present as X/5 or X/10 per dimension."}, {"text": "has_verdict_section", "passed": true, "evidence": "Has a 'Minimum viable path' verdict paragraph."}, {"text": "covers_all_four_lenses", "passed": false, "evidence": "No separate named agent sections \u2014 content is integrated rather than structured per lens."}, {"text": "surfaces_conflicts_or_agreements", "passed": false, "evidence": "No conflict/synthesis section \u2014 each dimension evaluated independently without cross-lens deliberation."}, {"text": "opinionated_not_hedged", "passed": true, "evidence": "Verdict is direct: 'Build it \u2014 but not exactly as described.'"}]}, {"eval_id": 2, "eval_name": "cpm-rules-page-code-critique", "config": "with_skill", "pass_rate": 1.0, "duration_seconds": 206.6, "total_tokens": 36998, "assertions": [{"text": "reads_actual_source_file", "passed": true, "evidence": "References specific elements: onClick bug on body button, hardcoded CPM gauge at left:48%, 'Help text here' placeholders, 11-column table schema."}, {"text": "produces_rigor_matrix_table", "passed": true, "evidence": "Full 4-dimension Rigor Matrix table with scores and priorities."}, {"text": "has_verdict_section", "passed": true, "evidence": "## Verdict present with P0 fix list before launch."}, {"text": "ux_cites_specific_friction", "passed": true, "evidence": "Names: dual submit buttons, missing onClick on body button, truncated names without tooltip, static gauge position."}, {"text": "business_connects_to_yield", "passed": true, "evidence": "Business section references 'yield revenue on a revenue-critical screen' and 'ceiling-break narrative'."}, {"text": "covers_all_four_lenses", "passed": true, "evidence": "All four agent sections present in collapsible details blocks."}]}, {"eval_id": 2, "eval_name": "cpm-rules-page-code-critique", "config": "without_skill", "pass_rate": 1.0, "duration_seconds": 105.9, "total_tokens": 28821, "assertions": [{"text": "reads_actual_source_file", "passed": true, "evidence": "References specific component elements: 401-line component, tab filter, search state, colored badges, dual submit buttons."}, {"text": "produces_rigor_matrix_table", "passed": true, "evidence": "Has a structured dimension scores table with findings."}, {"text": "has_verdict_section", "passed": true, "evidence": "Has an overall verdict paragraph with score."}, {"text": "ux_cites_specific_friction", "passed": true, "evidence": "Names 7 specific priority fixes with exact component references."}, {"text": "business_connects_to_yield", "passed": true, "evidence": "References business impact, no-spends rows, and revenue-critical classification."}, {"text": "covers_all_four_lenses", "passed": true, "evidence": "Has four distinct scored dimension sections."}]}, {"eval_id": 3, "eval_name": "smart-budget-recommender-feature-critique", "config": "with_skill", "pass_rate": 1.0, "duration_seconds": 175.1, "total_tokens": 29011, "assertions": [{"text": "feasibility_flags_ml_complexity", "passed": true, "evidence": "Names three distinct ML/data pipelines required: similarity engine, seasonality model, live inventory API."}, {"text": "delight_identifies_wow_moment", "passed": true, "evidence": "Delight section explicitly evaluates: 'Latent wow moment exists but accuracy is the prerequisite.'"}, {"text": "produces_rigor_matrix_table", "passed": true, "evidence": "Full 4-dimension Rigor Matrix with scores, key findings, recommendations, and priorities."}, {"text": "has_verdict_section", "passed": true, "evidence": "## Verdict present with explicit build/defer/kill breakdown across three phases."}, {"text": "verdict_addresses_scope", "passed": true, "evidence": "Verdict explicitly kills 'shipping full ML recommendation in v1' and scopes to statistical benchmark for v1."}, {"text": "surfaces_agent_conflict", "passed": true, "evidence": "## Conflicts section names 'Feasibility says defer graph vs. Delight says graph is the wow moment' as explicit human-judgment item."}]}, {"eval_id": 3, "eval_name": "smart-budget-recommender-feature-critique", "config": "without_skill", "pass_rate": 0.667, "duration_seconds": 137.0, "total_tokens": 52680, "assertions": [{"text": "feasibility_flags_ml_complexity", "passed": true, "evidence": "References 'live ad-slot availability model', 'seasonal modeling', and '12+ months of category data' as complexity factors."}, {"text": "delight_identifies_wow_moment", "passed": true, "evidence": "Discusses delight arriving 'when the recommendation feels specific and is later validated.'"}, {"text": "produces_rigor_matrix_table", "passed": false, "evidence": "Has a Build vs. Cut table but no unified Rigor Matrix with all 4 dimensions in the standard format."}, {"text": "has_verdict_section", "passed": true, "evidence": "Has a 'Build vs. Cut in one table' section."}, {"text": "verdict_addresses_scope", "passed": true, "evidence": "Explicitly cuts live inventory integration and defers seasonal trends."}, {"text": "surfaces_agent_conflict", "passed": false, "evidence": "No cross-agent synthesis section \u2014 dimensions are evaluated independently without surfacing tensions between them."}]}], "run_summary": {"with_skill": {"pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0}, "time_seconds": {"mean": 179.8, "stddev": 25.2, "min": 157.6, "max": 206.6}, "tokens": {"mean": 33540, "stddev": 4031, "min": 29011, "max": 36998}}, "without_skill": {"pass_rate": {"mean": 0.778, "stddev": 0.192, "min": 0.667, "max": 1.0}, "time_seconds": {"mean": 120.1, "stddev": 15.7, "min": 105.9, "max": 137.0}, "tokens": {"mean": 41390, "stddev": 11948, "min": 28821, "max": 52680}}, "delta": {"pass_rate": "+0.22", "time_seconds": "+59.7s (skill is slower \u2014 more deliberation work)", "tokens": "-7850 (skill uses fewer tokens despite doing more structured work)"}}, "analyst_notes": ["The Rigor Matrix table structure and cross-agent conflict synthesis are the primary discriminators \u2014 the two without_skill failures both missed these.", "Eval 2 (CPM Rules code critique) scored 1.0 without_skill \u2014 meaning a strong analyst without the skill can match the output quality when given actual code to read. The skill's added value here is structure and the explicit conflict section.", "The skill produces shorter outputs (fewer tokens) than the baseline despite more structured content \u2014 it focuses agents rather than letting them ramble.", "All three with_skill Verdicts named something to kill or defer. Two of three without_skill Verdicts also did. The skill's Conflict section is the genuinely unique structural element.", "Timing: with_skill runs take ~50% longer (multi-agent chain). Worth it for high-stakes design decisions; overkill for trivial feature reviews \u2014 consider adding a --fast flag."]}};
+
+    // ---- State ----
+    let feedbackMap = {};  // run_id -> feedback text
+    let currentIndex = 0;
+    let visitedRuns = new Set();
+
+    // ---- Init ----
+    async function init() {
+      // Load saved feedback from server — but only if this isn't a fresh
+      // iteration (indicated by previous_feedback being present). When
+      // previous feedback exists, the feedback.json on disk is stale from
+      // the prior iteration and should not pre-fill the textareas.
+      const hasPrevious = Object.keys(EMBEDDED_DATA.previous_feedback || {}).length > 0
+        || Object.keys(EMBEDDED_DATA.previous_outputs || {}).length > 0;
+      if (!hasPrevious) {
+        try {
+          const resp = await fetch("/api/feedback");
+          const data = await resp.json();
+          if (data.reviews) {
+            for (const r of data.reviews) feedbackMap[r.run_id] = r.feedback;
+          }
+        } catch { /* first run, no feedback yet */ }
+      }
+
+      document.getElementById("skill-name").textContent = EMBEDDED_DATA.skill_name;
+      showRun(0);
+
+      // Wire up feedback auto-save
+      const textarea = document.getElementById("feedback");
+      let saveTimeout = null;
+      textarea.addEventListener("input", () => {
+        clearTimeout(saveTimeout);
+        document.getElementById("feedback-status").textContent = "";
+        saveTimeout = setTimeout(() => saveCurrentFeedback(), 800);
+      });
+    }
+
+    // ---- Navigation ----
+    function navigate(delta) {
+      const newIndex = currentIndex + delta;
+      if (newIndex >= 0 && newIndex < EMBEDDED_DATA.runs.length) {
+        saveCurrentFeedback();
+        showRun(newIndex);
+      }
+    }
+
+    function updateNavButtons() {
+      document.getElementById("prev-btn").disabled = currentIndex === 0;
+      document.getElementById("next-btn").disabled =
+        currentIndex === EMBEDDED_DATA.runs.length - 1;
+    }
+
+    // ---- Show a run ----
+    function showRun(index) {
+      currentIndex = index;
+      const run = EMBEDDED_DATA.runs[index];
+
+      // Progress
+      document.getElementById("progress").textContent =
+        `${index + 1} of ${EMBEDDED_DATA.runs.length}`;
+
+      // Prompt
+      document.getElementById("prompt-text").textContent = run.prompt;
+
+      // Config badge
+      const badge = document.getElementById("config-badge");
+      const configMatch = run.id.match(/(with_skill|without_skill|new_skill|old_skill)/);
+      if (configMatch) {
+        const config = configMatch[1];
+        const isBaseline = config === "without_skill" || config === "old_skill";
+        badge.textContent = config.replace(/_/g, " ");
+        badge.className = "config-badge " + (isBaseline ? "config-baseline" : "config-primary");
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+
+      // Outputs
+      renderOutputs(run);
+
+      // Previous outputs
+      renderPrevOutputs(run);
+
+      // Grades
+      renderGrades(run);
+
+      // Previous feedback
+      const prevFb = (EMBEDDED_DATA.previous_feedback || {})[run.id];
+      const prevEl = document.getElementById("prev-feedback");
+      if (prevFb) {
+        document.getElementById("prev-feedback-text").textContent = prevFb;
+        prevEl.style.display = "block";
+      } else {
+        prevEl.style.display = "none";
+      }
+
+      // Feedback
+      document.getElementById("feedback").value = feedbackMap[run.id] || "";
+      document.getElementById("feedback-status").textContent = "";
+
+      updateNavButtons();
+
+      // Track visited runs and promote done button when all visited
+      visitedRuns.add(index);
+      const doneBtn = document.getElementById("done-btn");
+      if (visitedRuns.size >= EMBEDDED_DATA.runs.length) {
+        doneBtn.classList.add("ready");
+      }
+
+      // Scroll main content to top
+      document.querySelector(".main").scrollTop = 0;
+    }
+
+    // ---- Render outputs ----
+    function renderOutputs(run) {
+      const container = document.getElementById("outputs-body");
+      container.innerHTML = "";
+
+      const outputs = run.outputs || [];
+      if (outputs.length === 0) {
+        container.innerHTML = '<div class="empty-state">No output files</div>';
+        return;
+      }
+
+      for (const file of outputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        // Always show file header with download link
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const content = document.createElement("div");
+        content.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          content.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          content.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          content.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(content, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          content.appendChild(a);
+        } else if (file.type === "error") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          pre.style.color = "var(--red)";
+          content.appendChild(pre);
+        }
+
+        fileDiv.appendChild(content);
+        container.appendChild(fileDiv);
+      }
+    }
+
+    // ---- XLSX rendering via SheetJS ----
+    function renderXlsx(container, b64Data) {
+      try {
+        const raw = Uint8Array.from(atob(b64Data), c => c.charCodeAt(0));
+        const wb = XLSX.read(raw, { type: "array" });
+
+        for (let i = 0; i < wb.SheetNames.length; i++) {
+          const sheetName = wb.SheetNames[i];
+          const ws = wb.Sheets[sheetName];
+
+          if (wb.SheetNames.length > 1) {
+            const sheetLabel = document.createElement("div");
+            sheetLabel.style.cssText =
+              "font-weight:600; font-size:0.8rem; color:#b0aea5; margin-top:0.5rem; margin-bottom:0.25rem;";
+            sheetLabel.textContent = "Sheet: " + sheetName;
+            container.appendChild(sheetLabel);
+          }
+
+          const htmlStr = XLSX.utils.sheet_to_html(ws, { editable: false });
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = htmlStr;
+          container.appendChild(wrapper);
+        }
+      } catch (err) {
+        container.textContent = "Error rendering spreadsheet: " + err.message;
+      }
+    }
+
+    // ---- Grades ----
+    function renderGrades(run) {
+      const section = document.getElementById("grades-section");
+      const content = document.getElementById("grades-content");
+
+      if (!run.grading) {
+        section.style.display = "none";
+        return;
+      }
+
+      const grading = run.grading;
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("grades-arrow").classList.remove("open");
+
+      const summary = grading.summary || {};
+      const expectations = grading.expectations || [];
+
+      let html = '<div style="padding: 1rem;">';
+
+      // Summary line
+      const passRate = summary.pass_rate != null
+        ? Math.round(summary.pass_rate * 100) + "%"
+        : "?";
+      const badgeClass = summary.pass_rate >= 0.8 ? "grade-pass" : summary.pass_rate >= 0.5 ? "" : "grade-fail";
+      html += '<div class="grades-summary">';
+      html += '<span class="grade-badge ' + badgeClass + '">' + passRate + '</span>';
+      html += '<span>' + (summary.passed || 0) + ' passed, ' + (summary.failed || 0) + ' failed of ' + (summary.total || 0) + '</span>';
+      html += '</div>';
+
+      // Assertions list
+      html += '<ul class="assertion-list">';
+      for (const exp of expectations) {
+        const statusClass = exp.passed ? "pass" : "fail";
+        const statusIcon = exp.passed ? "\u2713" : "\u2717";
+        html += '<li class="assertion-item">';
+        html += '<span class="assertion-status ' + statusClass + '">' + statusIcon + '</span>';
+        html += '<span>' + escapeHtml(exp.text) + '</span>';
+        if (exp.evidence) {
+          html += '<div class="assertion-evidence">' + escapeHtml(exp.evidence) + '</div>';
+        }
+        html += '</li>';
+      }
+      html += '</ul>';
+
+      html += '</div>';
+      content.innerHTML = html;
+    }
+
+    function toggleGrades() {
+      const content = document.getElementById("grades-content");
+      const arrow = document.getElementById("grades-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Previous outputs (collapsible) ----
+    function renderPrevOutputs(run) {
+      const section = document.getElementById("prev-outputs-section");
+      const content = document.getElementById("prev-outputs-content");
+      const prevOutputs = (EMBEDDED_DATA.previous_outputs || {})[run.id];
+
+      if (!prevOutputs || prevOutputs.length === 0) {
+        section.style.display = "none";
+        return;
+      }
+
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("prev-outputs-arrow").classList.remove("open");
+
+      // Render the files into the content area
+      content.innerHTML = "";
+      const wrapper = document.createElement("div");
+      wrapper.style.padding = "1rem";
+
+      for (const file of prevOutputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const fc = document.createElement("div");
+        fc.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          fc.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          fc.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          fc.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(fc, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          fc.appendChild(a);
+        }
+
+        fileDiv.appendChild(fc);
+        wrapper.appendChild(fileDiv);
+      }
+
+      content.appendChild(wrapper);
+    }
+
+    function togglePrevOutputs() {
+      const content = document.getElementById("prev-outputs-content");
+      const arrow = document.getElementById("prev-outputs-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Feedback (saved to server -> feedback.json) ----
+    function saveCurrentFeedback() {
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // Build reviews array from map
+      const reviews = [];
+      for (const [run_id, feedback] of Object.entries(feedbackMap)) {
+        if (feedback.trim()) {
+          reviews.push({ run_id, feedback, timestamp: new Date().toISOString() });
+        }
+      }
+
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviews, status: "in_progress" }),
+      }).then(() => {
+        document.getElementById("feedback-status").textContent = "Saved";
+      }).catch(() => {
+        // Static mode or server unavailable — no-op on auto-save,
+        // feedback will be downloaded on final submit
+        document.getElementById("feedback-status").textContent = "Will download on submit";
+      });
+    }
+
+    // ---- Done ----
+    function showDoneDialog() {
+      // Save current textarea to feedbackMap (but don't POST yet)
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // POST once with status: complete — include ALL runs so the model
+      // can distinguish "no feedback" (looks good) from "not reviewed"
+      const reviews = [];
+      const ts = new Date().toISOString();
+      for (const r of EMBEDDED_DATA.runs) {
+        reviews.push({ run_id: r.id, feedback: feedbackMap[r.id] || "", timestamp: ts });
+      }
+      const payload = JSON.stringify({ reviews, status: "complete" }, null, 2);
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+      }).then(() => {
+        document.getElementById("done-overlay").classList.add("visible");
+      }).catch(() => {
+        // Server not available (static mode) — download as file
+        const blob = new Blob([payload], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "feedback.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        document.getElementById("done-overlay").classList.add("visible");
+      });
+    }
+
+    function closeDoneDialog() {
+      // Reset status back to in_progress
+      saveCurrentFeedback();
+      document.getElementById("done-overlay").classList.remove("visible");
+    }
+
+    // ---- Toast ----
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+      setTimeout(() => toast.classList.remove("visible"), 2000);
+    }
+
+    // ---- Keyboard nav ----
+    document.addEventListener("keydown", (e) => {
+      // Don't capture when typing in textarea
+      if (e.target.tagName === "TEXTAREA") return;
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        navigate(-1);
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        navigate(1);
+      }
+    });
+
+    // ---- Util ----
+    function getDownloadUri(file) {
+      if (file.data_uri) return file.data_uri;
+      if (file.data_b64) return "data:application/octet-stream;base64," + file.data_b64;
+      if (file.type === "text") return "data:text/plain;charset=utf-8," + encodeURIComponent(file.content);
+      return "#";
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ---- View switching ----
+    function switchView(view) {
+      document.querySelectorAll(".view-tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".view-panel").forEach(p => p.classList.remove("active"));
+      document.querySelector(`[onclick="switchView('${view}')"]`).classList.add("active");
+      document.getElementById("panel-" + view).classList.add("active");
+    }
+
+    // ---- Benchmark rendering ----
+    function renderBenchmark() {
+      const data = EMBEDDED_DATA.benchmark;
+      if (!data) return;
+
+      // Show the tabs
+      document.getElementById("view-tabs").style.display = "flex";
+
+      const container = document.getElementById("benchmark-content");
+      const summary = data.run_summary || {};
+      const metadata = data.metadata || {};
+      const notes = data.notes || [];
+
+      let html = "";
+
+      // Header
+      html += "<h2 style='font-family: Poppins, sans-serif; margin-bottom: 0.5rem;'>Benchmark Results</h2>";
+      html += "<p style='color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;'>";
+      if (metadata.skill_name) html += "<strong>" + escapeHtml(metadata.skill_name) + "</strong> &mdash; ";
+      if (metadata.timestamp) html += metadata.timestamp + " &mdash; ";
+      if (metadata.evals_run) html += "Evals: " + metadata.evals_run.join(", ") + " &mdash; ";
+      html += (metadata.runs_per_configuration || "?") + " runs per configuration";
+      html += "</p>";
+
+      // Summary table
+      html += '<table class="benchmark-table">';
+
+      function fmtStat(stat, pct) {
+        if (!stat) return "—";
+        const suffix = pct ? "%" : "";
+        const m = pct ? (stat.mean * 100).toFixed(0) : stat.mean.toFixed(1);
+        const s = pct ? (stat.stddev * 100).toFixed(0) : stat.stddev.toFixed(1);
+        return m + suffix + " ± " + s + suffix;
+      }
+
+      function deltaClass(val) {
+        if (!val) return "";
+        const n = parseFloat(val);
+        if (n > 0) return "benchmark-delta-positive";
+        if (n < 0) return "benchmark-delta-negative";
+        return "";
+      }
+
+      // Discover config names dynamically (everything except "delta")
+      const configs = Object.keys(summary).filter(k => k !== "delta");
+      const configA = configs[0] || "config_a";
+      const configB = configs[1] || "config_b";
+      const labelA = configA.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const labelB = configB.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const a = summary[configA] || {};
+      const b = summary[configB] || {};
+      const delta = summary.delta || {};
+
+      html += "<thead><tr><th>Metric</th><th>" + escapeHtml(labelA) + "</th><th>" + escapeHtml(labelB) + "</th><th>Delta</th></tr></thead>";
+      html += "<tbody>";
+
+      html += "<tr><td><strong>Pass Rate</strong></td>";
+      html += "<td>" + fmtStat(a.pass_rate, true) + "</td>";
+      html += "<td>" + fmtStat(b.pass_rate, true) + "</td>";
+      html += '<td class="' + deltaClass(delta.pass_rate) + '">' + (delta.pass_rate || "—") + "</td></tr>";
+
+      // Time (only show row if data exists)
+      if (a.time_seconds || b.time_seconds) {
+        html += "<tr><td><strong>Time (s)</strong></td>";
+        html += "<td>" + fmtStat(a.time_seconds, false) + "</td>";
+        html += "<td>" + fmtStat(b.time_seconds, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.time_seconds) + '">' + (delta.time_seconds ? delta.time_seconds + "s" : "—") + "</td></tr>";
+      }
+
+      // Tokens (only show row if data exists)
+      if (a.tokens || b.tokens) {
+        html += "<tr><td><strong>Tokens</strong></td>";
+        html += "<td>" + fmtStat(a.tokens, false) + "</td>";
+        html += "<td>" + fmtStat(b.tokens, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.tokens) + '">' + (delta.tokens || "—") + "</td></tr>";
+      }
+
+      html += "</tbody></table>";
+
+      // Per-eval breakdown (if runs data available)
+      const runs = data.runs || [];
+      if (runs.length > 0) {
+        const evalIds = [...new Set(runs.map(r => r.eval_id))].sort((a, b) => a - b);
+
+        html += "<h3 style='font-family: Poppins, sans-serif; margin-bottom: 0.75rem;'>Per-Eval Breakdown</h3>";
+
+        const hasTime = runs.some(r => r.result && r.result.time_seconds != null);
+        const hasErrors = runs.some(r => r.result && r.result.errors > 0);
+
+        for (const evalId of evalIds) {
+          const evalRuns = runs.filter(r => r.eval_id === evalId);
+          const evalName = evalRuns[0] && evalRuns[0].eval_name ? evalRuns[0].eval_name : "Eval " + evalId;
+
+          html += "<h4 style='font-family: Poppins, sans-serif; margin: 1rem 0 0.5rem; color: var(--text);'>" + escapeHtml(evalName) + "</h4>";
+          html += '<table class="benchmark-table">';
+          html += "<thead><tr><th>Config</th><th>Run</th><th>Pass Rate</th>";
+          if (hasTime) html += "<th>Time (s)</th>";
+          if (hasErrors) html += "<th>Crashes During Execution</th>";
+          html += "</tr></thead>";
+          html += "<tbody>";
+
+          // Group by config and render with average rows
+          const configGroups = [...new Set(evalRuns.map(r => r.configuration))];
+          for (let ci = 0; ci < configGroups.length; ci++) {
+            const config = configGroups[ci];
+            const configRuns = evalRuns.filter(r => r.configuration === config);
+            if (configRuns.length === 0) continue;
+
+            const rowClass = ci === 0 ? "benchmark-row-with" : "benchmark-row-without";
+            const configLabel = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+
+            for (const run of configRuns) {
+              const r = run.result || {};
+              const prClass = r.pass_rate >= 0.8 ? "benchmark-delta-positive" : r.pass_rate < 0.5 ? "benchmark-delta-negative" : "";
+              html += '<tr class="' + rowClass + '">';
+              html += "<td>" + configLabel + "</td>";
+              html += "<td>" + run.run_number + "</td>";
+              html += '<td class="' + prClass + '">' + ((r.pass_rate || 0) * 100).toFixed(0) + "% (" + (r.passed || 0) + "/" + (r.total || 0) + ")</td>";
+              if (hasTime) html += "<td>" + (r.time_seconds != null ? r.time_seconds.toFixed(1) : "—") + "</td>";
+              if (hasErrors) html += "<td>" + (r.errors || 0) + "</td>";
+              html += "</tr>";
+            }
+
+            // Average row
+            const rates = configRuns.map(r => (r.result || {}).pass_rate || 0);
+            const avgRate = rates.reduce((a, b) => a + b, 0) / rates.length;
+            const avgPrClass = avgRate >= 0.8 ? "benchmark-delta-positive" : avgRate < 0.5 ? "benchmark-delta-negative" : "";
+            html += '<tr class="benchmark-row-avg ' + rowClass + '">';
+            html += "<td>" + configLabel + "</td>";
+            html += "<td>Avg</td>";
+            html += '<td class="' + avgPrClass + '">' + (avgRate * 100).toFixed(0) + "%</td>";
+            if (hasTime) {
+              const times = configRuns.map(r => (r.result || {}).time_seconds).filter(t => t != null);
+              html += "<td>" + (times.length ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(1) : "—") + "</td>";
+            }
+            if (hasErrors) html += "<td></td>";
+            html += "</tr>";
+          }
+          html += "</tbody></table>";
+
+          // Per-assertion detail for this eval
+          const runsWithExpectations = {};
+          for (const config of configGroups) {
+            runsWithExpectations[config] = evalRuns.filter(r => r.configuration === config && r.expectations && r.expectations.length > 0);
+          }
+          const hasAnyExpectations = Object.values(runsWithExpectations).some(runs => runs.length > 0);
+          if (hasAnyExpectations) {
+            // Collect all unique assertion texts across all configs
+            const allAssertions = [];
+            const seen = new Set();
+            for (const config of configGroups) {
+              for (const run of runsWithExpectations[config]) {
+                for (const exp of (run.expectations || [])) {
+                  if (!seen.has(exp.text)) {
+                    seen.add(exp.text);
+                    allAssertions.push(exp.text);
+                  }
+                }
+              }
+            }
+
+            html += '<table class="benchmark-table" style="margin-top: 0.5rem;">';
+            html += "<thead><tr><th>Assertion</th>";
+            for (const config of configGroups) {
+              const label = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+              html += "<th>" + escapeHtml(label) + "</th>";
+            }
+            html += "</tr></thead><tbody>";
+
+            for (const assertionText of allAssertions) {
+              html += "<tr><td>" + escapeHtml(assertionText) + "</td>";
+
+              for (const config of configGroups) {
+                html += "<td>";
+                for (const run of runsWithExpectations[config]) {
+                  const exp = (run.expectations || []).find(e => e.text === assertionText);
+                  if (exp) {
+                    const cls = exp.passed ? "benchmark-delta-positive" : "benchmark-delta-negative";
+                    const icon = exp.passed ? "\u2713" : "\u2717";
+                    html += '<span class="' + cls + '" title="Run ' + run.run_number + ': ' + escapeHtml(exp.evidence || "") + '">' + icon + "</span> ";
+                  } else {
+                    html += "— ";
+                  }
+                }
+                html += "</td>";
+              }
+              html += "</tr>";
+            }
+            html += "</tbody></table>";
+          }
+        }
+      }
+
+      // Notes
+      if (notes.length > 0) {
+        html += '<div class="benchmark-notes">';
+        html += "<h3>Analysis Notes</h3>";
+        html += "<ul>";
+        for (const note of notes) {
+          html += "<li>" + escapeHtml(note) + "</li>";
+        }
+        html += "</ul></div>";
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ---- Start ----
+    init();
+    renderBenchmark();
+  </script>
+</body>
+</html>

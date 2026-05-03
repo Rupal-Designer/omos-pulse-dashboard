@@ -6,7 +6,7 @@ const FONT = "'Open Sans', sans-serif";
 const STATUS_MAP = {
   Active:   { bg: 'var(--osmos-brand-green-muted)',    color: 'var(--osmos-brand-green)' },
   Inactive: { bg: 'var(--osmos-bg-subtle)',            color: 'var(--osmos-fg-muted)' },
-  Paused:   { bg: 'rgba(245,166,35,0.12)',             color: 'var(--osmos-brand-amber)' },
+  Paused:   { bg: 'var(--osmos-brand-amber-muted)',             color: 'var(--osmos-brand-amber)' },
   Live:     { bg: 'var(--osmos-brand-green-muted)',    color: 'var(--osmos-brand-green)' },
   Draft:    { bg: 'var(--osmos-brand-primary-muted)',  color: 'var(--osmos-brand-primary)' },
   Error:    { bg: 'var(--tag-bg-error)',                color: 'var(--tag-fg-error)' },

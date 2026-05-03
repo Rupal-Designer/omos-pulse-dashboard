@@ -1,0 +1,37 @@
+{
+  "eval_id": 1,
+  "run_type": "without_skill",
+  "expectations": [
+    {
+      "text": "produces_rigor_matrix_table",
+      "passed": true,
+      "evidence": "File contains a markdown table in the Overall Verdict section with all four dimensions (Technical Feasibility, UX Quality, Business Value, Product Delight) and scores."
+    },
+    {
+      "text": "includes_numeric_scores",
+      "passed": true,
+      "evidence": "Each dimension row in the verdict summary table has a numeric score: 4/5, 3/5, 5/5, 3.5/5."
+    },
+    {
+      "text": "has_verdict_section",
+      "passed": true,
+      "evidence": "File contains '## Overall Verdict' header with '### Build it — but not exactly as described.' as the direct verdict statement."
+    },
+    {
+      "text": "covers_all_four_lenses",
+      "passed": false,
+      "evidence": "Sections are titled 'Dimension 1: Technical Feasibility', 'Dimension 2: UX Quality', 'Dimension 3: Business Value', 'Dimension 4: Product Delight' — none match the required 'Feasibility Analysis', 'UX Analysis', 'Business Analysis', or 'Delight Analysis' headers or close equivalents."
+    },
+    {
+      "text": "surfaces_conflicts_or_agreements",
+      "passed": false,
+      "evidence": "No synthesis section contains 'Conflicts', 'conflict', 'agrees', or 'alignment' — the word 'conflict' does not appear anywhere in the file."
+    },
+    {
+      "text": "opinionated_not_hedged",
+      "passed": true,
+      "evidence": "Verdict states 'Build it — but not exactly as described' and provides a numbered list of concrete changes, taking a clear position throughout."
+    }
+  ],
+  "overall_pass_rate": 0.6667
+}

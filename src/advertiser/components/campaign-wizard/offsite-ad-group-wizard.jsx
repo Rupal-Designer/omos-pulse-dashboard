@@ -1,59 +1,99 @@
-"use client";
+import { useState, useRef } from 'react';
+import {
+  Button, Input, Select, Checkbox, Icon,
+  CheckIcon, CloseIcon, ChevronRightIcon, PlusIcon,
+  TrashIcon, InfoIcon, UploadIcon, SearchBar,
+} from '../../../ui';
 
-import { Switch } from "@/components/ui/switch";
+const WHITE    = '#ffffff';
+const BORDER   = 'var(--osmos-border)';
+const ACCENT   = 'var(--osmos-brand-primary)';
+const ACCENT_M = 'var(--osmos-brand-primary-muted)';
+const GREEN    = 'var(--osmos-brand-green)';
+const GREEN_M  = 'var(--osmos-brand-green-muted)';
+const BG_SUB   = 'var(--osmos-bg-subtle)';
+const BG_MUT   = 'var(--osmos-bg-muted)';
+const TEXT_HI  = 'var(--osmos-fg)';
+const TEXT_MID = 'var(--osmos-fg-muted)';
+const TEXT_LO  = 'var(--osmos-fg-subtle)';
+const FONT     = "'Open Sans', sans-serif";
 
-import { useState, useRef } from "react";
-import {
-  X,
-  ChevronRight,
-  Check,
-  HelpCircle,
-  Upload,
-  ImageIcon,
-  Video,
-  Store,
-  Users,
-  Tag,
-  ShoppingBag,
-  Globe,
-  Trash2,
-  Search,
-  Sparkles,
-  Plus,
-  Wand2,
-  Info,
-  Package,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+const GlobeIcon = ({ size = 24, color = 'currentColor' }) => (
+  <Icon size={size} color={color}>
+    <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+  </Icon>
+);
+const StoreIcon = ({ size = 24, color = 'currentColor' }) => (
+  <Icon size={size} color={color}>
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+    <polyline points="9 22 9 12 15 12 15 22"/>
+  </Icon>
+);
+const UsersIcon = ({ size = 24, color = 'currentColor' }) => (
+  <Icon size={size} color={color}>
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+    <circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </Icon>
+);
+const TagIcon = ({ size = 24, color = 'currentColor' }) => (
+  <Icon size={size} color={color}>
+    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+    <line x1="7" y1="7" x2="7.01" y2="7"/>
+  </Icon>
+);
+const ShoppingBagIcon = ({ size = 24, color = 'currentColor' }) => (
+  <Icon size={size} color={color}>
+    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+    <line x1="3" y1="6" x2="21" y2="6"/>
+    <path d="M16 10a4 4 0 0 1-8 0"/>
+  </Icon>
+);
+const VideoIcon = ({ size = 24, color = 'currentColor' }) => (
+  <Icon size={size} color={color}>
+    <polygon points="23 7 16 12 23 17 23 7"/>
+    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+  </Icon>
+);
+const ImageSvgIcon = ({ size = 24, color = 'currentColor' }) => (
+  <Icon size={size} color={color}>
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+    <circle cx="8.5" cy="8.5" r="1.5"/>
+    <polyline points="21 15 16 10 5 21"/>
+  </Icon>
+);
+const PackageIcon = ({ size = 24, color = 'currentColor' }) => (
+  <Icon size={size} color={color}>
+    <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/>
+    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+    <line x1="12" y1="22.08" x2="12" y2="12"/>
+  </Icon>
+);
+const WandIcon = ({ size = 24, color = 'currentColor' }) => (
+  <Icon size={size} color={color}>
+    <path d="M15 4V2"/><path d="M15 16v-2"/><path d="M8 9h2"/><path d="M20 9h2"/>
+    <path d="M17.8 11.8 19 13"/><path d="M15 9h.01"/><path d="M17.8 6.2 19 5"/>
+    <path d="m3 21 9-9"/><path d="M12.2 6.2 11 5"/>
+  </Icon>
+);
+const SparklesIcon = ({ size = 24, color = 'currentColor' }) => (
+  <Icon size={size} color={color}>
+    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+    <path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>
+  </Icon>
+);
+const BarChartIcon = ({ size = 24, color = 'currentColor' }) => (
+  <Icon size={size} color={color}>
+    <line x1="18" y1="20" x2="18" y2="10"/>
+    <line x1="12" y1="20" x2="12" y2="4"/>
+    <line x1="6" y1="20" x2="6" y2="14"/>
+  </Icon>
+);
 
 const MetaIcon = () => (
-  <svg viewBox="0 0 36 36" className="w-10 h-10">
+  <svg viewBox="0 0 36 36" style={{width:40,height:40}}>
     <defs>
       <linearGradient id="meta-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stopColor="#0081FB" />
@@ -69,7 +109,7 @@ const MetaIcon = () => (
 );
 
 const GoogleIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-10 h-10">
+  <svg viewBox="0 0 24 24" style={{width:40,height:40}}>
     <path
       fill="#4285F4"
       d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -93,7 +133,7 @@ const GoogleIcon = () => (
 );
 
 const TikTokIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-10 h-10">
+  <svg viewBox="0 0 24 24" style={{width:40,height:40}}>
     <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z" />
   </svg>
 );
@@ -101,7 +141,7 @@ const TikTokIcon = () => (
 const AdFormatIllustrations = {
   // Google Ad Formats
   googleSearch: () => (
-    <svg viewBox="0 0 120 80" className="w-full h-24">
+    <svg viewBox="0 0 120 80" style={{width:'100%',height:96}}>
       <rect x="5" y="5" width="110" height="70" fill="#f8f9fa" rx="4" />
       <rect x="10" y="10" width="60" height="8" fill="#1a73e8" rx="2" />
       <rect x="10" y="22" width="80" height="4" fill="#006621" rx="1" />
@@ -121,7 +161,7 @@ const AdFormatIllustrations = {
     </svg>
   ),
   googleDisplay: () => (
-    <svg viewBox="0 0 120 80" className="w-full h-24">
+    <svg viewBox="0 0 120 80" style={{width:'100%',height:96}}>
       <rect x="5" y="5" width="110" height="70" fill="#f8f9fa" rx="4" />
       <rect x="10" y="10" width="70" height="40" fill="#e8f0fe" rx="2" />
       <rect
@@ -160,7 +200,7 @@ const AdFormatIllustrations = {
     </svg>
   ),
   googleVideo: () => (
-    <svg viewBox="0 0 120 80" className="w-full h-24">
+    <svg viewBox="0 0 120 80" style={{width:'100%',height:96}}>
       <rect x="5" y="5" width="110" height="70" fill="#0f0f0f" rx="4" />
       <rect x="15" y="15" width="90" height="50" fill="#282828" rx="2" />
       <polygon points="50,30 50,50 70,40" fill="#ff0000" />
@@ -181,7 +221,7 @@ const AdFormatIllustrations = {
     </svg>
   ),
   googleShopping: () => (
-    <svg viewBox="0 0 120 80" className="w-full h-24">
+    <svg viewBox="0 0 120 80" style={{width:'100%',height:96}}>
       <rect x="5" y="5" width="110" height="70" fill="#f8f9fa" rx="4" />
       {[0, 1, 2, 3].map((i) => (
         <g key={i} transform={`translate(${10 + i * 26}, 12)`}>
@@ -197,7 +237,7 @@ const AdFormatIllustrations = {
     </svg>
   ),
   googlePerformanceMax: () => (
-    <svg viewBox="0 0 120 80" className="w-full h-24">
+    <svg viewBox="0 0 120 80" style={{width:'100%',height:96}}>
       <rect x="5" y="5" width="110" height="70" fill="#f8f9fa" rx="4" />
       <rect x="10" y="10" width="45" height="30" fill="#e8f0fe" rx="2" />
       <rect x="60" y="10" width="50" height="30" fill="#fce8e6" rx="2" />
@@ -210,7 +250,7 @@ const AdFormatIllustrations = {
   ),
   // Meta Ad Formats
   metaImage: () => (
-    <svg viewBox="0 0 120 80" className="w-full h-24">
+    <svg viewBox="0 0 120 80" style={{width:'100%',height:96}}>
       <rect
         x="5"
         y="5"
@@ -237,7 +277,7 @@ const AdFormatIllustrations = {
     </svg>
   ),
   metaVideo: () => (
-    <svg viewBox="0 0 120 80" className="w-full h-24">
+    <svg viewBox="0 0 120 80" style={{width:'100%',height:96}}>
       <rect
         x="5"
         y="5"
@@ -256,7 +296,7 @@ const AdFormatIllustrations = {
     </svg>
   ),
   metaCarousel: () => (
-    <svg viewBox="0 0 120 80" className="w-full h-24">
+    <svg viewBox="0 0 120 80" style={{width:'100%',height:96}}>
       <rect
         x="5"
         y="5"
@@ -300,7 +340,7 @@ const AdFormatIllustrations = {
     </svg>
   ),
   metaCollection: () => (
-    <svg viewBox="0 0 120 80" className="w-full h-24">
+    <svg viewBox="0 0 120 80" style={{width:'100%',height:96}}>
       <rect
         x="5"
         y="5"
@@ -340,7 +380,7 @@ const AdFormatIllustrations = {
   ),
   // TikTok Ad Formats
   tiktokInFeed: () => (
-    <svg viewBox="0 0 120 80" className="w-full h-24">
+    <svg viewBox="0 0 120 80" style={{width:'100%',height:96}}>
       <rect x="30" y="2" width="60" height="76" fill="#000" rx="8" />
       <rect x="33" y="5" width="54" height="70" fill="#161823" rx="6" />
       <rect
@@ -369,7 +409,7 @@ const AdFormatIllustrations = {
     </svg>
   ),
   tiktokImage: () => (
-    <svg viewBox="0 0 120 80" className="w-full h-24">
+    <svg viewBox="0 0 120 80" style={{width:'100%',height:96}}>
       <rect x="30" y="2" width="60" height="76" fill="#000" rx="8" />
       <rect x="33" y="5" width="54" height="70" fill="#161823" rx="6" />
       <rect
@@ -406,7 +446,7 @@ const AdFormatIllustrations = {
     </svg>
   ),
   tiktokCarousel: () => (
-    <svg viewBox="0 0 120 80" className="w-full h-24">
+    <svg viewBox="0 0 120 80" style={{width:'100%',height:96}}>
       <rect x="30" y="2" width="60" height="76" fill="#000" rx="8" />
       <rect x="33" y="5" width="54" height="70" fill="#161823" rx="6" />
       <g>
@@ -793,7 +833,7 @@ const geoLocations = [
 ];
 
 function GeoLocationModal({ open, onClose, onApply, initialData = [] }) {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedLocations, setSelectedLocations] = useState(initialData);
   const [excludedLocations, setExcludedLocations] = useState([]);
 
@@ -822,146 +862,82 @@ function GeoLocationModal({ open, onClose, onApply, initialData = [] }) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative bg-white rounded-xl shadow-2xl w-[900px] max-h-[80vh] flex overflow-hidden">
+    <div style={{ position:'fixed', inset:0, zIndex:120, display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.5)' }} onClick={onClose} />
+      <div style={{ position:'relative', background:WHITE, borderRadius:12, boxShadow:'0 20px 60px rgba(0,0,0,0.3)', width:900, maxHeight:'80vh', display:'flex', overflow:'hidden' }}>
         {/* Main Content */}
-        <div className="flex-1 flex flex-col">
-          <div className="p-6 border-b border-[#e5e7eb]">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-[#404040]">
-                Geo Location Targeting
-              </h2>
-              <button
-                onClick={onClose}
-                className="text-[#7b7b7b] hover:text-[#404040]"
-              >
-                <X size={20} />
+        <div style={{ flex:1, display:'flex', flexDirection:'column' }}>
+          <div style={{ padding:24, borderBottom:'1px solid '+BORDER }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
+              <h2 style={{ fontFamily:FONT, fontSize:20, fontWeight:600, color:TEXT_HI, margin:0 }}>Geo Location Targeting</h2>
+              <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:4 }}>
+                <CloseIcon size={20} />
               </button>
             </div>
-            <div className="relative">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7b7b7b]"
-                size={18}
-              />
-              <Input
-                placeholder="Search countries, states, or cities..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+            <SearchBar value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search countries, states, or cities..." />
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4">
-            <div className="space-y-2">
-              {filteredLocations.map((location) => (
-                <div
-                  key={location.id}
-                  className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-all ${
-                    selectedLocations.includes(location.id)
-                      ? "border-[#10b981] bg-[#ecfdf5]"
-                      : excludedLocations.includes(location.id)
-                        ? "border-[#ef4444] bg-[#fef2f2]"
-                        : "border-[#e5e7eb] hover:border-[#d1d5db]"
-                  }`}
-                  onClick={() => toggleLocation(location.id)}
-                >
-                  <div className="flex items-center gap-3">
-                    <Globe size={20} className="text-[#7b7b7b]" />
-                    <div>
-                      <div className="font-medium text-[#404040]">
-                        {location.name}
-                      </div>
-                      <div className="text-sm text-[#7b7b7b] capitalize">
-                        {location.type}
+          <div style={{ flex:1, overflowY:'auto', padding:16 }}>
+            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+              {filteredLocations.map((location) => {
+                const isSelected = selectedLocations.includes(location.id);
+                const isExcluded = excludedLocations.includes(location.id);
+                return (
+                  <div
+                    key={location.id}
+                    style={{
+                      display:'flex', alignItems:'center', justifyContent:'space-between',
+                      padding:16, border:'1px solid '+(isSelected ? GREEN : isExcluded ? '#ef4444' : BORDER),
+                      borderRadius:8, cursor:'pointer',
+                      background: isSelected ? GREEN_M : isExcluded ? 'rgba(239,68,68,0.06)' : WHITE,
+                    }}
+                    onClick={() => toggleLocation(location.id)}
+                  >
+                    <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                      <GlobeIcon size={20} color={TEXT_MID} />
+                      <div>
+                        <div style={{ fontFamily:FONT, fontWeight:500, color:TEXT_HI }}>{location.name}</div>
+                        <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID, textTransform:'capitalize' }}>{location.type}</div>
                       </div>
                     </div>
+                    <div style={{ display:'flex', alignItems:'center', gap:16 }}>
+                      <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Reach: {(location.reach / 1000000).toFixed(1)}M</span>
+                      {isSelected && <span style={{ background:GREEN, color:WHITE, borderRadius:4, padding:'2px 8px', fontSize:11, fontWeight:600 }}>Included</span>}
+                      {isExcluded && <span style={{ background:'#ef4444', color:WHITE, borderRadius:4, padding:'2px 8px', fontSize:11, fontWeight:600 }}>Excluded</span>}
+                      <Button variant="ghost" onClick={(e) => { e.stopPropagation(); toggleLocation(location.id, true); }} style={{ fontSize:12, color:TEXT_MID }}>Exclude</Button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-sm text-[#7b7b7b]">
-                      Reach: {(location.reach / 1000000).toFixed(1)}M
-                    </span>
-                    {selectedLocations.includes(location.id) && (
-                      <Badge className="bg-[#10b981] text-white">
-                        Included
-                      </Badge>
-                    )}
-                    {excludedLocations.includes(location.id) && (
-                      <Badge className="bg-[#ef4444] text-white">
-                        Excluded
-                      </Badge>
-                    )}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleLocation(location.id, true);
-                      }}
-                      className="text-xs text-[#7b7b7b]"
-                    >
-                      Exclude
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
-          <div className="p-4 border-t border-[#e5e7eb] flex items-center justify-between">
-            <span className="text-sm text-[#7b7b7b]">
-              {selectedLocations.length} locations selected
-            </span>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button
-                className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white"
-                onClick={() =>
-                  onApply({
-                    included: selectedLocations,
-                    excluded: excludedLocations,
-                  })
-                }
-              >
-                Apply
-              </Button>
+          <div style={{ padding:16, borderTop:'1px solid '+BORDER, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+            <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>{selectedLocations.length} locations selected</span>
+            <div style={{ display:'flex', gap:8 }}>
+              <Button variant="outline" onClick={onClose}>Cancel</Button>
+              <Button variant="primary" onClick={() => onApply({ included: selectedLocations, excluded: excludedLocations })}>Apply</Button>
             </div>
           </div>
         </div>
 
         {/* Right Sidebar */}
-        <div className="w-[280px] border-l border-[#e5e7eb] bg-[#f9fafb] p-4">
-          <h3 className="font-semibold text-[#404040] mb-4">
-            Location Summary
-          </h3>
-          <div className="space-y-4">
-            <div className="bg-white rounded-lg p-4 border border-[#e5e7eb]">
-              <div className="text-sm text-[#7b7b7b]">Est. Reach</div>
-              <div className="text-2xl font-semibold text-[#404040]">
-                {}
-                {(totalReach / 1000000).toFixed(1)}M
-              </div>
+        <div style={{ width:280, borderLeft:'1px solid '+BORDER, background:BG_SUB, padding:16 }}>
+          <h3 style={{ fontFamily:FONT, fontWeight:600, color:TEXT_HI, marginBottom:16, marginTop:0 }}>Location Summary</h3>
+          <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
+            <div style={{ background:WHITE, borderRadius:8, padding:16, border:'1px solid '+BORDER }}>
+              <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Est. Reach</div>
+              <div style={{ fontFamily:FONT, fontSize:24, fontWeight:600, color:TEXT_HI }}>{(totalReach / 1000000).toFixed(1)}M</div>
             </div>
             <div>
-              <div className="text-sm font-medium text-[#404040] mb-2">
-                Included ({selectedLocations.length})
-              </div>
+              <div style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI, marginBottom:8 }}>Included ({selectedLocations.length})</div>
               {selectedLocations.map((id) => {
                 const loc = geoLocations.find((l) => l.id === id);
                 return loc ? (
-                  <div
-                    key={id}
-                    className="flex items-center justify-between py-1 text-sm"
-                  >
-                    <span className="text-[#404040]">{loc.name}</span>
-                    <button
-                      onClick={() => toggleLocation(id)}
-                      className="text-[#7b7b7b] hover:text-[#ef4444]"
-                    >
-                      <X size={14} />
+                  <div key={id} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'4px 0', fontFamily:FONT, fontSize:13 }}>
+                    <span style={{ color:TEXT_HI }}>{loc.name}</span>
+                    <button onClick={() => toggleLocation(id)} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:2 }}>
+                      <CloseIcon size={14} />
                     </button>
                   </div>
                 ) : null;
@@ -969,26 +945,14 @@ function GeoLocationModal({ open, onClose, onApply, initialData = [] }) {
             </div>
             {excludedLocations.length > 0 && (
               <div>
-                <div className="text-sm font-medium text-[#ef4444] mb-2">
-                  Excluded ({excludedLocations.length})
-                </div>
+                <div style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:'#ef4444', marginBottom:8 }}>Excluded ({excludedLocations.length})</div>
                 {excludedLocations.map((id) => {
                   const loc = geoLocations.find((l) => l.id === id);
                   return loc ? (
-                    <div
-                      key={id}
-                      className="flex items-center justify-between py-1 text-sm"
-                    >
-                      <span className="text-[#404040]">{loc.name}</span>
-                      <button
-                        onClick={() =>
-                          setExcludedLocations((prev) =>
-                            prev.filter((l) => l !== id),
-                          )
-                        }
-                        className="text-[#7b7b7b] hover:text-[#ef4444]"
-                      >
-                        <X size={14} />
+                    <div key={id} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'4px 0', fontFamily:FONT, fontSize:13 }}>
+                      <span style={{ color:TEXT_HI }}>{loc.name}</span>
+                      <button onClick={() => setExcludedLocations((prev) => prev.filter((l) => l !== id))} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:2 }}>
+                        <CloseIcon size={14} />
                       </button>
                     </div>
                   ) : null;
@@ -1003,9 +967,9 @@ function GeoLocationModal({ open, onClose, onApply, initialData = [] }) {
 }
 
 function StoreTargetingModal({ open, onClose, onApply, initialData = [] }) {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedStores, setSelectedStores] = useState(initialData);
-  const [filterState, setFilterState] = useState("all");
+  const [filterState, setFilterState] = useState('all');
 
   const states = [...new Set(storeLocations.map((s) => s.state))];
 
@@ -1013,7 +977,7 @@ function StoreTargetingModal({ open, onClose, onApply, initialData = [] }) {
     const matchesSearch =
       store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       store.city.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesState = filterState === "all" || store.state === filterState;
+    const matchesState = filterState === 'all' || store.state === filterState;
     return matchesSearch && matchesState;
   });
 
@@ -1030,131 +994,85 @@ function StoreTargetingModal({ open, onClose, onApply, initialData = [] }) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative bg-white rounded-xl shadow-2xl w-[900px] max-h-[80vh] flex overflow-hidden">
-        <div className="flex-1 flex flex-col">
-          <div className="p-6 border-b border-[#e5e7eb]">
-            <div className="flex items-center justify-between mb-4">
+    <div style={{ position:'fixed', inset:0, zIndex:120, display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.5)' }} onClick={onClose} />
+      <div style={{ position:'relative', background:WHITE, borderRadius:12, boxShadow:'0 20px 60px rgba(0,0,0,0.3)', width:900, maxHeight:'80vh', display:'flex', overflow:'hidden' }}>
+        <div style={{ flex:1, display:'flex', flexDirection:'column' }}>
+          <div style={{ padding:24, borderBottom:'1px solid '+BORDER }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
               <div>
-                <h2 className="text-xl font-semibold text-[#404040]">
-                  Store Targeting
-                </h2>
-                <p className="text-sm text-[#7b7b7b]">
-                  Select stores to localize your ads to specific locations
-                </p>
+                <h2 style={{ fontFamily:FONT, fontSize:20, fontWeight:600, color:TEXT_HI, margin:0 }}>Store Targeting</h2>
+                <p style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID, marginTop:4, marginBottom:0 }}>Select stores to localize your ads to specific locations</p>
               </div>
-              <button
-                onClick={onClose}
-                className="text-[#7b7b7b] hover:text-[#404040]"
-              >
-                <X size={20} />
+              <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:4 }}>
+                <CloseIcon size={20} />
               </button>
             </div>
-            <div className="flex gap-3">
-              <div className="relative flex-1">
-                <Search
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7b7b7b]"
-                  size={18}
-                />
-                <Input
-                  placeholder="Search stores..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
+            <div style={{ display:'flex', gap:12 }}>
+              <div style={{ flex:1 }}>
+                <SearchBar value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search stores..." />
               </div>
-              <Select value={filterState} onValueChange={setFilterState}>
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="All States" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All States</SelectItem>
-                  {states.map((state) => (
-                    <SelectItem key={state} value={state}>
-                      {state}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Select
+                value={filterState}
+                onChange={(e) => setFilterState(e.target.value)}
+                options={[{ value:'all', label:'All States' }, ...states.map((s) => ({ value:s, label:s }))]}
+                style={{ width:150 }}
+              />
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4">
-            <div className="grid grid-cols-2 gap-3">
-              {filteredStores.map((store) => (
-                <div
-                  key={store.id}
-                  className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                    selectedStores.includes(store.id)
-                      ? "border-[#10b981] bg-[#ecfdf5]"
-                      : "border-[#e5e7eb] hover:border-[#d1d5db]"
-                  }`}
-                  onClick={() => toggleStore(store.id)}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-[#fef3c7] flex items-center justify-center">
-                        <Store size={20} className="text-[#f59e0b]" />
-                      </div>
-                      <div>
-                        <div className="font-medium text-[#404040]">
-                          {store.name}
+          <div style={{ flex:1, overflowY:'auto', padding:16 }}>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+              {filteredStores.map((store) => {
+                const isSel = selectedStores.includes(store.id);
+                return (
+                  <div
+                    key={store.id}
+                    style={{ padding:16, border:'1px solid '+(isSel ? GREEN : BORDER), borderRadius:8, cursor:'pointer', background: isSel ? GREEN_M : WHITE }}
+                    onClick={() => toggleStore(store.id)}
+                  >
+                    <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between' }}>
+                      <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                        <div style={{ width:40, height:40, borderRadius:8, background:'#fef3c7', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                          <StoreIcon size={20} color="#f59e0b" />
                         </div>
-                        <div className="text-sm text-[#7b7b7b]">
-                          {store.city}, {store.state}
+                        <div>
+                          <div style={{ fontFamily:FONT, fontWeight:500, color:TEXT_HI }}>{store.name}</div>
+                          <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>{store.city}, {store.state}</div>
                         </div>
                       </div>
+                      {isSel && <CheckIcon size={20} color={GREEN} />}
                     </div>
-                    {selectedStores.includes(store.id) && (
-                      <Check size={20} className="text-[#10b981]" />
-                    )}
+                    <div style={{ marginTop:12, fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Est. Reach: {(store.reach / 1000).toFixed(0)}K</div>
                   </div>
-                  <div className="mt-3 text-sm text-[#7b7b7b]">
-                    Est. Reach: {(store.reach / 1000).toFixed(0)}K
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
-          <div className="p-4 border-t border-[#e5e7eb] flex items-center justify-between">
-            <span className="text-sm text-[#7b7b7b]">
-              {selectedStores.length} stores selected
-            </span>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button
-                className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white"
-                onClick={() => onApply(selectedStores)}
-              >
-                Apply
-              </Button>
+          <div style={{ padding:16, borderTop:'1px solid '+BORDER, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+            <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>{selectedStores.length} stores selected</span>
+            <div style={{ display:'flex', gap:8 }}>
+              <Button variant="outline" onClick={onClose}>Cancel</Button>
+              <Button variant="primary" onClick={() => onApply(selectedStores)}>Apply</Button>
             </div>
           </div>
         </div>
 
-        <div className="w-[280px] border-l border-[#e5e7eb] bg-[#f9fafb] p-4">
-          <h3 className="font-semibold text-[#404040] mb-4">Store Summary</h3>
-          <div className="space-y-4">
-            <div className="bg-white rounded-lg p-4 border border-[#e5e7eb]">
-              <div className="text-sm text-[#7b7b7b]">Total Reach</div>
-              <div className="text-2xl font-semibold text-[#404040]">
-                {(totalReach / 1000).toFixed(0)}K
-              </div>
+        <div style={{ width:280, borderLeft:'1px solid '+BORDER, background:BG_SUB, padding:16 }}>
+          <h3 style={{ fontFamily:FONT, fontWeight:600, color:TEXT_HI, marginBottom:16, marginTop:0 }}>Store Summary</h3>
+          <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
+            <div style={{ background:WHITE, borderRadius:8, padding:16, border:'1px solid '+BORDER }}>
+              <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Total Reach</div>
+              <div style={{ fontFamily:FONT, fontSize:24, fontWeight:600, color:TEXT_HI }}>{(totalReach / 1000).toFixed(0)}K</div>
             </div>
-            <div className="bg-white rounded-lg p-4 border border-[#e5e7eb]">
-              <div className="text-sm text-[#7b7b7b]">Stores Selected</div>
-              <div className="text-2xl font-semibold text-[#404040]">
-                {selectedStores.length}
-              </div>
+            <div style={{ background:WHITE, borderRadius:8, padding:16, border:'1px solid '+BORDER }}>
+              <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Stores Selected</div>
+              <div style={{ fontFamily:FONT, fontSize:24, fontWeight:600, color:TEXT_HI }}>{selectedStores.length}</div>
             </div>
-            <div className="text-xs text-[#7b7b7b] p-3 bg-[#fef3c7] rounded-lg">
-              <Info size={14} className="inline mr-1" />
-              Store targeting helpsTo localize your ads to specific retail
-              locations, improving relevance and conversion.
+            <div style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID, padding:12, background:'#fef3c7', borderRadius:8, display:'flex', alignItems:'flex-start', gap:6 }}>
+              <InfoIcon size={14} color={TEXT_MID} />
+              Store targeting helps localize your ads to specific retail locations, improving relevance and conversion.
             </div>
           </div>
         </div>
@@ -1164,9 +1082,9 @@ function StoreTargetingModal({ open, onClose, onApply, initialData = [] }) {
 }
 
 function AudienceTargetingModal({ open, onClose, onApply, initialData = [] }) {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedAudiences, setSelectedAudiences] = useState(initialData);
-  const [audienceType, setAudienceType] = useState("1st_party");
+  const [audienceType, setAudienceType] = useState('1st_party');
 
   const filteredAudiences = audienceSegments.filter((aud) =>
     aud.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -1185,205 +1103,134 @@ function AudienceTargetingModal({ open, onClose, onApply, initialData = [] }) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative bg-white rounded-xl shadow-2xl w-[950px] max-h-[85vh] flex overflow-hidden">
-        <div className="flex-1 flex flex-col">
-          <div className="p-6 border-b border-[#e5e7eb]">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-[#404040]">
-                Audience Targeting
-              </h2>
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="outline"
-                  className="text-[#2563eb] border-[#2563eb] bg-transparent"
-                >
-                  <Plus size={16} className="mr-1" />
-                  Create New Audience
+    <div style={{ position:'fixed', inset:0, zIndex:120, display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.5)' }} onClick={onClose} />
+      <div style={{ position:'relative', background:WHITE, borderRadius:12, boxShadow:'0 20px 60px rgba(0,0,0,0.3)', width:950, maxHeight:'85vh', display:'flex', overflow:'hidden' }}>
+        <div style={{ flex:1, display:'flex', flexDirection:'column' }}>
+          <div style={{ padding:24, borderBottom:'1px solid '+BORDER }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
+              <h2 style={{ fontFamily:FONT, fontSize:20, fontWeight:600, color:TEXT_HI, margin:0 }}>Audience Targeting</h2>
+              <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                <Button variant="outline" style={{ color:ACCENT, borderColor:ACCENT }}>
+                  <PlusIcon size={16} color={ACCENT} /> Create New Audience
                 </Button>
-                <button
-                  onClick={onClose}
-                  className="text-[#7b7b7b] hover:text-[#404040]"
-                >
-                  <X size={20} />
+                <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:4 }}>
+                  <CloseIcon size={20} />
                 </button>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 mb-4">
-              <Users size={18} className="text-[#7b7b7b]" />
-              <span className="text-sm text-[#7b7b7b]">
-                Select Audience Segments to Include or Exclude
+            <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:16 }}>
+              <UsersIcon size={18} color={TEXT_MID} />
+              <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Select Audience Segments to Include or Exclude</span>
+              <span title="Target specific customer segments based on their behavior and attributes">
+                <InfoIcon size={14} color={TEXT_MID} />
               </span>
-              <Tooltip>
-                <TooltipTrigger>
-                  <HelpCircle size={14} className="text-[#7b7b7b]" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  Target specific customer segments based on their behavior and
-                  attributes
-                </TooltipContent>
-              </Tooltip>
             </div>
 
-            <div className="flex gap-3">
-              <Select value={audienceType} onValueChange={setAudienceType}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Audience Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1st_party">1st Party Audience</SelectItem>
-                  <SelectItem value="3rd_party">3rd Party Audience</SelectItem>
-                  <SelectItem value="lookalike">Lookalike Audience</SelectItem>
-                </SelectContent>
-              </Select>
-              <div className="relative flex-1">
-                <Search
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7b7b7b]"
-                  size={18}
-                />
-                <Input
-                  placeholder="Search audience segment to add"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
+            <div style={{ display:'flex', gap:12 }}>
+              <Select
+                value={audienceType}
+                onChange={(e) => setAudienceType(e.target.value)}
+                options={[
+                  { value:'1st_party', label:'1st Party Audience' },
+                  { value:'3rd_party', label:'3rd Party Audience' },
+                  { value:'lookalike', label:'Lookalike Audience' },
+                ]}
+                style={{ width:180 }}
+              />
+              <div style={{ flex:1 }}>
+                <SearchBar value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search audience segment to add" />
               </div>
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto">
-            <div className="divide-y divide-[#e5e7eb]">
-              {filteredAudiences.map((audience) => (
+          <div style={{ flex:1, overflowY:'auto' }}>
+            {filteredAudiences.map((audience) => {
+              const isSel = selectedAudiences.includes(audience.id);
+              return (
                 <div
                   key={audience.id}
-                  className={`flex items-center justify-between p-4 cursor-pointer transition-all hover:bg-[#f9fafb] ${
-                    selectedAudiences.includes(audience.id)
-                      ? "bg-[#eff6ff]"
-                      : ""
-                  }`}
+                  style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:16, cursor:'pointer', background: isSel ? ACCENT_M : WHITE, borderBottom:'1px solid '+BORDER }}
                   onClick={() => toggleAudience(audience.id)}
                 >
-                  <div className="flex items-center gap-3">
-                    <Checkbox
-                      checked={selectedAudiences.includes(audience.id)}
-                    />
+                  <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                    <Checkbox checked={isSel} onChange={() => toggleAudience(audience.id)} />
                     <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-[#404040]">
-                          {audience.name}
-                        </span>
+                      <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                        <span style={{ fontFamily:FONT, fontWeight:500, color:TEXT_HI }}>{audience.name}</span>
                         {audience.recommended && (
-                          <Badge className="bg-[#eff6ff] text-[#2563eb] border-0 text-xs">
-                            <Sparkles size={12} className="mr-1" />
-                            Sofie's Recommended
-                          </Badge>
+                          <span style={{ background:ACCENT_M, color:ACCENT, borderRadius:4, padding:'2px 6px', fontSize:11, display:'inline-flex', alignItems:'center', gap:3 }}>
+                            <SparklesIcon size={12} color={ACCENT} /> Sofie's Recommended
+                          </span>
                         )}
                       </div>
-                      <div className="text-sm text-[#7b7b7b]">
-                        Estimated reach: {(audience.reach / 1000000).toFixed(1)}
-                        M | {audience.premium} premium on each inventory's
-                        minimum CPM
+                      <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>
+                        Estimated reach: {(audience.reach / 1000000).toFixed(1)}M | {audience.premium} premium on each inventory's minimum CPM
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    {selectedAudiences.includes(audience.id) ? (
-                      <span className="text-[#10b981] font-medium flex items-center gap-1">
-                        <Check size={16} />
-                        Selected
+                  <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                    {isSel ? (
+                      <span style={{ color:GREEN, fontFamily:FONT, fontWeight:500, display:'flex', alignItems:'center', gap:4 }}>
+                        <CheckIcon size={16} color={GREEN} /> Selected
                       </span>
                     ) : (
-                      <span className="text-[#2563eb] font-medium">Select</span>
+                      <span style={{ color:ACCENT, fontFamily:FONT, fontWeight:500 }}>Select</span>
                     )}
-                    <button className="text-[#7b7b7b] hover:text-[#404040] p-1">
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    <button style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:4 }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                       </svg>
                     </button>
                   </div>
                 </div>
-              ))}
-            </div>
+              );
+            })}
           </div>
 
-          <div className="p-4 border-t border-[#e5e7eb] flex items-center justify-between">
-            <span className="text-sm text-[#404040] font-medium">
-              Audience selected: {selectedAudiences.length}
-            </span>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                className="text-[#2563eb] border-[#2563eb] bg-transparent"
-              >
-                <Plus size={16} className="mr-1" />
-                Add
+          <div style={{ padding:16, borderTop:'1px solid '+BORDER, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+            <span style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI }}>Audience selected: {selectedAudiences.length}</span>
+            <div style={{ display:'flex', gap:8 }}>
+              <Button variant="outline" style={{ color:ACCENT, borderColor:ACCENT }}>
+                <PlusIcon size={16} color={ACCENT} /> Add
               </Button>
-              <Button
-                className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white"
-                onClick={() => onApply(selectedAudiences)}
-              >
-                Apply
-              </Button>
+              <Button variant="primary" onClick={() => onApply(selectedAudiences)}>Apply</Button>
             </div>
           </div>
         </div>
 
-        <div className="w-[280px] border-l border-[#e5e7eb] bg-[#f9fafb] flex flex-col">
-          <div className="p-4 border-b border-[#e5e7eb]">
-            <h3 className="font-semibold text-[#404040]">Audience Reach</h3>
+        <div style={{ width:280, borderLeft:'1px solid '+BORDER, background:BG_SUB, display:'flex', flexDirection:'column' }}>
+          <div style={{ padding:16, borderBottom:'1px solid '+BORDER }}>
+            <h3 style={{ fontFamily:FONT, fontWeight:600, color:TEXT_HI, margin:0 }}>Audience Reach</h3>
           </div>
-          <div className="p-4 flex-1">
+          <div style={{ padding:16, flex:1 }}>
             {selectedAudiences.length === 0 ? (
-              <div className="text-center py-8">
-                <div className="w-16 h-16 mx-auto mb-4 bg-[#e5e7eb] rounded-full flex items-center justify-center">
-                  <Users size={32} className="text-[#7b7b7b]" />
+              <div style={{ textAlign:'center', padding:'32px 0' }}>
+                <div style={{ width:64, height:64, margin:'0 auto 16px', background:BG_MUT, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  <UsersIcon size={32} color={TEXT_MID} />
                 </div>
-                <p className="text-sm text-[#7b7b7b]">
-                  Add audience from the left panel to see your audience reach or
-                  create new audience segment
-                </p>
+                <p style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Add audience from the left panel to see your audience reach or create new audience segment</p>
               </div>
             ) : (
-              <div className="space-y-4">
-                <div className="bg-white rounded-lg p-4 border border-[#e5e7eb]">
-                  <div className="text-sm text-[#7b7b7b]">Total Reach</div>
-                  <div className="text-2xl font-semibold text-[#404040]">
-                    {(totalReach / 1000000).toFixed(1)}M
-                  </div>
-                </div>
+              <div style={{ background:WHITE, borderRadius:8, padding:16, border:'1px solid '+BORDER }}>
+                <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Total Reach</div>
+                <div style={{ fontFamily:FONT, fontSize:24, fontWeight:600, color:TEXT_HI }}>{(totalReach / 1000000).toFixed(1)}M</div>
               </div>
             )}
           </div>
-          <div className="p-4 border-t border-[#e5e7eb]">
-            <h4 className="font-medium text-[#404040] mb-3">
-              Audience Summary
-            </h4>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-[#7b7b7b]">All Cohorts:</span>
-                <span className="text-[#404040]">
-                  {selectedAudiences.length}
-                </span>
+          <div style={{ padding:16, borderTop:'1px solid '+BORDER }}>
+            <h4 style={{ fontFamily:FONT, fontWeight:500, color:TEXT_HI, marginBottom:12, marginTop:0 }}>Audience Summary</h4>
+            <div style={{ display:'flex', flexDirection:'column', gap:8, fontFamily:FONT, fontSize:13 }}>
+              <div style={{ display:'flex', justifyContent:'space-between' }}>
+                <span style={{ color:TEXT_MID }}>All Cohorts:</span><span style={{ color:TEXT_HI }}>{selectedAudiences.length}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-[#7b7b7b]">Included:</span>
-                <span className="text-[#404040]">
-                  {selectedAudiences.length}
-                </span>
+              <div style={{ display:'flex', justifyContent:'space-between' }}>
+                <span style={{ color:TEXT_MID }}>Included:</span><span style={{ color:TEXT_HI }}>{selectedAudiences.length}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-[#7b7b7b]">Excluded:</span>
-                <span className="text-[#404040]">0</span>
+              <div style={{ display:'flex', justifyContent:'space-between' }}>
+                <span style={{ color:TEXT_MID }}>Excluded:</span><span style={{ color:TEXT_HI }}>0</span>
               </div>
             </div>
           </div>
@@ -1395,33 +1242,23 @@ function AudienceTargetingModal({ open, onClose, onApply, initialData = [] }) {
 
 function KeywordTargetingModal({ open, onClose, onApply, initialData = [] }) {
   const [keywords, setKeywords] = useState(initialData);
-  const [bulkInput, setBulkInput] = useState("");
-  const [activeTab, setActiveTab] = useState("manual");
+  const [bulkInput, setBulkInput] = useState('');
+  const [activeTab, setActiveTab] = useState('manual');
   const [generatedKeywords, setGeneratedKeywords] = useState([]);
-  const [productCategory, setProductCategory] = useState("");
+  const [productCategory, setProductCategory] = useState('');
+  const [manualInput, setManualInput] = useState('');
 
   const handleBulkAdd = () => {
     const newKeywords = bulkInput
-      .split("\n")
+      .split('\n')
       .map((k) => k.trim())
       .filter((k) => k.length > 0 && !keywords.includes(k));
     setKeywords([...keywords, ...newKeywords]);
-    setBulkInput("");
+    setBulkInput('');
   };
 
   const generateKeywords = () => {
-    // Mock AI-generated keywords
-    const suggestions = [
-      "premium headphones",
-      "wireless audio",
-      "noise canceling",
-      "bluetooth earbuds",
-      "studio quality",
-      "bass boost",
-      "comfortable fit",
-      "long battery life",
-      "premium sound",
-    ];
+    const suggestions = ['premium headphones','wireless audio','noise canceling','bluetooth earbuds','studio quality','bass boost','comfortable fit','long battery life','premium sound'];
     setGeneratedKeywords(suggestions.filter((k) => !keywords.includes(k)));
   };
 
@@ -1439,169 +1276,134 @@ function KeywordTargetingModal({ open, onClose, onApply, initialData = [] }) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative bg-white rounded-xl shadow-2xl w-[900px] max-h-[85vh] flex overflow-hidden">
-        <div className="flex-1 flex flex-col">
-          <div className="p-6 border-b border-[#e5e7eb]">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-[#404040]">
-                Keyword Targeting
-              </h2>
-              <button
-                onClick={onClose}
-                className="text-[#7b7b7b] hover:text-[#404040]"
-              >
-                <X size={20} />
+    <div style={{ position:'fixed', inset:0, zIndex:120, display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.5)' }} onClick={onClose} />
+      <div style={{ position:'relative', background:WHITE, borderRadius:12, boxShadow:'0 20px 60px rgba(0,0,0,0.3)', width:900, maxHeight:'85vh', display:'flex', overflow:'hidden' }}>
+        <div style={{ flex:1, display:'flex', flexDirection:'column' }}>
+          <div style={{ padding:24, borderBottom:'1px solid '+BORDER }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
+              <h2 style={{ fontFamily:FONT, fontSize:20, fontWeight:600, color:TEXT_HI, margin:0 }}>Keyword Targeting</h2>
+              <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:4 }}>
+                <CloseIcon size={20} />
               </button>
             </div>
 
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="bg-[#f3f4f6]">
-                <TabsTrigger value="manual">Manual Entry</TabsTrigger>
-                <TabsTrigger value="bulk">Bulk Upload</TabsTrigger>
-                <TabsTrigger value="generate">AI Generate</TabsTrigger>
-              </TabsList>
+            {/* Hand-rolled tabs */}
+            <div style={{ display:'flex', gap:4, background:BG_SUB, borderRadius:6, padding:4, marginBottom:16 }}>
+              {[['manual','Manual Entry'],['bulk','Bulk Upload'],['generate','AI Generate']].map(([tab, label]) => (
+                <button key={tab} onClick={() => setActiveTab(tab)} style={{
+                  padding:'6px 12px', borderRadius:4, border:'none', cursor:'pointer',
+                  background: activeTab === tab ? WHITE : 'transparent',
+                  color: activeTab === tab ? TEXT_HI : TEXT_MID,
+                  fontFamily: FONT, fontSize:13, fontWeight: activeTab === tab ? 600 : 400,
+                  boxShadow: activeTab === tab ? '0 1px 2px rgba(0,0,0,0.1)' : 'none',
+                }}>{label}</button>
+              ))}
+            </div>
 
-              <TabsContent value="manual" className="mt-4">
-                <div className="flex gap-2">
+            {activeTab === 'manual' && (
+              <div style={{ display:'flex', gap:8 }}>
+                <div style={{ flex:1 }}>
                   <Input
+                    value={manualInput}
+                    onChange={(e) => setManualInput(e.target.value)}
                     placeholder="Enter a keyword..."
                     onKeyDown={(e) => {
-                      if (e.key === "Enter" && e.currentTarget.value.trim()) {
-                        const value = e.currentTarget.value.trim();
-                        if (!keywords.includes(value)) {
-                          setKeywords([...keywords, value]);
-                        }
-                        e.currentTarget.value = "";
+                      if (e.key === 'Enter' && manualInput.trim()) {
+                        if (!keywords.includes(manualInput.trim())) setKeywords([...keywords, manualInput.trim()]);
+                        setManualInput('');
                       }
                     }}
                   />
-
-                  <Button variant="outline">Add</Button>
                 </div>
-              </TabsContent>
+                <Button variant="outline" onClick={() => { if (manualInput.trim() && !keywords.includes(manualInput.trim())) { setKeywords([...keywords, manualInput.trim()]); setManualInput(''); } }}>Add</Button>
+              </div>
+            )}
 
-              <TabsContent value="bulk" className="mt-4">
-                <Textarea
-                  placeholder="Enter keywords (one per line)&#10;electronics&#10;smartphones&#10;laptops&#10;gadgets"
+            {activeTab === 'bulk' && (
+              <div>
+                <textarea
+                  placeholder={'Enter keywords (one per line)\nelectronics\nsmartphones\nlaptops\ngadgets'}
                   value={bulkInput}
                   onChange={(e) => setBulkInput(e.target.value)}
-                  className="min-h-[150px] font-mono text-sm"
+                  style={{ width:'100%', minHeight:150, fontFamily:'monospace', fontSize:13, border:'1px solid '+BORDER, borderRadius:6, padding:'8px 12px', resize:'vertical', outline:'none', boxSizing:'border-box' }}
                 />
-
-                <div className="mt-3 flex items-center justify-between">
-                  <p className="text-xs text-[#7b7b7b]">
-                    Keywords will be considered under Phrase match type. Max 50
-                    keywords.
-                  </p>
-                  <Button
-                    onClick={handleBulkAdd}
-                    className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white"
-                  >
-                    Add Keywords
-                  </Button>
+                <div style={{ marginTop:12, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                  <p style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID, margin:0 }}>Keywords will be considered under Phrase match type. Max 50 keywords.</p>
+                  <Button variant="primary" onClick={handleBulkAdd}>Add Keywords</Button>
                 </div>
-              </TabsContent>
+              </div>
+            )}
 
-              <TabsContent value="generate" className="mt-4">
-                <div className="bg-[#f09ff] border border-[#bae6fd] rounded-lg p-4 mb-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Wand2 size={20} className="text-[#0284c7]" />
-                    <span className="font-medium text-[#0c4ae6]">
-                      AI Keyword Generator
-                    </span>
+            {activeTab === 'generate' && (
+              <div>
+                <div style={{ background:'#f0f9ff', border:'1px solid #bae6fd', borderRadius:8, padding:16, marginBottom:16 }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:12 }}>
+                    <WandIcon size={20} color="#0284c7" />
+                    <span style={{ fontFamily:FONT, fontWeight:500, color:'#0c4a6e' }}>AI Keyword Generator</span>
                   </div>
-                  <div className="flex gap-2">
-                    <Select
-                      value={productCategory}
-                      onValueChange={setProductCategory}
-                    >
-                      <SelectTrigger className="flex-1">
-                        <SelectValue placeholder="Select product category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="electronics">Electronics</SelectItem>
-                        <SelectItem value="fashion">Fashion</SelectItem>
-                        <SelectItem value="sports">Sports & Fitness</SelectItem>
-                        <SelectItem value="home">Home & Garden</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Button
-                      onClick={generateKeywords}
-                      className="bg-[#0284c7] hover:bg-[#0369a1] text-white"
-                    >
-                      <Sparkles size={16} className="mr-1" />
-                      Generate
+                  <div style={{ display:'flex', gap:8 }}>
+                    <div style={{ flex:1 }}>
+                      <Select
+                        value={productCategory}
+                        onChange={(e) => setProductCategory(e.target.value)}
+                        options={[
+                          { value:'', label:'Select product category' },
+                          { value:'electronics', label:'Electronics' },
+                          { value:'fashion', label:'Fashion' },
+                          { value:'sports', label:'Sports & Fitness' },
+                          { value:'home', label:'Home & Garden' },
+                        ]}
+                      />
+                    </div>
+                    <Button variant="primary" onClick={generateKeywords} style={{ background:'#0284c7' }}>
+                      <SparklesIcon size={16} color={WHITE} /> Generate
                     </Button>
                   </div>
                 </div>
-
                 {generatedKeywords.length > 0 && (
-                  <div className="border border-[#e5e7eb] rounded-lg p-4">
-                    <div className="text-sm font-medium text-[#404040] mb-3">
-                      Suggested Keywords
-                    </div>
-                    <div className="flex flex-wrap gap-2">
+                  <div style={{ border:'1px solid '+BORDER, borderRadius:8, padding:16 }}>
+                    <div style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI, marginBottom:12 }}>Suggested Keywords</div>
+                    <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
                       {generatedKeywords.map((keyword) => (
-                        <Badge
-                          key={keyword}
-                          variant="outline"
-                          className="cursor-pointer hover:bg-[#eff6ff] hover:border-[#2563eb]"
-                          onClick={() => addGeneratedKeyword(keyword)}
-                        >
-                          <Plus size={12} className="mr-1" />
-                          {keyword}
-                        </Badge>
+                        <span key={keyword} onClick={() => addGeneratedKeyword(keyword)} style={{ border:'1px solid '+BORDER, borderRadius:4, padding:'2px 6px', cursor:'pointer', display:'inline-flex', alignItems:'center', gap:4, fontFamily:FONT, fontSize:12, color:TEXT_MID }}>
+                          <PlusIcon size={12} color={TEXT_MID} /> {keyword}
+                        </span>
                       ))}
                     </div>
                   </div>
                 )}
-              </TabsContent>
-            </Tabs>
+              </div>
+            )}
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-sm font-medium text-[#404040]">
-                NEW KEYWORDS ADDED ({keywords.length})
-              </div>
-              <div className="relative w-64">
-                <Search
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7b7b7b]"
-                  size={16}
-                />
-                <Input placeholder="Search" className="pl-9 h-8" />
+          <div style={{ flex:1, overflowY:'auto', padding:16 }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
+              <div style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI }}>NEW KEYWORDS ADDED ({keywords.length})</div>
+              <div style={{ width:256 }}>
+                <SearchBar placeholder="Search" />
               </div>
             </div>
 
             {keywords.length === 0 ? (
-              <div className="text-center py-12 text-[#7b7b7b]">
-                <Tag size={48} className="mx-auto mb-4 opacity-50" />
-                <p>You have not added any keyword to your campaign yet!</p>
+              <div style={{ textAlign:'center', padding:'48px 0', color:TEXT_MID }}>
+                <div style={{ marginBottom:16, opacity:0.5 }}><TagIcon size={48} color={TEXT_MID} /></div>
+                <p style={{ fontFamily:FONT, fontSize:14 }}>You have not added any keyword to your campaign yet!</p>
               </div>
             ) : (
-              <div className="border border-[#e5e7eb] rounded-lg overflow-hidden">
-                <div className="bg-[#f9fafb] px-4 py-2 border-b border-[#e5e7eb] flex items-center gap-3">
-                  <Checkbox />
-                  <span className="text-sm font-medium text-[#7b7b7b]">
-                    Keyword
-                  </span>
+              <div style={{ border:'1px solid '+BORDER, borderRadius:8, overflow:'hidden' }}>
+                <div style={{ background:BG_SUB, padding:'8px 16px', borderBottom:'1px solid '+BORDER, display:'flex', alignItems:'center', gap:12 }}>
+                  <Checkbox checked={false} onChange={() => {}} />
+                  <span style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_MID }}>Keyword</span>
                 </div>
                 {keywords.map((keyword, index) => (
-                  <div
-                    key={index}
-                    className="px-4 py-3 border-b border-[#e5e7eb] last:border-0 flex items-center justify-between hover:bg-[#f9fafb]"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Checkbox />
-                      <span className="text-[#404040]">{keyword}</span>
+                  <div key={index} style={{ padding:'12px 16px', borderBottom: index < keywords.length-1 ? '1px solid '+BORDER : 'none', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                      <Checkbox checked={false} onChange={() => {}} />
+                      <span style={{ fontFamily:FONT, color:TEXT_HI }}>{keyword}</span>
                     </div>
-                    <button
-                      onClick={() => removeKeyword(keyword)}
-                      className="text-[#7b7b7b] hover:text-[#ef4444]"
-                    >
-                      <X size={16} />
+                    <button onClick={() => removeKeyword(keyword)} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:4 }}>
+                      <CloseIcon size={16} />
                     </button>
                   </div>
                 ))}
@@ -1609,29 +1411,21 @@ function KeywordTargetingModal({ open, onClose, onApply, initialData = [] }) {
             )}
           </div>
 
-          <div className="p-4 border-t border-[#e5e7eb] flex justify-center">
-            <Button
-              className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-8"
-              onClick={() => onApply(keywords)}
-            >
-              Save
-            </Button>
+          <div style={{ padding:16, borderTop:'1px solid '+BORDER, display:'flex', justifyContent:'center' }}>
+            <Button variant="primary" onClick={() => onApply(keywords)} style={{ minWidth:100 }}>Save</Button>
           </div>
         </div>
 
-        <div className="w-[250px] border-l border-[#e5e7eb] bg-[#f9fafb] p-4">
-          <h3 className="font-semibold text-[#404040] mb-4">Keyword Summary</h3>
-          <div className="space-y-3">
-            <div className="bg-white rounded-lg p-4 border border-[#e5e7eb]">
-              <div className="text-sm text-[#7b7b7b]">Total Keywords</div>
-              <div className="text-2xl font-semibold text-[#404040]">
-                {keywords.length}
-              </div>
+        <div style={{ width:250, borderLeft:'1px solid '+BORDER, background:BG_SUB, padding:16 }}>
+          <h3 style={{ fontFamily:FONT, fontWeight:600, color:TEXT_HI, marginBottom:16, marginTop:0 }}>Keyword Summary</h3>
+          <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+            <div style={{ background:WHITE, borderRadius:8, padding:16, border:'1px solid '+BORDER }}>
+              <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Total Keywords</div>
+              <div style={{ fontFamily:FONT, fontSize:24, fontWeight:600, color:TEXT_HI }}>{keywords.length}</div>
             </div>
-            <div className="text-xs text-[#7b7b7b] p-3 bg-[#fef3c7] rounded-lg">
-              <Info size={14} className="inline mr-1" />
-              Keywords help match your ads to relevant search queries and
-              content.
+            <div style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID, padding:12, background:'#fef3c7', borderRadius:8, display:'flex', alignItems:'flex-start', gap:6 }}>
+              <InfoIcon size={14} color={TEXT_MID} />
+              Keywords help match your ads to relevant search queries and content.
             </div>
           </div>
         </div>
@@ -1641,18 +1435,15 @@ function KeywordTargetingModal({ open, onClose, onApply, initialData = [] }) {
 }
 
 function ProductCatalogModal({ open, onClose, onApply, initialData = [] }) {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedProducts, setSelectedProducts] = useState(initialData);
-  const [filterCategory, setFilterCategory] = useState("all");
+  const [filterCategory, setFilterCategory] = useState('all');
 
   const categories = [...new Set(productCatalog.map((p) => p.category))];
 
   const filteredProducts = productCatalog.filter((product) => {
-    const matchesSearch = product.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const matchesCategory =
-      filterCategory === "all" || product.category === filterCategory;
+    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = filterCategory === 'all' || product.category === filterCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -1665,147 +1456,92 @@ function ProductCatalogModal({ open, onClose, onApply, initialData = [] }) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative bg-white rounded-xl shadow-2xl w-[950px] max-h-[85vh] flex overflow-hidden">
-        <div className="flex-1 flex flex-col">
-          <div className="p-6 border-b border-[#e5e7eb]">
-            <div className="flex items-center justify-between mb-4">
+    <div style={{ position:'fixed', inset:0, zIndex:120, display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.5)' }} onClick={onClose} />
+      <div style={{ position:'relative', background:WHITE, borderRadius:12, boxShadow:'0 20px 60px rgba(0,0,0,0.3)', width:950, maxHeight:'85vh', display:'flex', overflow:'hidden' }}>
+        <div style={{ flex:1, display:'flex', flexDirection:'column' }}>
+          <div style={{ padding:24, borderBottom:'1px solid '+BORDER }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
               <div>
-                <h2 className="text-xl font-semibold text-[#404040]">
-                  Product Catalog Targeting
-                </h2>
-                <p className="text-sm text-[#7b7b7b]">
-                  Select products from your catalog to promote
-                </p>
+                <h2 style={{ fontFamily:FONT, fontSize:20, fontWeight:600, color:TEXT_HI, margin:0 }}>Product Catalog Targeting</h2>
+                <p style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID, marginTop:4, marginBottom:0 }}>Select products from your catalog to promote</p>
               </div>
-              <button
-                onClick={onClose}
-                className="text-[#7b7b7b] hover:text-[#404040]"
-              >
-                <X size={20} />
+              <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:4 }}>
+                <CloseIcon size={20} />
               </button>
             </div>
-            <div className="flex gap-3">
-              <div className="relative flex-1">
-                <Search
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7b7b7b]"
-                  size={18}
-                />
-                <Input
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
+            <div style={{ display:'flex', gap:12 }}>
+              <div style={{ flex:1 }}>
+                <SearchBar value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search products..." />
               </div>
-              <Select value={filterCategory} onValueChange={setFilterCategory}>
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map((cat) => (
-                    <SelectItem key={cat} value={cat}>
-                      {cat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Select
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value)}
+                options={[{ value:'all', label:'All Categories' }, ...categories.map((c) => ({ value:c, label:c }))]}
+                style={{ width:150 }}
+              />
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4">
-            <div className="grid grid-cols-2 gap-3">
-              {filteredProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                    selectedProducts.includes(product.id)
-                      ? "border-[#10b981] bg-[#ecfdf5]"
-                      : "border-[#e5e7eb] hover:border-[#d1d5db]"
-                  }`}
-                  onClick={() => toggleProduct(product.id)}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-lg bg-[#f3f4f6] flex items-center justify-center">
-                        <ShoppingBag size={24} className="text-[#7b7b7b]" />
-                      </div>
-                      <div>
-                        <div className="font-medium text-[#404040]">
-                          {product.name}
+          <div style={{ flex:1, overflowY:'auto', padding:16 }}>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+              {filteredProducts.map((product) => {
+                const isSel = selectedProducts.includes(product.id);
+                return (
+                  <div
+                    key={product.id}
+                    style={{ padding:16, border:'1px solid '+(isSel ? GREEN : BORDER), borderRadius:8, cursor:'pointer', background: isSel ? GREEN_M : WHITE }}
+                    onClick={() => toggleProduct(product.id)}
+                  >
+                    <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between' }}>
+                      <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                        <div style={{ width:48, height:48, borderRadius:8, background:BG_MUT, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                          <ShoppingBagIcon size={24} color={TEXT_MID} />
                         </div>
-                        <div className="text-sm text-[#7b7b7b]">
-                          {product.category}
+                        <div>
+                          <div style={{ fontFamily:FONT, fontWeight:500, color:TEXT_HI }}>{product.name}</div>
+                          <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>{product.category}</div>
                         </div>
                       </div>
+                      {isSel && <CheckIcon size={20} color={GREEN} />}
                     </div>
-                    {selectedProducts.includes(product.id) && (
-                      <Check size={20} className="text-[#10b981]" />
-                    )}
+                    <div style={{ marginTop:12, display:'flex', alignItems:'center', justifyContent:'space-between', fontFamily:FONT, fontSize:13 }}>
+                      <span style={{ fontWeight:600, color:TEXT_HI }}>${product.price}</span>
+                      <span style={{ color:TEXT_MID }}>Stock: {product.inventory}</span>
+                    </div>
                   </div>
-                  <div className="mt-3 flex items-center justify-between text-sm">
-                    <span className="font-semibold text-[#404040]">
-                      ${product.price}
-                    </span>
-                    <span className="text-[#7b7b7b]">
-                      Stock: {product.inventory}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
-          <div className="p-4 border-t border-[#e5e7eb] flex items-center justify-between">
-            <span className="text-sm text-[#7b7b7b]">
-              {selectedProducts.length} products selected
-            </span>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button
-                className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white"
-                onClick={() => onApply(selectedProducts)}
-              >
-                Apply
-              </Button>
+          <div style={{ padding:16, borderTop:'1px solid '+BORDER, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+            <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>{selectedProducts.length} products selected</span>
+            <div style={{ display:'flex', gap:8 }}>
+              <Button variant="outline" onClick={onClose}>Cancel</Button>
+              <Button variant="primary" onClick={() => onApply(selectedProducts)}>Apply</Button>
             </div>
           </div>
         </div>
 
-        <div className="w-[280px] border-l border-[#e5e7eb] bg-[#f9fafb] p-4">
-          <h3 className="font-semibold text-[#404040] mb-4">Product Summary</h3>
-          <div className="space-y-4">
-            <div className="bg-white rounded-lg p-4 border border-[#e5e7eb]">
-              <div className="text-sm text-[#7b7b7b]">Products Selected</div>
-              <div className="text-2xl font-semibold text-[#404040]">
-                {selectedProducts.length}
-              </div>
+        <div style={{ width:280, borderLeft:'1px solid '+BORDER, background:BG_SUB, padding:16 }}>
+          <h3 style={{ fontFamily:FONT, fontWeight:600, color:TEXT_HI, marginBottom:16, marginTop:0 }}>Product Summary</h3>
+          <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
+            <div style={{ background:WHITE, borderRadius:8, padding:16, border:'1px solid '+BORDER }}>
+              <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Products Selected</div>
+              <div style={{ fontFamily:FONT, fontSize:24, fontWeight:600, color:TEXT_HI }}>{selectedProducts.length}</div>
             </div>
             {selectedProducts.length > 0 && (
               <div>
-                <div className="text-sm font-medium text-[#404040] mb-2">
-                  Selected Products
-                </div>
-                <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                <div style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI, marginBottom:8 }}>Selected Products</div>
+                <div style={{ display:'flex', flexDirection:'column', gap:8, maxHeight:300, overflowY:'auto' }}>
                   {selectedProducts.map((id) => {
                     const product = productCatalog.find((p) => p.id === id);
                     return product ? (
-                      <div
-                        key={id}
-                        className="flex items-center justify-between bg-white p-2 rounded border border-[#e5e7eb]"
-                      >
-                        <span className="text-sm text-[#404040] truncate">
-                          {product.name}
-                        </span>
-                        <button
-                          onClick={() => toggleProduct(id)}
-                          className="text-[#7b7b7b] hover:text-[#ef4444]"
-                        >
-                          <X size={14} />
+                      <div key={id} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', background:WHITE, padding:8, borderRadius:4, border:'1px solid '+BORDER }}>
+                        <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_HI, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{product.name}</span>
+                        <button onClick={() => toggleProduct(id)} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:2, flexShrink:0 }}>
+                          <CloseIcon size={14} />
                         </button>
                       </div>
                     ) : null;
@@ -1837,6 +1573,7 @@ export function OffsiteAdGroupWizard({
 
   const [currentStep, setCurrentStep] = useState(visibleSteps[0].id);
   const [estimatorOpen, setEstimatorOpen] = useState(false);
+  const [accordionOpen, setAccordionOpen] = useState(false);
   const fileInputRef = useRef(null);
   const videoInputRef = useRef(null);
   const [data, setData] = useState({
@@ -2436,55 +2173,39 @@ export function OffsiteAdGroupWizard({
     // Meta Feed Placements (Square/Portrait in feed context)
     if (["feed", "instagram-feed", "marketplace-feed"].includes(placement.id)) {
       return (
-        <div className="w-[280px] bg-white rounded-xl border border-[#e5e7eb] shadow-sm overflow-hidden">
-          {/* Feed post header */}
-          <div className="flex items-center gap-2 p-3 border-b border-[#e5e7eb]">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#1877f2] to-[#0866ff]"></div>
-            <div className="flex-1">
-              <div className="flex items-center gap-1.5">
-                <p className="text-xs font-semibold text-[#050505]">
-                  Your Brand
-                </p>
-                <div className="w-1 h-1 rounded-full bg-[#65676b]"></div>
-                <span className="text-[10px] font-semibold text-[#65676b]">
-                  Sponsored
-                </span>
+        <div style={{ width:280, background:WHITE, borderRadius:12, border:'1px solid #e5e7eb', boxShadow:'0 1px 2px rgba(0,0,0,0.05)', overflow:'hidden' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:8, padding:12, borderBottom:'1px solid #e5e7eb' }}>
+            <div style={{ width:32, height:32, borderRadius:'50%', background:'linear-gradient(135deg,#1877f2,#0866ff)', flexShrink:0 }} />
+            <div style={{ flex:1 }}>
+              <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+                <p style={{ fontFamily:FONT, fontSize:12, fontWeight:600, color:'#050505', margin:0 }}>Your Brand</p>
+                <div style={{ width:4, height:4, borderRadius:'50%', background:'#65676b' }} />
+                <span style={{ fontFamily:FONT, fontSize:10, fontWeight:600, color:'#65676b' }}>Sponsored</span>
               </div>
-              <p className="text-[10px] text-[#65676b]">2h ago</p>
+              <p style={{ fontFamily:FONT, fontSize:10, color:'#65676b', margin:0 }}>2h ago</p>
             </div>
           </div>
 
-          {/* Creative area */}
           {hasCreative ? (
             data.creative.videoUrl ? (
-              <video
-                src={data.creative.videoUrl}
-                className="w-full aspect-square object-cover"
-                muted
-                playsInline
-              />
+              <video src={data.creative.videoUrl} style={{ width:'100%', aspectRatio:'1/1', objectFit:'cover', display:'block' }} muted playsInline />
             ) : (
-              <img
-                src={data.creative.imageUrl || "/placeholder.svg"}
-                alt="Ad"
-                className="w-full aspect-square object-cover"
-              />
+              <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Ad" style={{ width:'100%', aspectRatio:'1/1', objectFit:'cover', display:'block' }} />
             )
           ) : (
-            <div className="w-full aspect-square bg-gradient-to-br from-[#f0f2f5] to-[#e4e6eb] flex items-center justify-center">
-              <ImageIcon size={40} className="text-[#bcc0c4]" />
+            <div style={{ width:'100%', aspectRatio:'1/1', background:'linear-gradient(135deg,#f0f2f5,#e4e6eb)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <ImageSvgIcon size={40} color="#bcc0c4" />
             </div>
           )}
 
-          {/* Engagement bar */}
-          <div className="p-3 border-t border-[#e5e7eb]">
-            <p className="text-xs font-medium text-[#050505] mb-1 line-clamp-2">
+          <div style={{ padding:12, borderTop:'1px solid #e5e7eb' }}>
+            <p style={{ fontFamily:FONT, fontSize:12, fontWeight:500, color:'#050505', margin:'0 0 4px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
               {data.creative.headline || "Your compelling headline goes here"}
             </p>
-            <p className="text-[10px] text-[#65676b] mb-2 line-clamp-2">
+            <p style={{ fontFamily:FONT, fontSize:10, color:'#65676b', margin:'0 0 8px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
               {data.creative.description || "Engaging description text"}
             </p>
-            <button className="w-full py-2 bg-[#0866ff] text-white text-xs font-semibold rounded-lg hover:bg-[#0756d4] transition-colors">
+            <button style={{ width:'100%', padding:'8px 0', background:'#0866ff', color:WHITE, fontFamily:FONT, fontSize:12, fontWeight:600, border:'none', borderRadius:8, cursor:'pointer' }}>
               {data.creative.cta || "Learn More"}
             </button>
           </div>
@@ -2493,69 +2214,43 @@ export function OffsiteAdGroupWizard({
     }
 
     // Stories & Reels (9:16 phone mockup)
-    if (
-      ["stories", "instagram-stories", "reels", "instagram-reels"].includes(
-        placement.id,
-      )
-    ) {
+    if (["stories", "instagram-stories", "reels", "instagram-reels"].includes(placement.id)) {
       return (
-        <div className="relative">
-          {/* Phone mockup frame */}
-          <div className="w-[180px] h-[320px] bg-black rounded-[28px] shadow-2xl p-2 relative">
-            {/* Notch */}
-            <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-6 bg-black rounded-b-2xl z-10"></div>
-
-            {/* Screen content */}
-            <div className="w-full h-full rounded-[20px] overflow-hidden relative">
+        <div style={{ position:'relative' }}>
+          <div style={{ width:180, height:320, background:'#000', borderRadius:28, boxShadow:'0 20px 40px rgba(0,0,0,0.4)', padding:8, position:'relative' }}>
+            <div style={{ position:'absolute', top:8, left:'50%', transform:'translateX(-50%)', width:96, height:24, background:'#000', borderRadius:'0 0 12px 12px', zIndex:10 }} />
+            <div style={{ width:'100%', height:'100%', borderRadius:20, overflow:'hidden', position:'relative' }}>
               {hasCreative ? (
                 data.creative.videoUrl ? (
-                  <video
-                    src={data.creative.videoUrl}
-                    className="w-full h-full object-cover"
-                    muted
-                    playsInline
-                    loop
-                  />
+                  <video src={data.creative.videoUrl} style={{ width:'100%', height:'100%', objectFit:'cover' }} muted playsInline loop />
                 ) : (
-                  <img
-                    src={data.creative.imageUrl || "/placeholder.svg"}
-                    alt="Ad"
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Ad" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
                 )
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-[#833ab4] via-[#fd1d1d] to-[#fcb045] flex items-center justify-center">
-                  <ImageIcon size={48} className="text-white/50" />
+                <div style={{ width:'100%', height:'100%', background:'linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  <ImageSvgIcon size={48} color="rgba(255,255,255,0.5)" />
                 </div>
               )}
 
-              {/* Story UI overlay */}
-              <div className="absolute top-0 left-0 right-0 p-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-white/90 flex items-center justify-center">
-                    <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#1877f2] to-[#0866ff]"></div>
+              <div style={{ position:'absolute', top:0, left:0, right:0, padding:12 }}>
+                <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                  <div style={{ width:28, height:28, borderRadius:'50%', background:'rgba(255,255,255,0.9)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                    <div style={{ width:20, height:20, borderRadius:'50%', background:'linear-gradient(135deg,#1877f2,#0866ff)' }} />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-white text-[10px] font-semibold drop-shadow-lg">
-                      Your Brand
-                    </p>
-                    <p className="text-white/80 text-[8px] drop-shadow-lg">
-                      Sponsored
-                    </p>
+                  <div style={{ flex:1 }}>
+                    <p style={{ fontFamily:FONT, color:WHITE, fontSize:10, fontWeight:600, margin:0, textShadow:'0 1px 2px rgba(0,0,0,0.5)' }}>Your Brand</p>
+                    <p style={{ fontFamily:FONT, color:'rgba(255,255,255,0.8)', fontSize:8, margin:0, textShadow:'0 1px 2px rgba(0,0,0,0.5)' }}>Sponsored</p>
                   </div>
                 </div>
               </div>
 
-              {/* CTA button at bottom */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
-                <p className="text-white text-xs font-semibold mb-2 drop-shadow-lg line-clamp-2">
+              <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:16, background:'linear-gradient(to top,rgba(0,0,0,0.6),transparent)' }}>
+                <p style={{ fontFamily:FONT, color:WHITE, fontSize:12, fontWeight:600, margin:'0 0 8px', textShadow:'0 1px 2px rgba(0,0,0,0.5)', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
                   {data.creative.headline || "Swipe up to learn more"}
                 </p>
-                <div className="flex items-center justify-center gap-2 py-2 px-4 bg-white/95 backdrop-blur-sm rounded-full">
-                  <span className="text-xs font-semibold text-[#050505]">
-                    {data.creative.cta || "Learn More"}
-                  </span>
-                  <ChevronRight size={14} className="text-[#050505]" />
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, padding:'8px 16px', background:'rgba(255,255,255,0.95)', borderRadius:999 }}>
+                  <span style={{ fontFamily:FONT, fontSize:12, fontWeight:600, color:'#050505' }}>{data.creative.cta || "Learn More"}</span>
+                  <ChevronRightIcon size={14} color="#050505" />
                 </div>
               </div>
             </div>
@@ -2567,51 +2262,34 @@ export function OffsiteAdGroupWizard({
     // YouTube Video Placements (16:9 video player)
     if (placement.id.includes("youtube") || placement.id.includes("video")) {
       return (
-        <div className="w-[360px] bg-black rounded-lg shadow-lg overflow-hidden">
-          {/* Video player */}
-          <div className="relative aspect-video bg-black">
+        <div style={{ width:360, background:'#000', borderRadius:8, boxShadow:'0 4px 12px rgba(0,0,0,0.3)', overflow:'hidden' }}>
+          <div style={{ position:'relative', aspectRatio:'16/9', background:'#000' }}>
             {hasCreative ? (
               data.creative.videoUrl ? (
-                <video
-                  src={data.creative.videoUrl}
-                  className="w-full h-full object-cover"
-                  muted
-                  playsInline
-                  loop
-                />
+                <video src={data.creative.videoUrl} style={{ width:'100%', height:'100%', objectFit:'cover' }} muted playsInline loop />
               ) : (
-                <img
-                  src={data.creative.imageUrl || "/placeholder.svg"}
-                  alt="Ad"
-                  className="w-full h-full object-cover"
-                />
+                <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Ad" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
               )
             ) : (
-              <div className="w-full h-full bg-[#1f1f1f] flex items-center justify-center">
-                <Video size={48} className="text-[#909090]" />
+              <div style={{ width:'100%', height:'100%', background:'#1f1f1f', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                <VideoIcon size={48} color="#909090" />
               </div>
             )}
 
-            {/* YouTube Ad overlay */}
-            <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 bg-[#ffd700] text-black text-[10px] font-bold rounded">
-                    AD
-                  </span>
-                  <p className="text-white text-xs font-medium">
-                    {data.creative.headline || "Ad Title"}
-                  </p>
+            <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:12, background:'linear-gradient(to top,rgba(0,0,0,0.8),transparent)' }}>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                  <span style={{ padding:'1px 8px', background:'#ffd700', color:'#000', fontFamily:FONT, fontSize:10, fontWeight:700, borderRadius:3 }}>AD</span>
+                  <p style={{ fontFamily:FONT, color:WHITE, fontSize:12, fontWeight:500, margin:0 }}>{data.creative.headline || "Ad Title"}</p>
                 </div>
-                <button className="px-3 py-1 bg-white text-black text-xs font-semibold rounded hover:bg-[#f1f1f1] transition-colors">
+                <button style={{ padding:'4px 12px', background:WHITE, color:'#000', fontFamily:FONT, fontSize:12, fontWeight:600, border:'none', borderRadius:4, cursor:'pointer' }}>
                   {data.creative.cta || "Visit Site"}
                 </button>
               </div>
             </div>
 
-            {/* Skip ad button (top right) */}
-            <div className="absolute top-3 right-3">
-              <div className="px-2 py-1 bg-black/60 backdrop-blur-sm text-white text-[10px] rounded">
+            <div style={{ position:'absolute', top:12, right:12 }}>
+              <div style={{ padding:'3px 8px', background:'rgba(0,0,0,0.6)', color:WHITE, fontFamily:FONT, fontSize:10, borderRadius:4 }}>
                 Ad • 0:05
               </div>
             </div>
@@ -2623,25 +2301,21 @@ export function OffsiteAdGroupWizard({
     // Google Search Ads (Text-only search result)
     if (placement.id.includes("search") && !placement.id.includes("shopping")) {
       return (
-        <div className="w-[400px] bg-white rounded-lg border border-[#e5e7eb] shadow-sm p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="px-1.5 py-0.5 bg-[#f8f9fa] border border-[#dadce0] rounded text-[10px] font-medium text-[#5f6368]">
-              Ad
-            </div>
-            <span className="text-xs text-[#202124]">www.yourbrand.com</span>
+        <div style={{ width:400, background:WHITE, borderRadius:8, border:'1px solid #e5e7eb', boxShadow:'0 1px 2px rgba(0,0,0,0.05)', padding:16 }}>
+          <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
+            <div style={{ padding:'1px 6px', background:'#f8f9fa', border:'1px solid #dadce0', borderRadius:3, fontFamily:FONT, fontSize:10, fontWeight:500, color:'#5f6368' }}>Ad</div>
+            <span style={{ fontFamily:FONT, fontSize:12, color:'#202124' }}>www.yourbrand.com</span>
           </div>
-          <h3 className="text-lg text-[#1a0dab] font-normal mb-1 hover:underline cursor-pointer line-clamp-1">
-            {data.creative.headline ||
-              "Your Headline - Brand Name | Product Category"}
+          <h3 style={{ fontFamily:FONT, fontSize:18, color:'#1a0dab', fontWeight:400, margin:'0 0 4px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', cursor:'pointer' }}>
+            {data.creative.headline || "Your Headline - Brand Name | Product Category"}
           </h3>
-          <p className="text-sm text-[#4d5156] line-clamp-2 mb-2">
-            {data.creative.description ||
-              "Your ad description appears here in the search results. Make it compelling and relevant to the search query."}
+          <p style={{ fontFamily:FONT, fontSize:14, color:'#4d5156', margin:'0 0 8px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
+            {data.creative.description || "Your ad description appears here in the search results. Make it compelling and relevant to the search query."}
           </p>
-          <div className="flex items-center gap-3 text-xs text-[#1a0dab]">
-            <span className="hover:underline cursor-pointer">Shop Now</span>
-            <span className="hover:underline cursor-pointer">Learn More</span>
-            <span className="hover:underline cursor-pointer">Contact Us</span>
+          <div style={{ display:'flex', alignItems:'center', gap:12, fontFamily:FONT, fontSize:12, color:'#1a0dab' }}>
+            <span style={{ cursor:'pointer' }}>Shop Now</span>
+            <span style={{ cursor:'pointer' }}>Learn More</span>
+            <span style={{ cursor:'pointer' }}>Contact Us</span>
           </div>
         </div>
       );
@@ -2650,49 +2324,34 @@ export function OffsiteAdGroupWizard({
     // Google Shopping Ads (Product grid)
     if (placement.id.includes("shopping")) {
       return (
-        <div className="w-[160px] bg-white rounded-lg border border-[#e5e7eb] shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+        <div style={{ width:160, background:WHITE, borderRadius:8, border:'1px solid #e5e7eb', boxShadow:'0 1px 2px rgba(0,0,0,0.05)', overflow:'hidden' }}>
           {hasCreative ? (
-            <img
-              src={data.creative.imageUrl || "/placeholder.svg"}
-              alt="Product"
-              className="w-full aspect-square object-cover"
-            />
+            <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Product" style={{ width:'100%', aspectRatio:'1/1', objectFit:'cover', display:'block' }} />
           ) : (
-            <div className="w-full aspect-square bg-[#f8f9fa] flex items-center justify-center">
-              <ShoppingBag size={32} className="text-[#dadce0]" />
+            <div style={{ width:'100%', aspectRatio:'1/1', background:'#f8f9fa', display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <ShoppingBagIcon size={32} color="#dadce0" />
             </div>
           )}
-          <div className="p-2">
-            <div className="flex items-center gap-1 mb-1">
-              <span className="px-1 py-0.5 bg-[#f8f9fa] border border-[#dadce0] rounded text-[8px] font-medium text-[#5f6368]">
-                Sponsored
-              </span>
+          <div style={{ padding:8 }}>
+            <div style={{ marginBottom:4 }}>
+              <span style={{ padding:'1px 4px', background:'#f8f9fa', border:'1px solid #dadce0', borderRadius:3, fontFamily:FONT, fontSize:8, fontWeight:500, color:'#5f6368' }}>Sponsored</span>
             </div>
-            <p className="text-xs text-[#202124] font-medium mb-1 line-clamp-2">
+            <p style={{ fontFamily:FONT, fontSize:12, fontWeight:500, color:'#202124', margin:'0 0 4px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
               {data.creative.headline || "Product Name"}
             </p>
-            <div className="flex items-baseline gap-1">
-              <span className="text-sm font-semibold text-[#202124]">
-                $49.99
-              </span>
-              <span className="text-[10px] text-[#70757a] line-through">
-                $79.99
-              </span>
+            <div style={{ display:'flex', alignItems:'baseline', gap:4 }}>
+              <span style={{ fontFamily:FONT, fontSize:14, fontWeight:600, color:'#202124' }}>$49.99</span>
+              <span style={{ fontFamily:FONT, fontSize:10, color:'#70757a', textDecoration:'line-through' }}>$79.99</span>
             </div>
-            <div className="flex items-center gap-1 mt-1">
-              <div className="flex">
+            <div style={{ display:'flex', alignItems:'center', gap:4, marginTop:4 }}>
+              <div style={{ display:'flex' }}>
                 {[...Array(5)].map((_, i) => (
-                  <svg
-                    key={i}
-                    className="w-2.5 h-2.5 text-[#fbbc04]"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0 2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                  <svg key={i} width={10} height={10} fill="#fbbc04" viewBox="0 0 20 20">
+                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                   </svg>
                 ))}
               </div>
-              <span className="text-[9px] text-[#70757a]">(234)</span>
+              <span style={{ fontFamily:FONT, fontSize:9, color:'#70757a' }}>(234)</span>
             </div>
           </div>
         </div>
@@ -2702,65 +2361,40 @@ export function OffsiteAdGroupWizard({
     // Google Display Network (Banner ads)
     if (placement.id.includes("display") || placement.id.includes("banner")) {
       return (
-        <div className="w-[320px] bg-white rounded-lg border border-[#e5e7eb] shadow-sm overflow-hidden">
+        <div style={{ width:320, background:WHITE, borderRadius:8, border:'1px solid '+BORDER, boxShadow:'0 1px 2px rgba(0,0,0,0.05)', overflow:'hidden' }}>
           {hasCreative ? (
-            <img
-              src={data.creative.imageUrl || "/placeholder.svg"}
-              alt="Banner Ad"
-              className="w-full h-[100px] object-cover"
-            />
+            <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Banner Ad" style={{ width:'100%', height:100, objectFit:'cover' }} />
           ) : (
-            <div className="w-full h-[100px] bg-gradient-to-r from-[#4285f4] via-[#ea4335] to-[#fbbc04] flex items-center justify-center">
-              <ImageIcon size={36} className="text-white/50" />
+            <div style={{ width:'100%', height:100, background:'linear-gradient(to right,#4285f4,#ea4335,#fbbc04)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <ImageSvgIcon size={36} color="rgba(255,255,255,0.5)" />
             </div>
           )}
-          <div className="p-2 flex items-center justify-between">
-            <div className="flex-1">
-              <p className="text-xs font-medium text-[#202124] line-clamp-1">
-                {data.creative.headline || "Your Ad Headline"}
-              </p>
-              <p className="text-[10px] text-[#5f6368] line-clamp-1">
-                {data.creative.description || "Description"}
-              </p>
+          <div style={{ padding:8, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+            <div style={{ flex:1 }}>
+              <p style={{ fontFamily:FONT, fontSize:12, fontWeight:500, color:'#202124', margin:'0 0 2px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{data.creative.headline || "Your Ad Headline"}</p>
+              <p style={{ fontFamily:FONT, fontSize:10, color:'#5f6368', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{data.creative.description || "Description"}</p>
             </div>
-            <button className="px-3 py-1 bg-[#1a73e8] text-white text-xs font-medium rounded hover:bg-[#1765cc] transition-colors flex-shrink-0 ml-2">
-              {data.creative.cta || "Shop"}
-            </button>
+            <button style={{ padding:'4px 12px', background:'#1a73e8', color:WHITE, fontSize:12, fontWeight:500, borderRadius:4, border:'none', cursor:'pointer', flexShrink:0, marginLeft:8 }}>{data.creative.cta || "Shop"}</button>
           </div>
         </div>
       );
     }
 
     // Right Column / Sidebar Ads (Small vertical format)
-    if (
-      placement.id.includes("right-column") ||
-      placement.id.includes("sidebar")
-    ) {
+    if (placement.id.includes("right-column") || placement.id.includes("sidebar")) {
       return (
-        <div className="w-[220px] bg-white rounded-lg border border-[#e5e7eb] shadow-sm overflow-hidden">
+        <div style={{ width:220, background:WHITE, borderRadius:8, border:'1px solid '+BORDER, boxShadow:'0 1px 2px rgba(0,0,0,0.05)', overflow:'hidden' }}>
           {hasCreative ? (
-            <img
-              src={data.creative.imageUrl || "/placeholder.svg"}
-              alt="Ad"
-              className="w-full h-[120px] object-cover"
-            />
+            <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Ad" style={{ width:'100%', height:120, objectFit:'cover' }} />
           ) : (
-            <div className="w-full h-[120px] bg-[#f0f2f5] flex items-center justify-center">
-              <ImageIcon size={28} className="text-[#bcc0c4]" />
+            <div style={{ width:'100%', height:120, background:'#f0f2f5', display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <ImageSvgIcon size={28} color="#bcc0c4" />
             </div>
           )}
-          <div className="p-2">
-            <div className="flex items-center gap-1 mb-1">
-              <span className="text-[9px] font-semibold text-[#65676b]">
-                Sponsored
-              </span>
-            </div>
-            <p className="text-xs font-medium text-[#050505] mb-0.5 line-clamp-2">
-              {data.creative.headline || "Ad Headline"}
-            </p>
-            <p className="text-[10px] text-[#65676b] line-clamp-2">
-              {data.creative.description || "Description text"}
-            </p>
+          <div style={{ padding:8 }}>
+            <span style={{ fontSize:9, fontWeight:600, color:'#65676b' }}>Sponsored</span>
+            <p style={{ fontFamily:FONT, fontSize:12, fontWeight:500, color:'#050505', margin:'2px 0', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>{data.creative.headline || "Ad Headline"}</p>
+            <p style={{ fontFamily:FONT, fontSize:10, color:'#65676b', margin:0, overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>{data.creative.description || "Description text"}</p>
           </div>
         </div>
       );
@@ -2769,60 +2403,39 @@ export function OffsiteAdGroupWizard({
     // TikTok Feed (Vertical phone-style)
     if (placement.id.includes("tiktok")) {
       return (
-        <div className="relative">
-          <div className="w-[160px] h-[280px] bg-black rounded-2xl shadow-xl overflow-hidden relative">
+        <div style={{ position:'relative' }}>
+          <div style={{ width:160, height:280, background:'#000', borderRadius:16, boxShadow:'0 10px 40px rgba(0,0,0,0.4)', overflow:'hidden', position:'relative' }}>
             {hasCreative ? (
               data.creative.videoUrl ? (
-                <video
-                  src={data.creative.videoUrl}
-                  className="w-full h-full object-cover"
-                  muted
-                  playsInline
-                  loop
-                />
+                <video src={data.creative.videoUrl} style={{ width:'100%', height:'100%', objectFit:'cover' }} muted playsInline loop />
               ) : (
-                <img
-                  src={data.creative.imageUrl || "/placeholder.svg"}
-                  alt="Ad"
-                  className="w-full h-full object-cover"
-                />
+                <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Ad" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
               )
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-[#25f4ee] via-[#fe2c55] to-[#000] flex items-center justify-center">
-                <Video size={40} className="text-white/50" />
+              <div style={{ width:'100%', height:'100%', background:'linear-gradient(135deg,#25f4ee,#fe2c55,#000)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                <VideoIcon size={40} color="rgba(255,255,255,0.5)" />
               </div>
             )}
-
             {/* TikTok UI elements */}
-            <div className="absolute right-2 bottom-20 flex flex-col gap-3">
-              <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                <Users size={20} className="text-white" />
+            <div style={{ position:'absolute', right:8, bottom:80, display:'flex', flexDirection:'column', gap:12 }}>
+              <div style={{ width:40, height:40, borderRadius:'50%', background:'rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                <UsersIcon size={20} color={WHITE} />
               </div>
-              <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                <span className="text-white text-xs font-bold">♥</span>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                <span className="text-white text-xs font-bold">💬</span>
+              <div style={{ width:40, height:40, borderRadius:'50%', background:'rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                <span style={{ color:WHITE, fontSize:12, fontWeight:700 }}>♥</span>
               </div>
             </div>
-
             {/* Ad info overlay */}
-            <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 rounded-full bg-white/90"></div>
+            <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:12, background:'linear-gradient(to top,rgba(0,0,0,0.8),transparent)' }}>
+              <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
+                <div style={{ width:24, height:24, borderRadius:'50%', background:'rgba(255,255,255,0.9)' }} />
                 <div>
-                  <p className="text-white text-[10px] font-semibold">
-                    @yourbrand
-                  </p>
-                  <p className="text-white/70 text-[8px]">Sponsored</p>
+                  <p style={{ color:WHITE, fontSize:10, fontWeight:600, margin:0 }}>@yourbrand</p>
+                  <p style={{ color:'rgba(255,255,255,0.7)', fontSize:8, margin:0 }}>Sponsored</p>
                 </div>
               </div>
-              <p className="text-white text-xs font-medium mb-2 line-clamp-2">
-                {data.creative.headline || "Check this out! 🔥"}
-              </p>
-              <button className="w-full py-1.5 bg-[#fe2c55] text-white text-xs font-bold rounded-lg">
-                {data.creative.cta || "Shop Now"}
-              </button>
+              <p style={{ color:WHITE, fontSize:12, fontWeight:500, margin:'0 0 8px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>{data.creative.headline || "Check this out!"}</p>
+              <button style={{ width:'100%', padding:'6px 0', background:'#fe2c55', color:WHITE, fontSize:12, fontWeight:700, borderRadius:8, border:'none', cursor:'pointer' }}>{data.creative.cta || "Shop Now"}</button>
             </div>
           </div>
         </div>
@@ -2832,36 +2445,21 @@ export function OffsiteAdGroupWizard({
     // Messenger Inbox (Chat interface)
     if (placement.id.includes("messenger")) {
       return (
-        <div className="w-[280px] bg-white rounded-xl border border-[#e5e7eb] shadow-lg overflow-hidden">
-          {/* Messenger header */}
-          <div className="p-3 border-b border-[#e5e7eb] flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00b2ff] to-[#0078ff]"></div>
-            <div className="flex-1">
-              <p className="text-xs font-semibold text-[#050505]">Your Brand</p>
-              <p className="text-[10px] text-[#65676b]">Sponsored Message</p>
+        <div style={{ width:280, background:WHITE, borderRadius:12, border:'1px solid '+BORDER, boxShadow:'0 4px 12px rgba(0,0,0,0.1)', overflow:'hidden' }}>
+          <div style={{ padding:12, borderBottom:'1px solid '+BORDER, display:'flex', alignItems:'center', gap:8 }}>
+            <div style={{ width:32, height:32, borderRadius:'50%', background:'linear-gradient(135deg,#00b2ff,#0078ff)' }} />
+            <div style={{ flex:1 }}>
+              <p style={{ fontFamily:FONT, fontSize:12, fontWeight:600, color:'#050505', margin:0 }}>Your Brand</p>
+              <p style={{ fontFamily:FONT, fontSize:10, color:'#65676b', margin:0 }}>Sponsored Message</p>
             </div>
           </div>
-
-          {/* Message bubble with ad */}
-          <div className="p-3 space-y-2">
-            <div className="bg-[#e4e6eb] rounded-2xl rounded-tl-sm p-3 max-w-[200px]">
-              {hasCreative && (
-                <img
-                  src={data.creative.imageUrl || "/placeholder.svg"}
-                  alt="Ad"
-                  className="w-full aspect-video object-cover rounded-lg mb-2"
-                />
-              )}
-              <p className="text-xs text-[#050505] mb-1 font-medium">
-                {data.creative.headline || "Hey! Check this out"}
-              </p>
-              <p className="text-[10px] text-[#65676b]">
-                {data.creative.description || "Special offer just for you"}
-              </p>
+          <div style={{ padding:12, display:'flex', flexDirection:'column', gap:8 }}>
+            <div style={{ background:'#e4e6eb', borderRadius:'16px 16px 16px 4px', padding:12, maxWidth:200 }}>
+              {hasCreative && <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Ad" style={{ width:'100%', aspectRatio:'16/9', objectFit:'cover', borderRadius:8, marginBottom:8 }} />}
+              <p style={{ fontFamily:FONT, fontSize:12, color:'#050505', margin:'0 0 4px', fontWeight:500 }}>{data.creative.headline || "Hey! Check this out"}</p>
+              <p style={{ fontFamily:FONT, fontSize:10, color:'#65676b', margin:0 }}>{data.creative.description || "Special offer just for you"}</p>
             </div>
-            <button className="w-full py-2 bg-[#0084ff] text-white text-xs font-semibold rounded-full">
-              {data.creative.cta || "View Offer"}
-            </button>
+            <button style={{ width:'100%', padding:'8px 0', background:'#0084ff', color:WHITE, fontSize:12, fontWeight:600, borderRadius:999, border:'none', cursor:'pointer' }}>{data.creative.cta || "View Offer"}</button>
           </div>
         </div>
       );
@@ -2870,74 +2468,45 @@ export function OffsiteAdGroupWizard({
     // Gmail Ads (Email-like format)
     if (placement.id.includes("gmail")) {
       return (
-        <div className="w-[340px] bg-white rounded-lg border border-[#e5e7eb] shadow-sm">
-          <div className="p-3 border-b border-[#e5e7eb] flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#4285f4] to-[#ea4335]"></div>
+        <div style={{ width:340, background:WHITE, borderRadius:8, border:'1px solid '+BORDER, boxShadow:'0 1px 2px rgba(0,0,0,0.05)' }}>
+          <div style={{ padding:12, borderBottom:'1px solid '+BORDER, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+              <div style={{ width:32, height:32, borderRadius:'50%', background:'linear-gradient(135deg,#4285f4,#ea4335)' }} />
               <div>
-                <p className="text-xs font-medium text-[#202124]">Your Brand</p>
-                <p className="text-[10px] text-[#5f6368]">Promotional</p>
+                <p style={{ fontFamily:FONT, fontSize:12, fontWeight:500, color:'#202124', margin:0 }}>Your Brand</p>
+                <p style={{ fontFamily:FONT, fontSize:10, color:'#5f6368', margin:0 }}>Promotional</p>
               </div>
             </div>
-            <span className="px-2 py-0.5 bg-[#fef7e0] border border-[#fbbc04] rounded text-[9px] font-medium text-[#ea8600]">
-              Ad
-            </span>
+            <span style={{ padding:'2px 8px', background:'#fef7e0', border:'1px solid #fbbc04', borderRadius:4, fontSize:9, fontWeight:500, color:'#ea8600' }}>Ad</span>
           </div>
-
-          <div className="p-3">
-            <h4 className="text-sm font-medium text-[#202124] mb-1">
-              {data.creative.headline || "Special Offer Inside"}
-            </h4>
-            <p className="text-xs text-[#5f6368] mb-3 line-clamp-2">
-              {data.creative.description ||
-                "Limited time offer on our best products. Don't miss out!"}
-            </p>
-
-            {hasCreative && (
-              <img
-                src={data.creative.imageUrl || "/placeholder.svg"}
-                alt="Ad"
-                className="w-full h-[120px] object-cover rounded mb-3"
-              />
-            )}
-
-            <button className="w-full py-2 bg-[#1a73e8] text-white text-xs font-medium rounded hover:bg-[#1765cc] transition-colors">
-              {data.creative.cta || "Shop Now"}
-            </button>
+          <div style={{ padding:12 }}>
+            <h4 style={{ fontFamily:FONT, fontSize:14, fontWeight:500, color:'#202124', margin:'0 0 4px' }}>{data.creative.headline || "Special Offer Inside"}</h4>
+            <p style={{ fontFamily:FONT, fontSize:12, color:'#5f6368', margin:'0 0 12px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>{data.creative.description || "Limited time offer on our best products. Don't miss out!"}</p>
+            {hasCreative && <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Ad" style={{ width:'100%', height:120, objectFit:'cover', borderRadius:4, marginBottom:12 }} />}
+            <button style={{ width:'100%', padding:'8px 0', background:'#1a73e8', color:WHITE, fontSize:12, fontWeight:500, borderRadius:4, border:'none', cursor:'pointer' }}>{data.creative.cta || "Shop Now"}</button>
           </div>
         </div>
       );
     }
 
     // Audience Network / Pangle (Generic mobile banner)
-    if (
-      placement.id.includes("audience-network") ||
-      placement.id.includes("pangle")
-    ) {
+    if (placement.id.includes("audience-network") || placement.id.includes("pangle")) {
       return (
-        <div className="w-[280px] bg-[#f5f5f5] rounded-lg p-2">
-          <div className="bg-white rounded-lg border border-[#e5e7eb] overflow-hidden">
-            <div className="flex items-center gap-2 p-2">
-              <div className="flex-1">
-                <div className="flex items-center gap-1 mb-1">
-                  <span className="text-[8px] px-1 py-0.5 bg-[#f0f2f5] rounded-sm text-[#65676b] font-semibold">
-                    AD
-                  </span>
-                  <span className="text-[9px] text-[#65676b]">Your Brand</span>
+        <div style={{ width:280, background:'#f5f5f5', borderRadius:8, padding:8 }}>
+          <div style={{ background:WHITE, borderRadius:8, border:'1px solid '+BORDER, overflow:'hidden' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:8, padding:8 }}>
+              <div style={{ flex:1 }}>
+                <div style={{ display:'flex', alignItems:'center', gap:4, marginBottom:4 }}>
+                  <span style={{ fontSize:8, padding:'1px 4px', background:'#f0f2f5', borderRadius:2, color:'#65676b', fontWeight:600 }}>AD</span>
+                  <span style={{ fontSize:9, color:'#65676b' }}>Your Brand</span>
                 </div>
-                <p className="text-[10px] font-medium text-[#050505] line-clamp-1">
-                  {data.creative.headline || "Sponsored Content"}
-                </p>
+                <p style={{ fontFamily:FONT, fontSize:10, fontWeight:500, color:'#050505', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{data.creative.headline || "Sponsored Content"}</p>
               </div>
               {hasCreative ? (
-                <img
-                  src={data.creative.imageUrl || "/placeholder.svg"}
-                  alt="Ad"
-                  className="w-14 h-14 object-cover rounded"
-                />
+                <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Ad" style={{ width:56, height:56, objectFit:'cover', borderRadius:4 }} />
               ) : (
-                <div className="w-14 h-14 bg-[#e4e6eb] rounded flex items-center justify-center">
-                  <ImageIcon size={20} className="text-[#bcc0c4]" />
+                <div style={{ width:56, height:56, background:'#e4e6eb', borderRadius:4, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  <ImageSvgIcon size={20} color="#bcc0c4" />
                 </div>
               )}
             </div>
@@ -2948,16 +2517,12 @@ export function OffsiteAdGroupWizard({
 
     // Default fallback
     return (
-      <div className="w-[240px] bg-white rounded-lg border border-[#e5e7eb] shadow-sm p-3">
-        <p className="text-xs font-medium text-[#404040] mb-2">
-          {placement.label}
-        </p>
-        <div className="w-full h-32 bg-[#f3f4f6] rounded flex items-center justify-center">
-          <ImageIcon size={32} className="text-[#9ca3af]" />
+      <div style={{ width:240, background:WHITE, borderRadius:8, border:'1px solid '+BORDER, boxShadow:'0 1px 2px rgba(0,0,0,0.05)', padding:12 }}>
+        <p style={{ fontFamily:FONT, fontSize:12, fontWeight:500, color:TEXT_HI, margin:'0 0 8px' }}>{placement.label}</p>
+        <div style={{ width:'100%', height:128, background:BG_MUT, borderRadius:4, display:'flex', alignItems:'center', justifyContent:'center' }}>
+          <ImageSvgIcon size={32} color="#9ca3af" />
         </div>
-        <p className="text-[10px] text-[#7b7b7b] mt-2">
-          {placement.description}
-        </p>
+        <p style={{ fontFamily:FONT, fontSize:10, color:TEXT_MID, marginTop:8, marginBottom:0 }}>{placement.description}</p>
       </div>
     );
   };
@@ -2965,7 +2530,7 @@ export function OffsiteAdGroupWizard({
   const renderPlacementStep = () => {
     if (!data.platform || !data.adFormat) {
       return (
-        <div className="text-[#7b7b7b]">
+        <div style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID }}>
           Please select a platform and ad format first.
         </div>
       );
@@ -3048,23 +2613,23 @@ export function OffsiteAdGroupWizard({
     });
 
     return (
-      <div className="space-y-6">
+      <div style={{ display:'flex', flexDirection:'column', gap:24 }}>
         <div>
-          <h2 className="text-2xl font-semibold text-[#404040] mb-2">
+          <h2 style={{ fontFamily:FONT, fontSize:22, fontWeight:600, color:TEXT_HI, margin:'0 0 8px' }}>
             Select Placements
           </h2>
-          <p className="text-[#7b7b7b]">
+          <p style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, margin:0 }}>
             Choose where your ads will appear across the selected platform.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:16 }}>
           {Object.entries(groupedPlacements).map(([category, placements]) => (
-            <Card key={category} className="p-6">
-              <h3 className="font-semibold text-lg text-[#404040] mb-4">
+            <div key={category} style={{ background:WHITE, border:'1px solid '+BORDER, borderRadius:10, padding:24 }}>
+              <h3 style={{ fontFamily:FONT, fontSize:16, fontWeight:600, color:TEXT_HI, margin:'0 0 16px' }}>
                 {category}
               </h3>
-              <div className="space-y-4">
+              <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
                 {placements.map((placement) => (
                   <PlacementOption
                     key={placement.id}
@@ -3078,24 +2643,24 @@ export function OffsiteAdGroupWizard({
                   />
                 ))}
               </div>
-            </Card>
+            </div>
           ))}
         </div>
 
         {/* Live Preview Section */}
-        <Card className="p-6">
-          <h3 className="font-semibold text-lg text-[#404040] mb-4">
+        <div style={{ background:WHITE, border:'1px solid '+BORDER, borderRadius:10, padding:24 }}>
+          <h3 style={{ fontFamily:FONT, fontSize:16, fontWeight:600, color:TEXT_HI, margin:'0 0 16px' }}>
             Live Preview
           </h3>
-          <div className="flex justify-center items-center gap-4 flex-wrap">
+          <div style={{ display:'flex', justifyContent:'center', alignItems:'center', gap:16, flexWrap:'wrap' }}>
             {data.placements.length > 0 ? (
               data.placements.map((placementId) => {
                 const placement = currentPlatformPlacements.find(
                   (p) => p.id === placementId,
                 );
                 return placement ? (
-                  <div key={placementId} className="text-center">
-                    <p className="text-xs text-[#7b7b7b] mb-2">
+                  <div key={placementId} style={{ textAlign:'center' }}>
+                    <p style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID, margin:'0 0 8px' }}>
                       {placement.label}
                     </p>
                     {renderPlacementPreview(placement)}
@@ -3103,12 +2668,12 @@ export function OffsiteAdGroupWizard({
                 ) : null;
               })
             ) : (
-              <div className="text-center text-[#7b7b7b]">
+              <div style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, textAlign:'center' }}>
                 Select placements to see previews.
               </div>
             )}
           </div>
-        </Card>
+        </div>
       </div>
     );
   };
@@ -3117,8 +2682,8 @@ export function OffsiteAdGroupWizard({
     {
       id: "geoLocation",
       title: "Geo Location",
-      icon: <Globe size={28} className="text-[#4285f4]" />,
-      iconBg: "bg-[#e8f0fe]",
+      icon: <GlobeIcon size={28} color="#4285f4" />,
+      iconBg: '#e8f0fe',
       description:
         "Target users in specific countries, states, cities, or zip codes.",
       onClick: () => setGeoModalOpen(true),
@@ -3131,8 +2696,8 @@ export function OffsiteAdGroupWizard({
     {
       id: "storeTargeting",
       title: "Store Targeting",
-      icon: <Store size={28} className="text-[#34a853]" />,
-      iconBg: "bg-[#e6f4ea]",
+      icon: <StoreIcon size={28} color="#34a853" />,
+      iconBg: '#e6f4ea',
       description:
         "Localize ads to specific retail locations to drive in-store visits.",
       onClick: () => setStoreModalOpen(true),
@@ -3145,8 +2710,8 @@ export function OffsiteAdGroupWizard({
     {
       id: "audienceTargeting",
       title: "Audience Targeting",
-      icon: <Users size={28} className="text-[#fbbc04]" />,
-      iconBg: "bg-[#fef7e0]",
+      icon: <UsersIcon size={28} color="#fbbc04" />,
+      iconBg: '#fef7e0',
       description:
         "Reach specific demographic or interest-based audience segments.",
       onClick: () => setAudienceModalOpen(true),
@@ -3159,8 +2724,8 @@ export function OffsiteAdGroupWizard({
     {
       id: "keywordTargeting",
       title: "Keyword Targeting",
-      icon: <Tag size={28} className="text-[#ea4335]" />,
-      iconBg: "bg-[#fce8e6]",
+      icon: <TagIcon size={28} color="#ea4335" />,
+      iconBg: '#fce8e6',
       description:
         "Show ads to users searching for specific keywords on Google Search.",
       onClick: () => setKeywordModalOpen(true),
@@ -3173,8 +2738,8 @@ export function OffsiteAdGroupWizard({
     {
       id: "productCatalog",
       title: "Product Catalog",
-      icon: <ShoppingBag size={28} className="text-[#1a73e8]" />,
-      iconBg: "bg-[#e8f0fe]",
+      icon: <ShoppingBagIcon size={28} color="#1a73e8" />,
+      iconBg: '#e8f0fe',
       description:
         "Promote specific products from your catalog to relevant users.",
       onClick: () => setProductModalOpen(true),
@@ -3189,31 +2754,33 @@ export function OffsiteAdGroupWizard({
   if (!open) return null;
 
   return (
-    <TooltipProvider>
+    <>
       {/* Overlay */}
-      <div className="fixed inset-0 bg-black/50 z-[60]" onClick={onClose} />
-
-      {/* Drawer Container - Updated to match other wizard layouts */}
       <div
-        className="fixed right-0 top-0 z-[60] h-full bg-[#f8f9fb] shadow-xl flex flex-col transition-transform duration-300"
-        style={{ width: "85%" }}
+        style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', zIndex:60 }}
+        onClick={onClose}
+      />
+
+      {/* Drawer Container */}
+      <div
+        style={{ position:'fixed', right:0, top:0, zIndex:60, height:'100%', width:'85%', background:BG_SUB, boxShadow:'0 10px 40px rgba(0,0,0,0.18)', display:'flex', flexDirection:'column', transition:'transform 0.3s' }}
       >
-        {/* Header - Updated to match other wizards */}
-        <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-[#e5e7eb]">
-          <div className="flex items-center gap-4">
+        {/* Header */}
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 24px', background:WHITE, borderBottom:'1px solid '+BORDER }}>
+          <div style={{ display:'flex', alignItems:'center', gap:16 }}>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              style={{ padding:8, background:'transparent', border:'none', borderRadius:8, cursor:'pointer' }}
             >
-              <X size={20} className="text-gray-600" />
+              <CloseIcon size={20} color={TEXT_MID} />
             </button>
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 style={{ fontFamily:FONT, fontSize:16, fontWeight:600, color:TEXT_HI, margin:0 }}>
                 {mode === "add_ad_group"
                   ? `Add Ad Group to ${selectedCampaign?.name}`
                   : "Create Offsite Ad Group"}
               </h2>
-              <p className="text-sm text-gray-500">
+              <p style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID, margin:0 }}>
                 Step {stepIndex + 1} of {visibleSteps.length} •{" "}
                 {currentStepInfo.description}
               </p>
@@ -3221,16 +2788,16 @@ export function OffsiteAdGroupWizard({
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            style={{ padding:8, background:'transparent', border:'none', borderRadius:8, cursor:'pointer' }}
           >
-            <X size={20} className="text-gray-500" />
+            <CloseIcon size={20} color={TEXT_MID} />
           </button>
         </div>
 
-        <div className="flex-1 flex overflow-hidden">
+        <div style={{ flex:1, display:'flex', overflow:'hidden' }}>
           {/* Steps Sidebar */}
-          <div className="w-64 bg-white border-r flex flex-col flex-shrink-0">
-            <div className="flex-1 p-4 space-y-1 overflow-y-auto">
+          <div style={{ width:256, background:WHITE, borderRight:'1px solid '+BORDER, display:'flex', flexDirection:'column', flexShrink:0 }}>
+            <div style={{ flex:1, padding:16, display:'flex', flexDirection:'column', gap:4, overflowY:'auto' }}>
               {visibleSteps.map((step, index) => {
                 const isCompleted = index < stepIndex;
                 const isCurrent = step.id === currentStep;
@@ -3241,32 +2808,35 @@ export function OffsiteAdGroupWizard({
                     key={step.id}
                     onClick={() => !isDisabled && setCurrentStep(step.id)}
                     disabled={isDisabled}
-                    className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-all ${
-                      isCurrent
-                        ? "bg-[#2563eb]/10 border border-[#2563eb]"
-                        : isCompleted
-                          ? "hover:bg-gray-50"
-                          : "opacity-50 cursor-not-allowed"
-                    }`}
+                    style={{
+                      width:'100%', display:'flex', alignItems:'center', gap:12,
+                      padding:'10px 12px', borderRadius:8, textAlign:'left',
+                      border: isCurrent ? '1px solid '+ACCENT : '1px solid transparent',
+                      background: isCurrent ? ACCENT_M : 'transparent',
+                      opacity: isDisabled ? 0.5 : 1,
+                      cursor: isDisabled ? 'not-allowed' : 'pointer',
+                      transition:'all 0.15s',
+                    }}
                   >
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
-                        isCompleted
-                          ? "bg-green-500 text-white"
-                          : isCurrent
-                            ? "bg-[#2563eb] text-white"
-                            : "bg-gray-200 text-gray-500"
-                      }`}
+                      style={{
+                        width:32, height:32, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center',
+                        fontSize:13, fontFamily:FONT, fontWeight:500, flexShrink:0,
+                        background: isCompleted ? GREEN : isCurrent ? ACCENT : BG_MUT,
+                        color: (isCompleted || isCurrent) ? WHITE : TEXT_MID,
+                      }}
                     >
-                      {isCompleted ? <Check className="h-4 w-4" /> : index + 1}
+                      {isCompleted ? <CheckIcon size={14} color={WHITE} /> : index + 1}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div
-                        className={`text-sm font-medium truncate ${isCurrent ? "text-[#2563eb]" : isCompleted ? "text-gray-900" : "text-gray-400"}`}
-                      >
+                    <div style={{ flex:1, minWidth:0 }}>
+                      <div style={{
+                        fontFamily:FONT, fontSize:13, fontWeight:500,
+                        color: isCurrent ? ACCENT : isCompleted ? TEXT_HI : TEXT_LO,
+                        overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
+                      }}>
                         {step.label}
                       </div>
-                      <div className="text-xs text-gray-500 truncate">
+                      <div style={{ fontFamily:FONT, fontSize:11, color:TEXT_MID, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
                         {step.description}
                       </div>
                     </div>
@@ -3276,63 +2846,34 @@ export function OffsiteAdGroupWizard({
             </div>
 
             {/* Ad Group Summary */}
-            <div className="border-t p-4 bg-gray-50">
-              <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+            <div style={{ borderTop:'1px solid '+BORDER, padding:16, background:BG_SUB }}>
+              <h4 style={{ fontFamily:FONT, fontSize:11, fontWeight:600, color:TEXT_MID, textTransform:'uppercase', letterSpacing:'0.05em', margin:'0 0 12px' }}>
                 Ad Group Summary
               </h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Name</span>
-                  <span className="font-medium text-gray-900 truncate max-w-[120px]">
-                    {data.name || "-"}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Platform</span>
-                  <span className="font-medium text-gray-900 capitalize">
-                    {data.platform || "-"}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Format</span>
-                  <span className="font-medium text-gray-900 capitalize">
-                    {data.adFormat || "-"}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Placements</span>
-                  <span className="font-medium text-gray-900">
-                    {data.placements.length || 0}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Budget</span>
-                  <span className="font-medium text-gray-900">
-                    {data.budget ? `$${data.budget}/day` : "-"}
-                  </span>
-                </div>
+              <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                {[
+                  { label:'Name', value: data.name || '-', truncate:true },
+                  { label:'Platform', value: data.platform || '-' },
+                  { label:'Format', value: data.adFormat || '-' },
+                  { label:'Placements', value: String(data.placements.length || 0) },
+                  { label:'Budget', value: data.budget ? `$${data.budget}/day` : '-' },
+                ].map(({ label, value, truncate }) => (
+                  <div key={label} style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                    <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>{label}</span>
+                    <span style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI, maxWidth:truncate?120:undefined, overflow:truncate?'hidden':undefined, textOverflow:truncate?'ellipsis':undefined, whiteSpace:truncate?'nowrap':undefined }}>
+                      {value}
+                    </span>
+                  </div>
+                ))}
               </div>
 
               {/* Media Estimator FAB */}
-              <div className="mt-4 pt-4 border-t">
+              <div style={{ marginTop:16, paddingTop:16, borderTop:'1px solid '+BORDER }}>
                 <button
                   onClick={() => setEstimatorOpen(!estimatorOpen)}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#2563eb] hover:bg-[#1d4ed8] text-white rounded-lg text-sm font-medium transition-colors"
+                  style={{ width:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:8, padding:'10px 16px', background:ACCENT, color:WHITE, border:'none', borderRadius:8, fontFamily:FONT, fontSize:13, fontWeight:500, cursor:'pointer' }}
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                    />
-                  </svg>
+                  <BarChartIcon size={16} color={WHITE} />
                   Media Estimator
                 </button>
               </div>
@@ -3340,133 +2881,82 @@ export function OffsiteAdGroupWizard({
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 overflow-y-auto p-6">
+          <div style={{ flex:1, overflowY:'auto', padding:24 }}>
             {estimatorOpen && (
-              <div className="fixed inset-0 z-[70] flex items-center justify-center">
+              <div style={{ position:'fixed', inset:0, zIndex:70, display:'flex', alignItems:'center', justifyContent:'center' }}>
                 <div
-                  className="absolute inset-0 bg-black/30"
+                  style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.3)' }}
                   onClick={() => setEstimatorOpen(false)}
                 />
-                <div className="relative bg-white rounded-2xl border border-[#e5e7eb] shadow-2xl w-[380px] overflow-hidden animate-in zoom-in-95 duration-200">
+                <div style={{ position:'relative', background:WHITE, borderRadius:16, border:'1px solid '+BORDER, boxShadow:'0 20px 60px rgba(0,0,0,0.18)', width:380, overflow:'hidden' }}>
                   {/* Estimator Header */}
-                  <div className="bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] p-4 flex items-center justify-between text-white">
-                    <div className="flex items-center gap-2">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                        />
-                      </svg>
-                      <span className="font-semibold">Media Estimator</span>
+                  <div style={{ background:ACCENT, padding:16, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                      <BarChartIcon size={20} color={WHITE} />
+                      <span style={{ fontFamily:FONT, fontWeight:600, color:WHITE, fontSize:14 }}>Media Estimator</span>
                     </div>
                     <button
                       onClick={() => setEstimatorOpen(false)}
-                      className="p-1 hover:bg-white/20 rounded"
+                      style={{ padding:4, background:'transparent', border:'none', borderRadius:4, cursor:'pointer' }}
                     >
-                      <X size={16} />
+                      <CloseIcon size={16} color={WHITE} />
                     </button>
                   </div>
 
                   {/* Estimator Content */}
-                  <div className="p-4 space-y-4">
+                  <div style={{ padding:16, display:'flex', flexDirection:'column', gap:16 }}>
                     {/* Estimated Results */}
-                    <div className="bg-[#f0fdf4] border border-[#86efac] rounded-lg p-4">
-                      <div className="text-xs text-[#166534] font-medium mb-2">
+                    <div style={{ background:GREEN_M, border:'1px solid '+GREEN, borderRadius:8, padding:16 }}>
+                      <div style={{ fontFamily:FONT, fontSize:12, color:GREEN, fontWeight:500, marginBottom:8 }}>
                         Estimated Results
                       </div>
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-[#15803d]">
-                            Daily Reach
-                          </span>
-                          <span className="font-semibold text-[#166534]">
-                            12K - 35K
-                          </span>
+                      {[
+                        { label:'Daily Reach', value:'12K - 35K' },
+                        { label:'Est. Clicks', value:'180 - 450' },
+                        { label:'Est. CPM', value:'$4.50 - $8.20' },
+                      ].map(({ label, value }) => (
+                        <div key={label} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:8 }}>
+                          <span style={{ fontFamily:FONT, fontSize:13, color:GREEN }}>{label}</span>
+                          <span style={{ fontFamily:FONT, fontSize:13, fontWeight:600, color:GREEN }}>{value}</span>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-[#15803d]">
-                            Est. Clicks
-                          </span>
-                          <span className="font-semibold text-[#166534]">
-                            180 - 450
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-[#15803d]">
-                            Est. CPM
-                          </span>
-                          <span className="font-semibold text-[#166534]">
-                            $4.50 - $8.20
-                          </span>
-                        </div>
-                      </div>
+                      ))}
                     </div>
 
-                    {/* Current Settings Summary */}
-                    <Accordion type="single" collapsible className="w-full">
-                      <AccordionItem
-                        value="targeting"
-                        className="border rounded-lg"
+                    {/* Targeting Summary (hand-rolled accordion) */}
+                    <div style={{ border:'1px solid '+BORDER, borderRadius:8 }}>
+                      <button
+                        onClick={() => setAccordionOpen(!accordionOpen)}
+                        style={{ width:'100%', display:'flex', alignItems:'center', justifyContent:'space-between', padding:'8px 12px', background:'transparent', border:'none', cursor:'pointer', borderRadius:8 }}
                       >
-                        <AccordionTrigger className="px-3 py-2 text-sm hover:no-underline">
-                          <span className="font-medium">Targeting Summary</span>
-                        </AccordionTrigger>
-                        <AccordionContent className="px-3 pb-3 pt-0">
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-[#6b7280]">Locations</span>
-                              <span className="font-medium text-[#1f2937]">
-                                {data.targeting.locations.length > 0
-                                  ? `${data.targeting.locations.length} selected`
-                                  : "None"}
-                              </span>
+                        <span style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI }}>Targeting Summary</span>
+                        <ChevronRightIcon size={14} color={TEXT_MID} style={{ transform: accordionOpen ? 'rotate(90deg)' : 'rotate(0deg)', transition:'transform 0.2s' }} />
+                      </button>
+                      {accordionOpen && (
+                        <div style={{ padding:'0 12px 12px', display:'flex', flexDirection:'column', gap:8 }}>
+                          {[
+                            { label:'Locations', value: data.targeting.locations.length > 0 ? `${data.targeting.locations.length} selected` : 'None' },
+                            { label:'Audiences', value: data.targeting.audiences.length > 0 ? `${data.targeting.audiences.length} selected` : 'None' },
+                            { label:'Keywords', value: data.targeting.keywords.length > 0 ? `${data.targeting.keywords.length} added` : 'None' },
+                            { label:'Stores', value: data.targeting.stores.length > 0 ? `${data.targeting.stores.length} selected` : 'None' },
+                          ].map(({ label, value }) => (
+                            <div key={label} style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                              <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>{label}</span>
+                              <span style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI }}>{value}</span>
                             </div>
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-[#6b7280]">Audiences</span>
-                              <span className="font-medium text-[#1f2937]">
-                                {data.targeting.audiences.length > 0
-                                  ? `${data.targeting.audiences.length} selected`
-                                  : "None"}
-                              </span>
-                            </div>
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-[#6b7280]">Keywords</span>
-                              <span className="font-medium text-[#1f2937]">
-                                {data.targeting.keywords.length > 0
-                                  ? `${data.targeting.keywords.length} added`
-                                  : "None"}
-                              </span>
-                            </div>
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-[#6b7280]">Stores</span>
-                              <span className="font-medium text-[#1f2937]">
-                                {data.targeting.stores.length > 0
-                                  ? `${data.targeting.stores.length} selected`
-                                  : "None"}
-                              </span>
-                            </div>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
+                          ))}
+                        </div>
+                      )}
+                    </div>
 
                     {/* Budget Impact */}
-                    <div className="bg-[#fefce8] border border-[#fde047] rounded-lg p-3">
-                      <div className="text-xs text-[#713f12] font-medium mb-1">
+                    <div style={{ background:'#fefce8', border:'1px solid #fde047', borderRadius:8, padding:12 }}>
+                      <div style={{ fontFamily:FONT, fontSize:12, color:'#713f12', fontWeight:500, marginBottom:4 }}>
                         Budget Impact
                       </div>
-                      <div className="text-sm text-[#854d0e]">
+                      <div style={{ fontFamily:FONT, fontSize:13, color:'#854d0e' }}>
                         With ${data.budget || "50"}/day budget, you could reach
                         up to{" "}
-                        <span className="font-semibold">~17K users daily</span>
+                        <span style={{ fontWeight:600 }}>~17K users daily</span>
                       </div>
                     </div>
                   </div>
@@ -3475,134 +2965,101 @@ export function OffsiteAdGroupWizard({
             )}
 
             {currentStepInfo.id === "basics" && (
-              <div className="space-y-6">
+              <div style={{ display:'flex', flexDirection:'column', gap:24 }}>
                 <div>
-                  <h2 className="text-2xl font-semibold text-[#404040] mb-2">
+                  <h2 style={{ fontFamily:FONT, fontSize:22, fontWeight:600, color:TEXT_HI, margin:'0 0 8px' }}>
                     Ad Group Basics
                   </h2>
-                  <p className="text-[#7b7b7b]">
+                  <p style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, margin:0 }}>
                     Name your ad group and select the advertising platform.
                   </p>
                 </div>
 
-                <Card className="p-6 space-y-6">
-                  <div>
-                    <Label htmlFor="adGroupName">Ad Group Name *</Label>
-                    <Input
-                      id="adGroupName"
-                      value={data.name}
-                      onChange={(e) =>
-                        setData({ ...data, name: e.target.value })
-                      }
-                      placeholder="e.g., Summer Sale - US Audience"
-                      className="mt-1.5"
-                    />
-                  </div>
+                <div style={{ background:WHITE, border:'1px solid '+BORDER, borderRadius:10, padding:24, display:'flex', flexDirection:'column', gap:24 }}>
+                  <Input
+                    label="Ad Group Name *"
+                    value={data.name}
+                    onChange={(e) => setData({ ...data, name: e.target.value })}
+                    placeholder="e.g., Summer Sale - US Audience"
+                  />
 
                   <div>
-                    <div className="flex items-center gap-2 mb-4">
-                      <Label>Select Platform *</Label>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <HelpCircle size={14} className="text-[#7b7b7b]" />
-                        </TooltipTrigger>
-                        <TooltipContent className="max-w-xs">
-                          <p>
-                            Choose where your ads will run. Each platform has
-                            different strengths and audience types.
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
+                    <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:16 }}>
+                      <span style={{ fontFamily:FONT, fontSize:13, fontWeight:600, color:TEXT_HI }}>Select Platform *</span>
+                      <span title="Choose where your ads will run. Each platform has different strengths and audience types.">
+                        <InfoIcon size={14} color={TEXT_MID} />
+                      </span>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-4">
+                    <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:16 }}>
                       {platforms.map((platform) => (
-                        <Card
+                        <div
                           key={platform.id}
-                          className={`p-4 cursor-pointer transition-all hover:shadow-md ${
-                            data.platform === platform.id
-                              ? "ring-2 ring-[#2563eb] bg-[#eff6ff]"
-                              : "hover:border-[#d1d5db]"
-                          }`}
+                          style={{
+                            padding:16, borderRadius:8, cursor:'pointer', transition:'all 0.15s',
+                            border: data.platform === platform.id ? '2px solid '+ACCENT : '1px solid '+BORDER,
+                            background: data.platform === platform.id ? ACCENT_M : WHITE,
+                            boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
+                          }}
                           onClick={() =>
-                            setData({
-                              ...data,
-                              platform: platform.id,
-                              adFormat: null,
-                              placements: [],
-                            })
+                            setData({ ...data, platform: platform.id, adFormat: null, placements: [] })
                           }
                         >
-                          <div className="flex flex-col items-center text-center gap-2">
-                            <div className="w-10 h-10">{platform.icon}</div>
-                            <div className="font-semibold text-[#404040]">
-                              {platform.name}
-                            </div>
-                            <div className="text-xs text-[#7b7b7b]">
-                              {platform.description}
-                            </div>
+                          <div style={{ display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', gap:8 }}>
+                            <div style={{ width:40, height:40 }}>{platform.icon}</div>
+                            <div style={{ fontFamily:FONT, fontWeight:600, color:TEXT_HI }}>{platform.name}</div>
+                            <div style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID }}>{platform.description}</div>
                           </div>
-                        </Card>
+                        </div>
                       ))}
                     </div>
                   </div>
-                </Card>
+                </div>
               </div>
             )}
 
             {currentStepInfo.id === "format" && data.platform && (
-              <div className="space-y-6">
+              <div style={{ display:'flex', flexDirection:'column', gap:24 }}>
                 <div>
-                  <h2 className="text-2xl font-semibold text-[#404040] mb-2">
+                  <h2 style={{ fontFamily:FONT, fontSize:22, fontWeight:600, color:TEXT_HI, margin:'0 0 8px' }}>
                     Choose Ad Format
                   </h2>
-                  <p className="text-[#7b7b7b]">
+                  <p style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, margin:0 }}>
                     Select the type of ad you want to create on{" "}
-                    {data.platform === "meta"
-                      ? "Meta"
-                      : data.platform === "google"
-                        ? "Google"
-                        : "TikTok"}{" "}
+                    {data.platform === "meta" ? "Meta" : data.platform === "google" ? "Google" : "TikTok"}{" "}
                     Ads.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+                <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:16 }}>
                   {adFormats[data.platform].map((format) => (
-                    <Card
+                    <div
                       key={format.id}
-                      className={`cursor-pointer transition-all hover:shadow-md relative ${
-                        data.adFormat === format.id
-                          ? "ring-2 ring-[#2563eb] bg-[#fafafa]"
-                          : "hover:border-[#d1d5db]"
-                      }`}
+                      style={{
+                        position:'relative', cursor:'pointer', transition:'all 0.15s', borderRadius:8,
+                        border: data.adFormat === format.id ? '2px solid '+ACCENT : '1px solid '+BORDER,
+                        background: data.adFormat === format.id ? '#fafafa' : WHITE,
+                        boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
+                      }}
                       onClick={() => setData({ ...data, adFormat: format.id })}
                     >
                       {data.adFormat === format.id && (
-                        <div className="absolute top-3 right-3 z-10 w-5 h-5 bg-[#10b981] rounded-full flex items-center justify-center shadow-sm">
-                          <Check
-                            size={12}
-                            strokeWidth={3}
-                            className="text-white"
-                          />
+                        <div style={{ position:'absolute', top:12, right:12, zIndex:1, width:20, height:20, background:GREEN, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 1px 3px rgba(0,0,0,0.2)' }}>
+                          <CheckIcon size={12} color={WHITE} />
                         </div>
                       )}
-                      <div className="p-3 bg-[#f9fafb] rounded-t-lg flex items-center justify-center h-[140px]">
+                      <div style={{ padding:12, background:BG_MUT, borderRadius:'8px 8px 0 0', display:'flex', alignItems:'center', justifyContent:'center', height:140 }}>
                         {format.illustration}
                       </div>
-                      <div className="p-4">
-                        <div className="font-semibold text-[#404040] mb-1">
-                          {format.name}
-                        </div>
-                        <div className="text-xs text-[#7b7b7b] mb-2">
-                          {format.description}
-                        </div>
-                        <div className="flex items-center gap-1 text-xs text-[#2563eb]">
-                          <HelpCircle size={12} />
+                      <div style={{ padding:16 }}>
+                        <div style={{ fontFamily:FONT, fontWeight:600, color:TEXT_HI, marginBottom:4 }}>{format.name}</div>
+                        <div style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID, marginBottom:8 }}>{format.description}</div>
+                        <div style={{ display:'flex', alignItems:'center', gap:4, fontFamily:FONT, fontSize:12, color:ACCENT }}>
+                          <InfoIcon size={12} color={ACCENT} />
                           <span>Specs: {format.specs}</span>
                         </div>
                       </div>
-                    </Card>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -3677,258 +3134,157 @@ export function OffsiteAdGroupWizard({
             />
 
             {currentStepInfo.id === "targeting" && (
-              <div className="relative">
-                {/* Main Content - Full Width */}
-                <div>
-                  <div className="mb-6">
-                    <h2 className="text-2xl font-semibold text-[#404040] mb-2">
-                      Set Your Targets
-                    </h2>
-                    <p className="text-[#7b7b7b]">
-                      Select your preferred targeting options for this campaign.
-                    </p>
-                  </div>
+              <div>
+                <div style={{ marginBottom:24 }}>
+                  <h2 style={{ fontFamily:FONT, fontSize:22, fontWeight:600, color:TEXT_HI, margin:'0 0 8px' }}>
+                    Set Your Targets
+                  </h2>
+                  <p style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, margin:0 }}>
+                    Select your preferred targeting options for this campaign.
+                  </p>
+                </div>
 
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    {targetingOptions.map((option) => (
-                      <div
-                        key={option.id}
-                        className="group relative p-6 border border-[#e5e7eb] rounded-xl hover:border-[#2563eb] hover:shadow-md cursor-pointer transition-all bg-white"
-                        onClick={option.onClick}
-                      >
-                        <div className="flex items-start gap-4">
-                          {/* Icon - Larger and more prominent */}
-                          <div
-                            className={`w-16 h-16 rounded-2xl ${option.iconBg} flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform`}
-                          >
-                            <div className="scale-125">{option.icon}</div>
-                          </div>
-
-                          {/* Content */}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between gap-2 mb-2">
-                              <h3 className="font-semibold text-base text-[#1f2937]">
-                                {option.title}
-                              </h3>
-                              <Badge
-                                className={`shrink-0 ${
-                                  option.configured
-                                    ? "bg-[#ecfdf5] text-[#050505] border-[#a7f3d0]"
-                                    : "bg-[#f3f4f6] text-[#6b7280] border-[#e5e7eb]"
-                                }`}
-                              >
-                                {option.configured ? "CONFIGURED" : "NOT SET"}
-                              </Badge>
-                            </div>
-
-                            <p className="text-sm text-[#6b7280] leading-relaxed mb-3">
-                              {option.description}
-                            </p>
-
-                            {/* Summary info when configured */}
-                            {option.summary && (
-                              <div className="flex items-center gap-2 text-sm">
-                                <div className="h-px flex-1 bg-[#e5e7eb]" />
-                                <span className="text-[#2563eb] font-medium">
-                                  {option.summary}
-                                </span>
-                                <div className="h-px flex-1 bg-[#e5e7eb]" />
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Arrow indicator */}
-                          <ChevronRight
-                            size={20}
-                            className="text-[#9ca3af] group-hover:text-[#2563eb] group-hover:translate-x-1 transition-all shrink-0"
-                          />
+                <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:16 }}>
+                  {targetingOptions.map((option) => (
+                    <div
+                      key={option.id}
+                      style={{ position:'relative', padding:24, border:'1px solid '+BORDER, borderRadius:12, cursor:'pointer', transition:'all 0.15s', background:WHITE }}
+                      onClick={option.onClick}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.boxShadow = 'none'; }}
+                    >
+                      <div style={{ display:'flex', alignItems:'flex-start', gap:16 }}>
+                        <div style={{ width:64, height:64, borderRadius:16, background:option.iconBg, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                          {option.icon}
                         </div>
+
+                        <div style={{ flex:1, minWidth:0 }}>
+                          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:8, marginBottom:8 }}>
+                            <h3 style={{ fontFamily:FONT, fontWeight:600, fontSize:14, color:TEXT_HI, margin:0 }}>{option.title}</h3>
+                            <span style={{
+                              flexShrink:0, padding:'2px 8px', borderRadius:4, fontSize:11, fontFamily:FONT, fontWeight:600,
+                              background: option.configured ? GREEN_M : BG_MUT,
+                              color: option.configured ? GREEN : TEXT_MID,
+                              border: '1px solid ' + (option.configured ? GREEN : BORDER),
+                            }}>
+                              {option.configured ? "CONFIGURED" : "NOT SET"}
+                            </span>
+                          </div>
+
+                          <p style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID, margin:'0 0 12px', lineHeight:1.5 }}>
+                            {option.description}
+                          </p>
+
+                          {option.summary && (
+                            <div style={{ display:'flex', alignItems:'center', gap:8, fontSize:13 }}>
+                              <div style={{ height:1, flex:1, background:BORDER }} />
+                              <span style={{ fontFamily:FONT, color:ACCENT, fontWeight:500 }}>{option.summary}</span>
+                              <div style={{ height:1, flex:1, background:BORDER }} />
+                            </div>
+                          )}
+                        </div>
+
+                        <ChevronRightIcon size={20} color={TEXT_LO} style={{ flexShrink:0 }} />
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
 
             {currentStepInfo.id === "creative" && (
-              <div className="space-y-6">
+              <div style={{ display:'flex', flexDirection:'column', gap:24 }}>
                 <div>
-                  <h2 className="text-2xl font-semibold text-[#404040] mb-2">
+                  <h2 style={{ fontFamily:FONT, fontSize:22, fontWeight:600, color:TEXT_HI, margin:'0 0 8px' }}>
                     Ad Creative
                   </h2>
-                  <p className="text-[#7b7b7b]">
+                  <p style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, margin:0 }}>
                     Create compelling ad content that drives engagement.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:24 }}>
                   {/* Creative inputs */}
-                  <Card className="p-6 space-y-5">
+                  <div style={{ background:WHITE, border:'1px solid '+BORDER, borderRadius:10, padding:24, display:'flex', flexDirection:'column', gap:20 }}>
                     <div>
-                      <Label htmlFor="headline">Headline *</Label>
                       <Input
-                        id="headline"
+                        label="Headline *"
                         value={data.creative.headline}
-                        onChange={(e) =>
-                          setData({
-                            ...data,
-                            creative: {
-                              ...data.creative,
-                              headline: e.target.value,
-                            },
-                          })
-                        }
+                        onChange={(e) => setData({ ...data, creative: { ...data.creative, headline: e.target.value } })}
                         placeholder="Your attention-grabbing headline"
-                        className="mt-1.5"
                         maxLength={60}
                       />
-
-                      <p className="text-xs text-[#7b7b7b] mt-1">
+                      <p style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID, marginTop:4 }}>
                         {data.creative.headline.length}/60 characters
                       </p>
                     </div>
 
                     <div>
-                      <Label htmlFor="description">Description *</Label>
-                      <Textarea
-                        id="description"
+                      <span style={{ fontFamily:FONT, fontSize:13, fontWeight:600, color:TEXT_HI, display:'block', marginBottom:6 }}>Description *</span>
+                      <textarea
                         value={data.creative.description}
-                        onChange={(e) =>
-                          setData({
-                            ...data,
-                            creative: {
-                              ...data.creative,
-                              description: e.target.value,
-                            },
-                          })
-                        }
+                        onChange={(e) => setData({ ...data, creative: { ...data.creative, description: e.target.value } })}
                         placeholder="Describe your product or service"
-                        className="mt-1.5"
                         rows={3}
                         maxLength={150}
+                        style={{ width:'100%', fontFamily:FONT, fontSize:13, color:TEXT_HI, border:'1px solid '+BORDER, borderRadius:6, padding:'8px 10px', resize:'vertical', boxSizing:'border-box', outline:'none' }}
                       />
-
-                      <p className="text-xs text-[#7b7b7b] mt-1">
+                      <p style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID, marginTop:4 }}>
                         {data.creative.description.length}/150 characters
                       </p>
                     </div>
 
-                    <div>
-                      <Label htmlFor="cta">Call to Action</Label>
-                      <Select
-                        value={data.creative.cta}
-                        onValueChange={(value) =>
-                          setData({
-                            ...data,
-                            creative: { ...data.creative, cta: value },
-                          })
-                        }
-                      >
-                        <SelectTrigger className="mt-1.5">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Learn More">Learn More</SelectItem>
-                          <SelectItem value="Shop Now">Shop Now</SelectItem>
-                          <SelectItem value="Sign Up">Sign Up</SelectItem>
-                          <SelectItem value="Download">Download</SelectItem>
-                          <SelectItem value="Get Quote">Get Quote</SelectItem>
-                          <SelectItem value="Contact Us">Contact Us</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    <Select
+                      label="Call to Action"
+                      value={data.creative.cta}
+                      onChange={(e) => setData({ ...data, creative: { ...data.creative, cta: e.target.value } })}
+                      options={[
+                        { value:'Learn More', label:'Learn More' },
+                        { value:'Shop Now', label:'Shop Now' },
+                        { value:'Sign Up', label:'Sign Up' },
+                        { value:'Download', label:'Download' },
+                        { value:'Get Quote', label:'Get Quote' },
+                        { value:'Contact Us', label:'Contact Us' },
+                      ]}
+                    />
 
                     {/* Image Upload */}
-                    {(data.adFormat === "image" ||
-                      data.adFormat === "carousel" ||
-                      data.adFormat === "collection" ||
-                      data.adFormat === "display" ||
-                      data.adFormat === "shopping" ||
-                      data.adFormat === "static" ||
-                      data.adFormat === "performanceMax" || // <-- CHANGE: Added Performance Max
-                      data.adFormat === "google-search" || // Added google search as static text
-                      data.adFormat === "gmail-promotions" || // Added gmail
-                      data.adFormat === "gmail-social" || // Added gmail
-                      data.adFormat === "discover-feed" || // Added discover
-                      data.adFormat === "discover-youtube" || // Added discover
-                      data.adFormat === "display-responsive" ||
-                      data.adFormat === "display-banner" ||
-                      data.adFormat === "display-native") && (
+                    {(data.adFormat === "image" || data.adFormat === "carousel" || data.adFormat === "collection" || data.adFormat === "display" || data.adFormat === "shopping" || data.adFormat === "static" || data.adFormat === "performanceMax" || data.adFormat === "google-search" || data.adFormat === "gmail-promotions" || data.adFormat === "gmail-social" || data.adFormat === "discover-feed" || data.adFormat === "discover-youtube" || data.adFormat === "display-responsive" || data.adFormat === "display-banner" || data.adFormat === "display-native") && (
                       <div>
-                        {/* <-- CHANGE: Show asset source selector for Performance Max */}
                         {data.adFormat === "performanceMax" && (
-                          <div className="mb-4 p-4 bg-[#f0f9ff] border border-[#bae6fd] rounded-lg">
-                            <div className="flex items-start gap-2 mb-3">
-                              <Info
-                                size={16}
-                                className="text-[#0284c7] mt-0.5"
-                              />
+                          <div style={{ marginBottom:16, padding:16, background:'#f0f9ff', border:'1px solid #bae6fd', borderRadius:8 }}>
+                            <div style={{ display:'flex', alignItems:'flex-start', gap:8, marginBottom:12 }}>
+                              <InfoIcon size={16} color="#0284c7" style={{ marginTop:2 }} />
                               <div>
-                                <div className="text-sm font-medium text-[#0c4a6e]">
-                                  Performance Max Assets
-                                </div>
-                                <div className="text-xs text-[#075985] mt-1">
-                                  Upload custom images or connect your product
-                                  catalog. Minimum: 1 landscape (1.91:1) and 1
-                                  square (1:1) image.
+                                <div style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:'#0c4a6e' }}>Performance Max Assets</div>
+                                <div style={{ fontFamily:FONT, fontSize:12, color:'#075985', marginTop:4 }}>
+                                  Upload custom images or connect your product catalog. Minimum: 1 landscape (1.91:1) and 1 square (1:1) image.
                                 </div>
                               </div>
                             </div>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex-1 text-xs bg-transparent"
-                                onClick={() => {
-                                  /* Open product catalog selector */
-                                  setProductModalOpen(true);
-                                }}
-                              >
-                                <Package size={14} className="mr-1" />
-                                Use Product Catalog
+                            <div style={{ display:'flex', gap:8 }}>
+                              <Button variant="outline" style={{ flex:1 }} onClick={() => setProductModalOpen(true)}>
+                                <PackageIcon size={14} /> Use Product Catalog
                               </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex-1 text-xs bg-white"
-                                onClick={() => fileInputRef.current?.click()}
-                              >
-                                <Upload size={14} className="mr-1" />
-                                Upload Custom Assets
+                              <Button variant="outline" style={{ flex:1 }} onClick={() => fileInputRef.current?.click()}>
+                                <UploadIcon size={14} /> Upload Custom Assets
                               </Button>
                             </div>
                           </div>
                         )}
 
-                        <Label>
-                          {data.adFormat === "performanceMax"
-                            ? "Upload Images (Landscape & Square) *"
-                            : "Upload Image *"}
-                        </Label>
-                        <input
-                          ref={fileInputRef}
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="hidden"
-                          multiple={data.adFormat === "performanceMax"} // <-- CHANGE: Allow multiple files for Performance Max
-                        />
+                        <span style={{ fontFamily:FONT, fontSize:13, fontWeight:600, color:TEXT_HI, display:'block', marginBottom:6 }}>
+                          {data.adFormat === "performanceMax" ? "Upload Images (Landscape & Square) *" : "Upload Image *"}
+                        </span>
+                        <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} style={{ display:'none' }} multiple={data.adFormat === "performanceMax"} />
                         {data.creative.imageUrl ? (
-                          <div className="mt-2 relative">
-                            <img
-                              src={data.creative.imageUrl || "/placeholder.svg"}
-                              alt="Uploaded creative"
-                              className="w-full max-h-[200px] object-cover rounded-lg border border-[#e5e7eb]"
-                            />
-
-                            <button
-                              onClick={() => removeMedia("image")}
-                              className="absolute top-2 right-2 p-1.5 bg-white rounded-full shadow-md hover:bg-[#f3f4f6]"
-                            >
-                              <Trash2 size={16} className="text-[#dc2626]" />
+                          <div style={{ marginTop:8, position:'relative' }}>
+                            <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Uploaded creative" style={{ width:'100%', maxHeight:200, objectFit:'cover', borderRadius:8, border:'1px solid '+BORDER }} />
+                            <button onClick={() => removeMedia("image")} style={{ position:'absolute', top:8, right:8, padding:6, background:WHITE, border:'none', borderRadius:'50%', boxShadow:'0 1px 4px rgba(0,0,0,0.2)', cursor:'pointer' }}>
+                              <TrashIcon size={16} color="#dc2626" />
                             </button>
                             {data.adFormat === "performanceMax" && (
-                              <div className="absolute top-2 left-2 px-2 py-1 bg-white/90 rounded text-xs font-medium">
+                              <div style={{ position:'absolute', top:8, left:8, padding:'2px 8px', background:'rgba(255,255,255,0.9)', borderRadius:4, fontFamily:FONT, fontSize:12, fontWeight:500 }}>
                                 Landscape (1.91:1)
                               </div>
                             )}
@@ -3936,18 +3292,14 @@ export function OffsiteAdGroupWizard({
                         ) : (
                           <button
                             onClick={() => fileInputRef.current?.click()}
-                            className="mt-2 w-full h-[150px] border-2 border-dashed border-[#d1d5db] rounded-lg flex flex-col items-center justify-center gap-2 hover:border-[#2563eb] hover:bg-[#f9fafb] transition-colors"
+                            style={{ marginTop:8, width:'100%', height:150, border:'2px dashed '+BORDER, borderRadius:8, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, background:'transparent', cursor:'pointer', transition:'all 0.15s' }}
                           >
-                            <Upload size={24} className="text-[#7b7b7b]" />
-                            <span className="text-sm text-[#7b7b7b]">
-                              {data.adFormat === "performanceMax"
-                                ? "Click to upload images (landscape & square)"
-                                : "Click to upload image"}
+                            <UploadIcon size={24} color={TEXT_MID} />
+                            <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>
+                              {data.adFormat === "performanceMax" ? "Click to upload images (landscape & square)" : "Click to upload image"}
                             </span>
-                            <span className="text-xs text-[#9ca3af]">
-                              {data.adFormat === "performanceMax"
-                                ? "1200x628px (landscape), 1200x1200px (square)"
-                                : "PNG, JPG up to 10MB"}
+                            <span style={{ fontFamily:FONT, fontSize:12, color:TEXT_LO }}>
+                              {data.adFormat === "performanceMax" ? "1200x628px (landscape), 1200x1200px (square)" : "PNG, JPG up to 10MB"}
                             </span>
                           </button>
                         )}
@@ -3955,137 +3307,69 @@ export function OffsiteAdGroupWizard({
                     )}
 
                     {/* Video Upload */}
-                    {(data.adFormat === "video" ||
-                      data.adFormat === "infeed" ||
-                      data.adFormat === "youtube-watch" ||
-                      data.adFormat === "youtube-shorts" ||
-                      data.adFormat === "fb-instream-reels" ||
-                      data.adFormat === "audience-network-rewarded") && (
+                    {(data.adFormat === "video" || data.adFormat === "infeed" || data.adFormat === "youtube-watch" || data.adFormat === "youtube-shorts" || data.adFormat === "fb-instream-reels" || data.adFormat === "audience-network-rewarded") && (
                       <div>
-                        <Label>Upload Video *</Label>
-                        <input
-                          ref={videoInputRef}
-                          type="file"
-                          accept="video/*"
-                          onChange={handleVideoUpload}
-                          className="hidden"
-                        />
-
+                        <span style={{ fontFamily:FONT, fontSize:13, fontWeight:600, color:TEXT_HI, display:'block', marginBottom:6 }}>Upload Video *</span>
+                        <input ref={videoInputRef} type="file" accept="video/*" onChange={handleVideoUpload} style={{ display:'none' }} />
                         {data.creative.videoUrl ? (
-                          <div className="mt-2 relative">
-                            <video
-                              src={data.creative.videoUrl}
-                              controls
-                              className="w-full max-h-[200px] object-cover rounded-lg border border-[#e5e7eb]"
-                            />
-
-                            <button
-                              onClick={() => removeMedia("video")}
-                              className="absolute top-2 right-2 p-1.5 bg-white rounded-full shadow-md hover:bg-[#f3f4f6]"
-                            >
-                              <Trash2 size={16} className="text-[#dc2626]" />
+                          <div style={{ marginTop:8, position:'relative' }}>
+                            <video src={data.creative.videoUrl} controls style={{ width:'100%', maxHeight:200, objectFit:'cover', borderRadius:8, border:'1px solid '+BORDER }} />
+                            <button onClick={() => removeMedia("video")} style={{ position:'absolute', top:8, right:8, padding:6, background:WHITE, border:'none', borderRadius:'50%', boxShadow:'0 1px 4px rgba(0,0,0,0.2)', cursor:'pointer' }}>
+                              <TrashIcon size={16} color="#dc2626" />
                             </button>
                           </div>
                         ) : (
                           <button
                             onClick={() => videoInputRef.current?.click()}
-                            className="mt-2 w-full h-[150px] border-2 border-dashed border-[#d1d5db] rounded-lg flex flex-col items-center justify-center gap-2 hover:border-[#2563eb] hover:bg-[#f9fafb] transition-colors"
+                            style={{ marginTop:8, width:'100%', height:150, border:'2px dashed '+BORDER, borderRadius:8, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, background:'transparent', cursor:'pointer', transition:'all 0.15s' }}
                           >
-                            <Video size={24} className="text-[#7b7b7b]" />
-                            <span className="text-sm text-[#7b7b7b]">
-                              Click to upload video
-                            </span>
-                            <span className="text-xs text-[#9ca3af]">
-                              MP4, MOV up to 500MB
-                            </span>
+                            <VideoIcon size={24} color={TEXT_MID} />
+                            <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Click to upload video</span>
+                            <span style={{ fontFamily:FONT, fontSize:12, color:TEXT_LO }}>MP4, MOV up to 500MB</span>
                           </button>
                         )}
                       </div>
                     )}
-                  </Card>
+                  </div>
 
                   {/* Live Preview */}
-                  <Card className="p-6">
-                    <h3 className="font-medium text-[#404040] mb-4">
+                  <div style={{ background:WHITE, border:'1px solid '+BORDER, borderRadius:10, padding:24 }}>
+                    <h3 style={{ fontFamily:FONT, fontSize:14, fontWeight:500, color:TEXT_HI, margin:'0 0 16px' }}>
                       Live Preview
                     </h3>
-                    <div className="flex justify-center items-center h-full">
+                    <div style={{ display:'flex', justifyContent:'center', alignItems:'center', height:'100%' }}>
                       {data.platform && data.adFormat ? (
                         (() => {
-                          const platformPlacements =
-                            placementConfigs[data.platform];
-                          const currentAdFormat = adFormats[data.platform].find(
-                            (f) => f.id === data.adFormat,
-                          );
+                          const platformPlacements = placementConfigs[data.platform];
 
-                          let previewType = "feed"; // Default
-
-                          if (
-                            currentAdFormat?.illustration.props.className?.includes(
-                              "w-full h-24",
-                            )
-                          ) {
-                            // Crude check based on illustration rendering for common types
-                            if (
-                              data.adFormat === "search" ||
-                              data.adFormat === "google-search" ||
-                              data.adFormat === "search-text" ||
-                              data.adFormat === "search-shopping" ||
-                              data.adFormat === "search-local" ||
-                              data.adFormat === "fb-search" ||
-                              data.adFormat === "ig-search"
-                            ) {
-                              previewType = "search";
-                            } else if (
-                              data.adFormat === "video" ||
-                              data.adFormat === "youtube-watch" ||
-                              data.adFormat === "youtube-shorts" ||
-                              data.adFormat === "fb-instream-reels" ||
-                              data.adFormat === "audience-network-rewarded"
-                            ) {
-                              previewType = "video";
-                            } else if (
-                              data.adFormat === "display" ||
-                              data.adFormat === "googleDisplay"
-                            ) {
-                              previewType = "display";
-                            } else if (
-                              data.adFormat === "infeed" ||
-                              data.adFormat === "tiktok-feed"
-                            ) {
-                              previewType = "story"; // Treat in-feed as story-like for preview
-                            } else {
-                              previewType = "feed";
-                            }
-                          } else if (
-                            currentAdFormat?.illustration.props.className?.includes(
-                              "w-[160px]",
-                            )
-                          ) {
+                          // Determine preview type based on format id (no className inspection needed)
+                          let previewType = "feed";
+                          if (["search","google-search","search-text","search-shopping","search-local","fb-search","ig-search"].includes(data.adFormat)) {
+                            previewType = "search";
+                          } else if (["video","youtube-watch","youtube-shorts","fb-instream-reels","audience-network-rewarded"].includes(data.adFormat)) {
+                            previewType = "video";
+                          } else if (["display","googleDisplay","display-responsive","display-banner","display-native"].includes(data.adFormat)) {
+                            previewType = "display";
+                          } else if (["infeed","tiktok-feed","story","ig-stories","fb-stories"].includes(data.adFormat)) {
                             previewType = "story";
                           }
 
-                          // Find a representative placement for the preview
-                          const representativePlacement =
-                            platformPlacements.find(
-                              (p) => p.preview === previewType,
-                            );
-
+                          const representativePlacement = platformPlacements.find((p) => p.preview === previewType);
                           return representativePlacement ? (
                             renderPlacementPreview(representativePlacement)
                           ) : (
-                            <div className="text-center text-[#7b7b7b]">
+                            <div style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, textAlign:'center' }}>
                               No preview available for this format.
                             </div>
                           );
                         })()
                       ) : (
-                        <div className="text-center text-[#7b7b7b]">
+                        <div style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, textAlign:'center' }}>
                           Select platform and ad format to see preview.
                         </div>
                       )}
                     </div>
-                  </Card>
+                  </div>
                 </div>
               </div>
             )}
@@ -4095,105 +3379,101 @@ export function OffsiteAdGroupWizard({
               renderPlacementStep()}
 
             {currentStepInfo.id === "config" && (
-              <div className="space-y-6">
+              <div style={{ display:'flex', flexDirection:'column', gap:24 }}>
                 <div>
-                  <h2 className="text-2xl font-semibold text-[#404040] mb-2">
+                  <h2 style={{ fontFamily:FONT, fontSize:22, fontWeight:600, color:TEXT_HI, margin:'0 0 8px' }}>
                     Budget & Bidding
                   </h2>
-                  <p className="text-[#7b7b7b]">
+                  <p style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, margin:0 }}>
                     Set your daily budget and bidding strategy.
                   </p>
                 </div>
 
-                <Card className="p-6 space-y-6">
-                  <div className="grid grid-cols-2 gap-4">
+                <div style={{ background:WHITE, border:'1px solid '+BORDER, borderRadius:10, padding:24 }}>
+                  <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:16 }}>
                     <div>
-                      <Label htmlFor="budget">Daily Budget *</Label>
-                      <div className="relative mt-1.5">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7b7b7b]">
-                          $
-                        </span>
+                      <span style={{ fontFamily:FONT, fontSize:13, fontWeight:600, color:TEXT_HI, display:'block', marginBottom:6 }}>Daily Budget *</span>
+                      <div style={{ position:'relative' }}>
+                        <span style={{ position:'absolute', left:10, top:'50%', transform:'translateY(-50%)', fontFamily:FONT, fontSize:13, color:TEXT_MID, pointerEvents:'none' }}>$</span>
                         <Input
-                          id="budget"
                           type="number"
                           value={data.budget}
-                          onChange={(e) =>
-                            setData({ ...data, budget: e.target.value })
-                          }
+                          onChange={(e) => setData({ ...data, budget: e.target.value })}
                           placeholder="0.00"
-                          className="pl-7"
+                          style={{ paddingLeft:24 }}
                         />
                       </div>
                     </div>
 
-                    <div>
-                      <Label htmlFor="bidStrategy">Bid Strategy</Label>
-                      <Select
-                        value={data.bidStrategy}
-                        onValueChange={(value) =>
-                          setData({ ...data, bidStrategy: value })
-                        }
-                      >
-                        <SelectTrigger className="mt-1.5">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="lowest_cost">
-                            Lowest Cost
-                          </SelectItem>
-                          <SelectItem value="cost_cap">Cost Cap</SelectItem>
-                          <SelectItem value="bid_cap">Bid Cap</SelectItem>
-                          <SelectItem value="target_cost">
-                            Target Cost
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    <Select
+                      label="Bid Strategy"
+                      value={data.bidStrategy}
+                      onChange={(e) => setData({ ...data, bidStrategy: e.target.value })}
+                      options={[
+                        { value:'lowest_cost', label:'Lowest Cost' },
+                        { value:'cost_cap', label:'Cost Cap' },
+                        { value:'bid_cap', label:'Bid Cap' },
+                        { value:'target_cost', label:'Target Cost' },
+                      ]}
+                    />
                   </div>
-                </Card>
+                </div>
               </div>
             )}
           </div>
         </div>
 
-        {/* Footer with navigation - Updated to match other wizards */}
-        <div className="border-t bg-white px-6 py-4">
-          <div className="flex items-center justify-end gap-3">
-            <Button variant="outline" onClick={onClose}>
-              Cancel
-            </Button>
+        {/* Footer */}
+        <div style={{ borderTop:'1px solid '+BORDER, background:WHITE, padding:'16px 24px' }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'flex-end', gap:12 }}>
+            <Button variant="outline" onClick={onClose}>Cancel</Button>
             {stepIndex > 0 && (
-              <Button variant="outline" onClick={handlePrevious}>
-                Back
-              </Button>
+              <Button variant="outline" onClick={handlePrevious}>Back</Button>
             )}
-            <Button
-              className="bg-[#2563eb] hover:bg-[#1d4ed8] min-w-[120px]"
-              onClick={handleNext}
-            >
+            <Button variant="primary" style={{ minWidth:120 }} onClick={handleNext}>
               {isLastStep ? "Create Ad Group" : "Continue"}
             </Button>
           </div>
         </div>
       </div>
-    </TooltipProvider>
+    </>
   );
 }
 
+const FONT_PO = "'Open Sans', sans-serif";
+const BORDER_PO = 'var(--osmos-border)';
+const TEXT_HI_PO = 'var(--osmos-fg)';
+const TEXT_MID_PO = 'var(--osmos-fg-muted)';
+const ACCENT_PO = 'var(--osmos-brand-primary)';
+
 function PlacementOption({ id, label, description, checked, onChange }) {
   return (
-    <div className="flex items-start space-x-3 p-4 border border-[#e0e0e0] rounded-lg hover:border-[#2681ff] transition-colors">
-      <Switch
-        id={id}
-        checked={checked}
-        onCheckedChange={onChange}
-        className="mt-1"
-      />
-      <div className="flex-1">
-        <Label htmlFor={id} className="font-medium cursor-pointer">
-          {label}
-        </Label>
-        <p className="text-sm text-[#7b7b7b] mt-1">{description}</p>
+    <div
+      style={{ display:'flex', alignItems:'flex-start', gap:12, padding:16, border:'1px solid '+BORDER_PO, borderRadius:8, transition:'border-color 0.15s' }}
+      onMouseEnter={e => e.currentTarget.style.borderColor = ACCENT_PO}
+      onMouseLeave={e => e.currentTarget.style.borderColor = BORDER_PO}
+    >
+      {/* Hand-rolled toggle switch */}
+      <button
+        role="switch"
+        aria-checked={checked}
+        onClick={() => onChange(!checked)}
+        style={{
+          flexShrink:0, marginTop:2, width:36, height:20, borderRadius:10, border:'none', cursor:'pointer', padding:2, transition:'background 0.2s',
+          background: checked ? ACCENT_PO : '#d1d5db',
+          display:'flex', alignItems:'center',
+        }}
+      >
+        <span style={{
+          width:16, height:16, borderRadius:'50%', background:'#ffffff',
+          transform: checked ? 'translateX(16px)' : 'translateX(0)',
+          transition:'transform 0.2s',
+          display:'block',
+        }} />
+      </button>
+      <div style={{ flex:1 }}>
+        <label htmlFor={id} style={{ fontFamily:FONT_PO, fontSize:13, fontWeight:500, color:TEXT_HI_PO, cursor:'pointer' }}>{label}</label>
+        <p style={{ fontFamily:FONT_PO, fontSize:12, color:TEXT_MID_PO, margin:'4px 0 0' }}>{description}</p>
       </div>
     </div>
   );

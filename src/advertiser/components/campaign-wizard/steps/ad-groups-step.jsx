@@ -1,147 +1,191 @@
-"use client";
+import { useState } from 'react';
+import { Button, Badge, PlusIcon, SearchIcon, EditIcon, TrashIcon, Icon } from '../../../../ui';
 
-import { Plus, Search, Pencil, Trash2, Copy, Layers } from "lucide-react";
-import { Button } from "@/components/ui/button";
+const FONT     = "'Open Sans', sans-serif";
+const TEXT     = 'var(--osmos-fg)';
+const TEXT_MID = 'var(--osmos-fg-muted)';
+const TEXT_SUB = 'var(--osmos-fg-subtle)';
+const BORDER   = 'var(--osmos-border)';
+const BG       = 'var(--osmos-bg)';
+const BG_SUB   = 'var(--osmos-bg-subtle)';
+const ACCENT   = 'var(--osmos-brand-primary)';
+const ACCENT_M = 'var(--osmos-brand-primary-muted)';
+const ERROR    = 'var(--alert-error-primary)';
 
-export function AdGroupsStep({
-  adGroups,
-  onAddAdGroup,
-  onEditAdGroup,
-  onDeleteAdGroup,
-}) {
+// ── Icons ─────────────────────────────────────────────────────────────────────
+const CopyIcon = (props) => (
+  <Icon {...props}>
+    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+  </Icon>
+);
+
+const LayersIcon = (props) => (
+  <Icon {...props}>
+    <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/>
+    <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/>
+    <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>
+  </Icon>
+);
+
+// ── ActionBtn — inline hover-state icon button ────────────────────────────────
+function ActionBtn({ onClick, children, danger = false }) {
+  const [hov, setHov] = useState(false);
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        width: 32, height: 32,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        border: 'none', borderRadius: 8, cursor: 'pointer',
+        background: hov ? (danger ? 'rgba(239,68,68,0.08)' : BG_SUB) : 'transparent',
+        color: danger ? ERROR : TEXT_MID,
+        transition: 'all 0.15s',
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+// ── AdGroupsStep ──────────────────────────────────────────────────────────────
+export function AdGroupsStep({ adGroups, onAddAdGroup, onEditAdGroup, onDeleteAdGroup }) {
+  const [hoveredGroup, setHoveredGroup] = useState(null);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: FONT }}>
+      {/* Header row */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h2 className="text-2xl font-semibold text-[#2d2d2d] mb-2">
+          <h2 style={{ fontSize: 24, fontWeight: 600, color: TEXT, marginBottom: 8 }}>
             Ad Groups
           </h2>
-          <p className="text-[#6b7280]">
-            Create ad groups to organize your ads by inventory, targeting, and
-            creative.
+          <p style={{ color: TEXT_MID }}>
+            Create ad groups to organize your ads by inventory, targeting, and creative.
           </p>
         </div>
-        <Button
-          className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white gap-2"
-          onClick={onAddAdGroup}
-        >
-          <Plus size={16} />
+        <Button variant="primary" onClick={onAddAdGroup} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <PlusIcon size={16} color="#fff" />
           Add Ad Group
         </Button>
       </div>
 
       {adGroups.length === 0 ? (
         /* Empty State */
-        <div className="bg-white rounded-xl border border-[#e5e7eb] p-12 text-center">
-          <div className="w-16 h-16 rounded-full bg-[#eff6ff] flex items-center justify-center mx-auto mb-4">
-            <Layers size={28} className="text-[#2563eb]" />
+        <div style={{
+          background: BG, borderRadius: 12, border: `1px solid ${BORDER}`,
+          padding: 48, textAlign: 'center',
+        }}>
+          <div style={{
+            width: 64, height: 64, borderRadius: '50%',
+            background: ACCENT_M,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            margin: '0 auto 16px',
+          }}>
+            <LayersIcon size={28} color={ACCENT} />
           </div>
-          <h3 className="text-lg font-semibold text-[#2d2d2d] mb-2">
+          <h3 style={{ fontSize: 16, fontWeight: 600, color: TEXT, marginBottom: 8 }}>
             No ad groups yet
           </h3>
-          <p className="text-[#6b7280] mb-6 max-w-md mx-auto">
+          <p style={{ color: TEXT_MID, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
             Ad groups help you organize your campaign by grouping ads that share
             the same inventory, targeting, and budget settings.
           </p>
-          <Button
-            className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white gap-2"
-            onClick={onAddAdGroup}
-          >
-            <Plus size={16} />
+          <Button variant="primary" onClick={onAddAdGroup} style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            <PlusIcon size={16} color="#fff" />
             Create Your First Ad Group
           </Button>
         </div>
       ) : (
         /* Ad Groups List */
-        <div className="bg-white rounded-xl border border-[#e5e7eb] overflow-hidden">
+        <div style={{
+          background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, overflow: 'hidden',
+        }}>
           {/* Search Header */}
-          <div className="p-4 border-b border-[#e5e7eb] flex items-center justify-between">
-            <div className="flex items-center gap-2 px-3 py-2 border border-[#e5e7eb] rounded-lg bg-[#f9fafb] w-72">
-              <Search size={16} className="text-[#9ca3af]" />
+          <div style={{
+            padding: 16, borderBottom: `1px solid ${BORDER}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          }}>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '8px 12px', border: `1px solid ${BORDER}`,
+              borderRadius: 8, background: BG_SUB, width: 288,
+            }}>
+              <SearchIcon size={16} color={TEXT_SUB} />
               <input
                 type="text"
                 placeholder="Search ad groups..."
-                className="bg-transparent text-sm outline-none placeholder:text-[#9ca3af] flex-1"
+                style={{
+                  background: 'transparent', border: 'none', outline: 'none',
+                  fontSize: 13, color: TEXT, flex: 1, fontFamily: FONT,
+                }}
               />
             </div>
-            <span className="text-sm text-[#6b7280]">
+            <span style={{ fontSize: 13, color: TEXT_MID }}>
               {adGroups.length} ad group(s)
             </span>
           </div>
 
-          {/* Ad Groups Cards */}
-          <div className="p-4 space-y-4">
-            {adGroups.map((adGroup, index) => (
-              <div
-                key={adGroup.id}
-                className="border border-[#e5e7eb] rounded-xl p-5 hover:border-[#d1d5db] hover:shadow-sm transition-all"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h4 className="font-semibold text-[#2d2d2d] text-lg">
-                      {adGroup.name}
-                    </h4>
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#f3f4f6] text-[#6b7280] rounded text-xs mt-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#6b7280]" />
-                      Draft
-                    </span>
+          {/* Ad Group Cards */}
+          <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {adGroups.map((adGroup, index) => {
+              const isHovered = hoveredGroup === adGroup.id;
+              return (
+                <div
+                  key={adGroup.id}
+                  onMouseEnter={() => setHoveredGroup(adGroup.id)}
+                  onMouseLeave={() => setHoveredGroup(null)}
+                  style={{
+                    border: `1px solid ${isHovered ? TEXT_SUB : BORDER}`,
+                    borderRadius: 12, padding: 20,
+                    boxShadow: isHovered ? '0 1px 4px rgba(0,0,0,0.07)' : 'none',
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  {/* Row header */}
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16 }}>
+                    <div>
+                      <h4 style={{ fontWeight: 600, color: TEXT, fontSize: 16, marginBottom: 4 }}>
+                        {adGroup.name}
+                      </h4>
+                      <Badge status="Draft" />
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <ActionBtn onClick={() => onEditAdGroup(index)}>
+                        <EditIcon size={14} color={TEXT_MID} />
+                      </ActionBtn>
+                      <ActionBtn>
+                        <CopyIcon size={14} color={TEXT_MID} />
+                      </ActionBtn>
+                      <ActionBtn danger onClick={() => onDeleteAdGroup(index)}>
+                        <TrashIcon size={14} color={ERROR} />
+                      </ActionBtn>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => onEditAdGroup(index)}
-                      className="w-8 h-8 flex items-center justify-center text-[#6b7280] hover:bg-[#f3f4f6] rounded-lg transition-colors"
-                    >
-                      <Pencil size={14} />
-                    </button>
-                    <button className="w-8 h-8 flex items-center justify-center text-[#6b7280] hover:bg-[#f3f4f6] rounded-lg transition-colors">
-                      <Copy size={14} />
-                    </button>
-                    <button
-                      onClick={() => onDeleteAdGroup(index)}
-                      className="w-8 h-8 flex items-center justify-center text-[#ef4444] hover:bg-[#fef2f2] rounded-lg transition-colors"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                </div>
 
-                {/* Summary Stats */}
-                <div className="grid grid-cols-4 gap-4">
-                  <div className="bg-[#f9fafb] rounded-lg p-3">
-                    <span className="text-xs text-[#6b7280] block mb-1">
-                      Inventory
-                    </span>
-                    <span className="text-sm font-semibold text-[#2d2d2d]">
-                      {adGroup.selectedPages.length} page(s)
-                    </span>
-                  </div>
-                  <div className="bg-[#f9fafb] rounded-lg p-3">
-                    <span className="text-xs text-[#6b7280] block mb-1">
-                      Targeting
-                    </span>
-                    <span className="text-sm font-semibold text-[#2d2d2d]">
-                      {Object.values(adGroup.targeting).flat().length} option(s)
-                    </span>
-                  </div>
-                  <div className="bg-[#f9fafb] rounded-lg p-3">
-                    <span className="text-xs text-[#6b7280] block mb-1">
-                      Ad Format
-                    </span>
-                    <span className="text-sm font-semibold text-[#2d2d2d]">
-                      {adGroup.adFormat || "Not set"}
-                    </span>
-                  </div>
-                  <div className="bg-[#f9fafb] rounded-lg p-3">
-                    <span className="text-xs text-[#6b7280] block mb-1">
-                      Creatives
-                    </span>
-                    <span className="text-sm font-semibold text-[#2d2d2d]">
-                      {adGroup.creatives.length}
-                    </span>
+                  {/* Summary Stats */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+                    {[
+                      { label: 'Inventory',  value: `${adGroup.selectedPages.length} page(s)` },
+                      { label: 'Targeting',  value: `${Object.values(adGroup.targeting).flat().length} option(s)` },
+                      { label: 'Ad Format',  value: adGroup.adFormat || 'Not set' },
+                      { label: 'Creatives',  value: adGroup.creatives.length },
+                    ].map(({ label, value }) => (
+                      <div key={label} style={{ background: BG_SUB, borderRadius: 8, padding: 12 }}>
+                        <span style={{ fontSize: 12, color: TEXT_MID, display: 'block', marginBottom: 4 }}>
+                          {label}
+                        </span>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: TEXT }}>
+                          {value}
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

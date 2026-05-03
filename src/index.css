@@ -15,6 +15,11 @@
   --osmos-brand-green:          var(--chart-mintgreen);          /* #1ca678 */
   --osmos-brand-green-muted:    var(--alert-success-bg);         /* #eaf2eb */
   --osmos-brand-amber:          var(--chart-yellow);             /* #f9a825 */
+  --osmos-brand-amber-muted:    rgba(245, 166, 35, 0.12);        /* amber warning backgrounds */
+  --osmos-brand-violet:         #7c3aed;                         /* AI feature brand color (Sofie, debugger) */
+  --osmos-brand-violet-muted:   rgba(124, 58, 237, 0.10);        /* AI feature backgrounds */
+  --osmos-brand-violet-hover:   #6d28d9;                         /* AI feature hover state */
+  --osmos-tooltip-bg:           #354a67;                         /* chart / recharts tooltip background */
 
   /* Surfaces & backgrounds */
   --osmos-bg:                   var(--bg-screen);               /* #ffffff */

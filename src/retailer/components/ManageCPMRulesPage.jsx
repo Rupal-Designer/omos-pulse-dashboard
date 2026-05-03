@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { RefreshIcon, ColumnsIcon, SearchIcon, DownloadIcon, CloseIcon, ChevronDownIcon } from '../../ui/atoms/Icon';
 import { Button } from '../../ui/atoms/Button';
+import { Badge, TypeBadge } from '../../ui/atoms/Badge';
 import { Toast, useToast } from '../../ui/atoms/Toast';
 
 const FONT = "'Open Sans', sans-serif";
@@ -39,26 +40,10 @@ const COLS = [
 
 const RULE_COLORS = {
   'User Attribute': { bg: ACCENT_M,                     color: ACCENT },
-  'User Activity':  { bg: 'rgba(245,166,35,0.12)',       color: 'var(--osmos-brand-amber)' },
-  'User Segment':   { bg: 'rgba(139,92,246,0.12)',       color: '#8b5cf6' },
+  'User Activity':  { bg: 'var(--osmos-brand-amber-muted)',       color: 'var(--osmos-brand-amber)' },
+  'User Segment':   { bg: 'var(--osmos-brand-violet-muted)',       color: '#8b5cf6' },
 };
 
-function StatusBadge({ s }) {
-  return (
-    <span style={{ display:'inline-flex', alignItems:'center', gap:5, padding:'3px 8px',
-      borderRadius:12, fontSize:11, fontWeight:500, background:'var(--osmos-brand-green-muted)', color:'var(--osmos-brand-green)' }}>
-      <span style={{ width:6, height:6, borderRadius:'50%', background:'var(--osmos-brand-green)', display:'inline-block' }} />
-      {s}
-    </span>
-  );
-}
-
-function RuleTypeBadge({ t }) {
-  const { bg, color } = RULE_COLORS[t] || RULE_COLORS['User Attribute'];
-  return (
-    <span style={{ padding:'2px 8px', borderRadius:10, fontSize:11, fontWeight:500, background:bg, color }}>{t}</span>
-  );
-}
 
 function CreateRuleDrawer({ onClose, showToast }) {
   const [form, setForm] = useState({
@@ -91,14 +76,14 @@ function CreateRuleDrawer({ onClose, showToast }) {
       <div onClick={onClose} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.35)', zIndex:800 }} />
       <div style={{ position:'fixed', top:0, right:0, bottom:0, width:480, zIndex:801,
         background:'var(--osmos-bg)', display:'flex', flexDirection:'column', boxShadow:'-4px 0 24px rgba(0,0,0,.12)' }}>
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'18px 24px', borderBottom:`1px solid ${BORDER}` }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 20px', borderBottom:`1px solid ${BORDER}` }}>
           <span style={{ fontSize:15, fontWeight:700, fontFamily:FONT, color:FG }}>Create Rule</span>
           <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', padding:4, display:'flex' }}>
             <CloseIcon size={18} color={FG_MUT} />
           </button>
         </div>
 
-        <div style={{ flex:1, overflowY:'auto', padding:'24px' }}>
+        <div style={{ flex:1, overflowY:'auto', padding:20 }}>
           <div style={field}>
             <label style={fieldLabel}>Set Rule By <span style={{ color:'var(--alert-error-primary)' }}>*</span></label>
             <div style={{ display:'flex', gap:20 }}>
@@ -196,7 +181,7 @@ function CreateRuleDrawer({ onClose, showToast }) {
           </button>
         </div>
 
-        <div style={{ padding:'16px 24px', borderTop:`1px solid ${BORDER}`, display:'flex', justifyContent:'flex-end', gap:10 }}>
+        <div style={{ padding:'14px 20px', borderTop:`1px solid ${BORDER}`, display:'flex', justifyContent:'flex-end', gap:10 }}>
           <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button onClick={handleCreate}>Create</Button>
         </div>
@@ -276,13 +261,13 @@ export default function ManageCPMRulesPage() {
                 <tr key={row.id} style={{ background:'var(--osmos-bg)' }}
                   onMouseEnter={e => e.currentTarget.style.background = BG_SUB}
                   onMouseLeave={e => e.currentTarget.style.background = 'var(--osmos-bg)'}>
-                  <td style={tdStyle}><StatusBadge s={row.status} /></td>
+                  <td style={tdStyle}><Badge status={row.status} /></td>
                   <td style={{ ...tdStyle, fontWeight:500, color:FG, maxWidth:220 }}>
                     <span style={{ display:'block', overflow:'hidden', textOverflow:'ellipsis', maxWidth:220 }}>{row.name}</span>
                   </td>
                   <td style={{ ...tdStyle, textAlign:'center', fontWeight:600 }}>{row.cpmPct}</td>
                   <td style={{ ...tdStyle, textAlign:'center', fontWeight:600 }}>{row.cpcPct}</td>
-                  <td style={tdStyle}><RuleTypeBadge t={row.ruleType} /></td>
+                  <td style={tdStyle}><TypeBadge type={row.ruleType} colorMap={RULE_COLORS} /></td>
                   <td style={tdStyle}>{row.reach}</td>
                   <td style={tdStyle}>{row.creatorName}</td>
                   <td style={tdStyle}>{row.createdOn}</td>

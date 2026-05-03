@@ -1,121 +1,187 @@
-"use client";
-
 import { useState, useEffect } from "react";
-import {
-  X,
-  Package,
-  DollarSign,
-  Key,
-  Globe,
-  Search,
-  Plus,
-  Check,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { createPortal } from "react-dom";
+import { Button } from "../../../ui";
 
+// ─── Design tokens ───────────────────────────────────────────────────────────
+const FONT    = "'Open Sans', sans-serif";
+const TEXT    = "var(--osmos-fg)";
+const TEXT_MID = "var(--osmos-fg-muted)";
+const TEXT_SUB = "var(--osmos-fg-subtle)";
+const BORDER  = "var(--osmos-border)";
+const BG      = "var(--osmos-bg)";
+const BG_SUB  = "var(--osmos-bg-subtle)";
+const ACCENT  = "var(--osmos-brand-primary)";
+const ACCENT_M = "var(--osmos-brand-primary-muted)";
+
+// ─── Hand-rolled icon components ─────────────────────────────────────────────
+const CloseIcon = ({ size = 20, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+const CheckIcon = ({ size = 16, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
+
+const SearchIcon = ({ size = 16, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="8" />
+    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+  </svg>
+);
+
+const PlusIcon = ({ size = 16, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="5" x2="12" y2="19" />
+    <line x1="5" y1="12" x2="19" y2="12" />
+  </svg>
+);
+
+// Type-specific icons (hand-rolled, no lucide dependency)
+const PackageIcon = ({ size = 20, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="16.5" y1="9.4" x2="7.5" y2="4.21" />
+    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+    <line x1="12" y1="22.08" x2="12" y2="12" />
+  </svg>
+);
+
+const DollarIcon = ({ size = 20, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="1" x2="12" y2="23" />
+    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+  </svg>
+);
+
+const KeyIcon = ({ size = 20, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4" />
+  </svg>
+);
+
+const GlobeIcon = ({ size = 20, color = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10" />
+    <line x1="2" y1="12" x2="22" y2="12" />
+    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+  </svg>
+);
+
+// ─── Static data ─────────────────────────────────────────────────────────────
 const mockProducts = [
-  {
-    id: "1",
-    name: "iPhone 15 Pro Max",
-    category: "Electronics",
-    sku: "APPL-IP15PM",
-    price: 1199,
-  },
-  {
-    id: "2",
-    name: "Samsung Galaxy S24",
-    category: "Electronics",
-    sku: "SAMS-GS24",
-    price: 999,
-  },
-  {
-    id: "3",
-    name: "Sony WH-1000XM5",
-    category: "Electronics",
-    sku: "SONY-WH1000",
-    price: 399,
-  },
-  {
-    id: "4",
-    name: "Nike Air Max 90",
-    category: "Footwear",
-    sku: "NIKE-AM90",
-    price: 130,
-  },
-  {
-    id: "5",
-    name: "Adidas Ultraboost",
-    category: "Footwear",
-    sku: "ADID-UB22",
-    price: 180,
-  },
-  {
-    id: "6",
-    name: "Levi's 501 Jeans",
-    category: "Apparel",
-    sku: "LEVI-501",
-    price: 69,
-  },
+  { id: "1", name: "iPhone 15 Pro Max",  category: "Electronics", sku: "APPL-IP15PM", price: 1199 },
+  { id: "2", name: "Samsung Galaxy S24", category: "Electronics", sku: "SAMS-GS24",   price: 999  },
+  { id: "3", name: "Sony WH-1000XM5",   category: "Electronics", sku: "SONY-WH1000", price: 399  },
+  { id: "4", name: "Nike Air Max 90",    category: "Footwear",    sku: "NIKE-AM90",   price: 130  },
+  { id: "5", name: "Adidas Ultraboost",  category: "Footwear",    sku: "ADID-UB22",   price: 180  },
+  { id: "6", name: "Levi's 501 Jeans",   category: "Apparel",     sku: "LEVI-501",    price: 69   },
 ];
 
 const mockCategories = [
-  { id: "electronics", name: "Electronics", productCount: 1250 },
-  { id: "footwear", name: "Footwear", productCount: 890 },
-  { id: "apparel", name: "Apparel", productCount: 2100 },
-  { id: "home", name: "Home & Garden", productCount: 1560 },
-  { id: "beauty", name: "Beauty & Personal Care", productCount: 980 },
+  { id: "electronics", name: "Electronics",            productCount: 1250 },
+  { id: "footwear",    name: "Footwear",               productCount: 890  },
+  { id: "apparel",     name: "Apparel",                productCount: 2100 },
+  { id: "home",        name: "Home & Garden",          productCount: 1560 },
+  { id: "beauty",      name: "Beauty & Personal Care", productCount: 980  },
 ];
 
 const mockNetworks = [
-  { id: "amazon", name: "Amazon", logo: "🛒", reach: "150M+" },
-  { id: "walmart", name: "Walmart", logo: "🏪", reach: "120M+" },
-  { id: "target", name: "Target", logo: "🎯", reach: "80M+" },
-  { id: "costco", name: "Costco", logo: "📦", reach: "60M+" },
-  { id: "kroger", name: "Kroger", logo: "🛍️", reach: "45M+" },
-  { id: "instacart", name: "Instacart", logo: "🚗", reach: "40M+" },
+  { id: "amazon",    name: "Amazon",    logo: "🛒", reach: "150M+" },
+  { id: "walmart",   name: "Walmart",   logo: "🏪", reach: "120M+" },
+  { id: "target",    name: "Target",    logo: "🎯", reach: "80M+"  },
+  { id: "costco",    name: "Costco",    logo: "📦", reach: "60M+"  },
+  { id: "kroger",    name: "Kroger",    logo: "🛍️", reach: "45M+"  },
+  { id: "instacart", name: "Instacart", logo: "🚗", reach: "40M+"  },
 ];
 
-export function ProductAdSettingsDrawer({
-  open,
-  onClose,
-  type,
-  data,
-  updateData,
-}) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedProducts, setSelectedProducts] = useState(
-    data.productSelection?.selectedProducts || [],
+// ─── Shared sub-components ───────────────────────────────────────────────────
+
+/** Reusable 2-column mode-picker card */
+function ModeCard({ active, onClick, label, description }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        fontFamily: FONT,
+        padding: 16,
+        borderRadius: 8,
+        border: active ? `2px solid ${ACCENT}` : hov ? "2px solid var(--osmos-border-muted, #dedede)" : `2px solid ${BORDER}`,
+        background: active ? ACCENT_M : BG,
+        textAlign: "left",
+        cursor: "pointer",
+        transition: "all 0.15s",
+        outline: "none",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+        <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: TEXT }}>{label}</span>
+        {active && <CheckIcon size={16} color={ACCENT} />}
+      </div>
+      <p style={{ fontFamily: FONT, fontSize: 12, color: TEXT_MID, margin: 0 }}>{description}</p>
+    </button>
   );
-  const [selectedCategories, setSelectedCategories] = useState(
-    data.productSelection?.selectedCategories || [],
+}
+
+/** Selectable row item (categories, products, networks) */
+function SelectableRow({ active, onClick, children }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        fontFamily: FONT,
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "12px",
+        borderRadius: 8,
+        border: active ? `1px solid ${ACCENT}` : hov ? "1px solid var(--osmos-border-muted, #dedede)" : `1px solid ${BORDER}`,
+        background: active ? ACCENT_M : BG,
+        cursor: "pointer",
+        transition: "all 0.15s",
+        outline: "none",
+        boxSizing: "border-box",
+      }}
+    >
+      {children}
+      {active && <CheckIcon size={16} color={ACCENT} />}
+    </button>
   );
-  const [productMode, setProductMode] = useState(
-    data.productSelection?.mode || "auto",
-  );
-  const [bidMode, setBidMode] = useState(data.bidSettings?.mode || "auto");
-  const [categoryBids, setCategoryBids] = useState(
-    data.bidSettings?.categoryBids || {},
-  );
-  const [keywordMode, setKeywordMode] = useState(
-    data.keywordSettings?.mode || "all",
-  );
-  const [keywords, setKeywords] = useState(
-    data.keywordSettings?.keywords || [],
-  );
-  const [keywordInput, setKeywordInput] = useState("");
-  const [networkMode, setNetworkMode] = useState(
-    data.networkTargeting?.mode || "all",
-  );
-  const [selectedNetworks, setSelectedNetworks] = useState(
-    data.networkTargeting?.networks || [],
-  );
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
+export function ProductAdSettingsDrawer({ open, onClose, type, data, updateData }) {
+  const [searchQuery,        setSearchQuery]        = useState("");
+  const [selectedProducts,   setSelectedProducts]   = useState(data.productSelection?.selectedProducts  || []);
+  const [selectedCategories, setSelectedCategories] = useState(data.productSelection?.selectedCategories || []);
+  const [productMode,        setProductMode]        = useState(data.productSelection?.mode     || "auto");
+  const [bidMode,            setBidMode]            = useState(data.bidSettings?.mode          || "auto");
+  const [categoryBids,       setCategoryBids]       = useState(data.bidSettings?.categoryBids  || {});
+  const [keywordMode,        setKeywordMode]        = useState(data.keywordSettings?.mode      || "all");
+  const [keywords,           setKeywords]           = useState(data.keywordSettings?.keywords  || []);
+  const [keywordInput,       setKeywordInput]       = useState("");
+  const [networkMode,        setNetworkMode]        = useState(data.networkTargeting?.mode     || "all");
+  const [selectedNetworks,   setSelectedNetworks]   = useState(data.networkTargeting?.networks || []);
+
+  // Hover states
+  const [closeHov,  setCloseHov]  = useState(false);
+  const [cancelHov, setCancelHov] = useState(false);
 
   useEffect(() => {
     if (data.productSelection) {
       setProductMode(data.productSelection.mode);
-      setSelectedProducts(data.productSelection.selectedProducts || []);
+      setSelectedProducts(data.productSelection.selectedProducts   || []);
       setSelectedCategories(data.productSelection.selectedCategories || []);
     }
     if (data.bidSettings) {
@@ -137,10 +203,8 @@ export function ProductAdSettingsDrawer({
       updateData({
         productSelection: {
           mode: productMode,
-          selectedProducts:
-            productMode === "manual" ? selectedProducts : undefined,
-          selectedCategories:
-            productMode === "manual" ? selectedCategories : undefined,
+          selectedProducts:   productMode === "manual" ? selectedProducts   : undefined,
+          selectedCategories: productMode === "manual" ? selectedCategories : undefined,
         },
       });
     } else if (type === "bid") {
@@ -175,209 +239,195 @@ export function ProductAdSettingsDrawer({
     }
   };
 
-  const removeKeyword = (kw) => {
-    setKeywords(keywords.filter((k) => k !== kw));
-  };
-
-  const toggleProduct = (id) => {
-    setSelectedProducts((prev) =>
-      prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id],
-    );
-  };
-
-  const toggleCategory = (id) => {
-    setSelectedCategories((prev) =>
-      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id],
-    );
-  };
-
-  const toggleNetwork = (id) => {
-    setSelectedNetworks((prev) =>
-      prev.includes(id) ? prev.filter((n) => n !== id) : [...prev, id],
-    );
-  };
+  const removeKeyword = (kw) => setKeywords(keywords.filter((k) => k !== kw));
+  const toggleProduct  = (id) => setSelectedProducts((prev)   => prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]);
+  const toggleCategory = (id) => setSelectedCategories((prev) => prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]);
+  const toggleNetwork  = (id) => setSelectedNetworks((prev)   => prev.includes(id) ? prev.filter((n) => n !== id) : [...prev, id]);
 
   const getTitle = () => {
     switch (type) {
-      case "product":
-        return "Product Selection";
-      case "bid":
-        return "Bid Settings";
-      case "keyword":
-        return "Keyword Settings";
-      case "network":
-        return "Network Targeting";
-      default:
-        return "";
+      case "product": return "Product Selection";
+      case "bid":     return "Bid Settings";
+      case "keyword": return "Keyword Settings";
+      case "network": return "Network Targeting";
+      default:        return "";
     }
   };
 
   const getIcon = () => {
     switch (type) {
-      case "product":
-        return <Package size={20} className="text-[#f59e0b]" />;
-      case "bid":
-        return <DollarSign size={20} className="text-[#10b981]" />;
-      case "keyword":
-        return <Key size={20} className="text-[#8b5cf6]" />;
-      case "network":
-        return <Globe size={20} className="text-[#0ea5e9]" />;
-      default:
-        return null;
+      case "product": return <PackageIcon size={20} color="#f59e0b" />;
+      case "bid":     return <DollarIcon  size={20} color="#10b981" />;
+      case "keyword": return <KeyIcon     size={20} color="#7349a1" />; // brand-secondary — no osmos token yet
+      case "network": return <GlobeIcon   size={20} color="#0ea5e9" />;
+      default:        return null;
     }
   };
 
   if (!open || !type) return null;
 
+  // ── Shared label style ──
+  const labelStyle = {
+    fontFamily: FONT,
+    fontSize: 13,
+    fontWeight: 500,
+    color: TEXT,
+    display: "block",
+  };
+
+  // ── Shared input style ──
+  const inputStyle = {
+    fontFamily: FONT,
+    width: "100%",
+    padding: "8px 12px",
+    fontSize: 13,
+    color: TEXT,
+    background: BG,
+    border: `1px solid ${BORDER}`,
+    borderRadius: 8,
+    outline: "none",
+    boxSizing: "border-box",
+  };
+
   return createPortal(
-    <div className="fixed inset-0 z-[200] flex justify-end">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-[500px] max-w-full h-full bg-white shadow-xl flex flex-col animate-in slide-in-from-right duration-300">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#efefef]">
-          <div className="flex items-center gap-3">
+    <div style={{ position: "fixed", inset: 0, zIndex: 200, display: "flex", justifyContent: "flex-end" }}>
+      {/* Backdrop */}
+      <div
+        onClick={onClose}
+        style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)" }}
+      />
+
+      {/* Drawer panel */}
+      <div style={{
+        position: "relative",
+        width: 500,
+        maxWidth: "100%",
+        height: "100%",
+        background: BG,
+        boxShadow: "0 8px 40px rgba(0,0,0,0.18)",
+        display: "flex",
+        flexDirection: "column",
+        fontFamily: FONT,
+      }}>
+        {/* ── Header ── */}
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "16px 24px",
+          borderBottom: `1px solid ${BORDER}`,
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             {getIcon()}
-            <h2 className="text-lg font-semibold text-[#404040]">
+            <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 600, color: TEXT, margin: 0 }}>
               {getTitle()}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#f5f5f5] text-[#7b7b7b]"
+            onMouseEnter={() => setCloseHov(true)}
+            onMouseLeave={() => setCloseHov(false)}
+            style={{
+              width: 32,
+              height: 32,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 8,
+              border: "none",
+              background: closeHov ? BG_SUB : "transparent",
+              color: TEXT_MID,
+              cursor: "pointer",
+              transition: "all 0.15s",
+              padding: 0,
+            }}
           >
-            <X size={20} />
+            <CloseIcon size={20} color={TEXT_MID} />
           </button>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
+        {/* ── Content ── */}
+        <div style={{ flex: 1, overflowY: "auto", padding: 24 }}>
+
+          {/* ===== PRODUCT ===== */}
           {type === "product" && (
-            <div className="space-y-6">
+            <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
               {/* Mode Selection */}
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-[#404040]">
-                  Selection Mode
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <label style={labelStyle}>Selection Mode</label>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 12 }}>
+                  <ModeCard
+                    active={productMode === "auto"}
                     onClick={() => setProductMode("auto")}
-                    className={`p-4 rounded-lg border-2 text-left transition-all ${
-                      productMode === "auto"
-                        ? "border-[#0097f0] bg-[#e8f4fd]"
-                        : "border-[#efefef] hover:border-[#dedede]"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-[#404040]">
-                        Automatic
-                      </span>
-                      {productMode === "auto" && (
-                        <Check size={16} className="text-[#0097f0]" />
-                      )}
-                    </div>
-                    <p className="text-xs text-[#7b7b7b]">
-                      AI selects best performing products
-                    </p>
-                  </button>
-                  <button
+                    label="Automatic"
+                    description="AI selects best performing products"
+                  />
+                  <ModeCard
+                    active={productMode === "manual"}
                     onClick={() => setProductMode("manual")}
-                    className={`p-4 rounded-lg border-2 text-left transition-all ${
-                      productMode === "manual"
-                        ? "border-[#0097f0] bg-[#e8f4fd]"
-                        : "border-[#efefef] hover:border-[#dedede]"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-[#404040]">
-                        Manual
-                      </span>
-                      {productMode === "manual" && (
-                        <Check size={16} className="text-[#0097f0]" />
-                      )}
-                    </div>
-                    <p className="text-xs text-[#7b7b7b]">
-                      Select specific products or categories
-                    </p>
-                  </button>
+                    label="Manual"
+                    description="Select specific products or categories"
+                  />
                 </div>
               </div>
 
               {productMode === "manual" && (
                 <>
                   {/* Search */}
-                  <div className="relative">
-                    <Search
-                      size={16}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9a9a9a]"
-                    />
-                    <Input
+                  <div style={{ position: "relative" }}>
+                    <span style={{
+                      position: "absolute",
+                      left: 12,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      display: "flex",
+                      alignItems: "center",
+                      pointerEvents: "none",
+                    }}>
+                      <SearchIcon size={16} color={TEXT_SUB} />
+                    </span>
+                    <input
                       placeholder="Search products or categories..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-9 border-[#dedede]"
+                      style={{ ...inputStyle, paddingLeft: 36 }}
                     />
                   </div>
 
                   {/* Categories */}
-                  <div className="space-y-3">
-                    <label className="text-sm font-medium text-[#404040]">
-                      Categories
-                    </label>
-                    <div className="space-y-2">
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    <label style={labelStyle}>Categories</label>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                       {mockCategories.map((cat) => (
-                        <button
+                        <SelectableRow
                           key={cat.id}
+                          active={selectedCategories.includes(cat.id)}
                           onClick={() => toggleCategory(cat.id)}
-                          className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all ${
-                            selectedCategories.includes(cat.id)
-                              ? "border-[#0097f0] bg-[#e8f4fd]"
-                              : "border-[#efefef] hover:border-[#dedede]"
-                          }`}
                         >
                           <div>
-                            <p className="text-sm font-medium text-[#404040]">
-                              {cat.name}
-                            </p>
-                            <p className="text-xs text-[#9a9a9a]">
-                              {cat.productCount.toLocaleString()} products
-                            </p>
+                            <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: TEXT, margin: 0 }}>{cat.name}</p>
+                            <p style={{ fontFamily: FONT, fontSize: 12, color: TEXT_SUB, margin: 0 }}>{cat.productCount.toLocaleString()} products</p>
                           </div>
-                          {selectedCategories.includes(cat.id) && (
-                            <Check size={16} className="text-[#0097f0]" />
-                          )}
-                        </button>
+                        </SelectableRow>
                       ))}
                     </div>
                   </div>
 
                   {/* Individual Products */}
-                  <div className="space-y-3">
-                    <label className="text-sm font-medium text-[#404040]">
-                      Individual Products
-                    </label>
-                    <div className="space-y-2 max-h-60 overflow-y-auto">
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    <label style={labelStyle}>Individual Products</label>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 240, overflowY: "auto" }}>
                       {mockProducts.map((product) => (
-                        <button
+                        <SelectableRow
                           key={product.id}
+                          active={selectedProducts.includes(product.id)}
                           onClick={() => toggleProduct(product.id)}
-                          className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all ${
-                            selectedProducts.includes(product.id)
-                              ? "border-[#0097f0] bg-[#e8f4fd]"
-                              : "border-[#efefef] hover:border-[#dedede]"
-                          }`}
                         >
                           <div>
-                            <p className="text-sm font-medium text-[#404040]">
-                              {product.name}
-                            </p>
-                            <p className="text-xs text-[#9a9a9a]">
-                              {product.category} · ${product.price}
-                            </p>
+                            <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: TEXT, margin: 0 }}>{product.name}</p>
+                            <p style={{ fontFamily: FONT, fontSize: 12, color: TEXT_SUB, margin: 0 }}>{product.category} · ${product.price}</p>
                           </div>
-                          {selectedProducts.includes(product.id) && (
-                            <Check size={16} className="text-[#0097f0]" />
-                          )}
-                        </button>
+                        </SelectableRow>
                       ))}
                     </div>
                   </div>
@@ -386,92 +436,72 @@ export function ProductAdSettingsDrawer({
             </div>
           )}
 
+          {/* ===== BID ===== */}
           {type === "bid" && (
-            <div className="space-y-6">
+            <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
               {/* Mode Selection */}
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-[#404040]">
-                  Bidding Mode
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <label style={labelStyle}>Bidding Mode</label>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 12 }}>
+                  <ModeCard
+                    active={bidMode === "auto"}
                     onClick={() => setBidMode("auto")}
-                    className={`p-4 rounded-lg border-2 text-left transition-all ${
-                      bidMode === "auto"
-                        ? "border-[#0097f0] bg-[#e8f4fd]"
-                        : "border-[#efefef] hover:border-[#dedede]"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-[#404040]">
-                        Automatic
-                      </span>
-                      {bidMode === "auto" && (
-                        <Check size={16} className="text-[#0097f0]" />
-                      )}
-                    </div>
-                    <p className="text-xs text-[#7b7b7b]">
-                      AI optimizes bids for best ROI
-                    </p>
-                  </button>
-                  <button
+                    label="Automatic"
+                    description="AI optimizes bids for best ROI"
+                  />
+                  <ModeCard
+                    active={bidMode === "manual"}
                     onClick={() => setBidMode("manual")}
-                    className={`p-4 rounded-lg border-2 text-left transition-all ${
-                      bidMode === "manual"
-                        ? "border-[#0097f0] bg-[#e8f4fd]"
-                        : "border-[#efefef] hover:border-[#dedede]"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-[#404040]">
-                        Manual
-                      </span>
-                      {bidMode === "manual" && (
-                        <Check size={16} className="text-[#0097f0]" />
-                      )}
-                    </div>
-                    <p className="text-xs text-[#7b7b7b]">
-                      Set custom bids per category
-                    </p>
-                  </button>
+                    label="Manual"
+                    description="Set custom bids per category"
+                  />
                 </div>
               </div>
 
               {bidMode === "manual" && (
-                <div className="space-y-3">
-                  <label className="text-sm font-medium text-[#404040]">
-                    Category Bids
-                  </label>
-                  <div className="space-y-3">
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <label style={labelStyle}>Category Bids</label>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     {mockCategories.map((cat) => (
                       <div
                         key={cat.id}
-                        className="flex items-center justify-between p-3 bg-[#f8f9fa] rounded-lg"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: 12,
+                          background: BG_SUB,
+                          borderRadius: 8,
+                        }}
                       >
                         <div>
-                          <p className="text-sm font-medium text-[#404040]">
-                            {cat.name}
-                          </p>
-                          <p className="text-xs text-[#9a9a9a]">
-                            Suggested: $0.50 - $1.20
-                          </p>
+                          <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: TEXT, margin: 0 }}>{cat.name}</p>
+                          <p style={{ fontFamily: FONT, fontSize: 12, color: TEXT_SUB, margin: 0 }}>Suggested: $0.50 - $1.20</p>
                         </div>
-                        <div className="relative w-24">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7b7b7b]">
-                            $
-                          </span>
-                          <Input
+                        <div style={{ position: "relative", width: 96 }}>
+                          <span style={{
+                            position: "absolute",
+                            left: 10,
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            fontFamily: FONT,
+                            fontSize: 13,
+                            color: TEXT_MID,
+                            pointerEvents: "none",
+                          }}>$</span>
+                          <input
                             type="number"
                             step="0.01"
                             value={categoryBids[cat.id] || ""}
-                            onChange={(e) =>
-                              setCategoryBids({
-                                ...categoryBids,
-                                [cat.id]: e.target.value,
-                              })
-                            }
-                            className="pl-7 h-8 text-sm border-[#dedede]"
+                            onChange={(e) => setCategoryBids({ ...categoryBids, [cat.id]: e.target.value })}
                             placeholder="0.00"
+                            style={{
+                              ...inputStyle,
+                              paddingLeft: 24,
+                              height: 32,
+                              width: "100%",
+                              fontSize: 13,
+                            }}
                           />
                         </div>
                       </div>
@@ -482,101 +512,64 @@ export function ProductAdSettingsDrawer({
             </div>
           )}
 
+          {/* ===== KEYWORD ===== */}
           {type === "keyword" && (
-            <div className="space-y-6">
+            <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
               {/* Mode Selection */}
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-[#404040]">
-                  Keyword Mode
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <label style={labelStyle}>Keyword Mode</label>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 12 }}>
+                  <ModeCard
+                    active={keywordMode === "all"}
                     onClick={() => setKeywordMode("all")}
-                    className={`p-4 rounded-lg border-2 text-left transition-all ${
-                      keywordMode === "all"
-                        ? "border-[#0097f0] bg-[#e8f4fd]"
-                        : "border-[#efefef] hover:border-[#dedede]"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-[#404040]">
-                        All Keywords
-                      </span>
-                      {keywordMode === "all" && (
-                        <Check size={16} className="text-[#0097f0]" />
-                      )}
-                    </div>
-                    <p className="text-xs text-[#7b7b7b]">
-                      Target all relevant keywords
-                    </p>
-                  </button>
-                  <button
+                    label="All Keywords"
+                    description="Target all relevant keywords"
+                  />
+                  <ModeCard
+                    active={keywordMode === "manual"}
                     onClick={() => setKeywordMode("manual")}
-                    className={`p-4 rounded-lg border-2 text-left transition-all ${
-                      keywordMode === "manual"
-                        ? "border-[#0097f0] bg-[#e8f4fd]"
-                        : "border-[#efefef] hover:border-[#dedede]"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-[#404040]">
-                        Manual
-                      </span>
-                      {keywordMode === "manual" && (
-                        <Check size={16} className="text-[#0097f0]" />
-                      )}
-                    </div>
-                    <p className="text-xs text-[#7b7b7b]">
-                      Specify exact keywords to target
-                    </p>
-                  </button>
+                    label="Manual"
+                    description="Specify exact keywords to target"
+                  />
                 </div>
               </div>
 
               {keywordMode === "manual" && (
-                <div className="space-y-3">
-                  <label className="text-sm font-medium text-[#404040]">
-                    Add Keywords
-                  </label>
-                  <div className="flex gap-2">
-                    <Input
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <label style={labelStyle}>Add Keywords</label>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <input
                       placeholder="Enter keyword..."
                       value={keywordInput}
                       onChange={(e) => setKeywordInput(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && addKeyword()}
-                      className="border-[#dedede]"
+                      style={{ ...inputStyle, flex: 1 }}
                     />
-
                     <Button
+                      variant="primary"
                       onClick={addKeyword}
-                      className="bg-[#0097f0] hover:bg-[#2983d4] text-white"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "0 12px",
+                        height: 36,
+                        minWidth: 36,
+                      }}
                     >
-                      <Plus size={16} />
+                      <PlusIcon size={16} color="#fff" />
                     </Button>
                   </div>
-                  <p className="text-xs text-[#9a9a9a]">
+                  <p style={{ fontFamily: FONT, fontSize: 12, color: TEXT_SUB, margin: 0 }}>
                     Phrase match type. Max 50 keywords.
                   </p>
 
                   {keywords.length > 0 && (
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-[#404040]">
-                        Keywords ({keywords.length})
-                      </label>
-                      <div className="flex flex-wrap gap-2">
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                      <label style={labelStyle}>Keywords ({keywords.length})</label>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                         {keywords.map((kw) => (
-                          <span
-                            key={kw}
-                            className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#f0f0f0] text-[#404040] text-sm rounded-full"
-                          >
-                            {kw}
-                            <button
-                              onClick={() => removeKeyword(kw)}
-                              className="hover:text-[#d83c3b]"
-                            >
-                              <X size={14} />
-                            </button>
-                          </span>
+                          <KeywordChip key={kw} label={kw} onRemove={() => removeKeyword(kw)} />
                         ))}
                       </div>
                     </div>
@@ -586,88 +579,46 @@ export function ProductAdSettingsDrawer({
             </div>
           )}
 
+          {/* ===== NETWORK ===== */}
           {type === "network" && (
-            <div className="space-y-6">
+            <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
               {/* Mode Selection */}
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-[#404040]">
-                  Network Targeting
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <label style={labelStyle}>Network Targeting</label>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 12 }}>
+                  <ModeCard
+                    active={networkMode === "all"}
                     onClick={() => setNetworkMode("all")}
-                    className={`p-4 rounded-lg border-2 text-left transition-all ${
-                      networkMode === "all"
-                        ? "border-[#0097f0] bg-[#e8f4fd]"
-                        : "border-[#efefef] hover:border-[#dedede]"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-[#404040]">
-                        All Networks
-                      </span>
-                      {networkMode === "all" && (
-                        <Check size={16} className="text-[#0097f0]" />
-                      )}
-                    </div>
-                    <p className="text-xs text-[#7b7b7b]">
-                      Show on all retail networks
-                    </p>
-                  </button>
-                  <button
+                    label="All Networks"
+                    description="Show on all retail networks"
+                  />
+                  <ModeCard
+                    active={networkMode === "manual"}
                     onClick={() => setNetworkMode("manual")}
-                    className={`p-4 rounded-lg border-2 text-left transition-all ${
-                      networkMode === "manual"
-                        ? "border-[#0097f0] bg-[#e8f4fd]"
-                        : "border-[#efefef] hover:border-[#dedede]"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-[#404040]">
-                        Select Networks
-                      </span>
-                      {networkMode === "manual" && (
-                        <Check size={16} className="text-[#0097f0]" />
-                      )}
-                    </div>
-                    <p className="text-xs text-[#7b7b7b]">
-                      Choose specific retail networks
-                    </p>
-                  </button>
+                    label="Select Networks"
+                    description="Choose specific retail networks"
+                  />
                 </div>
               </div>
 
               {networkMode === "manual" && (
-                <div className="space-y-3">
-                  <label className="text-sm font-medium text-[#404040]">
-                    Select Retail Networks
-                  </label>
-                  <div className="space-y-2">
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <label style={labelStyle}>Select Retail Networks</label>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                     {mockNetworks.map((network) => (
-                      <button
+                      <SelectableRow
                         key={network.id}
+                        active={selectedNetworks.includes(network.id)}
                         onClick={() => toggleNetwork(network.id)}
-                        className={`w-full flex items-center justify-between p-4 rounded-lg border transition-all ${
-                          selectedNetworks.includes(network.id)
-                            ? "border-[#0097f0] bg-[#e8f4fd]"
-                            : "border-[#efefef] hover:border-[#dedede]"
-                        }`}
                       >
-                        <div className="flex items-center gap-3">
-                          <span className="text-2xl">{network.logo}</span>
-                          <div className="text-left">
-                            <p className="text-sm font-medium text-[#404040]">
-                              {network.name}
-                            </p>
-                            <p className="text-xs text-[#9a9a9a]">
-                              Reach: {network.reach} users
-                            </p>
+                        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                          <span style={{ fontSize: 24 }}>{network.logo}</span>
+                          <div style={{ textAlign: "left" }}>
+                            <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: TEXT, margin: 0 }}>{network.name}</p>
+                            <p style={{ fontFamily: FONT, fontSize: 12, color: TEXT_SUB, margin: 0 }}>Reach: {network.reach} users</p>
                           </div>
                         </div>
-                        {selectedNetworks.includes(network.id) && (
-                          <Check size={16} className="text-[#0097f0]" />
-                        )}
-                      </button>
+                      </SelectableRow>
                     ))}
                   </div>
                 </div>
@@ -676,24 +627,62 @@ export function ProductAdSettingsDrawer({
           )}
         </div>
 
-        {/* Footer */}
-        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-[#efefef]">
-          <Button
-            variant="outline"
-            onClick={onClose}
-            className="border-[#dedede] bg-transparent"
-          >
+        {/* ── Footer ── */}
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          gap: 12,
+          padding: "16px 24px",
+          borderTop: `1px solid ${BORDER}`,
+        }}>
+          <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button
-            onClick={handleSave}
-            className="bg-[#0097f0] hover:bg-[#2983d4] text-white"
-          >
+          <Button variant="primary" onClick={handleSave}>
             Save
           </Button>
         </div>
       </div>
     </div>,
     document.body,
+  );
+}
+
+// ─── Keyword chip — isolated hover state ──────────────────────────────────────
+function KeywordChip({ label, onRemove }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <span style={{
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 4,
+      padding: "6px 12px",
+      background: BG_SUB,
+      color: TEXT,
+      fontSize: 13,
+      fontFamily: FONT,
+      borderRadius: 999,
+      border: `1px solid ${BORDER}`,
+    }}>
+      {label}
+      <button
+        onClick={onRemove}
+        onMouseEnter={() => setHov(true)}
+        onMouseLeave={() => setHov(false)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          background: "transparent",
+          border: "none",
+          padding: 0,
+          cursor: "pointer",
+          color: hov ? "#d83c3b" : TEXT_MID,
+          transition: "color 0.15s",
+        }}
+      >
+        <CloseIcon size={14} color={hov ? "#d83c3b" : TEXT_MID} />
+      </button>
+    </span>
   );
 }

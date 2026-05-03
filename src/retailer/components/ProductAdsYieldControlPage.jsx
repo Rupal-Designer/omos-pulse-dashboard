@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Icon } from '../../ui/atoms/Icon';
+import { Icon, InfoIcon } from '../../ui/atoms/Icon';
 import { Toast, useToast } from '../../ui/atoms/Toast';
 
 const ROWS = [
@@ -36,15 +36,6 @@ const GridIcon = () => (
   </Icon>
 );
 
-const InfoIcon = () => (
-  <span style={{ verticalAlign: 'middle', marginLeft: 4, display: 'inline-flex' }}>
-    <Icon size={13} strokeWidth={2}>
-      <circle cx="12" cy="12" r="10" />
-      <line x1="12" y1="8" x2="12" y2="8" strokeWidth="3" strokeLinecap="round" />
-      <line x1="12" y1="12" x2="12" y2="16" />
-    </Icon>
-  </span>
-);
 
 export default function ProductAdsYieldControlPage() {
   const [form, setForm] = useState({ floorCpc: '$15', ceilingCpc: '$15', bidMultiplier: '5' });
@@ -114,7 +105,7 @@ export default function ProductAdsYieldControlPage() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif", display: 'flex', alignItems: 'center' }}>
         {label}&nbsp;<span style={{ color: 'var(--alert-error-primary)' }}>*</span>
-        <InfoIcon />
+        <span style={{ verticalAlign: 'middle', marginLeft: 4, display: 'inline-flex' }}><InfoIcon size={13} /></span>
       </label>
       <input
         value={form[key]}

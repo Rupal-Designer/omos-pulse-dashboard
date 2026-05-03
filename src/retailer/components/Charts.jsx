@@ -3,6 +3,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
+import { ChevronDownIcon, DownloadIcon } from '../../ui/atoms/Icon';
 
 const dates = ['05/08','05/09','05/10','05/11','05/12','05/13','05/14'];
 
@@ -37,23 +38,7 @@ function formatYAxisM(val) {
 }
 
 function ChevronDown({ color = '#555' }) {
-  return (
-    <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-      stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="6 9 12 15 18 9"/>
-    </svg>
-  );
-}
-
-function DownloadIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-      stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-      <polyline points="7 10 12 15 17 10"/>
-      <line x1="12" y1="15" x2="12" y2="3"/>
-    </svg>
-  );
+  return <ChevronDownIcon size={11} color={color} strokeWidth={2.5} />;
 }
 
 function MetricTag({ color, label }) {

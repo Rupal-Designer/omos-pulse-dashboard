@@ -85,9 +85,6 @@ function getDateCols() {
 }
 const DATE_COLS = getDateCols();
 
-function Ico({ d, size = 13, stroke = 'currentColor', sw = 1.8 }) {
-  return <Icon size={size} color={stroke} strokeWidth={sw}>{d}</Icon>;
-}
 
 export default function HealthReportPage() {
   const [tab, setTab] = useState('D');
@@ -105,10 +102,10 @@ export default function HealthReportPage() {
         {/* Card header */}
         <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 28, height: 28, background: 'var(--osmos-brand-primary-muted)', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Ico stroke="var(--osmos-brand-primary)" d={<><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></>} />
+            <Icon size={13} color="var(--osmos-brand-primary)" strokeWidth={1.8}><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></Icon>
           </div>
           <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)' }}>Health Report</span>
-          <Ico stroke="var(--osmos-fg-subtle)" d={<><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>} size={13} />
+          <Icon size={13} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></Icon>
         </div>
 
         {/* Toolbar */}
@@ -135,7 +132,7 @@ export default function HealthReportPage() {
               padding: '5px 10px', cursor: 'pointer', fontSize: 11, color: 'var(--osmos-fg-muted)',
               fontFamily: "'Open Sans', sans-serif",
             }}>
-              <Ico d={<><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></>} size={11} sw={2.5} />
+              <Icon size={11} color="currentColor" strokeWidth={2.5}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></Icon>
               Add Filter
             </button>
           </div>
@@ -143,12 +140,12 @@ export default function HealthReportPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             {/* Columns button */}
             <button style={{ height: 30, padding: '0 10px', display: 'flex', alignItems: 'center', gap: 5, background: '#fff', border: '1px solid var(--osmos-border)', borderRadius: 6, cursor: 'pointer', color: 'var(--osmos-fg-muted)' }}>
-              <Ico d={<><rect x="3" y="4" width="18" height="16" rx="1"/><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/></>} />
-              <Ico d={<polyline points="6 9 12 15 18 9"/>} size={11} />
+              <Icon size={13} color="currentColor" strokeWidth={1.8}><rect x="3" y="4" width="18" height="16" rx="1"/><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/></Icon>
+              <Icon size={11} color="currentColor" strokeWidth={1.8}><polyline points="6 9 12 15 18 9"/></Icon>
             </button>
             {/* Search */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '0 10px', height: 30 }}>
-              <Ico d={<><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>} stroke="var(--osmos-fg-subtle)" />
+              <Icon size={13} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>
               <input
                 value={search} onChange={e => setSearch(e.target.value)}
                 placeholder="Search Parameters"
@@ -170,7 +167,7 @@ export default function HealthReportPage() {
                   <th key={d} style={{ padding: '9px 14px', textAlign: 'right', fontWeight: 500, color: 'var(--osmos-fg-muted)', fontSize: 11, whiteSpace: 'nowrap', minWidth: 70 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4 }}>
                       {d}
-                      <Ico d={<><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>} size={11} stroke="var(--osmos-fg-subtle)" />
+                      <Icon size={11} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></Icon>
                     </div>
                   </th>
                 ))}

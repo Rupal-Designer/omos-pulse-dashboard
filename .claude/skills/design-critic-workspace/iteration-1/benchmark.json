@@ -1,0 +1,137 @@
+{
+  "metadata": {
+    "skill_name": "design-critic",
+    "skill_path": ".claude/skills/design-critic/SKILL.md",
+    "executor_model": "claude-sonnet-4-6",
+    "analyzer_model": "claude-sonnet-4-6",
+    "timestamp": "2026-04-24T06:20:00Z",
+    "evals_run": [
+      "campaign-duplicate-feature-critique",
+      "cpm-rules-page-code-critique",
+      "smart-budget-recommender-feature-critique"
+    ],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "campaign-duplicate-feature-critique",
+      "config": "with_skill",
+      "pass_rate": 1.0,
+      "duration_seconds": 157.6,
+      "total_tokens": 34611,
+      "assertions": [
+        {"text": "produces_rigor_matrix_table", "passed": true, "evidence": "Full 4-dimension markdown table present with scores."},
+        {"text": "includes_numeric_scores", "passed": true, "evidence": "Feasibility 3/5, UX 3/5, Business 4/5, Delight 2/5, Composite 12/20."},
+        {"text": "has_verdict_section", "passed": true, "evidence": "## Verdict header present with actionable paragraph."},
+        {"text": "covers_all_four_lenses", "passed": true, "evidence": "All four agent sections present inside collapsible details blocks."},
+        {"text": "surfaces_conflicts_or_agreements", "passed": true, "evidence": "## Conflicts (Needs Human Judgment) section with two named conflicts."},
+        {"text": "opinionated_not_hedged", "passed": true, "evidence": "Opens 'Build campaign duplication, but not as described' with a concrete 4-step build sequence."}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "campaign-duplicate-feature-critique",
+      "config": "without_skill",
+      "pass_rate": 0.667,
+      "duration_seconds": 117.3,
+      "total_tokens": 42670,
+      "assertions": [
+        {"text": "produces_rigor_matrix_table", "passed": true, "evidence": "Has a dimension scores table, though format differs from the structured Rigor Matrix."},
+        {"text": "includes_numeric_scores", "passed": true, "evidence": "Scores present as X/5 or X/10 per dimension."},
+        {"text": "has_verdict_section", "passed": true, "evidence": "Has a 'Minimum viable path' verdict paragraph."},
+        {"text": "covers_all_four_lenses", "passed": false, "evidence": "No separate named agent sections — content is integrated rather than structured per lens."},
+        {"text": "surfaces_conflicts_or_agreements", "passed": false, "evidence": "No conflict/synthesis section — each dimension evaluated independently without cross-lens deliberation."},
+        {"text": "opinionated_not_hedged", "passed": true, "evidence": "Verdict is direct: 'Build it — but not exactly as described.'"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "cpm-rules-page-code-critique",
+      "config": "with_skill",
+      "pass_rate": 1.0,
+      "duration_seconds": 206.6,
+      "total_tokens": 36998,
+      "assertions": [
+        {"text": "reads_actual_source_file", "passed": true, "evidence": "References specific elements: onClick bug on body button, hardcoded CPM gauge at left:48%, 'Help text here' placeholders, 11-column table schema."},
+        {"text": "produces_rigor_matrix_table", "passed": true, "evidence": "Full 4-dimension Rigor Matrix table with scores and priorities."},
+        {"text": "has_verdict_section", "passed": true, "evidence": "## Verdict present with P0 fix list before launch."},
+        {"text": "ux_cites_specific_friction", "passed": true, "evidence": "Names: dual submit buttons, missing onClick on body button, truncated names without tooltip, static gauge position."},
+        {"text": "business_connects_to_yield", "passed": true, "evidence": "Business section references 'yield revenue on a revenue-critical screen' and 'ceiling-break narrative'."},
+        {"text": "covers_all_four_lenses", "passed": true, "evidence": "All four agent sections present in collapsible details blocks."}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "cpm-rules-page-code-critique",
+      "config": "without_skill",
+      "pass_rate": 1.0,
+      "duration_seconds": 105.9,
+      "total_tokens": 28821,
+      "assertions": [
+        {"text": "reads_actual_source_file", "passed": true, "evidence": "References specific component elements: 401-line component, tab filter, search state, colored badges, dual submit buttons."},
+        {"text": "produces_rigor_matrix_table", "passed": true, "evidence": "Has a structured dimension scores table with findings."},
+        {"text": "has_verdict_section", "passed": true, "evidence": "Has an overall verdict paragraph with score."},
+        {"text": "ux_cites_specific_friction", "passed": true, "evidence": "Names 7 specific priority fixes with exact component references."},
+        {"text": "business_connects_to_yield", "passed": true, "evidence": "References business impact, no-spends rows, and revenue-critical classification."},
+        {"text": "covers_all_four_lenses", "passed": true, "evidence": "Has four distinct scored dimension sections."}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "smart-budget-recommender-feature-critique",
+      "config": "with_skill",
+      "pass_rate": 1.0,
+      "duration_seconds": 175.1,
+      "total_tokens": 29011,
+      "assertions": [
+        {"text": "feasibility_flags_ml_complexity", "passed": true, "evidence": "Names three distinct ML/data pipelines required: similarity engine, seasonality model, live inventory API."},
+        {"text": "delight_identifies_wow_moment", "passed": true, "evidence": "Delight section explicitly evaluates: 'Latent wow moment exists but accuracy is the prerequisite.'"},
+        {"text": "produces_rigor_matrix_table", "passed": true, "evidence": "Full 4-dimension Rigor Matrix with scores, key findings, recommendations, and priorities."},
+        {"text": "has_verdict_section", "passed": true, "evidence": "## Verdict present with explicit build/defer/kill breakdown across three phases."},
+        {"text": "verdict_addresses_scope", "passed": true, "evidence": "Verdict explicitly kills 'shipping full ML recommendation in v1' and scopes to statistical benchmark for v1."},
+        {"text": "surfaces_agent_conflict", "passed": true, "evidence": "## Conflicts section names 'Feasibility says defer graph vs. Delight says graph is the wow moment' as explicit human-judgment item."}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "smart-budget-recommender-feature-critique",
+      "config": "without_skill",
+      "pass_rate": 0.667,
+      "duration_seconds": 137.0,
+      "total_tokens": 52680,
+      "assertions": [
+        {"text": "feasibility_flags_ml_complexity", "passed": true, "evidence": "References 'live ad-slot availability model', 'seasonal modeling', and '12+ months of category data' as complexity factors."},
+        {"text": "delight_identifies_wow_moment", "passed": true, "evidence": "Discusses delight arriving 'when the recommendation feels specific and is later validated.'"},
+        {"text": "produces_rigor_matrix_table", "passed": false, "evidence": "Has a Build vs. Cut table but no unified Rigor Matrix with all 4 dimensions in the standard format."},
+        {"text": "has_verdict_section", "passed": true, "evidence": "Has a 'Build vs. Cut in one table' section."},
+        {"text": "verdict_addresses_scope", "passed": true, "evidence": "Explicitly cuts live inventory integration and defers seasonal trends."},
+        {"text": "surfaces_agent_conflict", "passed": false, "evidence": "No cross-agent synthesis section — dimensions are evaluated independently without surfacing tensions between them."}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 179.8, "stddev": 25.2, "min": 157.6, "max": 206.6},
+      "tokens": {"mean": 33540, "stddev": 4031, "min": 29011, "max": 36998}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.778, "stddev": 0.192, "min": 0.667, "max": 1.0},
+      "time_seconds": {"mean": 120.1, "stddev": 15.7, "min": 105.9, "max": 137.0},
+      "tokens": {"mean": 41390, "stddev": 11948, "min": 28821, "max": 52680}
+    },
+    "delta": {
+      "pass_rate": "+0.22",
+      "time_seconds": "+59.7s (skill is slower — more deliberation work)",
+      "tokens": "-7850 (skill uses fewer tokens despite doing more structured work)"
+    }
+  },
+  "analyst_notes": [
+    "The Rigor Matrix table structure and cross-agent conflict synthesis are the primary discriminators — the two without_skill failures both missed these.",
+    "Eval 2 (CPM Rules code critique) scored 1.0 without_skill — meaning a strong analyst without the skill can match the output quality when given actual code to read. The skill's added value here is structure and the explicit conflict section.",
+    "The skill produces shorter outputs (fewer tokens) than the baseline despite more structured content — it focuses agents rather than letting them ramble.",
+    "All three with_skill Verdicts named something to kill or defer. Two of three without_skill Verdicts also did. The skill's Conflict section is the genuinely unique structural element.",
+    "Timing: with_skill runs take ~50% longer (multi-agent chain). Worth it for high-stakes design decisions; overkill for trivial feature reviews — consider adding a --fast flag."
+  ]
+}

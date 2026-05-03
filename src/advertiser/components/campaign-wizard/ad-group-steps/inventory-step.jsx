@@ -1,62 +1,50 @@
-"use client";
+import { useState } from 'react';
+import { CheckIcon, Icon } from '../../../../ui';
 
-import { Check, Sparkles, DollarSign } from "lucide-react";
-import { useState } from "react";
+const FONT     = "'Open Sans', sans-serif";
+const TEXT     = 'var(--osmos-fg)';
+const TEXT_MID = 'var(--osmos-fg-muted)';
+const TEXT_SUB = 'var(--osmos-fg-subtle)';
+const BORDER   = 'var(--osmos-border)';
+const BG       = 'var(--osmos-bg)';
+const BG_SUB   = 'var(--osmos-bg-subtle)';
+const ACCENT   = 'var(--osmos-brand-primary)';
+const ACCENT_M = 'var(--osmos-brand-primary-muted)';
+const AMBER    = 'var(--osmos-brand-amber)';
+const VIOLET   = '#7349a1'; // brand-secondary — no osmos token yet
 
+// ── Icons ─────────────────────────────────────────────────────────────────────
+const SparklesIcon = (props) => (
+  <Icon {...props}>
+    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3z"/>
+    <path d="M5 3v4"/><path d="M19 17v4"/>
+    <path d="M3 5h4"/><path d="M17 19h4"/>
+  </Icon>
+);
+
+const DollarSignIcon = (props) => (
+  <Icon {...props}>
+    <line x1="12" x2="12" y1="2" y2="22"/>
+    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+  </Icon>
+);
+
+// ── Data ──────────────────────────────────────────────────────────────────────
 const websitePages = [
-  {
-    id: 0,
-    name: "Home Page",
-    impressions: "2.5M",
-    inventories: 8,
-    targeting: 5,
-    tags: ["High Traffic", "Premium"],
-  },
-  {
-    id: 1,
-    name: "Category Page",
-    impressions: "1.8M",
-    inventories: 6,
-    targeting: 4,
-    tags: ["High Intent", "Category Specific"],
-  },
-  {
-    id: 2,
-    name: "Product Detail Page",
-    impressions: "3.2M",
-    inventories: 10,
-    targeting: 6,
-    tags: ["High Conversion", "Product Specific"],
-  },
-  {
-    id: 3,
-    name: "Search Results",
-    impressions: "1.5M",
-    inventories: 4,
-    targeting: 3,
-    tags: ["High Intent", "Keyword Based"],
-  },
-  {
-    id: 4,
-    name: "Cart Page",
-    impressions: "800K",
-    inventories: 3,
-    targeting: 2,
-    tags: ["High Conversion", "Checkout Flow"],
-  },
-  {
-    id: 5,
-    name: "Checkout Page",
-    impressions: "600K",
-    inventories: 2,
-    targeting: 2,
-    tags: ["Premium", "Checkout Flow"],
-  },
+  { id: 0, name: 'Home Page',           impressions: '2.5M', inventories: 8,  targeting: 5, tags: ['High Traffic', 'Premium']             },
+  { id: 1, name: 'Category Page',       impressions: '1.8M', inventories: 6,  targeting: 4, tags: ['High Intent', 'Category Specific']    },
+  { id: 2, name: 'Product Detail Page', impressions: '3.2M', inventories: 10, targeting: 6, tags: ['High Conversion', 'Product Specific'] },
+  { id: 3, name: 'Search Results',      impressions: '1.5M', inventories: 4,  targeting: 3, tags: ['High Intent', 'Keyword Based']        },
+  { id: 4, name: 'Cart Page',           impressions: '800K', inventories: 3,  targeting: 2, tags: ['High Conversion', 'Checkout Flow']    },
+  { id: 5, name: 'Checkout Page',       impressions: '600K', inventories: 2,  targeting: 2, tags: ['Premium', 'Checkout Flow']            },
 ];
 
+// ── InventoryStep ─────────────────────────────────────────────────────────────
 export function InventoryStep({ data, updateData }) {
-  const [bidOverrides, setBidOverrides] = useState(data.bidOverrides || {});
+  const [bidOverrides,    setBidOverrides]    = useState(data.bidOverrides || {});
   const [showBidOverrides, setShowBidOverrides] = useState(false);
+  const [hoveredPage,     setHoveredPage]     = useState(null);
+  const [clearHovered,    setClearHovered]    = useState(false);
 
   const togglePage = (id) => {
     const updated = data.selectedPages.includes(id)
@@ -72,113 +60,135 @@ export function InventoryStep({ data, updateData }) {
   };
 
   return (
-    <div className="space-y-8">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: FONT }}>
       <div>
-        <h2 className="text-2xl font-semibold text-[#2d2d2d] mb-2">
+        <h2 style={{ fontSize: 24, fontWeight: 600, color: TEXT, marginBottom: 8 }}>
           Select Inventory
         </h2>
-        <p className="text-[#6b7280]">
+        <p style={{ color: TEXT_MID }}>
           Choose the website pages where your ads will be displayed.
         </p>
       </div>
 
-      <div className="bg-white rounded-xl border border-[#e5e7eb] p-4">
-        <label className="flex items-center justify-between cursor-pointer">
-          <div className="flex items-center gap-2">
-            <DollarSign size={16} className="text-[#7349a1]" />
-            <span className="text-sm font-medium text-[#2d2d2d]">
+      {/* Bid Override Toggle */}
+      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <DollarSignIcon size={16} color={VIOLET} />
+            <span style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>
               Enable Inventory-Level Bid Overrides
             </span>
           </div>
+          {/* Toggle switch */}
           <button
             onClick={() => setShowBidOverrides(!showBidOverrides)}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              showBidOverrides ? "bg-[#7349a1]" : "bg-[#d1d5db]"
-            }`}
+            style={{
+              position: 'relative',
+              width: 44, height: 24, borderRadius: 999,
+              background: showBidOverrides ? VIOLET : TEXT_SUB,
+              border: 'none', cursor: 'pointer',
+              transition: 'background 0.15s', flexShrink: 0,
+            }}
           >
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                showBidOverrides ? "translate-x-6" : "translate-x-1"
-              }`}
-            />
+            <span style={{
+              position: 'absolute', top: 4,
+              width: 16, height: 16, borderRadius: '50%', background: '#fff',
+              transform: showBidOverrides ? 'translateX(24px)' : 'translateX(4px)',
+              transition: 'transform 0.15s',
+              display: 'block',
+            }} />
           </button>
-        </label>
+        </div>
         {showBidOverrides && (
-          <p className="text-xs text-[#6b7280] mt-2">
-            Set custom bid amounts for specific inventory pages to prioritize
-            high-value placements
+          <p style={{ fontSize: 12, color: TEXT_MID, marginTop: 8 }}>
+            Set custom bid amounts for specific inventory pages to prioritize high-value placements
           </p>
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      {/* Page Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
         {websitePages.map((page) => {
           const isSelected = data.selectedPages.includes(page.id);
+          const isHovered  = hoveredPage === page.id;
           return (
-            <div key={page.id} className="space-y-2">
+            <div key={page.id} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <button
                 onClick={() => togglePage(page.id)}
-                className={`w-full p-5 rounded-xl border-2 text-left transition-all relative ${
-                  isSelected
-                    ? "border-[#2563eb] bg-[#eff6ff]"
-                    : "border-[#e5e7eb] hover:border-[#d1d5db] hover:bg-[#f9fafb]"
-                }`}
+                onMouseEnter={() => setHoveredPage(page.id)}
+                onMouseLeave={() => setHoveredPage(null)}
+                style={{
+                  position: 'relative', width: '100%',
+                  padding: 20, borderRadius: 12, textAlign: 'left',
+                  border: `2px solid ${isSelected ? ACCENT : isHovered ? TEXT_MID : BORDER}`,
+                  background: isSelected ? ACCENT_M : isHovered ? BG_SUB : BG,
+                  cursor: 'pointer', transition: 'all 0.15s',
+                  fontFamily: FONT,
+                }}
               >
                 {isSelected && (
-                  <div className="absolute top-3 right-3 w-6 h-6 bg-[#2563eb] rounded-full flex items-center justify-center">
-                    <Check size={14} className="text-white" />
+                  <div style={{
+                    position: 'absolute', top: 12, right: 12,
+                    width: 24, height: 24, borderRadius: '50%',
+                    background: ACCENT,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <CheckIcon size={14} color="#fff" />
                   </div>
                 )}
 
-                <h4
-                  className={`font-semibold mb-2 ${isSelected ? "text-[#2563eb]" : "text-[#2d2d2d]"}`}
-                >
+                <h4 style={{ fontWeight: 600, marginBottom: 8, color: isSelected ? ACCENT : TEXT }}>
                   {page.name}
                 </h4>
 
-                <div className="flex items-center gap-1 text-[#f59e0b] text-sm mb-3">
-                  <Sparkles size={14} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: AMBER, fontSize: 13, marginBottom: 12 }}>
+                  <SparklesIcon size={14} color={AMBER} />
                   <span>Est. Daily Imp: {page.impressions}</span>
                 </div>
 
-                <div className="space-y-1 text-sm text-[#6b7280]">
-                  <div className="flex justify-between">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 13, color: TEXT_MID }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>Total Inventories</span>
-                    <span className="font-medium text-[#2d2d2d]">
-                      {page.inventories}
-                    </span>
+                    <span style={{ fontWeight: 500, color: TEXT }}>{page.inventories}</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>Targeting Options</span>
-                    <span className="font-medium text-[#2d2d2d]">
-                      {page.targeting}
-                    </span>
+                    <span style={{ fontWeight: 500, color: TEXT }}>{page.targeting}</span>
                   </div>
                 </div>
 
-                <div className="flex gap-2 mt-4">
+                <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
                   {page.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-2 py-1 bg-[#f3f4f6] text-[#6b7280] text-xs rounded"
-                    >
+                    <span key={tag} style={{
+                      padding: '4px 8px', background: BG_SUB,
+                      color: TEXT_MID, fontSize: 12, borderRadius: 4,
+                    }}>
                       {tag}
                     </span>
                   ))}
                 </div>
               </button>
 
+              {/* Bid Override Input */}
               {isSelected && showBidOverrides && (
-                <div className="px-4 py-3 bg-[#f9fafb] rounded-lg border border-[#e5e7eb]">
-                  <label className="block text-xs font-medium text-[#6b7280] mb-2">
+                <div style={{
+                  padding: '12px 16px', background: BG_SUB,
+                  borderRadius: 8, border: `1px solid ${BORDER}`,
+                }}>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: TEXT_MID, marginBottom: 8 }}>
                     Custom Bid ($)
                   </label>
                   <input
                     type="number"
-                    value={bidOverrides[page.id] || ""}
+                    value={bidOverrides[page.id] || ''}
                     onChange={(e) => updateBidOverride(page.id, e.target.value)}
                     placeholder="Leave empty for default"
-                    className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:border-[#2563eb] outline-none"
+                    style={{
+                      width: '100%', boxSizing: 'border-box',
+                      padding: '8px 12px', border: `1px solid ${BORDER}`,
+                      borderRadius: 8, fontSize: 13, color: TEXT,
+                      background: BG, fontFamily: FONT, outline: 'none',
+                    }}
                   />
                 </div>
               )}
@@ -187,14 +197,24 @@ export function InventoryStep({ data, updateData }) {
         })}
       </div>
 
+      {/* Selection Summary */}
       {data.selectedPages.length > 0 && (
-        <div className="bg-[#eff6ff] rounded-lg p-4 flex items-center justify-between">
-          <span className="text-sm text-[#2563eb]">
+        <div style={{
+          background: ACCENT_M, borderRadius: 8, padding: 16,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          <span style={{ fontSize: 13, color: ACCENT }}>
             {data.selectedPages.length} page(s) selected
           </span>
           <button
             onClick={() => updateData({ selectedPages: [] })}
-            className="text-sm text-[#2563eb] hover:underline"
+            onMouseEnter={() => setClearHovered(true)}
+            onMouseLeave={() => setClearHovered(false)}
+            style={{
+              fontSize: 13, color: ACCENT, background: 'none', border: 'none',
+              cursor: 'pointer', textDecoration: clearHovered ? 'underline' : 'none',
+              fontFamily: FONT,
+            }}
           >
             Clear all
           </button>

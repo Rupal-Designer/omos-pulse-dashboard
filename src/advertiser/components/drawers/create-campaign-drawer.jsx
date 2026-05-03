@@ -1,52 +1,71 @@
-"use client";
-
-import { useState } from "react";
+import { useState } from 'react';
 import {
-  X,
-  Pencil,
-  Info,
-  ChevronDown,
-  Calendar,
-  Search,
-  RefreshCw,
-  Download,
-  Plus,
-  MoreVertical,
-  TrendingUp,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { CreateAdGroupDrawer } from "./create-ad-group-drawer";
+  Button, Icon,
+  CloseIcon, EditIcon, InfoIcon, ChevronDownIcon,
+  CalendarIcon, SearchIcon, RefreshIcon, DownloadIcon, PlusIcon, MoreIcon,
+} from '../../../ui';
+import { EmptyState } from '../../../ui';
+import { SectionCard } from '../../../ui';
+import { CreateAdGroupDrawer } from './create-ad-group-drawer';
 
+// ── Design tokens ─────────────────────────────────────────────────────────────
+const FONT      = "'Open Sans', sans-serif";
+const BG        = 'var(--osmos-bg)';
+const BG_SUBTLE = 'var(--osmos-bg-subtle)';
+const BORDER    = 'var(--osmos-border)';
+const TEXT      = 'var(--osmos-fg)';
+const TEXT_MID  = 'var(--osmos-fg-muted)';
+const TEXT_SUB  = 'var(--osmos-fg-subtle)';
+const ACCENT    = 'var(--osmos-brand-primary)';
+const ACCENT_M  = 'var(--osmos-brand-primary-muted)';
+const GREEN     = 'var(--osmos-brand-green)';
+
+// ── Hand-rolled icons ─────────────────────────────────────────────────────────
+const TrendingUpIcon = ({ size = 14, color = TEXT_MID }) => (
+  <Icon size={size} color={color}>
+    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+    <polyline points="16 7 22 7 22 13" />
+  </Icon>
+);
+
+// ── Status badge for ad groups ────────────────────────────────────────────────
+const STATUS_STYLE = {
+  active: { bg: 'var(--osmos-brand-green-muted)', color: GREEN,    dot: GREEN },
+  paused: { bg: 'var(--osmos-brand-amber-muted)',          color: 'var(--osmos-brand-amber)', dot: 'var(--osmos-brand-amber)' },
+  draft:  { bg: BG_SUBTLE,                         color: TEXT_MID, dot: TEXT_MID },
+};
+
+// ── Shared form-select style ──────────────────────────────────────────────────
+const SELECT = {
+  padding: '8px 32px 8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8,
+  fontSize: 13, color: TEXT, backgroundColor: BG, appearance: 'none',
+  outline: 'none', width: '100%', fontFamily: FONT, cursor: 'pointer',
+};
+
+// ── CreateCampaignDrawer ──────────────────────────────────────────────────────
 export function CreateCampaignDrawer({ open, onClose }) {
-  const [activeTab, setActiveTab] = useState("estimator");
-  const [adGroupDrawerOpen, setAdGroupDrawerOpen] = useState(false);
-  const [adGroups, setAdGroups] = useState([]);
+  const [activeTab,           setActiveTab]           = useState('estimator');
+  const [adGroupDrawerOpen,   setAdGroupDrawerOpen]   = useState(false);
+  const [adGroups,            setAdGroups]            = useState([]);
   const [editingAdGroupIndex, setEditingAdGroupIndex] = useState(null);
+  const [hoveredRow,          setHoveredRow]          = useState(null);
 
   const handleAddAdGroup = (adGroupData) => {
     const newAdGroup = {
-      id: `ag-${Date.now()}`,
-      name: adGroupData.name || `Ad Group ${adGroups.length + 1}`,
-      status: "draft",
-      biddingStrategy: "CPM",
-      creationDate: new Date().toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "2-digit",
-      }),
-      dailyBudget: "$500",
-      adSpend: "$0",
-      impressions: "0",
-      clicks: "0",
+      id:              `ag-${Date.now()}`,
+      name:            adGroupData.name || `Ad Group ${adGroups.length + 1}`,
+      status:          'draft',
+      biddingStrategy: 'CPM',
+      creationDate:    new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }),
+      dailyBudget:     '$500',
+      adSpend:         '$0',
+      impressions:     '0',
+      clicks:          '0',
     };
 
     if (editingAdGroupIndex !== null) {
       const updated = [...adGroups];
-      updated[editingAdGroupIndex] = {
-        ...updated[editingAdGroupIndex],
-        ...newAdGroup,
-      };
+      updated[editingAdGroupIndex] = { ...updated[editingAdGroupIndex], ...newAdGroup };
       setAdGroups(updated);
       setEditingAdGroupIndex(null);
     } else {
@@ -63,490 +82,366 @@ export function CreateCampaignDrawer({ open, onClose }) {
 
   return (
     <>
-      <div className="fixed inset-0 z-50 bg-black/30" onClick={onClose} />
+      {/* Backdrop */}
       <div
-        className="fixed right-0 top-0 z-50 h-full bg-[#f4f6f9] shadow-xl flex flex-col transition-transform duration-300"
-        style={{ width: "90%" }}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-[#e0e0e0]">
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-semibold text-[#2d2d2d]">
+        onClick={onClose}
+        style={{ position: 'fixed', inset: 0, zIndex: 50, backgroundColor: 'rgba(0,0,0,0.3)' }}
+      />
+
+      {/* Panel — 90% width */}
+      <div style={{
+        position: 'fixed', right: 0, top: 0, zIndex: 50,
+        height: '100%', width: '90%',
+        backgroundColor: BG_SUBTLE,
+        boxShadow: '0 10px 40px rgba(0,0,0,0.2)',
+        display: 'flex', flexDirection: 'column',
+        fontFamily: FONT,
+      }}>
+        {/* ── Header ── */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', backgroundColor: BG, borderBottom: `1px solid ${BORDER}` }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 16, fontWeight: 600, color: TEXT }}>
               Campaign Name (8th September | 10:00)
             </span>
-            <button className="text-[#6b7280] hover:text-[#2d2d2d] transition-colors">
-              <Pencil size={16} />
+            <button style={{ padding: 4, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', color: TEXT_MID }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = TEXT)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = TEXT_MID)}
+            >
+              <EditIcon size={16} color="currentColor" />
             </button>
           </div>
-          <div className="flex items-center gap-4">
-            <a
-              href="#"
-              className="flex items-center gap-1.5 text-sm text-[#2563eb] hover:underline"
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <a href="#" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: ACCENT, textDecoration: 'none' }}
+              onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
+              onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
             >
-              <Info size={14} />
+              <InfoIcon size={14} color={ACCENT} />
               How to create and modify a campaign?
             </a>
-            <button
-              onClick={onClose}
-              className="text-[#6b7280] hover:text-[#2d2d2d] transition-colors"
-            >
-              <X size={20} />
+            <button onClick={onClose} style={{ padding: 4, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex' }}>
+              <CloseIcon size={20} color={TEXT_MID} />
             </button>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="flex flex-1 overflow-hidden">
-          {/* Main Content */}
-          <div className="flex-1 overflow-auto p-6">
-            {/* Campaign Settings Card */}
-            <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm mb-6">
-              <div className="px-5 py-3 border-b border-[#e5e7eb]">
-                <span className="text-sm font-medium text-[#6b7280]">
-                  Campaign Settings
-                </span>
-              </div>
+        {/* ── Body (main content + right sidebar) ── */}
+        <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+          {/* ── Main content ── */}
+          <div style={{ flex: 1, overflowY: 'auto', padding: 24, display: 'flex', flexDirection: 'column', gap: 24 }}>
 
-              <div className="p-6 space-y-6">
-                {/* Bidding Strategy & Schedule */}
-                <div className="grid grid-cols-2 gap-8">
+            {/* Campaign Settings card */}
+            <SectionCard title="Campaign Settings" bodyBg={BG} bodyPad={24}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+
+                {/* Bidding + Schedule */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
                   {/* Bidding Strategy */}
                   <div>
-                    <h3 className="font-semibold text-[#2d2d2d] mb-4">
-                      Bidding Strategy
-                    </h3>
-                    <div className="border border-[#e5e7eb] rounded-lg p-4 bg-[#fafafa]">
-                      <label className="text-sm text-[#2d2d2d] flex items-center gap-1 mb-2">
-                        Select buying type{" "}
-                        <span className="text-[#ef4444]">*</span>
-                        <Info size={12} className="text-[#9ca3af]" />
+                    <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 600, color: TEXT }}>Bidding Strategy</h3>
+                    <SectionCard bodyBg={BG_SUBTLE} bodyPad={16}>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, color: TEXT, marginBottom: 8 }}>
+                        Select buying type <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
+                        <InfoIcon size={12} color={TEXT_SUB} />
                       </label>
-                      <div className="relative">
-                        <select className="w-52 px-3 py-2.5 border border-[#e5e7eb] rounded-lg text-sm text-[#6b7280] appearance-none bg-white focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] outline-none transition-colors">
+                      <div style={{ position: 'relative', width: 208 }}>
+                        <select style={SELECT}>
                           <option>Choose strategy</option>
                           <option>CPM</option>
                           <option>CPC</option>
                           <option>CPA</option>
                         </select>
-                        <ChevronDown
-                          size={16}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6b7280] pointer-events-none"
-                        />
+                        <div style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+                          <ChevronDownIcon size={14} color={TEXT_MID} />
+                        </div>
                       </div>
-                      <p className="text-xs text-[#9ca3af] mt-2">
-                        You can select the buying type like CPM/CPC
-                      </p>
-                    </div>
+                      <p style={{ margin: '8px 0 0', fontSize: 11, color: TEXT_SUB }}>You can select the buying type like CPM/CPC</p>
+                    </SectionCard>
                   </div>
 
                   {/* Schedule */}
                   <div>
-                    <h3 className="font-semibold text-[#2d2d2d] mb-4">
-                      Schedule
-                    </h3>
-                    <div className="border border-[#e5e7eb] rounded-lg p-4 bg-[#fafafa]">
-                      <div className="flex gap-4">
-                        <div className="flex-1">
-                          <label className="text-sm text-[#2d2d2d] mb-2 block">
-                            Start date
-                          </label>
-                          <div className="flex items-center gap-2 px-3 py-2.5 border border-[#e5e7eb] rounded-lg bg-white">
-                            <Calendar size={16} className="text-[#2563eb]" />
-                            <span className="text-sm text-[#2d2d2d]">
-                              08 Sept 2025
-                            </span>
+                    <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 600, color: TEXT }}>Schedule</h3>
+                    <SectionCard bodyBg={BG_SUBTLE} bodyPad={16}>
+                      <div style={{ display: 'flex', gap: 16 }}>
+                        <div style={{ flex: 1 }}>
+                          <label style={{ display: 'block', fontSize: 13, color: TEXT, marginBottom: 8 }}>Start date</label>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, backgroundColor: BG }}>
+                            <CalendarIcon size={16} color={ACCENT} />
+                            <span style={{ fontSize: 13, color: TEXT }}>08 Sept 2025</span>
                           </div>
                         </div>
-                        <div className="flex-1">
-                          <label className="text-sm text-[#2d2d2d] mb-2 block">
-                            End date{" "}
-                            <span className="text-[#9ca3af] italic text-xs">
-                              (Optional)
-                            </span>
+                        <div style={{ flex: 1 }}>
+                          <label style={{ display: 'block', fontSize: 13, color: TEXT, marginBottom: 8 }}>
+                            End date{' '}
+                            <span style={{ fontSize: 11, color: TEXT_SUB, fontStyle: 'italic' }}>(Optional)</span>
                           </label>
-                          <div className="flex items-center gap-2 px-3 py-2.5 border border-[#e5e7eb] rounded-lg bg-white">
-                            <Calendar size={16} className="text-[#2563eb]" />
-                            <span className="text-sm text-[#2d2d2d]">
-                              28 Sept 2025
-                            </span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, backgroundColor: BG }}>
+                            <CalendarIcon size={16} color={ACCENT} />
+                            <span style={{ fontSize: 13, color: TEXT }}>28 Sept 2025</span>
                           </div>
                         </div>
                       </div>
-                      <p className="text-xs text-[#9ca3af] mt-3">
-                        * Date range will be set in the Asia/Kolkata timezone
-                      </p>
-                    </div>
+                      <p style={{ margin: '10px 0 0', fontSize: 11, color: TEXT_SUB }}>* Date range will be set in the Asia/Kolkata timezone</p>
+                    </SectionCard>
                   </div>
                 </div>
 
-                {/* Budget & Wallet */}
-                <div className="grid grid-cols-2 gap-8">
+                {/* Budget + Wallet */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
                   {/* Budget */}
                   <div>
-                    <h3 className="font-semibold text-[#2d2d2d] mb-4">
-                      Budget
-                    </h3>
-                    <div className="border border-[#e5e7eb] rounded-lg p-4 bg-[#fafafa]">
-                      <div className="flex gap-4">
-                        <div className="flex-1">
-                          <label className="text-sm text-[#2d2d2d] mb-2 block">
-                            Enter Total Budget ($)
-                            <span className="text-[#ef4444]">*</span>
+                    <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 600, color: TEXT }}>Budget</h3>
+                    <SectionCard bodyBg={BG_SUBTLE} bodyPad={16}>
+                      <div style={{ display: 'flex', gap: 16 }}>
+                        <div style={{ flex: 1 }}>
+                          <label style={{ display: 'block', fontSize: 13, color: TEXT, marginBottom: 8 }}>
+                            Enter Total Budget ($) <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
                           </label>
-                          <Input
-                            placeholder="Enter here"
-                            className="border-[#e5e7eb] bg-white focus:border-[#2563eb]"
-                          />
-
-                          <p className="text-xs text-[#9ca3af] mt-1">
-                            Minimum budget should be $10
-                          </p>
+                          <input placeholder="Enter here" style={{ ...SELECT, width: '100%', boxSizing: 'border-box', paddingRight: 12 }} />
+                          <p style={{ margin: '4px 0 0', fontSize: 11, color: TEXT_SUB }}>Minimum budget should be $10</p>
                         </div>
-                        <div className="flex-1">
-                          <label className="text-sm text-[#2d2d2d] mb-2 block">
-                            Enter Daily Budget ($)
-                            <span className="text-[#ef4444]">*</span>
+                        <div style={{ flex: 1 }}>
+                          <label style={{ display: 'block', fontSize: 13, color: TEXT, marginBottom: 8 }}>
+                            Enter Daily Budget ($) <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
                           </label>
-                          <Input
-                            placeholder="Enter here"
-                            className="border-[#e5e7eb] bg-white focus:border-[#2563eb]"
-                          />
-
-                          <p className="text-xs text-[#9ca3af] mt-1">
-                            Minimum budget should be $10
-                          </p>
+                          <input placeholder="Enter here" style={{ ...SELECT, width: '100%', boxSizing: 'border-box', paddingRight: 12 }} />
+                          <p style={{ margin: '4px 0 0', fontSize: 11, color: TEXT_SUB }}>Minimum budget should be $10</p>
                         </div>
                       </div>
-                    </div>
+                    </SectionCard>
                   </div>
 
                   {/* Wallet */}
                   <div>
-                    <h3 className="font-semibold text-[#2d2d2d] mb-4">
-                      Wallet
-                    </h3>
-                    <div className="border border-[#2563eb]/20 rounded-lg p-4 bg-[#eff6ff]">
-                      <label className="text-sm text-[#2d2d2d] flex items-center gap-1 mb-2">
-                        Choose wallet <span className="text-[#ef4444]">*</span>
-                        <Info size={12} className="text-[#9ca3af]" />
+                    <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 600, color: TEXT }}>Wallet</h3>
+                    <SectionCard bodyBg={ACCENT_M} bodyPad={16} style={{ border: `1px solid rgba(99,108,255,0.2)` }}>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, color: TEXT, marginBottom: 8 }}>
+                        Choose wallet <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
+                        <InfoIcon size={12} color={TEXT_SUB} />
                       </label>
-                      <div className="relative">
-                        <select className="w-full px-3 py-2.5 border border-[#e5e7eb] rounded-lg text-sm text-[#2d2d2d] appearance-none bg-white focus:border-[#2563eb] outline-none">
+                      <div style={{ position: 'relative' }}>
+                        <select style={SELECT}>
                           <option>Default wallet</option>
                         </select>
-                        <ChevronDown
-                          size={16}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6b7280] pointer-events-none"
-                        />
+                        <div style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+                          <ChevronDownIcon size={14} color={TEXT_MID} />
+                        </div>
                       </div>
-                      <p className="text-xs text-[#059669] mt-2 font-medium">
-                        Wallet Balance: $5,850,489.59
-                      </p>
-                    </div>
+                      <p style={{ margin: '8px 0 0', fontSize: 12, color: GREEN, fontWeight: 500 }}>Wallet Balance: $5,850,489.59</p>
+                    </SectionCard>
                   </div>
                 </div>
 
                 {/* Additional Setting */}
                 <div>
-                  <h3 className="font-semibold text-[#2d2d2d] mb-4">
-                    Additional Setting
-                  </h3>
-                  <div className="border border-[#e5e7eb] rounded-lg p-4 bg-[#fafafa]">
-                    <div className="flex gap-4">
-                      <div className="flex-1">
-                        <label className="text-sm text-[#2d2d2d] flex items-center gap-1 mb-2">
-                          Campaign Priority{" "}
-                          <Info size={12} className="text-[#9ca3af]" />
+                  <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 600, color: TEXT }}>Additional Setting</h3>
+                  <SectionCard bodyBg={BG_SUBTLE} bodyPad={16}>
+                    <div style={{ display: 'flex', gap: 16 }}>
+                      <div style={{ flex: 1 }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, color: TEXT, marginBottom: 8 }}>
+                          Campaign Priority <InfoIcon size={12} color={TEXT_SUB} />
                         </label>
-                        <div className="relative">
-                          <select className="w-full px-3 py-2.5 border border-[#e5e7eb] rounded-lg text-sm text-[#2d2d2d] appearance-none bg-white focus:border-[#2563eb] outline-none">
+                        <div style={{ position: 'relative' }}>
+                          <select style={SELECT}>
                             <option>Guaranteed</option>
                             <option>Standard</option>
                             <option>Low</option>
                           </select>
-                          <ChevronDown
-                            size={16}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6b7280] pointer-events-none"
-                          />
+                          <div style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+                            <ChevronDownIcon size={14} color={TEXT_MID} />
+                          </div>
                         </div>
                       </div>
-                      <div className="flex-1">
-                        <label className="text-sm text-[#2d2d2d] flex items-center gap-1 mb-2">
-                          Campaign Pacing{" "}
-                          <Info size={12} className="text-[#9ca3af]" />
+                      <div style={{ flex: 1 }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, color: TEXT, marginBottom: 8 }}>
+                          Campaign Pacing <InfoIcon size={12} color={TEXT_SUB} />
                         </label>
-                        <div className="relative">
-                          <select className="w-full px-3 py-2.5 border border-[#e5e7eb] rounded-lg text-sm text-[#2d2d2d] appearance-none bg-white focus:border-[#2563eb] outline-none">
+                        <div style={{ position: 'relative' }}>
+                          <select style={SELECT}>
                             <option>Accelerated</option>
                             <option>Standard</option>
                             <option>Smooth</option>
                           </select>
-                          <ChevronDown
-                            size={16}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6b7280] pointer-events-none"
-                          />
+                          <div style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+                            <ChevronDownIcon size={14} color={TEXT_MID} />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </SectionCard>
                 </div>
 
-                {/* Advance Setting Link */}
-                <button className="flex items-center gap-1 text-sm text-[#2563eb] hover:underline font-medium">
+                {/* Advance Setting link */}
+                <button
+                  style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, color: ACCENT, fontWeight: 500, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                  onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
+                  onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
+                >
                   Advance Setting
-                  <ChevronDown size={14} className="-rotate-90" />
+                  <ChevronDownIcon size={14} color={ACCENT} style={{ transform: 'rotate(-90deg)' }} />
                 </button>
               </div>
-            </div>
+            </SectionCard>
 
-            {/* Ad Groups Section */}
-            <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm">
-              <div className="px-5 py-4 border-b border-[#e5e7eb] flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-[#2d2d2d]">
-                    Ad Groups
-                  </span>
-                  <span className="text-xs bg-[#e5e7eb] text-[#6b7280] px-2 py-0.5 rounded-full">
+            {/* Ad Groups card */}
+            <SectionCard
+              title="Ad Groups"
+              headerSize="md"
+              titleRight={
+                <>
+                  <span style={{ fontSize: 11, padding: '2px 8px', backgroundColor: BG_SUBTLE, color: TEXT_MID, borderRadius: 999 }}>
                     {adGroups.length}
                   </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button className="w-8 h-8 flex items-center justify-center border border-[#e5e7eb] rounded-lg text-[#6b7280] hover:bg-[#f9fafb] transition-colors">
-                    <RefreshCw size={14} />
-                  </button>
-                  <div className="flex items-center gap-2 px-3 py-1.5 border border-[#e5e7eb] rounded-lg bg-white">
-                    <Search size={14} className="text-[#9ca3af]" />
-                    <input
-                      type="text"
-                      placeholder="Search Ad Groups"
-                      className="text-sm outline-none placeholder:text-[#9ca3af] w-36"
-                    />
+                  <IconBtn onClick={() => {}}><RefreshIcon size={14} color={TEXT_MID} /></IconBtn>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, backgroundColor: BG }}>
+                    <SearchIcon size={14} color={TEXT_SUB} />
+                    <input type="text" placeholder="Search Ad Groups" style={{ border: 'none', outline: 'none', width: 140, fontSize: 13, color: TEXT, background: 'transparent', fontFamily: FONT }} />
                   </div>
-                  <button className="w-8 h-8 flex items-center justify-center border border-[#e5e7eb] rounded-lg text-[#6b7280] hover:bg-[#f9fafb] transition-colors">
-                    <Download size={14} />
-                  </button>
-                  <Button
-                    className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white gap-1.5"
-                    onClick={() => {
-                      setEditingAdGroupIndex(null);
-                      setAdGroupDrawerOpen(true);
-                    }}
-                  >
-                    <Plus size={16} />
-                    Add Ad Group
+                  <IconBtn onClick={() => {}}><DownloadIcon size={14} color={TEXT_MID} /></IconBtn>
+                  <Button variant="primary" onClick={() => { setEditingAdGroupIndex(null); setAdGroupDrawerOpen(true); }}>
+                    <PlusIcon size={14} color="#fff" />
+                    <span style={{ marginLeft: 4 }}>Add Ad Group</span>
                   </Button>
-                </div>
-              </div>
-
-              {/* Table */}
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-[#e5e7eb] text-left bg-[#f9fafb]">
-                      <th className="p-3 text-xs font-semibold text-[#6b7280] uppercase tracking-wider">
-                        Name
+                </>
+              }
+              bodyBg={BG}
+              bodyPad={0}
+            >
+              {/* Ad groups table */}
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ borderBottom: `1px solid ${BORDER}`, backgroundColor: BG_SUBTLE }}>
+                    {['Name', 'Status', 'Bidding Strategy', 'Creation Date', 'Daily Budget', 'Ad Spend', 'Impressions', 'Clicks', 'Actions'].map((col, i) => (
+                      <th key={col} style={{ padding: '10px 12px', fontSize: 11, fontWeight: 600, color: TEXT_MID, textAlign: 'left', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        {col === 'Bidding Strategy' || col === 'Daily Budget'
+                          ? <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>{col} <InfoIcon size={10} color={TEXT_SUB} /></span>
+                          : col}
                       </th>
-                      <th className="p-3 text-xs font-semibold text-[#6b7280] uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th className="p-3 text-xs font-semibold text-[#6b7280] uppercase tracking-wider">
-                        <div className="flex items-center gap-1">
-                          Bidding Strategy{" "}
-                          <Info size={10} className="text-[#9ca3af]" />
-                        </div>
-                      </th>
-                      <th className="p-3 text-xs font-semibold text-[#6b7280] uppercase tracking-wider">
-                        Creation Date
-                      </th>
-                      <th className="p-3 text-xs font-semibold text-[#6b7280] uppercase tracking-wider">
-                        <div className="flex items-center gap-1">
-                          Daily Budget{" "}
-                          <Info size={10} className="text-[#9ca3af]" />
-                        </div>
-                      </th>
-                      <th className="p-3 text-xs font-semibold text-[#6b7280] uppercase tracking-wider">
-                        Ad Spend
-                      </th>
-                      <th className="p-3 text-xs font-semibold text-[#6b7280] uppercase tracking-wider">
-                        Impressions
-                      </th>
-                      <th className="p-3 text-xs font-semibold text-[#6b7280] uppercase tracking-wider">
-                        Clicks
-                      </th>
-                      <th className="p-3 text-xs font-semibold text-[#6b7280] uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {adGroups.map((adGroup, index) => (
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {adGroups.map((ag, index) => {
+                    const s = STATUS_STYLE[ag.status] || STATUS_STYLE.draft;
+                    return (
                       <tr
-                        key={adGroup.id}
-                        className="border-b border-[#e5e7eb] hover:bg-[#f9fafb] transition-colors"
+                        key={ag.id}
+                        style={{ borderBottom: `1px solid ${BORDER}`, backgroundColor: hoveredRow === index ? BG_SUBTLE : BG, transition: 'background 0.1s' }}
+                        onMouseEnter={() => setHoveredRow(index)}
+                        onMouseLeave={() => setHoveredRow(null)}
                       >
-                        <td className="p-3">
-                          <span
-                            className="text-sm text-[#2563eb] font-medium hover:underline cursor-pointer"
-                            onClick={() => handleEditAdGroup(index)}
-                          >
-                            {adGroup.name}
+                        <td style={{ padding: '10px 12px' }}>
+                          <span style={{ fontSize: 13, color: ACCENT, fontWeight: 500, cursor: 'pointer' }} onClick={() => handleEditAdGroup(index)}>
+                            {ag.name}
                           </span>
                         </td>
-                        <td className="p-3">
-                          <span
-                            className={`inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium ${
-                              adGroup.status === "active"
-                                ? "bg-[#dcfce7] text-[#16a34a]"
-                                : adGroup.status === "paused"
-                                  ? "bg-[#fef3c7] text-[#d97706]"
-                                  : "bg-[#f3f4f6] text-[#6b7280]"
-                            }`}
-                          >
-                            <span
-                              className={`w-1.5 h-1.5 rounded-full ${
-                                adGroup.status === "active"
-                                  ? "bg-[#16a34a]"
-                                  : adGroup.status === "paused"
-                                    ? "bg-[#d97706]"
-                                    : "bg-[#6b7280]"
-                              }`}
-                            />
-
-                            {adGroup.status.charAt(0).toUpperCase() +
-                              adGroup.status.slice(1)}
+                        <td style={{ padding: '10px 12px' }}>
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 8px', borderRadius: 4, fontSize: 12, fontWeight: 500, backgroundColor: s.bg, color: s.color }}>
+                            <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: s.dot }} />
+                            {ag.status.charAt(0).toUpperCase() + ag.status.slice(1)}
                           </span>
                         </td>
-                        <td className="p-3 text-sm text-[#6b7280]">
-                          {adGroup.biddingStrategy}
-                        </td>
-                        <td className="p-3 text-sm text-[#6b7280]">
-                          {adGroup.creationDate}
-                        </td>
-                        <td className="p-3 text-sm text-[#6b7280]">
-                          {adGroup.dailyBudget}
-                        </td>
-                        <td className="p-3 text-sm text-[#6b7280]">
-                          {adGroup.adSpend}
-                        </td>
-                        <td className="p-3 text-sm text-[#6b7280]">
-                          {adGroup.impressions}
-                        </td>
-                        <td className="p-3 text-sm text-[#6b7280]">
-                          {adGroup.clicks}
-                        </td>
-                        <td className="p-3">
-                          <div className="flex items-center gap-1">
-                            <button className="w-7 h-7 flex items-center justify-center text-[#6b7280] hover:bg-[#e5e7eb] rounded transition-colors">
-                              <TrendingUp size={14} />
-                            </button>
-                            <button className="w-7 h-7 flex items-center justify-center text-[#6b7280] hover:bg-[#e5e7eb] rounded transition-colors">
-                              <MoreVertical size={14} />
-                            </button>
+                        <td style={{ padding: '10px 12px', fontSize: 13, color: TEXT_MID }}>{ag.biddingStrategy}</td>
+                        <td style={{ padding: '10px 12px', fontSize: 13, color: TEXT_MID }}>{ag.creationDate}</td>
+                        <td style={{ padding: '10px 12px', fontSize: 13, color: TEXT_MID }}>{ag.dailyBudget}</td>
+                        <td style={{ padding: '10px 12px', fontSize: 13, color: TEXT_MID }}>{ag.adSpend}</td>
+                        <td style={{ padding: '10px 12px', fontSize: 13, color: TEXT_MID }}>{ag.impressions}</td>
+                        <td style={{ padding: '10px 12px', fontSize: 13, color: TEXT_MID }}>{ag.clicks}</td>
+                        <td style={{ padding: '10px 12px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                            <IconBtn><TrendingUpIcon size={14} color={TEXT_MID} /></IconBtn>
+                            <IconBtn><MoreIcon size={14} color={TEXT_MID} /></IconBtn>
                           </div>
                         </td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    );
+                  })}
+                </tbody>
+              </table>
 
-              {/* Empty State */}
+              {/* Empty state */}
               {adGroups.length === 0 && (
-                <div className="py-20 flex flex-col items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-[#eff6ff] flex items-center justify-center mb-4">
-                    <Plus size={24} className="text-[#2563eb]" />
-                  </div>
-                  <p className="text-[#6b7280] mb-4 text-center">
-                    Start building your Campaign by adding Ad Groups
-                  </p>
-                  <Button
-                    className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white gap-1.5"
-                    onClick={() => {
-                      setEditingAdGroupIndex(null);
-                      setAdGroupDrawerOpen(true);
-                    }}
-                  >
-                    <Plus size={16} />
-                    Add Your First Ad Group
+                <EmptyState message="Start building your Campaign by adding Ad Groups">
+                  <Button variant="primary" onClick={() => { setEditingAdGroupIndex(null); setAdGroupDrawerOpen(true); }}>
+                    <PlusIcon size={14} color="#fff" />
+                    <span style={{ marginLeft: 4 }}>Add Your First Ad Group</span>
                   </Button>
-                </div>
+                </EmptyState>
               )}
-            </div>
+            </SectionCard>
           </div>
 
-          {/* Right Sidebar - Media Estimator */}
-          <div className="w-72 bg-white border-l border-[#e5e7eb] flex flex-col">
+          {/* ── Right sidebar — Media Estimator ── */}
+          <div style={{ width: 288, backgroundColor: BG, borderLeft: `1px solid ${BORDER}`, display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
             {/* Tabs */}
-            <div className="flex border-b border-[#e5e7eb]">
-              <button
-                className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
-                  activeTab === "estimator"
-                    ? "text-[#2563eb] border-b-2 border-[#2563eb] bg-[#eff6ff]"
-                    : "text-[#6b7280] hover:bg-[#f9fafb]"
-                }`}
-                onClick={() => setActiveTab("estimator")}
-              >
-                Media Estimator
-              </button>
-              <button
-                className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
-                  activeTab === "delivery"
-                    ? "text-[#2563eb] border-b-2 border-[#2563eb] bg-[#eff6ff]"
-                    : "text-[#6b7280] hover:bg-[#f9fafb]"
-                }`}
-                onClick={() => setActiveTab("delivery")}
-              >
-                Delivery so far
-              </button>
+            <div style={{ display: 'flex', borderBottom: `1px solid ${BORDER}` }}>
+              {[{ id: 'estimator', label: 'Media Estimator' }, { id: 'delivery', label: 'Delivery so far' }].map(({ id, label }) => (
+                <button
+                  key={id}
+                  onClick={() => setActiveTab(id)}
+                  style={{
+                    flex: 1, padding: '12px 16px', border: 'none', cursor: 'pointer',
+                    fontSize: 13, fontWeight: 500, fontFamily: FONT, transition: 'all 0.15s',
+                    borderBottom: activeTab === id ? `2px solid ${ACCENT}` : '2px solid transparent',
+                    backgroundColor: activeTab === id ? ACCENT_M : 'transparent',
+                    color: activeTab === id ? ACCENT : TEXT_MID,
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
             </div>
 
-            <div className="flex-1 p-5 space-y-6">
-              <div className="p-4 bg-[#f9fafb] rounded-lg border border-[#e5e7eb]">
-                <div className="flex items-center gap-1 text-sm font-medium text-[#2d2d2d] mb-2">
-                  Impressions <Info size={12} className="text-[#9ca3af]" />
+            {/* Sidebar content */}
+            <div style={{ flex: 1, padding: 20, display: 'flex', flexDirection: 'column', gap: 24 }}>
+              {[{ label: 'Impressions', hint: 'Your estimated and max impressions will be displayed here.' },
+                { label: 'Pricing',     hint: 'Your suggested CPM and suggested total budget will be displayed here.' }].map(({ label, hint }) => (
+                <div key={label} style={{ padding: 16, backgroundColor: BG_SUBTLE, borderRadius: 8, border: `1px solid ${BORDER}` }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 500, color: TEXT, marginBottom: 8 }}>
+                    {label} <InfoIcon size={12} color={TEXT_SUB} />
+                  </div>
+                  <p style={{ margin: 0, fontSize: 11, color: TEXT_SUB, fontStyle: 'italic', lineHeight: 1.5 }}>{hint}</p>
                 </div>
-                <p className="text-xs text-[#9ca3af] italic leading-relaxed">
-                  Your estimated and max impressions will be displayed here.
-                </p>
-              </div>
-
-              <div className="p-4 bg-[#f9fafb] rounded-lg border border-[#e5e7eb]">
-                <div className="flex items-center gap-1 text-sm font-medium text-[#2d2d2d] mb-2">
-                  Pricing <Info size={12} className="text-[#9ca3af]" />
-                </div>
-                <p className="text-xs text-[#9ca3af] italic leading-relaxed">
-                  Your suggested CPM and suggested total budget will be
-                  displayed here.
-                </p>
-              </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="px-6 py-4 bg-white border-t border-[#e5e7eb] flex justify-center gap-3">
-          <Button
-            variant="outline"
-            className="px-8 border-[#2563eb] text-[#2563eb] hover:bg-[#eff6ff] bg-transparent"
-            onClick={onClose}
-          >
-            Cancel
-          </Button>
-          <Button
-            className="px-8 bg-[#475569] hover:bg-[#334155] text-white"
-            disabled={adGroups.length === 0}
-          >
+        {/* ── Footer ── */}
+        <div style={{ padding: '16px 24px', backgroundColor: BG, borderTop: `1px solid ${BORDER}`, display: 'flex', justifyContent: 'center', gap: 12 }}>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button variant="primary" onClick={() => {}} disabled={adGroups.length === 0}
+            style={{ opacity: adGroups.length === 0 ? 0.5 : 1, cursor: adGroups.length === 0 ? 'not-allowed' : 'pointer' }}>
             Launch Campaign
           </Button>
         </div>
       </div>
 
-      {/* Ad Group Drawer (80% width) */}
+      {/* Nested Ad Group Drawer */}
       <CreateAdGroupDrawer
         open={adGroupDrawerOpen}
         onClose={() => setAdGroupDrawerOpen(false)}
         onSave={handleAddAdGroup}
       />
     </>
+  );
+}
+
+// ── IconBtn — small icon-only button ─────────────────────────────────────────
+function IconBtn({ children, onClick }) {
+  const [hover, setHover] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        border: `1px solid ${BORDER}`, borderRadius: 8, cursor: 'pointer',
+        background: hover ? BG_SUBTLE : 'transparent', transition: 'all 0.15s', padding: 0,
+      }}
+    >
+      {children}
+    </button>
   );
 }

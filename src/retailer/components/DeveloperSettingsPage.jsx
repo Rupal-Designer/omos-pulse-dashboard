@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Icon } from '../../ui/atoms/Icon';
+import { Icon, SearchIcon, FilterIcon, RefreshIcon, DownloadIcon } from '../../ui/atoms/Icon';
 import { Toast, useToast } from '../../ui/atoms/Toast';
 
 /* ── tokens ─────────────────────────────────────────────────────── */
@@ -13,15 +13,6 @@ const TEXT_MID= 'var(--osmos-fg-muted)';
 const TEXT_LO = 'var(--osmos-fg-subtle)';
 const FONT    = "'Open Sans', sans-serif";
 
-/* ── Local icon aliases (use imported Icon atom) ────────────────── */
-const SearchIcon = () =>
-  <Icon size={14} color={TEXT_LO}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>;
-const FilterIcon = () =>
-  <Icon size={14} color={TEXT_MID}><path d="M4 6h16M7 12h10M10 18h4"/></Icon>;
-const RefreshIcon = () =>
-  <Icon size={14} color={TEXT_MID}><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></Icon>;
-const DownloadIcon = () =>
-  <Icon size={14} color={TEXT_MID}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></Icon>;
 const NoDataIcon = () =>
   <Icon size={40} color={TEXT_LO} sw={1.2}>
     <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -44,7 +35,7 @@ export default function DeveloperSettingsPage() {
   const tabs = ['All Events', 'Errors', 'Warnings'];
 
   return (
-    <div style={{ fontFamily: FONT, background: BG_SUB, minHeight: '100vh', padding: '24px' }}>
+    <div style={{ fontFamily: FONT, background: BG_SUB, minHeight: '100vh', padding: '20px 24px' }}>
       <Toast {...toast} />
 
       {/* ── Zone 1: Log Tracker ─────────────────────────────────────── */}
@@ -230,7 +221,7 @@ export default function DeveloperSettingsPage() {
                         display: 'inline-block', padding: '2px 8px', borderRadius: 10,
                         fontSize: 11, fontWeight: 600,
                         background: row.eventType === 'PageView' ? 'var(--osmos-brand-primary-muted)'
-                          : row.eventType === 'Purchase' ? 'var(--osmos-brand-green-muted)' : 'rgba(245,166,35,0.12)',
+                          : row.eventType === 'Purchase' ? 'var(--osmos-brand-green-muted)' : 'var(--osmos-brand-amber-muted)',
                         color: row.eventType === 'PageView' ? 'var(--osmos-brand-primary)'
                           : row.eventType === 'Purchase' ? 'var(--osmos-brand-green)' : 'var(--osmos-brand-amber)',
                       }}>

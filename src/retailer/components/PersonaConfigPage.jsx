@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Icon } from '../../ui/atoms/Icon';
+import { Checkbox } from '../../ui/atoms/Checkbox';
 import { Toast, useToast } from '../../ui/atoms/Toast';
 
 const PERSONAS = [
@@ -18,6 +19,7 @@ const INITIAL_ROWS = [
   { id: 'hide_wallet_balance',      label: 'App Level Config > Hide wallet balance & promotional balance split',       group: 'App Level Config',        Platinum: false, Gold: true,  Silver: false, Beta: true  },
   { id: 'enable_change_history',    label: 'App Level Config > Enable Change History For Billing',                    group: 'App Level Config',        Platinum: true,  Gold: false, Silver: true,  Beta: false },
   { id: 'enable_sofie',             label: 'App Level Config > Enable Sofie Suggestions',                             group: 'App Level Config',        Platinum: false, Gold: false, Silver: false, Beta: true  },
+  { id: 'agentic_ai_debugger',      label: 'App Level Config > Agentic AI Campaign Debugger',                         group: 'App Level Config',        Platinum: true,  Gold: true,  Silver: false, Beta: true  },
   { id: 'enable_perf_dashboard',    label: 'Performance Dashboard > Enable Performance Dashboard',                    group: 'Performance Dashboard',   Platinum: true,  Gold: true,  Silver: true,  Beta: false },
   { id: 'enable_header',            label: 'Performance Dashboard > Dashboard Header > Enable Header',                 group: 'Performance Dashboard',   Platinum: true,  Gold: true,  Silver: false, Beta: false },
   { id: 'enable_navigation',        label: 'Performance Dashboard > Dashboard Header > Enable Navigation',             group: 'Performance Dashboard',   Platinum: true,  Gold: false, Silver: true,  Beta: false },
@@ -33,30 +35,7 @@ const GROUP_STYLES = {
   'Performance Dashboard': { bg: 'var(--osmos-bg-subtle)', headerBg: 'var(--osmos-brand-primary-muted)', headerColor: 'var(--osmos-brand-primary)' },
 };
 
-function Ico({ d, size = 13, stroke = 'currentColor', sw = 1.8 }) {
-  return <Icon size={size} color={stroke} strokeWidth={sw}>{d}</Icon>;
-}
 
-function Checkbox({ checked, onChange }) {
-  return (
-    <div
-      onClick={onChange}
-      style={{
-        width: 16, height: 16, borderRadius: 4, cursor: 'pointer', flexShrink: 0,
-        border: checked ? 'none' : '1.5px solid var(--osmos-border)',
-        background: checked ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        transition: 'all 0.15s',
-      }}
-    >
-      {checked && (
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-          <path d="M2 5l2.5 2.5L8 3" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      )}
-    </div>
-  );
-}
 
 export default function PersonaConfigPage() {
   const [rows, setRows] = useState(INITIAL_ROWS);
@@ -94,7 +73,7 @@ export default function PersonaConfigPage() {
         {/* Card Header */}
         <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 28, height: 28, background: 'var(--osmos-brand-primary-muted)', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Ico stroke="var(--osmos-brand-primary)" d={<><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></>} />
+            <Icon size={13} color="var(--osmos-brand-primary)" strokeWidth={1.8}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></Icon>
           </div>
           <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)' }}>Persona Configuration</span>
         </div>
@@ -120,7 +99,7 @@ export default function PersonaConfigPage() {
           {/* Right: Search + Change Log */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '0 10px', height: 30 }}>
-              <Ico d={<><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>} stroke="var(--osmos-fg-subtle)" />
+              <Icon size={13} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
@@ -133,7 +112,7 @@ export default function PersonaConfigPage() {
               border: '1px solid var(--osmos-border)', borderRadius: 6, background: 'var(--osmos-bg)',
               fontSize: 12, color: 'var(--osmos-fg-muted)', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
             }}>
-              <Ico d={<><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></>} size={12} />
+              <Icon size={12} color="currentColor" strokeWidth={1.8}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></Icon>
               Change Log
             </button>
           </div>

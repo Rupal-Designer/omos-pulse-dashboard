@@ -15,7 +15,7 @@ const FEATURES = [
       "Enable precise targeting for advertisers by allowing them to curate audiences using first party data, without sharing any PII data.",
   },
   {
-    color: "#7c3aed",
+    color: "var(--osmos-brand-violet)",
     title: "Self-Serve Inventory Management",
     description:
       "Dynamically respond to demand by creating new supply, change floor CPMs & introduce new ad formats in real-time.",

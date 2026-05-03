@@ -14,14 +14,11 @@ const LOGS = [
 
 const STATUS_COLORS = {
   'Success': { bg: 'var(--osmos-brand-green-muted)', color: 'var(--osmos-brand-green)' },
-  'Partial Success': { bg: 'rgba(245,166,35,0.12)', color: 'var(--osmos-brand-amber)' },
+  'Partial Success': { bg: 'var(--osmos-brand-amber-muted)', color: 'var(--osmos-brand-amber)' },
   'Failed': { bg: 'rgba(220,38,38,0.1)', color: 'var(--alert-error-primary)' },
   '—': { bg: 'transparent', color: 'var(--osmos-fg-muted)' },
 };
 
-function Ico({ d, size = 13, stroke = 'currentColor', sw = 1.8 }) {
-  return <Icon size={size} color={stroke} strokeWidth={sw}>{d}</Icon>;
-}
 
 export default function ActivityLogPage() {
   const [search, setSearch] = useState('');
@@ -42,7 +39,7 @@ export default function ActivityLogPage() {
       <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 8, overflow: 'hidden' }}>
         <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 28, height: 28, background: 'var(--osmos-brand-primary-muted)', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Ico stroke="var(--osmos-brand-primary)" d={<><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></>} />
+            <Icon size={13} color="var(--osmos-brand-primary)" strokeWidth={1.8}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></Icon>
           </div>
           <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)' }}>Activity Log</span>
           <span style={{ marginLeft: 'auto', fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>{filtered.length} entries</span>
@@ -53,7 +50,7 @@ export default function ActivityLogPage() {
             {actions.map(a => <option key={a} value={a}>{a === 'All' ? 'All Actions' : a}</option>)}
           </select>
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6, background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '0 10px', height: 30 }}>
-            <Ico d={<><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>} stroke="var(--osmos-fg-subtle)" />
+            <Icon size={13} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search logs…" style={{ border: 'none', outline: 'none', fontSize: 12, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif", width: 200 }} />
           </div>
         </div>

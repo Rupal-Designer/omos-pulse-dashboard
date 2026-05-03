@@ -3,7 +3,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend,
 } from 'recharts';
-import { InfoIcon, DownloadIcon } from '../../ui/atoms/Icon';
+import { InfoIcon, DownloadIcon, StatCard } from '../../ui';
 
 // ─── Constants & Mock Data ────────────────────────────────────────────────────
 
@@ -37,7 +37,7 @@ const CLICKS_CPC_DATA = [
   { x: '05/08', clicks: 6, cpc: 8 },
 ];
 
-const DONUT_COLORS = ['#2563eb', '#f59e0b', '#16a34a', '#7c3aed', 'var(--alert-error-primary)'];
+const DONUT_COLORS = ['#2563eb', '#f59e0b', '#16a34a', 'var(--osmos-brand-violet)', 'var(--alert-error-primary)'];
 const DONUT_DATA = [
   { name: 'Blue',   value: 55 },
   { name: 'Orange', value: 20 },
@@ -62,7 +62,7 @@ const TREND_DATA = [
   { x: '05/08', category: 1.55, custom: 0.72, home: 1.55, product: 0.72, purchase: 0.72, search: 1.55 },
 ];
 const LINE_COLORS = {
-  category: '#7c3aed',
+  category: 'var(--osmos-brand-violet)',
   custom:   '#f59e0b',
   home:     '#16a34a',
   product:  'var(--alert-error-primary)',
@@ -146,32 +146,9 @@ const tooltipStyle = {
 // ─── 1. KPI Stat Cards ────────────────────────────────────────────────────────
 
 const KpiRow = () => (
-  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 12 }}>
-    {KPI_CARDS.map((card, i) => (
-      <div key={i} style={{
-        background: 'var(--osmos-bg)',
-        border: '1px solid var(--osmos-border)',
-        borderRadius: 8,
-        padding: '14px 16px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 6,
-      }}>
-        {/* label row */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', lineHeight: 1.3 }}>
-            {card.label}
-          </span>
-          {card.trend && (
-            <span style={{ fontSize: 10, color: 'var(--osmos-brand-amber)', marginLeft: 2 }}>▼</span>
-          )}
-          <InfoIcon size={13} color="var(--osmos-fg-subtle)" />
-        </div>
-        {/* value */}
-        <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--osmos-fg)', lineHeight: 1.2 }}>
-          {card.value}
-        </div>
-      </div>
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 20 }}>
+    {KPI_CARDS.map((card) => (
+      <StatCard key={card.label} label={card.label} value={card.value} />
     ))}
   </div>
 );
@@ -242,7 +219,7 @@ const DualLineChart = ({ title, data, line1Key, line1Label, line2Key, line2Label
 );
 
 const DualChartsRow = () => (
-  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 16 }}>
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginTop: 16 }}>
     <DualLineChart
       data={AD_REVENUE_DATA}
       line1Key="adRevenue"
@@ -326,7 +303,7 @@ const PageLevelContribution = () => (
     </div>
 
     {/* 4 donuts */}
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
       {DONUTS.map((d, i) => (
         <DonutChart key={i} centerValue={d.center} centerLabel={d.label} />
       ))}
@@ -522,7 +499,7 @@ const SkuTable = () => (
 export default function ProductAdsAnalyticsPage() {
   return (
     <div style={{
-      padding: '24px',
+      padding: '20px 24px',
       background: 'var(--osmos-bg-subtle)',
       minHeight: '100vh',
       fontFamily: "'Open Sans', sans-serif",

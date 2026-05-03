@@ -82,7 +82,7 @@ export default function SponsoredAdsCampaignsPage() {
   const pageRows = filtered.slice(pageStart, pageStart + PAGE_SIZE);
 
   return (
-    <div style={{ fontFamily: "'Open Sans', sans-serif", padding: '24px', background: 'var(--osmos-bg)', minHeight: '100vh', color: 'var(--osmos-fg)' }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif", padding: '20px 24px', background: 'var(--osmos-bg)', minHeight: '100vh', color: 'var(--osmos-fg)' }}>
       <Toast {...toast} />
 
       <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--osmos-fg)', marginBottom: '16px' }}>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Icon } from '../../ui/atoms/Icon';
+import { Icon, DownloadIcon } from '../../ui/atoms/Icon';
 import {
   LineChart,
   Line,
@@ -103,15 +103,6 @@ function GridIcon() {
   );
 }
 
-function DownloadIcon() {
-  return (
-    <Icon size={15} strokeWidth={2}>
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="7 10 12 15 17 10" />
-      <line x1="12" y1="15" x2="12" y2="3" />
-    </Icon>
-  );
-}
 
 function ChartIcon() {
   return (
@@ -224,7 +215,7 @@ export default function ProductAdsLivePage() {
 
   return (
     <div style={{
-      padding: 24,
+      padding: '20px 24px',
       background: 'var(--osmos-bg-subtle)',
       minHeight: '100vh',
       fontFamily: "'Open Sans', sans-serif",

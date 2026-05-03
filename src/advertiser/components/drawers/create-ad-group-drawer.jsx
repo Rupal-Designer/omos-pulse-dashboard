@@ -1,22 +1,75 @@
-"use client";
 import { useState } from "react";
 import {
-  X,
-  Pencil,
-  Info,
-  ChevronRight,
-  ChevronDown,
-  Sparkles,
-  Plus,
-  Trash2,
-  Upload,
-  Check,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { InventoryDetailsDrawer } from "./inventory-details-drawer";
-import { ProductSelectionDrawer } from "./product-selection-drawer";
+  CloseIcon,
+  EditIcon,
+  InfoIcon,
+  ChevronRightIcon,
+  ChevronDownIcon,
+  PlusIcon,
+  TrashIcon,
+  UploadIcon,
+  CheckIcon,
+  Icon,
+} from '../../../ui';
+import { Button } from '../../../ui';
+import { Checkbox } from '../../../ui';
+import { Stepper } from '../../../ui';
+import { Modal } from '../../../ui';
+import { RadioCard, RadioDot } from '../../../ui';
+import { InventoryDetailsDrawer } from './inventory-details-drawer';
+import { ProductSelectionDrawer } from './product-selection-drawer';
 
+// ─── Design tokens ────────────────────────────────────────────────────────────
+const FONT      = "'Open Sans', sans-serif";
+const BG        = 'var(--osmos-bg)';
+const BG_SUBTLE = 'var(--osmos-bg-subtle)';
+const BORDER    = 'var(--osmos-border)';
+const TEXT      = 'var(--osmos-fg)';
+const TEXT_MID  = 'var(--osmos-fg-muted)';
+const TEXT_SUB  = 'var(--osmos-fg-subtle)';
+const ACCENT    = 'var(--osmos-brand-primary)';
+const ACCENT_M  = 'var(--osmos-brand-primary-muted)';
+const GREEN     = 'var(--osmos-brand-green)';
+const GREEN_M   = 'var(--osmos-brand-green-muted)';
+const VI        = 'var(--osmos-brand-violet)';  // violet-primary — AI brand
+const VI_BG     = 'var(--osmos-brand-violet-muted)';
+
+// ─── Style constants ──────────────────────────────────────────────────────────
+const SELECT_STYLE = {
+  padding: '8px 32px 8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8,
+  fontSize: 13, color: TEXT, backgroundColor: BG, appearance: 'none',
+  outline: 'none', width: '100%', fontFamily: FONT, cursor: 'pointer',
+};
+
+const INPUT_STYLE = {
+  padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8,
+  fontSize: 13, color: TEXT, backgroundColor: BG,
+  outline: 'none', fontFamily: FONT, width: '100%', boxSizing: 'border-box',
+};
+
+// ─── Hand-rolled SparklesIcon (no lucide equivalent in ui/atoms) ──────────────
+const SparklesIcon = ({ size = 16, color = '#8b5cf6' }) => (
+  <Icon size={size} color={color}>
+    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3z" />
+    <path d="M5 3v4" /><path d="M19 17v4" /><path d="M3 5h4" /><path d="M17 19h4" />
+  </Icon>
+);
+
+// ─── Round multi-select check (not RadioDot — needs multi-select semantics) ───
+function RoundCheck({ checked, onClick }) {
+  return (
+    <div onClick={onClick} style={{
+      width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
+      border: `2px solid ${checked ? ACCENT : BORDER}`,
+      backgroundColor: checked ? ACCENT : 'transparent',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+    }}>
+      {checked && <CheckIcon size={12} color="#fff" />}
+    </div>
+  );
+}
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
 const websitePages = [
   {
     name: "Home Page",
@@ -180,6 +233,7 @@ const adFormats = [
   },
 ];
 
+// ─── Main export ──────────────────────────────────────────────────────────────
 export function CreateAdGroupDrawer({ open, onClose, onSave }) {
   const [adGroupName, setAdGroupName] = useState("Ad Group 1");
   const [currentStep, setCurrentStep] = useState(1);
@@ -242,7 +296,6 @@ export function CreateAdGroupDrawer({ open, onClose, onSave }) {
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Save and close
       onSave({
         name: adGroupName,
         selectedPages,
@@ -252,7 +305,6 @@ export function CreateAdGroupDrawer({ open, onClose, onSave }) {
         productSelection: selectedProducts,
       });
       onClose();
-      // Reset state
       setCurrentStep(1);
       setSelectedPages([]);
       setSelectedTargeting({
@@ -277,77 +329,78 @@ export function CreateAdGroupDrawer({ open, onClose, onSave }) {
 
   return (
     <>
-      <div className="fixed inset-0 z-[60] bg-black/20" onClick={onClose} />
+      {/* Backdrop */}
       <div
-        className="fixed right-0 top-0 z-[60] h-full bg-[#f4f6f9] shadow-xl flex flex-col transition-transform duration-300"
-        style={{ width: "80%" }}
+        onClick={onClose}
+        style={{ position: 'fixed', inset: 0, zIndex: 60, backgroundColor: 'rgba(0,0,0,0.2)' }}
+      />
+
+      {/* Drawer panel */}
+      <div
+        style={{
+          position: 'fixed', right: 0, top: 0, zIndex: 60,
+          height: '100%', width: '80%',
+          backgroundColor: BG_SUBTLE,
+          boxShadow: '0 25px 50px rgba(0,0,0,0.15)',
+          display: 'flex', flexDirection: 'column',
+          transition: 'transform 0.3s',
+          fontFamily: FONT,
+        }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-[#e5e7eb]">
-          <div className="flex items-center gap-3">
-            <Input
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '12px 24px', backgroundColor: BG, borderBottom: `1px solid ${BORDER}`,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <input
               value={adGroupName}
               onChange={(e) => setAdGroupName(e.target.value)}
-              className="text-lg font-semibold text-[#2d2d2d] border-none shadow-none p-0 h-auto focus-visible:ring-0 w-auto"
+              style={{
+                fontSize: 18, fontWeight: 600, color: TEXT, border: 'none',
+                outline: 'none', background: 'transparent', fontFamily: FONT, padding: 0,
+              }}
             />
-
-            <button className="text-[#6b7280] hover:text-[#2d2d2d] transition-colors">
-              <Pencil size={16} />
+            <button style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', padding: 2 }}>
+              <EditIcon size={16} color={TEXT_MID} />
             </button>
           </div>
-          <div className="flex items-center gap-4">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <a
               href="#"
-              className="flex items-center gap-1.5 text-sm text-[#2563eb] hover:underline"
+              style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: ACCENT, textDecoration: 'none' }}
             >
-              <Info size={14} />
+              <InfoIcon size={14} color={ACCENT} />
               How to create an Ad Group?
             </a>
             <button
               onClick={onClose}
-              className="text-[#6b7280] hover:text-[#2d2d2d] transition-colors"
+              style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', padding: 2 }}
             >
-              <X size={20} />
+              <CloseIcon size={20} color={TEXT_MID} />
             </button>
           </div>
         </div>
 
         {/* Content */}
-        <div className="flex flex-1 overflow-hidden">
-          {/* Main Content */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            {/* Stepper */}
-            <div className="px-6 py-4 bg-white border-b border-[#e5e7eb]">
-              <div className="flex items-center gap-8">
-                <StepItem
-                  number={1}
-                  label="Inventory"
-                  active={currentStep === 1}
-                  completed={currentStep > 1}
-                />
-                <StepItem
-                  number={2}
-                  label="Targeting"
-                  active={currentStep === 2}
-                  completed={currentStep > 2}
-                />
-                <StepItem
-                  number={3}
-                  label="Ad Creation"
-                  active={currentStep === 3}
-                  completed={currentStep > 3}
-                />
-                <StepItem
-                  number={4}
-                  label="Configure"
-                  active={currentStep === 4}
-                  completed={currentStep > 4}
-                />
-              </div>
+        <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+          {/* Main content area */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            {/* Stepper bar */}
+            <div style={{ padding: '16px 24px', backgroundColor: BG, borderBottom: `1px solid ${BORDER}` }}>
+              <Stepper
+                steps={[
+                  { label: 'Inventory' },
+                  { label: 'Targeting' },
+                  { label: 'Ad Creation' },
+                  { label: 'Configure' },
+                ]}
+                current={currentStep}
+              />
             </div>
 
-            {/* Step Content */}
-            <div className="flex-1 overflow-auto p-6">
+            {/* Step content */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: 24 }}>
               {currentStep === 1 && (
                 <InventoryStep
                   pages={websitePages}
@@ -383,40 +436,36 @@ export function CreateAdGroupDrawer({ open, onClose, onSave }) {
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 bg-white border-t border-[#e5e7eb] flex justify-center gap-3">
+            <div style={{
+              display: 'flex', justifyContent: 'center', gap: 12,
+              padding: '12px 24px', backgroundColor: BG, borderTop: `1px solid ${BORDER}`,
+            }}>
               {currentStep > 1 && (
-                <Button
-                  variant="outline"
-                  className="px-8 border-[#e5e7eb] text-[#6b7280] hover:bg-[#f9fafb] bg-transparent"
-                  onClick={handleBack}
-                >
-                  Back
-                </Button>
+                <Button variant="outline" onClick={handleBack}>Back</Button>
               )}
-              <Button
-                variant="outline"
-                className="px-8 border-[#2563eb] text-[#2563eb] hover:bg-[#eff6ff] bg-transparent"
-                onClick={onClose}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="px-8 bg-[#475569] hover:bg-[#334155] text-white"
-                onClick={handleNext}
-              >
-                {currentStep === 4 ? "Save Ad Group" : "Next"}
+              <Button variant="outline" onClick={onClose}>Cancel</Button>
+              <Button variant="primary" onClick={handleNext}>
+                {currentStep === 4 ? 'Save Ad Group' : 'Next'}
               </Button>
             </div>
           </div>
 
           {/* Ad Group Summary Sidebar */}
-          <div className="w-64 bg-white border-l border-[#e5e7eb] flex flex-col">
-            <div className="bg-[#7c3aed] text-white px-4 py-3 flex items-center gap-2">
-              <ChevronRight size={16} />
-              <span className="font-medium">Ad Group Summary</span>
+          <div style={{
+            width: 256, backgroundColor: BG,
+            borderLeft: `1px solid ${BORDER}`,
+            display: 'flex', flexDirection: 'column',
+          }}>
+            <div style={{
+              backgroundColor: VI, color: '#fff',
+              padding: '12px 16px',
+              display: 'flex', alignItems: 'center', gap: 8,
+            }}>
+              <ChevronRightIcon size={16} color="#fff" />
+              <span style={{ fontWeight: 500, fontSize: 14 }}>Ad Group Summary</span>
             </div>
 
-            <div className="flex-1 overflow-auto">
+            <div style={{ flex: 1, overflowY: 'auto' }}>
               <SummarySection
                 label="Inventory Setup"
                 expanded={expandedSections.includes("inventory")}
@@ -424,7 +473,6 @@ export function CreateAdGroupDrawer({ open, onClose, onSave }) {
                 count={selectedPages.length}
                 active={currentStep === 1}
               />
-
               <SummarySection
                 label="Targeting"
                 expanded={expandedSections.includes("targeting")}
@@ -432,7 +480,6 @@ export function CreateAdGroupDrawer({ open, onClose, onSave }) {
                 count={Object.values(selectedTargeting).flat().length}
                 active={currentStep === 2}
               />
-
               <SummarySection
                 label="Ad Creation"
                 expanded={expandedSections.includes("adCreation")}
@@ -440,7 +487,6 @@ export function CreateAdGroupDrawer({ open, onClose, onSave }) {
                 count={selectedAdFormat ? 1 : 0}
                 active={currentStep === 3}
               />
-
               <SummarySection
                 label="Config"
                 expanded={expandedSections.includes("config")}
@@ -452,7 +498,7 @@ export function CreateAdGroupDrawer({ open, onClose, onSave }) {
         </div>
       </div>
 
-      {/* Inventory Details Drawer (70% width) */}
+      {/* Inventory Details Drawer */}
       <InventoryDetailsDrawer
         open={inventoryDetailsOpen}
         onClose={() => setInventoryDetailsOpen(false)}
@@ -476,69 +522,68 @@ export function CreateAdGroupDrawer({ open, onClose, onSave }) {
   );
 }
 
-function StepItem({ number, label, active = false, completed = false }) {
-  return (
-    <div className="flex items-center gap-2">
-      <div
-        className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
-          active
-            ? "bg-[#2563eb] text-white"
-            : completed
-              ? "bg-[#16a34a] text-white"
-              : "bg-[#e5e7eb] text-[#6b7280]"
-        }`}
-      >
-        {completed ? <Check size={14} /> : number}
-      </div>
-      <span
-        className={`text-sm font-medium ${active ? "text-[#2563eb]" : completed ? "text-[#16a34a]" : "text-[#6b7280]"}`}
-      >
-        {label}
-      </span>
-    </div>
-  );
-}
-
+// ─── SummarySection ───────────────────────────────────────────────────────────
 function SummarySection({ label, expanded, onToggle, count, active }) {
   return (
-    <div
-      className={`border-b border-[#e5e7eb] ${active ? "bg-[#eff6ff]" : ""}`}
-    >
+    <div style={{
+      borderBottom: `1px solid ${BORDER}`,
+      backgroundColor: active ? ACCENT_M : 'transparent',
+    }}>
       <button
-        className="w-full flex items-center justify-between p-4 text-left hover:bg-[#f9fafb] transition-colors"
         onClick={onToggle}
+        style={{
+          width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: 16, textAlign: 'left', background: 'none', border: 'none',
+          cursor: 'pointer', fontFamily: FONT,
+        }}
+        onMouseEnter={(e) => { if (!active) e.currentTarget.style.backgroundColor = BG_SUBTLE; }}
+        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
       >
-        <div className="flex items-center gap-2">
-          <span
-            className={`text-sm font-medium ${active ? "text-[#2563eb]" : "text-[#2d2d2d]"}`}
-          >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 13, fontWeight: 500, color: active ? ACCENT : TEXT }}>
             {label}
           </span>
           {count !== undefined && count > 0 && (
-            <span className="text-xs bg-[#2563eb] text-white px-1.5 py-0.5 rounded-full">
+            <span style={{
+              backgroundColor: ACCENT, color: '#fff',
+              padding: '2px 6px', borderRadius: 999,
+              fontSize: 11, fontWeight: 500,
+            }}>
               {count}
             </span>
           )}
         </div>
-        <ChevronRight
-          size={16}
-          className={`text-[#6b7280] transition-transform ${expanded ? "rotate-90" : ""}`}
-        />
+        <div style={{
+          transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
+          transition: 'transform 0.15s',
+          display: 'flex',
+        }}>
+          <ChevronRightIcon size={16} color={TEXT_MID} />
+        </div>
       </button>
     </div>
   );
 }
 
+// ─── InventoryStep ────────────────────────────────────────────────────────────
 function InventoryStep({ pages, selectedPages, togglePage, onViewDetails }) {
   return (
-    <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm">
-      <button className="w-full flex items-center justify-between p-4 text-left border-b border-[#e5e7eb]">
-        <span className="font-semibold text-[#2d2d2d]">Select Page</span>
-        <ChevronDown size={20} className="text-[#6b7280]" />
+    <div style={{
+      backgroundColor: BG, borderRadius: 12,
+      border: `1px solid ${BORDER}`, boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+    }}>
+      <button style={{
+        width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: 16, borderBottom: `1px solid ${BORDER}`, background: 'none', border: 'none',
+        borderBottom: `1px solid ${BORDER}`,
+        cursor: 'pointer', fontFamily: FONT,
+      }}>
+        <span style={{ fontWeight: 600, color: TEXT, fontSize: 14 }}>Select Page</span>
+        <ChevronDownIcon size={20} color={TEXT_MID} />
       </button>
 
-      <div className="p-5">
-        <div className="grid grid-cols-3 gap-4">
+      <div style={{ padding: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
           {pages.map((page, index) => (
             <InventoryCard
               key={index}
@@ -554,86 +599,73 @@ function InventoryStep({ pages, selectedPages, togglePage, onViewDetails }) {
   );
 }
 
+// ─── InventoryCard ────────────────────────────────────────────────────────────
 function InventoryCard({ page, selected, onToggle, onViewDetails }) {
   return (
     <div
-      className={`border rounded-xl p-4 transition-all cursor-pointer ${
-        selected
-          ? "border-[#2563eb] bg-[#eff6ff] shadow-sm"
-          : "border-[#e5e7eb] bg-white hover:border-[#9ca3af] hover:shadow-sm"
-      }`}
+      style={{
+        border: `1px solid ${selected ? ACCENT : BORDER}`,
+        borderRadius: 12, padding: 16,
+        backgroundColor: selected ? ACCENT_M : BG,
+        boxShadow: selected ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
+        cursor: 'pointer', transition: 'all 0.15s',
+      }}
+      onMouseEnter={(e) => { if (!selected) e.currentTarget.style.borderColor = TEXT_SUB; }}
+      onMouseLeave={(e) => { if (!selected) e.currentTarget.style.borderColor = BORDER; }}
     >
-      <div className="flex items-start gap-3 mb-3">
-        <div
-          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 ${
-            selected ? "border-[#2563eb] bg-[#2563eb]" : "border-[#d1d5db]"
-          }`}
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggle();
-          }}
-        >
-          {selected && <Check size={12} className="text-white" />}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 12 }}>
+        <div style={{ marginTop: 2 }}>
+          <RoundCheck
+            checked={selected}
+            onClick={(e) => { e.stopPropagation(); onToggle(); }}
+          />
         </div>
-        <div className="flex-1">
-          <h4 className="font-semibold text-[#2d2d2d] mb-1">{page.name}</h4>
-          <div className="flex items-center gap-1 text-sm">
-            <Sparkles size={12} className="text-[#7c3aed]" />
-            <span className="text-[#7c3aed]">Est. Daily Imp(next 30 days)</span>
-            <span className="text-[#2d2d2d] font-semibold ml-auto">
-              {page.estDailyImp}
-            </span>
+        <div style={{ flex: 1 }}>
+          <h4 style={{ fontWeight: 600, color: TEXT, margin: '0 0 4px', fontSize: 13 }}>{page.name}</h4>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12 }}>
+            <SparklesIcon size={12} color={VI} />
+            <span style={{ color: VI }}>Est. Daily Imp(next 30 days)</span>
+            <span style={{ color: TEXT, fontWeight: 600, marginLeft: 'auto' }}>{page.estDailyImp}</span>
           </div>
         </div>
       </div>
 
-      <div className="space-y-2 text-sm mb-3">
-        <div className="flex justify-between">
-          <span className="text-[#6b7280]">Project Daily Impression</span>
-          <span className="text-[#2d2d2d] font-medium">
-            {page.projectDailyImp}
-          </span>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 12, marginBottom: 12 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ color: TEXT_MID }}>Project Daily Impression</span>
+          <span style={{ color: TEXT, fontWeight: 500 }}>{page.projectDailyImp}</span>
         </div>
-        <div className="flex justify-between">
-          <span className="text-[#6b7280]">Avg. Daily Impression</span>
-          <span className="text-[#2d2d2d] font-medium">{page.avgDailyImp}</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ color: TEXT_MID }}>Avg. Daily Impression</span>
+          <span style={{ color: TEXT, fontWeight: 500 }}>{page.avgDailyImp}</span>
         </div>
-        <div className="flex justify-between">
-          <span className="text-[#6b7280]">Total Inventories</span>
-          <span className="text-[#2d2d2d] font-medium">
-            {page.totalInventories}
-          </span>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ color: TEXT_MID }}>Total Inventories</span>
+          <span style={{ color: TEXT, fontWeight: 500 }}>{page.totalInventories}</span>
         </div>
-        <div className="flex justify-between">
-          <span className="text-[#6b7280]">Targeting Options</span>
-          <span className="text-[#2d2d2d] font-medium">
-            {page.targetingOptions}
-          </span>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ color: TEXT_MID }}>Targeting Options</span>
+          <span style={{ color: TEXT, fontWeight: 500 }}>{page.targetingOptions}</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-2 flex-wrap mb-3">
+      <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
         {page.tags.map((tag, i) => (
-          <span
-            key={i}
-            className="text-xs px-2 py-1 bg-[#f3f4f6] text-[#6b7280] rounded-md border border-[#e5e7eb]"
-          >
+          <span key={i} style={{
+            fontSize: 11, padding: '2px 8px', backgroundColor: BG_SUBTLE,
+            color: TEXT_MID, borderRadius: 6, border: `1px solid ${BORDER}`,
+          }}>
             {tag}
           </span>
         ))}
         {page.extraTags > 0 && (
-          <span className="text-xs text-[#2563eb] font-medium">
-            +{page.extraTags}
-          </span>
+          <span style={{ fontSize: 11, color: ACCENT, fontWeight: 500 }}>+{page.extraTags}</span>
         )}
       </div>
 
       <button
-        className="text-xs text-[#2563eb] hover:underline font-medium"
-        onClick={(e) => {
-          e.stopPropagation();
-          onViewDetails();
-        }}
+        style={{ fontSize: 11, color: ACCENT, background: 'none', border: 'none', cursor: 'pointer', fontWeight: 500, padding: 0, fontFamily: FONT }}
+        onClick={(e) => { e.stopPropagation(); onViewDetails(); }}
       >
         View Ad Slots →
       </button>
@@ -641,6 +673,7 @@ function InventoryCard({ page, selected, onToggle, onViewDetails }) {
   );
 }
 
+// ─── TargetingStep ────────────────────────────────────────────────────────────
 function TargetingStep({
   options,
   selected,
@@ -657,30 +690,14 @@ function TargetingStep({
       title: "Demographics",
       description: "Target by age, gender, income, and parental status",
       icon: (
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="9" cy="7" r="4" stroke="#2563eb" strokeWidth="2" />
-          <path
-            d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"
-            stroke="#2563eb"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
+          <path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" />
           <circle cx="17" cy="11" r="3" stroke="#2563eb" strokeWidth="2" />
-          <path
-            d="M21 21v-1.5a3 3 0 00-3-3h-1"
-            stroke="#2563eb"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
+          <path d="M21 21v-1.5a3 3 0 00-3-3h-1" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" />
         </svg>
       ),
-      iconBg: "bg-[#eff6ff]",
+      iconBg: ACCENT_M,
       selectedCount: selected.demographics.length,
     },
     {
@@ -688,564 +705,293 @@ function TargetingStep({
       title: "Interests & Behaviours",
       description: "Target based on shopping interests and browsing behavior",
       icon: (
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-            stroke="#8b5cf6"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="#8b5cf6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       ),
-      iconBg: "bg-[#f5f3ff]",
+      iconBg: VI_BG,
       selectedCount: selected.interests.length,
     },
     {
       id: "behaviors",
       title: "Audience Segments",
-      description:
-        "Target specific customer segments like loyal customers or cart abandoners",
+      description: "Target specific customer segments like loyal customers or cart abandoners",
       icon: (
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <rect
-            x="3"
-            y="3"
-            width="7"
-            height="7"
-            rx="1"
-            stroke="#10b981"
-            strokeWidth="2"
-          />
-          <rect
-            x="14"
-            y="3"
-            width="7"
-            height="7"
-            rx="1"
-            stroke="#10b981"
-            strokeWidth="2"
-          />
-          <rect
-            x="3"
-            y="14"
-            width="7"
-            height="7"
-            rx="1"
-            stroke="#10b981"
-            strokeWidth="2"
-          />
-          <rect
-            x="14"
-            y="14"
-            width="7"
-            height="7"
-            rx="1"
-            stroke="#10b981"
-            strokeWidth="2"
-          />
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="3" width="7" height="7" rx="1" stroke="#10b981" strokeWidth="2" />
+          <rect x="14" y="3" width="7" height="7" rx="1" stroke="#10b981" strokeWidth="2" />
+          <rect x="3" y="14" width="7" height="7" rx="1" stroke="#10b981" strokeWidth="2" />
+          <rect x="14" y="14" width="7" height="7" rx="1" stroke="#10b981" strokeWidth="2" />
         </svg>
       ),
-      iconBg: "bg-[#ecfdf5]",
+      iconBg: GREEN_M,
       selectedCount: selected.behaviors.length,
     },
     {
       id: "keywords",
       title: "Keyword Targeting",
-      description:
-        "Use relevant keywords to reach customers searching for your products",
+      description: "Use relevant keywords to reach customers searching for your products",
       icon: (
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="11" cy="11" r="8" stroke="#f59e0b" strokeWidth="2" />
-          <path
-            d="M21 21l-4.35-4.35"
-            stroke="#f59e0b"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
+          <path d="M21 21l-4.35-4.35" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" />
         </svg>
       ),
-      iconBg: "bg-[#fffbeb]",
+      iconBg: 'rgba(245,158,11,0.12)',
       selectedCount: selected.keywords.length,
     },
     {
       id: "products",
       title: "Product Catalog",
-      description:
-        "Choose specific products or categories to feature in your ads",
+      description: "Choose specific products or categories to feature in your ads",
       icon: (
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"
-            stroke="#06b6d4"
-            strokeWidth="2"
-          />
-
-          <path
-            d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"
-            stroke="#06b6d4"
-            strokeWidth="2"
-          />
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" stroke="#06b6d4" strokeWidth="2" />
+          <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" stroke="#06b6d4" strokeWidth="2" />
         </svg>
       ),
-      iconBg: "bg-[#ecfeff]",
+      iconBg: 'rgba(6,182,212,0.12)',
       selectedCount: productSelection?.includedProducts?.length || 0,
       isProduct: true,
     },
   ];
 
   const getStatusBadge = (type) => {
+    const baseStyle = {
+      padding: '4px 10px', fontSize: 11, fontWeight: 500, borderRadius: 4,
+      border: '1px solid', display: 'inline-block',
+    };
     if (type.isProduct) {
       if (productSelection) {
         return (
-          <span className="px-2.5 py-1 text-xs font-medium rounded bg-[#dcfce7] text-[#16a34a] border border-[#bbf7d0]">
+          <span style={{ ...baseStyle, backgroundColor: GREEN_M, color: GREEN, borderColor: GREEN }}>
             {productSelection.mode === "smart" ? "SMART" : "MANUAL"}
           </span>
         );
       }
       return (
-        <span className="px-2.5 py-1 text-xs font-medium rounded bg-[#f3f4f6] text-[#6b7280] border border-[#e5e7eb]">
+        <span style={{ ...baseStyle, backgroundColor: BG_SUBTLE, color: TEXT_MID, borderColor: BORDER }}>
           NOT CONFIGURED
         </span>
       );
     }
     if (type.selectedCount > 0) {
       return (
-        <span className="px-2.5 py-1 text-xs font-medium rounded bg-[#dcfce7] text-[#16a34a] border border-[#bbf7d0]">
+        <span style={{ ...baseStyle, backgroundColor: GREEN_M, color: GREEN, borderColor: GREEN }}>
           {type.selectedCount} SELECTED
         </span>
       );
     }
     return (
-      <span className="px-2.5 py-1 text-xs font-medium rounded bg-[#f3f4f6] text-[#6b7280] border border-[#e5e7eb]">
+      <span style={{ ...baseStyle, backgroundColor: BG_SUBTLE, color: TEXT_MID, borderColor: BORDER }}>
         NOT CONFIGURED
       </span>
     );
   };
 
+  // Modal checkbox rows helper
+  const renderModalCheckboxRows = (items, category) =>
+    items.map((item) => (
+      <div
+        key={item.id}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 12, padding: 12,
+          borderRadius: 8, border: `1px solid ${selected[category].includes(item.id) ? ACCENT : BORDER}`,
+          cursor: 'pointer', marginBottom: 8,
+        }}
+        onClick={() => toggleTargeting(category, item.id)}
+      >
+        <Checkbox
+          checked={selected[category].includes(item.id)}
+          onChange={() => toggleTargeting(category, item.id)}
+        />
+        <span style={{ fontSize: 13, color: TEXT }}>{item.label}</span>
+      </div>
+    ));
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      {/* Header row */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h2 className="text-xl font-semibold text-[#1f2937]">Targeting</h2>
-          <p className="text-sm text-[#6b7280] mt-1">
+          <h2 style={{ fontSize: 20, fontWeight: 600, color: TEXT, margin: 0 }}>Targeting</h2>
+          <p style={{ fontSize: 13, color: TEXT_MID, marginTop: 4, marginBottom: 0 }}>
             Configure how your ads reach the right audience (optional)
           </p>
         </div>
-        <div className="flex items-center gap-1 p-1 bg-[#f3f4f6] rounded-lg">
-          <button
-            onClick={() => setTargetingMode("auto")}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-              targetingMode === "auto"
-                ? "bg-white text-[#1f2937] shadow-sm"
-                : "text-[#6b7280] hover:text-[#1f2937]"
-            }`}
-          >
-            Auto
-          </button>
-          <button
-            onClick={() => setTargetingMode("manual")}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-              targetingMode === "manual"
-                ? "bg-white text-[#1f2937] shadow-sm"
-                : "text-[#6b7280] hover:text-[#1f2937]"
-            }`}
-          >
-            Manual
-          </button>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 4,
+          padding: 4, backgroundColor: BG_SUBTLE, borderRadius: 8,
+        }}>
+          {['auto', 'manual'].map((mode) => (
+            <button
+              key={mode}
+              onClick={() => setTargetingMode(mode)}
+              style={{
+                padding: '8px 16px', fontSize: 13, fontWeight: 500, borderRadius: 6,
+                border: 'none', cursor: 'pointer', fontFamily: FONT,
+                backgroundColor: targetingMode === mode ? BG : 'transparent',
+                color: targetingMode === mode ? TEXT : TEXT_MID,
+                boxShadow: targetingMode === mode ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                transition: 'all 0.15s',
+              }}
+            >
+              {mode.charAt(0).toUpperCase() + mode.slice(1)}
+            </button>
+          ))}
         </div>
       </div>
 
-      {targetingMode === "auto" ? (
-        <div className="bg-gradient-to-br from-[#eff6ff] to-[#f5f3ff] rounded-xl border border-[#e5e7eb] p-8">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 2L2 7l10 5 10-5-10-5z"
-                  stroke="#2563eb"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-
-                <path
-                  d="M2 17l10 5 10-5"
-                  stroke="#2563eb"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-
-                <path
-                  d="M2 12l10 5 10-5"
-                  stroke="#2563eb"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+      {/* Auto targeting panel */}
+      {targetingMode === 'auto' ? (
+        <div style={{
+          background: 'linear-gradient(135deg, var(--osmos-brand-primary-muted), rgba(124,58,237,0.05))',
+          borderRadius: 12, border: `1px solid ${BORDER}`, padding: 32,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+            <div style={{
+              width: 48, height: 48, borderRadius: '50%', backgroundColor: BG,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 1px 4px rgba(0,0,0,0.08)', flexShrink: 0,
+            }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M2 17l10 5 10-5" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M2 12l10 5 10-5" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold text-[#1f2937] mb-2">
+            <div style={{ flex: 1 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 600, color: TEXT, marginBottom: 8, marginTop: 0 }}>
                 AI-Optimized Targeting
               </h3>
-              <p className="text-sm text-[#6b7280] leading-relaxed">
-                Our AI will automatically optimize your ad targeting based on
-                your campaign objective, creative content, and historical
-                performance data. This typically results in 20-30% better
-                performance compared to manual targeting.
+              <p style={{ fontSize: 13, color: TEXT_MID, lineHeight: 1.6, margin: 0 }}>
+                Our AI will automatically optimize your ad targeting based on your campaign objective,
+                creative content, and historical performance data. This typically results in 20-30%
+                better performance compared to manual targeting.
               </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full text-xs font-medium text-[#6b7280] border border-[#e5e7eb]">
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  Smart audience discovery
-                </span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full text-xs font-medium text-[#6b7280] border border-[#e5e7eb]">
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  Real-time optimization
-                </span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full text-xs font-medium text-[#6b7280] border border-[#e5e7eb]">
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  Cross-platform learning
-                </span>
+              <div style={{ marginTop: 16, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                {['Smart audience discovery', 'Real-time optimization', 'Cross-platform learning'].map((chip) => (
+                  <span key={chip} style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    padding: '6px 12px', backgroundColor: BG, borderRadius: 999,
+                    fontSize: 12, color: TEXT_MID, border: `1px solid ${BORDER}`,
+                  }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    {chip}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {targetingTypes.map((type) => (
-            <div
+            <RadioCard
               key={type.id}
-              onClick={() =>
-                type.isProduct
-                  ? onOpenProductSelection()
-                  : setActiveModal(type.id)
-              }
-              className="flex items-center gap-4 p-4 bg-white rounded-xl border border-[#e5e7eb] cursor-pointer hover:border-[#2563eb] hover:shadow-sm transition-all group"
+              selected={false}
+              onClick={() => type.isProduct ? onOpenProductSelection() : setActiveModal(type.id)}
+              style={{ padding: 0, border: `1px solid ${BORDER}`, borderRadius: 12 }}
             >
-              <div
-                className={`w-12 h-12 rounded-xl ${type.iconBg} flex items-center justify-center flex-shrink-0`}
-              >
-                {type.icon}
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 16, padding: 16, cursor: 'pointer',
+              }}>
+                <div style={{
+                  width: 48, height: 48, borderRadius: 12,
+                  backgroundColor: type.iconBg,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                }}>
+                  {type.icon}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h3 style={{ fontSize: 13, fontWeight: 600, color: TEXT, margin: '0 0 2px' }}>
+                    {type.title}
+                  </h3>
+                  <p style={{ fontSize: 11, color: TEXT_MID, margin: 0 }}>{type.description}</p>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
+                  {getStatusBadge(type)}
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={TEXT_SUB} strokeWidth="2">
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-semibold text-[#1f2937]">
-                  {type.title}
-                </h3>
-                <p className="text-xs text-[#6b7280] mt-0.5">
-                  {type.description}
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                {getStatusBadge(type)}
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#9ca3af"
-                  strokeWidth="2"
-                  className="group-hover:stroke-[#2563eb] transition-colors"
-                >
-                  <path d="M9 18l6-6-6-6" />
-                </svg>
-              </div>
-            </div>
+            </RadioCard>
           ))}
         </div>
       )}
 
-      {/* Modals for each targeting type - only shown in manual mode */}
-      {targetingMode === "manual" && (
+      {/* Targeting modals (manual mode) */}
+      {targetingMode === 'manual' && (
         <>
-          {/* Demographics Modal */}
-          {activeModal === "demographics" && (
-            <div className="fixed inset-0 bg-black/50 z-[200] flex items-center justify-center p-4">
-              <div className="bg-white rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
-                <div className="flex items-center justify-between p-4 border-b border-[#e5e7eb]">
-                  <h3 className="text-lg font-semibold text-[#1f2937]">
-                    Demographics Targeting
-                  </h3>
-                  <button
-                    onClick={() => setActiveModal(null)}
-                    className="p-1 hover:bg-[#f3f4f6] rounded"
-                  >
-                    <X className="w-5 h-5 text-[#6b7280]" />
-                  </button>
-                </div>
-                <div className="flex-1 overflow-y-auto p-4">
-                  <div className="space-y-4">
-                    {options.demographics.map((demo) => (
-                      <label
-                        key={demo.id}
-                        className="flex items-center gap-3 p-3 rounded-lg border border-[#e5e7eb] hover:border-[#2563eb] cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={selected.demographics.includes(demo.id)}
-                          onChange={() =>
-                            toggleTargeting("demographics", demo.id)
-                          }
-                          className="w-4 h-4 rounded border-[#d1d5db] text-[#2563eb] focus:ring-[#2563eb]"
-                        />
+          <Modal
+            open={activeModal === 'demographics'}
+            onClose={() => setActiveModal(null)}
+            title="Demographics Targeting"
+            zIndex={200}
+            footer={
+              <>
+                <Button variant="outline" onClick={() => setActiveModal(null)}>Cancel</Button>
+                <Button variant="primary" onClick={() => setActiveModal(null)}>Apply</Button>
+              </>
+            }
+          >
+            {renderModalCheckboxRows(options.demographics, 'demographics')}
+          </Modal>
 
-                        <span className="text-sm text-[#1f2937]">
-                          {demo.label}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                <div className="p-4 border-t border-[#e5e7eb] flex justify-end gap-3">
-                  <Button
-                    variant="outline"
-                    onClick={() => setActiveModal(null)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white"
-                    onClick={() => setActiveModal(null)}
-                  >
-                    Apply
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
+          <Modal
+            open={activeModal === 'interests'}
+            onClose={() => setActiveModal(null)}
+            title="Interests & Behaviours"
+            zIndex={200}
+            footer={
+              <>
+                <Button variant="outline" onClick={() => setActiveModal(null)}>Cancel</Button>
+                <Button variant="primary" onClick={() => setActiveModal(null)}>Apply</Button>
+              </>
+            }
+          >
+            {renderModalCheckboxRows(options.interests, 'interests')}
+          </Modal>
 
-          {/* Interests Modal */}
-          {activeModal === "interests" && (
-            <div className="fixed inset-0 bg-black/50 z-[200] flex items-center justify-center p-4">
-              <div className="bg-white rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
-                <div className="flex items-center justify-between p-4 border-b border-[#e5e7eb]">
-                  <h3 className="text-lg font-semibold text-[#1f2937]">
-                    Interests & Behaviours
-                  </h3>
-                  <button
-                    onClick={() => setActiveModal(null)}
-                    className="p-1 hover:bg-[#f3f4f6] rounded"
-                  >
-                    <X className="w-5 h-5 text-[#6b7280]" />
-                  </button>
-                </div>
-                <div className="flex-1 overflow-y-auto p-4">
-                  <div className="space-y-4">
-                    {options.interests.map((interest) => (
-                      <label
-                        key={interest.id}
-                        className="flex items-center gap-3 p-3 rounded-lg border border-[#e5e7eb] hover:border-[#2563eb] cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={selected.interests.includes(interest.id)}
-                          onChange={() =>
-                            toggleTargeting("interests", interest.id)
-                          }
-                          className="w-4 h-4 rounded border-[#d1d5db] text-[#2563eb] focus:ring-[#2563eb]"
-                        />
+          <Modal
+            open={activeModal === 'behaviors'}
+            onClose={() => setActiveModal(null)}
+            title="Audience Segments"
+            zIndex={200}
+            footer={
+              <>
+                <Button variant="outline" onClick={() => setActiveModal(null)}>Cancel</Button>
+                <Button variant="primary" onClick={() => setActiveModal(null)}>Apply</Button>
+              </>
+            }
+          >
+            {renderModalCheckboxRows(options.behaviors, 'behaviors')}
+          </Modal>
 
-                        <span className="text-sm text-[#1f2937]">
-                          {interest.label}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                <div className="p-4 border-t border-[#e5e7eb] flex justify-end gap-3">
-                  <Button
-                    variant="outline"
-                    onClick={() => setActiveModal(null)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white"
-                    onClick={() => setActiveModal(null)}
-                  >
-                    Apply
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Behaviors Modal */}
-          {activeModal === "behaviors" && (
-            <div className="fixed inset-0 bg-black/50 z-[200] flex items-center justify-center p-4">
-              <div className="bg-white rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
-                <div className="flex items-center justify-between p-4 border-b border-[#e5e7eb]">
-                  <h3 className="text-lg font-semibold text-[#1f2937]">
-                    Audience Segments
-                  </h3>
-                  <button
-                    onClick={() => setActiveModal(null)}
-                    className="p-1 hover:bg-[#f3f4f6] rounded"
-                  >
-                    <X className="w-5 h-5 text-[#6b7280]" />
-                  </button>
-                </div>
-                <div className="flex-1 overflow-y-auto p-4">
-                  <div className="space-y-4">
-                    {options.behaviors.map((behavior) => (
-                      <label
-                        key={behavior.id}
-                        className="flex items-center gap-3 p-3 rounded-lg border border-[#e5e7eb] hover:border-[#2563eb] cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={selected.behaviors.includes(behavior.id)}
-                          onChange={() =>
-                            toggleTargeting("behaviors", behavior.id)
-                          }
-                          className="w-4 h-4 rounded border-[#d1d5db] text-[#2563eb] focus:ring-[#2563eb]"
-                        />
-
-                        <span className="text-sm text-[#1f2937]">
-                          {behavior.label}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                <div className="p-4 border-t border-[#e5e7eb] flex justify-end gap-3">
-                  <Button
-                    variant="outline"
-                    onClick={() => setActiveModal(null)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white"
-                    onClick={() => setActiveModal(null)}
-                  >
-                    Apply
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Keywords Modal */}
-          {activeModal === "keywords" && (
-            <div className="fixed inset-0 bg-black/50 z-[200] flex items-center justify-center p-4">
-              <div className="bg-white rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
-                <div className="flex items-center justify-between p-4 border-b border-[#e5e7eb]">
-                  <h3 className="text-lg font-semibold text-[#1f2937]">
-                    Keyword Targeting
-                  </h3>
-                  <button
-                    onClick={() => setActiveModal(null)}
-                    className="p-1 hover:bg-[#f3f4f6] rounded"
-                  >
-                    <X className="w-5 h-5 text-[#6b7280]" />
-                  </button>
-                </div>
-                <div className="flex-1 overflow-y-auto p-4">
-                  <div className="space-y-4">
-                    {options.keywords.map((keyword) => (
-                      <label
-                        key={keyword.id}
-                        className="flex items-center gap-3 p-3 rounded-lg border border-[#e5e7eb] hover:border-[#2563eb] cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={selected.keywords.includes(keyword.id)}
-                          onChange={() =>
-                            toggleTargeting("keywords", keyword.id)
-                          }
-                          className="w-4 h-4 rounded border-[#d1d5db] text-[#2563eb] focus:ring-[#2563eb]"
-                        />
-
-                        <span className="text-sm text-[#1f2937]">
-                          {keyword.label}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                <div className="p-4 border-t border-[#e5e7eb] flex justify-end gap-3">
-                  <Button
-                    variant="outline"
-                    onClick={() => setActiveModal(null)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white"
-                    onClick={() => setActiveModal(null)}
-                  >
-                    Apply
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
+          <Modal
+            open={activeModal === 'keywords'}
+            onClose={() => setActiveModal(null)}
+            title="Keyword Targeting"
+            zIndex={200}
+            footer={
+              <>
+                <Button variant="outline" onClick={() => setActiveModal(null)}>Cancel</Button>
+                <Button variant="primary" onClick={() => setActiveModal(null)}>Apply</Button>
+              </>
+            }
+          >
+            {renderModalCheckboxRows(options.keywords, 'keywords')}
+          </Modal>
         </>
       )}
     </div>
   );
 }
 
+// ─── AdCreationStep ───────────────────────────────────────────────────────────
 function AdCreationStep({
   formats,
   selectedFormat,
@@ -1254,10 +1000,7 @@ function AdCreationStep({
   setCreatives,
 }) {
   const addCreative = () => {
-    setCreatives([
-      ...creatives,
-      { headline: "", description: "", ctaText: "Shop Now" },
-    ]);
+    setCreatives([...creatives, { headline: "", description: "", ctaText: "Shop Now" }]);
   };
 
   const removeCreative = (index) => {
@@ -1271,133 +1014,127 @@ function AdCreationStep({
   };
 
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       {/* Ad Format Selection */}
-      <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm p-5">
-        <h3 className="font-semibold text-[#2d2d2d] mb-4">Select Ad Format</h3>
-        <div className="grid grid-cols-3 gap-4">
+      <div style={{
+        backgroundColor: BG, borderRadius: 12,
+        border: `1px solid ${BORDER}`, boxShadow: '0 1px 4px rgba(0,0,0,0.06)', padding: 20,
+      }}>
+        <h3 style={{ fontWeight: 600, color: TEXT, marginTop: 0, marginBottom: 16, fontSize: 14 }}>
+          Select Ad Format
+        </h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
           {formats.map((format) => (
-            <div
+            <RadioCard
               key={format.id}
-              className={`border rounded-xl p-4 cursor-pointer transition-all ${
-                selectedFormat === format.id
-                  ? "border-[#2563eb] bg-[#eff6ff] shadow-sm"
-                  : "border-[#e5e7eb] bg-white hover:border-[#9ca3af] hover:shadow-sm"
-              }`}
+              selected={selectedFormat === format.id}
               onClick={() => setSelectedFormat(format.id)}
             >
-              <div className="flex items-center gap-2 mb-2">
-                <div
-                  className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                    selectedFormat === format.id
-                      ? "border-[#2563eb] bg-[#2563eb]"
-                      : "border-[#d1d5db]"
-                  }`}
-                >
-                  {selectedFormat === format.id && (
-                    <Check size={8} className="text-white" />
-                  )}
-                </div>
-                <span className="font-medium text-[#2d2d2d]">
-                  {format.name}
-                </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                <RadioDot selected={selectedFormat === format.id} size={16} />
+                <span style={{ fontWeight: 500, color: TEXT, fontSize: 13 }}>{format.name}</span>
               </div>
-              <div className="ml-6 text-sm text-[#6b7280]">
-                <p>{format.dimensions}</p>
-                <p className="text-xs mt-1">{format.type}</p>
+              <div style={{ marginLeft: 24, fontSize: 13, color: TEXT_MID }}>
+                <p style={{ margin: 0 }}>{format.dimensions}</p>
+                <p style={{ margin: '4px 0 0', fontSize: 11 }}>{format.type}</p>
               </div>
-            </div>
+            </RadioCard>
           ))}
         </div>
       </div>
 
       {/* Ad Creatives */}
-      <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-[#2d2d2d]">Ad Creatives</h3>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={addCreative}
-            className="text-[#2563eb] border-[#2563eb] hover:bg-[#eff6ff] bg-transparent"
-          >
-            <Plus size={14} className="mr-1" />
+      <div style={{
+        backgroundColor: BG, borderRadius: 12,
+        border: `1px solid ${BORDER}`, boxShadow: '0 1px 4px rgba(0,0,0,0.06)', padding: 20,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          <h3 style={{ fontWeight: 600, color: TEXT, margin: 0, fontSize: 14 }}>Ad Creatives</h3>
+          <Button variant="outline" onClick={addCreative}>
+            <PlusIcon size={14} color={ACCENT} />
             Add Creative
           </Button>
         </div>
 
-        <div className="space-y-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {creatives.map((creative, index) => (
             <div
               key={index}
-              className="border border-[#e5e7eb] rounded-xl p-4 bg-[#fafafa]"
+              style={{
+                border: `1px solid ${BORDER}`, borderRadius: 12, padding: 16,
+                backgroundColor: BG_SUBTLE,
+              }}
             >
-              <div className="flex justify-between items-start mb-4">
-                <span className="text-sm font-medium text-[#6b7280]">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+                <span style={{ fontSize: 13, fontWeight: 500, color: TEXT_MID }}>
                   Creative {index + 1}
                 </span>
                 {creatives.length > 1 && (
                   <button
                     onClick={() => removeCreative(index)}
-                    className="text-[#ef4444] hover:text-[#dc2626]"
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', color: '#ef4444' }}
                   >
-                    <Trash2 size={16} />
+                    <TrashIcon size={16} color="#ef4444" />
                   </button>
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2">
-                  <div className="border-2 border-dashed border-[#d1d5db] rounded-xl p-8 text-center bg-white hover:border-[#2563eb] transition-colors cursor-pointer">
-                    <Upload size={32} className="mx-auto text-[#9ca3af] mb-2" />
-                    <p className="text-sm text-[#6b7280]">
-                      Drag and drop or click to upload
-                    </p>
-                    <p className="text-xs text-[#9ca3af] mt-1">
-                      PNG, JPG, GIF up to 5MB
-                    </p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                {/* Upload zone — full width */}
+                <div
+                  style={{
+                    gridColumn: '1 / -1',
+                    border: `2px dashed ${BORDER}`, borderRadius: 12, padding: 32,
+                    textAlign: 'center', backgroundColor: BG, cursor: 'pointer', transition: 'all 0.15s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = ACCENT)}
+                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = BORDER)}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 8 }}>
+                    <UploadIcon size={32} color={TEXT_SUB} />
                   </div>
+                  <p style={{ fontSize: 13, color: TEXT_MID, margin: 0 }}>Drag and drop or click to upload</p>
+                  <p style={{ fontSize: 11, color: TEXT_SUB, marginTop: 4, marginBottom: 0 }}>PNG, JPG, GIF up to 5MB</p>
                 </div>
 
+                {/* Headline */}
                 <div>
-                  <label className="text-sm text-[#2d2d2d] mb-1 block font-medium">
+                  <label style={{ fontSize: 13, color: TEXT, display: 'block', marginBottom: 4, fontWeight: 500 }}>
                     Headline
                   </label>
-                  <Input
+                  <input
                     placeholder="Enter headline"
                     value={creative.headline}
-                    onChange={(e) =>
-                      updateCreative(index, "headline", e.target.value)
-                    }
-                    className="border-[#e5e7eb] focus:border-[#2563eb]"
+                    onChange={(e) => updateCreative(index, 'headline', e.target.value)}
+                    style={INPUT_STYLE}
                   />
                 </div>
 
+                {/* CTA */}
                 <div>
-                  <label className="text-sm text-[#2d2d2d] mb-1 block font-medium">
+                  <label style={{ fontSize: 13, color: TEXT, display: 'block', marginBottom: 4, fontWeight: 500 }}>
                     CTA Text
                   </label>
-                  <Input
+                  <input
                     placeholder="Shop Now"
                     value={creative.ctaText}
-                    onChange={(e) =>
-                      updateCreative(index, "ctaText", e.target.value)
-                    }
-                    className="border-[#e5e7eb] focus:border-[#2563eb]"
+                    onChange={(e) => updateCreative(index, 'ctaText', e.target.value)}
+                    style={INPUT_STYLE}
                   />
                 </div>
 
-                <div className="col-span-2">
-                  <label className="text-sm text-[#2d2d2d] mb-1 block font-medium">
+                {/* Description — full width */}
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <label style={{ fontSize: 13, color: TEXT, display: 'block', marginBottom: 4, fontWeight: 500 }}>
                     Description
                   </label>
                   <textarea
                     placeholder="Enter description"
                     value={creative.description}
-                    onChange={(e) =>
-                      updateCreative(index, "description", e.target.value)
-                    }
-                    className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm resize-none h-20 focus:border-[#2563eb] outline-none"
+                    onChange={(e) => updateCreative(index, 'description', e.target.value)}
+                    style={{
+                      ...INPUT_STYLE, resize: 'none', height: 80, lineHeight: 1.5,
+                    }}
                   />
                 </div>
               </div>
@@ -1409,170 +1146,154 @@ function AdCreationStep({
   );
 }
 
+// ─── ConfigStep ───────────────────────────────────────────────────────────────
 function ConfigStep({ settings, setSettings }) {
-  const hours = Array.from(
-    { length: 24 },
-    (_, i) => `${i.toString().padStart(2, "0")}:00`,
-  );
+  const hours = Array.from({ length: 24 }, (_, i) => `${i.toString().padStart(2, '0')}:00`);
 
   const toggleHour = (hour) => {
     const current = settings.dayParting;
-    if (current.includes(hour)) {
-      setSettings({
-        ...settings,
-        dayParting: current.filter((h) => h !== hour),
-      });
-    } else {
-      setSettings({ ...settings, dayParting: [...current, hour] });
-    }
+    setSettings({
+      ...settings,
+      dayParting: current.includes(hour)
+        ? current.filter((h) => h !== hour)
+        : [...current, hour],
+    });
+  };
+
+  const [brandSafety, setBrandSafety] = useState({
+    adult: true, violence: true, gambling: true, political: true,
+  });
+
+  const deliveryTypes = [
+    { id: 'standard',    label: 'Standard',    desc: 'Distribute evenly over time' },
+    { id: 'accelerated', label: 'Accelerated', desc: 'Spend budget as fast as possible' },
+    { id: 'frontloaded', label: 'Frontloaded', desc: 'More impressions early in the day' },
+  ];
+
+  const brandSafetyItems = [
+    { id: 'adult',    label: 'Exclude adult content' },
+    { id: 'violence', label: 'Exclude violent content' },
+    { id: 'gambling', label: 'Exclude gambling content' },
+    { id: 'political',label: 'Exclude political content' },
+  ];
+
+  const cardStyle = {
+    backgroundColor: BG, borderRadius: 12,
+    border: `1px solid ${BORDER}`, boxShadow: '0 1px 4px rgba(0,0,0,0.06)', padding: 20,
   };
 
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       {/* Frequency Capping */}
-      <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm p-5">
-        <h3 className="font-semibold text-[#2d2d2d] mb-4">Frequency Capping</h3>
-        <div className="flex items-center gap-4">
-          <div className="flex-1">
-            <label className="text-sm text-[#6b7280] mb-1 block">
+      <div style={cardStyle}>
+        <h3 style={{ fontWeight: 600, color: TEXT, marginTop: 0, marginBottom: 16, fontSize: 14 }}>
+          Frequency Capping
+        </h3>
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 16 }}>
+          <div style={{ flex: 1 }}>
+            <label style={{ fontSize: 13, color: TEXT_MID, display: 'block', marginBottom: 4 }}>
               Max impressions per user
             </label>
-            <Input
+            <input
               type="number"
               value={settings.frequencyCap}
-              onChange={(e) =>
-                setSettings({ ...settings, frequencyCap: e.target.value })
-              }
-              className="w-32 border-[#e5e7eb] focus:border-[#2563eb]"
+              onChange={(e) => setSettings({ ...settings, frequencyCap: e.target.value })}
+              style={{ ...INPUT_STYLE, width: 128 }}
             />
           </div>
-          <div className="flex-1">
-            <label className="text-sm text-[#6b7280] mb-1 block">
+          <div style={{ flex: 1 }}>
+            <label style={{ fontSize: 13, color: TEXT_MID, display: 'block', marginBottom: 4 }}>
               Time period
             </label>
-            <div className="relative">
+            <div style={{ position: 'relative' }}>
               <select
-                className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm appearance-none bg-white focus:border-[#2563eb] outline-none"
                 value={settings.frequencyPeriod}
-                onChange={(e) =>
-                  setSettings({ ...settings, frequencyPeriod: e.target.value })
-                }
+                onChange={(e) => setSettings({ ...settings, frequencyPeriod: e.target.value })}
+                style={SELECT_STYLE}
               >
                 <option value="hour">Per Hour</option>
                 <option value="day">Per Day</option>
                 <option value="week">Per Week</option>
                 <option value="month">Per Month</option>
               </select>
-              <ChevronDown
-                size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6b7280] pointer-events-none"
-              />
+              <div style={{
+                position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)',
+                pointerEvents: 'none', display: 'flex',
+              }}>
+                <ChevronDownIcon size={16} color={TEXT_MID} />
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Delivery Type */}
-      <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm p-5">
-        <h3 className="font-semibold text-[#2d2d2d] mb-4">Delivery Type</h3>
-        <div className="grid grid-cols-3 gap-4">
-          {[
-            {
-              id: "standard",
-              label: "Standard",
-              desc: "Distribute evenly over time",
-            },
-            {
-              id: "accelerated",
-              label: "Accelerated",
-              desc: "Spend budget as fast as possible",
-            },
-            {
-              id: "frontloaded",
-              label: "Frontloaded",
-              desc: "More impressions early in the day",
-            },
-          ].map((type) => (
-            <div
+      <div style={cardStyle}>
+        <h3 style={{ fontWeight: 600, color: TEXT, marginTop: 0, marginBottom: 16, fontSize: 14 }}>
+          Delivery Type
+        </h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+          {deliveryTypes.map((type) => (
+            <RadioCard
               key={type.id}
-              className={`border rounded-xl p-4 cursor-pointer transition-all ${
-                settings.deliveryType === type.id
-                  ? "border-[#2563eb] bg-[#eff6ff] shadow-sm"
-                  : "border-[#e5e7eb] bg-white hover:border-[#9ca3af]"
-              }`}
-              onClick={() =>
-                setSettings({ ...settings, deliveryType: type.id })
-              }
+              selected={settings.deliveryType === type.id}
+              onClick={() => setSettings({ ...settings, deliveryType: type.id })}
             >
-              <div className="flex items-center gap-2 mb-2">
-                <div
-                  className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                    settings.deliveryType === type.id
-                      ? "border-[#2563eb] bg-[#2563eb]"
-                      : "border-[#d1d5db]"
-                  }`}
-                >
-                  {settings.deliveryType === type.id && (
-                    <Check size={8} className="text-white" />
-                  )}
-                </div>
-                <span className="font-medium text-[#2d2d2d]">{type.label}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                <RadioDot selected={settings.deliveryType === type.id} size={16} />
+                <span style={{ fontWeight: 500, color: TEXT, fontSize: 13 }}>{type.label}</span>
               </div>
-              <p className="text-xs text-[#6b7280] ml-6">{type.desc}</p>
-            </div>
+              <p style={{ fontSize: 11, color: TEXT_MID, margin: 0, marginLeft: 24 }}>{type.desc}</p>
+            </RadioCard>
           ))}
         </div>
       </div>
 
       {/* Day Parting */}
-      <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm p-5">
-        <h3 className="font-semibold text-[#2d2d2d] mb-4">
+      <div style={cardStyle}>
+        <h3 style={{ fontWeight: 600, color: TEXT, marginTop: 0, marginBottom: 4, fontSize: 14 }}>
           Day Parting (Optional)
         </h3>
-        <p className="text-sm text-[#6b7280] mb-4">
+        <p style={{ fontSize: 13, color: TEXT_MID, marginTop: 0, marginBottom: 16 }}>
           Select specific hours to run your ads
         </p>
-        <div className="grid grid-cols-8 gap-2">
-          {hours.map((hour) => (
-            <button
-              key={hour}
-              className={`py-2 px-3 text-xs rounded-lg border transition-all ${
-                settings.dayParting.includes(hour)
-                  ? "bg-[#2563eb] text-white border-[#2563eb]"
-                  : "bg-white text-[#6b7280] border-[#e5e7eb] hover:border-[#9ca3af]"
-              }`}
-              onClick={() => toggleHour(hour)}
-            >
-              {hour}
-            </button>
-          ))}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: 8 }}>
+          {hours.map((hour) => {
+            const active = settings.dayParting.includes(hour);
+            return (
+              <button
+                key={hour}
+                onClick={() => toggleHour(hour)}
+                style={{
+                  padding: '8px 4px', fontSize: 11, borderRadius: 8, cursor: 'pointer',
+                  fontFamily: FONT, transition: 'all 0.15s',
+                  backgroundColor: active ? ACCENT : BG,
+                  color: active ? '#fff' : TEXT_MID,
+                  border: `1px solid ${active ? ACCENT : BORDER}`,
+                }}
+                onMouseEnter={(e) => { if (!active) e.currentTarget.style.borderColor = TEXT_SUB; }}
+                onMouseLeave={(e) => { if (!active) e.currentTarget.style.borderColor = BORDER; }}
+              >
+                {hour}
+              </button>
+            );
+          })}
         </div>
       </div>
 
       {/* Brand Safety */}
-      <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm p-5">
-        <h3 className="font-semibold text-[#2d2d2d] mb-4">Brand Safety</h3>
-        <div className="space-y-3">
-          {[
-            { id: "adult", label: "Exclude adult content" },
-            { id: "violence", label: "Exclude violent content" },
-            { id: "gambling", label: "Exclude gambling content" },
-            { id: "political", label: "Exclude political content" },
-          ].map((item) => (
-            <label
+      <div style={cardStyle}>
+        <h3 style={{ fontWeight: 600, color: TEXT, marginTop: 0, marginBottom: 16, fontSize: 14 }}>
+          Brand Safety
+        </h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {brandSafetyItems.map((item) => (
+            <Checkbox
               key={item.id}
-              className="flex items-center gap-3 cursor-pointer group"
-            >
-              <input
-                type="checkbox"
-                defaultChecked
-                className="w-4 h-4 rounded border-[#d1d5db] text-[#2563eb] focus:ring-[#2563eb]"
-              />
-
-              <span className="text-sm text-[#2d2d2d] group-hover:text-[#2563eb] transition-colors">
-                {item.label}
-              </span>
-            </label>
+              checked={brandSafety[item.id]}
+              onChange={() => setBrandSafety((prev) => ({ ...prev, [item.id]: !prev[item.id] }))}
+              label={item.label}
+            />
           ))}
         </div>
       </div>

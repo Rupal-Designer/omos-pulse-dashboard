@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { RefreshIcon, ColumnsIcon, SearchIcon, DownloadIcon, PlusIcon, CloseIcon, CheckIcon } from '../../ui/atoms/Icon';
 import { Button } from '../../ui/atoms/Button';
+import { Badge, TypeBadge } from '../../ui/atoms/Badge';
 import { Toast, useToast } from '../../ui/atoms/Toast';
 
 /* ── tokens ───────────────────────────────────────────────────── */
@@ -30,34 +31,11 @@ const DATA = [
 ];
 
 /* ── Pill Badges ──────────────────────────────────────────────── */
-function StatusBadge({ value }) {
-  const active = value === 'Active';
-  return (
-    <span style={{
-      display: 'inline-flex', alignItems: 'center', gap: 5,
-      padding: '3px 9px', borderRadius: 20, fontSize: 11, fontWeight: 600,
-      background: active ? 'var(--osmos-brand-green-muted)' : BG_SUB,
-      color: active ? 'var(--osmos-brand-green)' : FG_MID,
-    }}>
-      <span style={{ width: 6, height: 6, borderRadius: '50%', background: active ? 'var(--osmos-brand-green)' : FG_LO, flexShrink: 0 }} />
-      {value}
-    </span>
-  );
-}
-
-function TypeBadge({ type }) {
-  const map = {
-    'Custom List':     { bg: ACCENT_M,                     color: ACCENT },
-    'User Attributes': { bg: 'rgba(139,92,246,0.12)',       color: '#8b5cf6' },
-    'User Activity':   { bg: 'rgba(245,166,35,0.12)',       color: 'var(--osmos-brand-amber)' },
-  };
-  const s = map[type] || { bg: BG_SUB, color: FG_MID };
-  return (
-    <span style={{ display: 'inline-block', padding: '3px 9px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: s.bg, color: s.color }}>
-      {type}
-    </span>
-  );
-}
+const TYPE_MAP = {
+  'Custom List':     { bg: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)' },
+  'User Attributes': { bg: 'var(--osmos-brand-violet-muted)',            color: '#8b5cf6' },
+  'User Activity':   { bg: 'var(--osmos-brand-amber-muted)',            color: 'var(--osmos-brand-amber)' },
+};
 
 function RuleBadge({ value }) {
   const yes = value !== 'No' && value !== '0' && value !== '';
@@ -388,7 +366,7 @@ export default function ManageSegmentsPage() {
               )}
               {filtered.map((row, idx) => (
                 <tr key={row.id} style={{ background: idx % 2 === 0 ? BG : BG_SUB }}>
-                  <Td sticky><StatusBadge value={row.status} /></Td>
+                  <Td sticky><Badge status={row.status} /></Td>
                   <Td><span style={{ fontWeight: 500, color: FG }}>{row.name}</span></Td>
                   <Td>
                     <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 22, height: 22, borderRadius: '50%', background: ACCENT_M, color: ACCENT, fontSize: 11, fontWeight: 700 }}>
@@ -397,7 +375,7 @@ export default function ManageSegmentsPage() {
                   </Td>
                   <Td>{row.usage}</Td>
                   <Td>{row.campaigns}</Td>
-                  <Td><TypeBadge type={row.type} /></Td>
+                  <Td><TypeBadge type={row.type} colorMap={TYPE_MAP} /></Td>
                   <Td><span style={{ color: FG_MID }}>{row.createdBy}</span></Td>
                   <Td><span style={{ color: FG_MID }}>{row.createdOn}</span></Td>
                   <Td><span style={{ color: FG_MID }}>{row.lastEditedBy}</span></Td>

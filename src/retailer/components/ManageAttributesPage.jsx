@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { RefreshIcon, ColumnsIcon, SearchIcon, DownloadIcon, CloseIcon, ChevronDownIcon } from '../../ui/atoms/Icon';
 import { Button } from '../../ui/atoms/Button';
+import { Badge } from '../../ui/atoms/Badge';
 import { Toast, useToast } from '../../ui/atoms/Toast';
 
 const FONT = "'Open Sans', sans-serif";
@@ -34,18 +35,6 @@ const COLS = [
   { key:'visibility',       label:'Advertiser Visibility' },
 ];
 
-function StatusBadge({ s }) {
-  const active = s === 'Active';
-  return (
-    <span style={{ display:'inline-flex', alignItems:'center', gap:5, padding:'3px 8px',
-      borderRadius:12, fontSize:11, fontWeight:500,
-      background: active ? 'var(--osmos-brand-green-muted)' : BG_SUB,
-      color: active ? 'var(--osmos-brand-green)' : FG_MUT }}>
-      <span style={{ width:6, height:6, borderRadius:'50%', background: active ? 'var(--osmos-brand-green)' : FG_SUB, display:'inline-block' }} />
-      {s}
-    </span>
-  );
-}
 
 function DataTypeBadge({ t }) {
   return (
@@ -95,14 +84,14 @@ function CreateAttributeDrawer({ onClose, showToast }) {
       <div onClick={onClose} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.35)', zIndex:800 }} />
       <div style={{ position:'fixed', top:0, right:0, bottom:0, width:440, zIndex:801,
         background:'var(--osmos-bg)', display:'flex', flexDirection:'column', boxShadow:'-4px 0 24px rgba(0,0,0,.12)' }}>
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'18px 24px', borderBottom:`1px solid ${BORDER}` }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 20px', borderBottom:`1px solid ${BORDER}` }}>
           <span style={{ fontSize:15, fontWeight:700, fontFamily:FONT, color:FG }}>Create Attribute</span>
           <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', padding:4, display:'flex' }}>
             <CloseIcon size={18} color={FG_MUT} />
           </button>
         </div>
 
-        <div style={{ flex:1, overflowY:'auto', padding:'24px' }}>
+        <div style={{ flex:1, overflowY:'auto', padding:20 }}>
           <div style={field}>
             <label style={fieldLabel}>id <span style={{ color:'var(--alert-error-primary)' }}>*</span></label>
             <input style={input} value={form.id} maxLength={50} onChange={e => set('id', e.target.value)} />
@@ -149,7 +138,7 @@ function CreateAttributeDrawer({ onClose, showToast }) {
           </div>
         </div>
 
-        <div style={{ padding:'16px 24px', borderTop:`1px solid ${BORDER}`, display:'flex', justifyContent:'flex-end', gap:10 }}>
+        <div style={{ padding:'14px 20px', borderTop:`1px solid ${BORDER}`, display:'flex', justifyContent:'flex-end', gap:10 }}>
           <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button onClick={handleCreate}>Create</Button>
         </div>
@@ -223,7 +212,7 @@ export default function ManageAttributesPage() {
                 <tr key={row.id} style={{ background:'var(--osmos-bg)' }}
                   onMouseEnter={e => e.currentTarget.style.background = BG_SUB}
                   onMouseLeave={e => e.currentTarget.style.background = 'var(--osmos-bg)'}>
-                  <td style={tdStyle}><StatusBadge s={row.status} /></td>
+                  <td style={tdStyle}><Badge status={row.status} /></td>
                   <td style={{ ...tdStyle, fontWeight:500, color:FG }}>{row.name}</td>
                   <td style={tdStyle}><AttrIdChip id={row.attrId} /></td>
                   <td style={tdStyle}><DataTypeBadge t={row.dataType} /></td>

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Icon } from '../../ui/atoms/Icon';
+import { Icon, DownloadIcon } from '../../ui/atoms/Icon';
 import { Toast, useToast } from '../../ui/atoms/Toast';
 
 const TABS = ['Create Campaign', 'Update Campaign', 'Activate Campaign', 'Pause Campaign'];
@@ -32,15 +32,6 @@ const CloudUploadIcon = () => (
   </Icon>
 );
 
-const DownloadIcon = () => (
-  <span style={{ marginRight: 6, display: 'inline-flex' }}>
-    <Icon size={14} strokeWidth={2}>
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="7 10 12 15 17 10" />
-      <line x1="12" y1="15" x2="12" y2="3" />
-    </Icon>
-  </span>
-);
 
 /* ─── Step Number Circle ──────────────────────────────────────────────────── */
 

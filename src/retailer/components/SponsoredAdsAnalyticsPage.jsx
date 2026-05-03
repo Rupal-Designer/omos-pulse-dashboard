@@ -3,6 +3,7 @@ import {
   LineChart, Line, BarChart, Bar,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
+import { StatCard } from '../../ui';
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 
@@ -182,34 +183,20 @@ const FilterToolbar = () => {
 
 // ─── KPI Cards ────────────────────────────────────────────────────────────────
 
-const KpiRow = () => {
-  const cards = [
-    { value: '86.5 M', label: 'Requests' },
-    { value: '86.5 M', label: 'Requests' },
-    { value: '86.5 M', label: 'Requests' },
-    { value: '86.5 M', label: 'Requests' },
-  ];
+const KPI_CARDS = [
+  { value: '86.5 M', label: 'Requests' },
+  { value: '86.5 M', label: 'Requests' },
+  { value: '86.5 M', label: 'Requests' },
+  { value: '86.5 M', label: 'Requests' },
+];
 
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
-      {cards.map((card, i) => (
-        <div key={i} style={{
-          background: 'var(--osmos-bg)',
-          border: '1px solid var(--osmos-border)',
-          borderRadius: 8,
-          padding: 16,
-        }}>
-          <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--osmos-fg)', lineHeight: 1.2 }}>
-            {card.value}
-          </div>
-          <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', marginTop: 4 }}>
-            {card.label}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
+const KpiRow = () => (
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+    {KPI_CARDS.map((card, i) => (
+      <StatCard key={i} label={card.label} value={card.value} />
+    ))}
+  </div>
+);
 
 // ─── Page Performance Trend ───────────────────────────────────────────────────
 
@@ -332,13 +319,13 @@ const HeatmapSection = ({ title = 'Available Advertising SKU By Hours' }) => (
 export default function SponsoredAdsAnalyticsPage() {
   return (
     <div style={{
-      padding: 24,
+      padding: '20px 24px',
       background: 'var(--osmos-bg-subtle)',
       minHeight: '100vh',
       fontFamily: "'Open Sans', sans-serif",
       display: 'flex',
       flexDirection: 'column',
-      gap: 16,
+      gap: 20,
     }}>
       {/* Filter Toolbar Card */}
       <div style={{

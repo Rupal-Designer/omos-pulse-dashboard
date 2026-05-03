@@ -3,6 +3,9 @@ import './globals.css'; // Tailwind v4 + v0 design tokens (advertiser-scoped)
 import DashboardPage from './pages/DashboardPage';
 import HomePage from './pages/HomePage';
 import DesignSystemPage from './pages/DesignSystemPage';
+import BYOTDashboardPage from './pages/BYOTDashboardPage';
+import BYOTCampaignDetailPage from './pages/BYOTCampaignDetailPage';
+import { Sidebar } from './components/sidebar';
 
 /**
  * Advertiser ("Beat") Console — root.
@@ -13,15 +16,11 @@ import DesignSystemPage from './pages/DesignSystemPage';
  *   #/             → DashboardPage  (main campaign performance dashboard)
  *   #/home         → HomePage       (executive overview)
  *   #/design-system → DesignSystemPage (component gallery)
+ *   #/byot         → BYOTDashboardPage (Bring Your Own Traffic)
  *
- * As pages are migrated to `src/ui/`, register their swap here.
+ * BYOT campaign detail is rendered inside BYOTDashboardPage via state
+ * (not a separate route) to maintain the wizard-drawer context.
  */
-const ROUTES = {
-  '':              DashboardPage,
-  '/':             DashboardPage,
-  '/home':         HomePage,
-  '/design-system': DesignSystemPage,
-};
 
 function getRoute() {
   const hash = window.location.hash.replace(/^#/, '');
@@ -29,14 +28,80 @@ function getRoute() {
 }
 
 export default function App() {
-  const [route, setRoute] = useState(getRoute());
+  const [route, setRoute]           = useState(getRoute());
+  const [activeAdType, setActiveAdType] = useState('Product Ads');
+  // BYOT sub-navigation state (campaign detail is not a separate route)
+  const [byotView, setByotView]     = useState('dashboard'); // 'dashboard' | 'detail'
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
 
   useEffect(() => {
-    const onHashChange = () => setRoute(getRoute());
+    const onHashChange = () => {
+      setRoute(getRoute());
+      // Reset BYOT sub-view when navigating away and back
+      setByotView('dashboard');
+      setSelectedCampaign(null);
+    };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
-  const Page = ROUTES[route] || DashboardPage;
-  return <Page />;
+  const handleViewCampaign = (campaign) => {
+    setSelectedCampaign(campaign);
+    setByotView('detail');
+  };
+
+  const handleBackToBYOT = () => {
+    setByotView('dashboard');
+    setSelectedCampaign(null);
+  };
+
+  const renderPage = () => {
+    // BYOT sub-routing
+    if (route === '/byot') {
+      if (byotView === 'detail' && selectedCampaign) {
+        return (
+          <BYOTCampaignDetailPage
+            campaign={selectedCampaign}
+            onBack={handleBackToBYOT}
+          />
+        );
+      }
+      return (
+        <BYOTDashboardPage onViewCampaign={handleViewCampaign} />
+      );
+    }
+
+    // Standard routes
+    switch (route) {
+      case '':
+      case '/':
+        return <DashboardPage activeAdType={activeAdType} onAdTypeChange={setActiveAdType} />;
+      case '/home':
+        return <HomePage />;
+      case '/design-system':
+        return <DesignSystemPage />;
+      default:
+        return <DashboardPage activeAdType={activeAdType} onAdTypeChange={setActiveAdType} />;
+    }
+  };
+
+  // Pages that use the sidebar layout (most pages)
+  const hasSidebar = route !== '/design-system';
+
+  if (!hasSidebar) return renderPage();
+
+  // DashboardPage and HomePage include their own Sidebar internally — don't wrap them
+  if (route === '/' || route === '' || route === '/home') {
+    return renderPage();
+  }
+
+  // BYOT and other new pages — add sidebar wrapper
+  return (
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#edf0f5' }}>
+      <Sidebar onAdTypeChange={setActiveAdType} activeAdType={activeAdType} onNavigate={(r) => { window.location.hash = r; }} />
+      <div style={{ flex: 1, marginLeft: 64, overflowY: 'auto' }}>
+        {renderPage()}
+      </div>
+    </div>
+  );
 }

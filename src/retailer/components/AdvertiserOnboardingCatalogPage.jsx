@@ -21,7 +21,7 @@ const PERSONA_COLORS = {
   Platinum: { bg: 'rgba(148,163,184,0.15)', color: '#64748b' },
   Gold:     { bg: 'rgba(245,158,11,0.12)',  color: '#d97706' },
   Silver:   { bg: 'rgba(100,116,139,0.12)', color: '#475569' },
-  Beta:     { bg: 'rgba(139,92,246,0.12)',  color: '#7c3aed' },
+  Beta:     { bg: 'var(--osmos-brand-violet-muted)',  color: 'var(--osmos-brand-violet)' },
 };
 
 /* ── Condition field options ────────────────────────────────────── */
@@ -95,7 +95,7 @@ function InfoStrip({ children }) {
   return (
     <div style={{
       display: 'flex', alignItems: 'flex-start', gap: 10,
-      background: 'rgba(99,108,255,0.06)', border: `1px solid rgba(99,108,255,0.18)`,
+      background: 'var(--osmos-brand-primary-muted)', border: `1px solid var(--osmos-brand-primary-muted)`,
       borderRadius: 8, padding: '10px 14px', marginBottom: 16, fontSize: 13, color: TEXT_MID,
     }}>
       <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={ACCENT}
@@ -179,7 +179,7 @@ function RuleBuilder({ rules, onChange }) {
               <div style={{ flex: 1, height: 1, background: BORDER }} />
               <span style={{
                 padding: '2px 10px', borderRadius: 12, fontSize: 11, fontWeight: 700,
-                background: 'rgba(99,108,255,0.10)', color: ACCENT, letterSpacing: 0.5,
+                background: 'var(--osmos-brand-primary-muted)', color: ACCENT, letterSpacing: 0.5,
               }}>OR</span>
               <div style={{ flex: 1, height: 1, background: BORDER }} />
             </div>
@@ -444,7 +444,7 @@ export default function AdvertiserOnboardingCatalogPage() {
   ];
 
   return (
-    <div style={{ fontFamily: FONT, background: BG_SUB, minHeight: '100vh', padding: 24 }}>
+    <div style={{ fontFamily: FONT, background: BG_SUB, minHeight: '100vh', padding: '20px 24px' }}>
       <Toast {...toast} />
 
       {/* ── Info strip ────────────────────────────────────────────── */}

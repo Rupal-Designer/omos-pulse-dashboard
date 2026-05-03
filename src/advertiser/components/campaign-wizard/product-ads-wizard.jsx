@@ -1,161 +1,193 @@
-"use client";
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { Button, Select, CalendarIcon, CheckIcon, ChevronRightIcon, ChevronLeftIcon, CloseIcon, InfoIcon, Icon } from '../../../ui';
 
-import { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  X,
-  Sparkles,
-  TrendingUp,
-  DollarSign,
-  Target,
-  Calendar,
-  HelpCircle,
-  ChevronRight,
-  Check,
-  ArrowLeft,
-} from "lucide-react";
+const FONT    = "'Open Sans', sans-serif";
+const TEXT    = 'var(--osmos-fg)';
+const TEXT_MID= 'var(--osmos-fg-muted)';
+const TEXT_SUB= 'var(--osmos-fg-subtle)';
+const BORDER  = 'var(--osmos-border)';
+const BG      = 'var(--osmos-bg)';
+const BG_SUB  = 'var(--osmos-bg-subtle)';
+const ACCENT  = 'var(--osmos-brand-primary)';
+const ACCENT_M= 'var(--osmos-brand-primary-muted)';
 
+// ── Icons ─────────────────────────────────────────────────────────────────────
+const SparklesIcon = (props) => (
+  <Icon {...props}><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></Icon>
+);
+const TrendingUpIcon = (props) => (
+  <Icon {...props}><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></Icon>
+);
+const TargetIcon = (props) => (
+  <Icon {...props}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></Icon>
+);
+const DollarSignIcon = (props) => (
+  <Icon {...props}><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></Icon>
+);
+const BarChartIcon = (props) => (
+  <Icon {...props}><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></Icon>
+);
+const ZapIcon = (props) => (
+  <Icon {...props}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></Icon>
+);
+
+// ── Data ──────────────────────────────────────────────────────────────────────
 const campaignTypes = [
-  {
-    id: "smart-shopping",
-    name: "Smart Shopping",
-    description:
-      "AI-powered campaign that automatically optimizes your product ads across all placements",
-    icon: Sparkles,
-    recommended: true,
-    features: [
-      "Automatic bidding optimization",
-      "Cross-channel placement",
-      "Dynamic product selection",
-    ],
-  },
-  {
-    id: "manual",
-    name: "Manual Campaign",
-    description: "Full control over targeting, bidding, and product selection",
-    icon: Target,
-    recommended: false,
-    features: [
-      "Custom targeting rules",
-      "Manual bid management",
-      "Granular product control",
-    ],
-  },
-  {
-    id: "performance-max",
-    name: "Performance Max",
-    description:
-      "Goal-based campaign that maximizes conversions across inventory",
-    icon: TrendingUp,
-    recommended: false,
-    features: [
-      "Conversion-focused",
-      "Automated creative",
-      "Full-funnel optimization",
-    ],
-  },
+  { id: 'smart-shopping',   name: 'Smart Shopping',   IconComp: SparklesIcon,  recommended: true,
+    description: 'AI-powered campaign that automatically optimizes your product ads across all placements',
+    features: ['Automatic bidding optimization', 'Cross-channel placement', 'Dynamic product selection'] },
+  { id: 'manual',           name: 'Manual Campaign',  IconComp: TargetIcon,    recommended: false,
+    description: 'Full control over targeting, bidding, and product selection',
+    features: ['Custom targeting rules', 'Manual bid management', 'Granular product control'] },
+  { id: 'performance-max',  name: 'Performance Max',  IconComp: TrendingUpIcon, recommended: false,
+    description: 'Goal-based campaign that maximizes conversions across inventory',
+    features: ['Conversion-focused', 'Automated creative', 'Full-funnel optimization'] },
 ];
 
 const wallets = [
-  { id: "default", name: "Default", balance: 1904753.59 },
-  { id: "sale-2024", name: "Sale 2024 - PLA", balance: 11748280 },
-  { id: "2024-q3", name: "2024 Q3", balance: 11599459 },
-  { id: "sale23", name: "Sale23", balance: 10000 },
-  { id: "awareness", name: "Awareness Ads", balance: 19521925.4 },
-  { id: "display", name: "display", balance: 1532113 },
+  { id: 'default',   name: 'Default',         balance: 1904753.59  },
+  { id: 'sale-2024', name: 'Sale 2024 - PLA', balance: 11748280    },
+  { id: '2024-q3',   name: '2024 Q3',         balance: 11599459    },
+  { id: 'sale23',    name: 'Sale23',           balance: 10000       },
+  { id: 'awareness', name: 'Awareness Ads',    balance: 19521925.4  },
+  { id: 'display',   name: 'display',          balance: 1532113     },
 ];
 
 const pacingOptions = [
-  {
-    id: "standard",
-    label: "Standard (Even Distribution)",
-    description: "Spread your budget evenly throughout the day",
-    icon: "📊",
-  },
-  {
-    id: "accelerated",
-    label: "Accelerated",
-    description: "Spend budget as quickly as possible",
-    icon: "⚡",
-  },
+  { id: 'standard',    label: 'Standard (Even Distribution)', IconComp: BarChartIcon, description: 'Spread your budget evenly throughout the day'       },
+  { id: 'accelerated', label: 'Accelerated',                  IconComp: ZapIcon,      description: 'Spend budget as quickly as possible'                },
 ];
 
-export function ProductAdsWizard({ open, onClose, onLaunch }) {
-  const [mounted, setMounted] = useState(false);
-  const [step, setStep] = useState("type-selection");
-  const [selectedType, setSelectedType] = useState(null);
-  const [dailyBudget, setDailyBudget] = useState("100");
-  const [selectedWallet, setSelectedWallet] = useState("");
-  const [startDate, setStartDate] = useState(
-    new Date().toISOString().split("T")[0],
+const walletSelectOptions = wallets.map((w) => ({ value: w.id, label: `${w.name} ($${w.balance.toLocaleString()})` }));
+
+// ── Sub-components ────────────────────────────────────────────────────────────
+function TypeCard({ type, selected, onClick }) {
+  const [hov, setHov] = useState(false);
+  const { IconComp, name, description, features, recommended } = type;
+  const isSelected = selected;
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(e) => e.key === 'Enter' && onClick()}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        position: 'relative', padding: 20, borderRadius: 12, cursor: 'pointer',
+        border: `2px solid ${isSelected ? ACCENT : hov ? TEXT_MID : BORDER}`,
+        background: isSelected ? ACCENT_M : hov ? BG_SUB : BG,
+        transition: 'all 0.15s', fontFamily: FONT,
+      }}
+    >
+      {recommended && (
+        <span style={{ position: 'absolute', top: 12, right: 12, padding: '2px 10px', background: ACCENT, color: '#fff', fontSize: 11, fontWeight: 600, borderRadius: 999 }}>
+          Recommended
+        </span>
+      )}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+        <div style={{ width: 48, height: 48, borderRadius: 12, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: isSelected ? ACCENT : BG_SUB }}>
+          <IconComp size={24} color={isSelected ? '#fff' : TEXT_MID} />
+        </div>
+        <div style={{ flex: 1 }}>
+          <h3 style={{ fontWeight: 600, color: isSelected ? ACCENT : TEXT, marginBottom: 4 }}>{name}</h3>
+          <p style={{ fontSize: 13, color: TEXT_MID, marginBottom: 12 }}>{description}</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {features.map((f) => (
+              <span key={f} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 8px', background: BG_SUB, borderRadius: 6, fontSize: 12, color: TEXT_MID }}>
+                <CheckIcon size={12} color='var(--osmos-brand-green)' />
+                {f}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div style={{ width: 24, height: 24, borderRadius: '50%', flexShrink: 0, border: `2px solid ${isSelected ? ACCENT : BORDER}`, background: isSelected ? ACCENT : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}>
+          {isSelected && <CheckIcon size={14} color="#fff" />}
+        </div>
+      </div>
+    </div>
   );
-  const [endDate, setEndDate] = useState("");
-  const [maxSpendCap, setMaxSpendCap] = useState("");
-  const [isLaunching, setIsLaunching] = useState(false);
-  const [pacing, setPacing] = useState("standard");
+}
+
+function PacingBtn({ option, selected, onClick }) {
+  const [hov, setHov] = useState(false);
+  const { IconComp, label, description } = option;
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        width: '100%', padding: 16, borderRadius: 8, textAlign: 'left',
+        border: `2px solid ${selected ? ACCENT : hov ? TEXT_MID : BORDER}`,
+        background: selected ? ACCENT_M : hov ? BG_SUB : BG,
+        cursor: 'pointer', transition: 'all 0.15s', fontFamily: FONT,
+        display: 'flex', alignItems: 'flex-start', gap: 12,
+      }}
+    >
+      <IconComp size={20} color={selected ? ACCENT : TEXT_MID} />
+      <div style={{ flex: 1 }}>
+        <div style={{ fontWeight: 500, color: selected ? ACCENT : TEXT, marginBottom: 4 }}>{label}</div>
+        <div style={{ fontSize: 12, color: TEXT_MID }}>{description}</div>
+      </div>
+      {selected && (
+        <div style={{ width: 20, height: 20, borderRadius: '50%', background: ACCENT, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <CheckIcon size={12} color="#fff" />
+        </div>
+      )}
+    </button>
+  );
+}
+
+const inputStyle = {
+  width: '100%', boxSizing: 'border-box', padding: '8px 12px 8px 32px',
+  border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT,
+  background: BG, fontFamily: FONT, outline: 'none',
+};
+
+const dateInputStyle = {
+  width: '100%', boxSizing: 'border-box', padding: '8px 12px',
+  border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT,
+  background: BG, fontFamily: FONT, outline: 'none',
+};
+
+const labelStyle = { display: 'block', fontSize: 13, fontWeight: 500, color: TEXT, marginBottom: 8 };
+
+// ── ProductAdsWizard ──────────────────────────────────────────────────────────
+export function ProductAdsWizard({ open, onClose, onLaunch }) {
+  const [mounted,       setMounted]       = useState(false);
+  const [step,          setStep]          = useState('type-selection');
+  const [selectedType,  setSelectedType]  = useState(null);
+  const [dailyBudget,   setDailyBudget]   = useState('100');
+  const [selectedWallet,setSelectedWallet]= useState('');
+  const [startDate,     setStartDate]     = useState(new Date().toISOString().split('T')[0]);
+  const [endDate,       setEndDate]       = useState('');
+  const [maxSpendCap,   setMaxSpendCap]   = useState('');
+  const [isLaunching,   setIsLaunching]   = useState(false);
+  const [pacing,        setPacing]        = useState('standard');
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
+    if (open) document.body.style.overflow = 'hidden';
+    else       document.body.style.overflow = 'auto';
+    return () => { document.body.style.overflow = 'auto'; };
   }, [open]);
 
   const handleClose = () => {
-    setStep("type-selection");
-    setSelectedType(null);
-    setDailyBudget("100");
-    setSelectedWallet("");
-    setEndDate("");
-    setMaxSpendCap("");
-    setIsLaunching(false);
+    setStep('type-selection'); setSelectedType(null); setDailyBudget('100');
+    setSelectedWallet(''); setEndDate(''); setMaxSpendCap(''); setIsLaunching(false);
     onClose();
   };
 
-  const handleTypeSelect = (typeId) => {
-    setSelectedType(typeId);
-  };
-
-  const handleContinue = () => {
-    if (selectedType) {
-      setStep("configuration");
-    }
-  };
-
-  const handleBack = () => {
-    setStep("type-selection");
-  };
+  const handleContinue = () => { if (selectedType) setStep('configuration'); };
+  const handleBack     = () => setStep('type-selection');
 
   const handleLaunch = () => {
     setIsLaunching(true);
     setTimeout(() => {
-      onLaunch({
-        campaignType: selectedType || "smart-shopping",
-        dailyBudget,
-        wallet: selectedWallet,
-        startDate,
-        endDate,
-        maxSpendCap,
-        pacing,
-      });
+      onLaunch({ campaignType: selectedType || 'smart-shopping', dailyBudget, wallet: selectedWallet, startDate, endDate, maxSpendCap, pacing });
       handleClose();
     }, 1500);
   };
@@ -164,298 +196,149 @@ export function ProductAdsWizard({ open, onClose, onLaunch }) {
 
   if (!open || !mounted) return null;
 
+  const canLaunch = step === 'configuration' ? !!dailyBudget && !!selectedWallet && !isLaunching : !!selectedType;
+
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+    <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT }}>
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50" onClick={handleClose} />
+      <div onClick={handleClose} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)' }} />
 
       {/* Modal */}
-      <div className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col">
+      <div style={{ position: 'relative', width: '100%', maxWidth: 900, maxHeight: '90vh', background: BG, borderRadius: 12, boxShadow: '0 24px 64px rgba(0,0,0,0.18)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#efefef]">
-          <div className="flex items-center gap-3">
-            {step === "configuration" && (
-              <button
-                onClick={handleBack}
-                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#f5f5f5] text-[#7b7b7b] transition-colors"
-              >
-                <ArrowLeft size={20} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: `1px solid ${BORDER}`, flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            {step === 'configuration' && (
+              <button onClick={handleBack} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = BG_SUB)}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}>
+                <ChevronLeftIcon size={20} color={TEXT_MID} />
               </button>
             )}
             <div>
-              <h2 className="text-lg font-semibold text-[#404040]">
-                {step === "type-selection"
-                  ? "Create Product Ads Campaign"
-                  : "Configure Campaign"}
+              <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: TEXT }}>
+                {step === 'type-selection' ? 'Create Product Ads Campaign' : 'Configure Campaign'}
               </h2>
-              <p className="text-sm text-[#7b7b7b] mt-0.5">
-                {step === "type-selection"
-                  ? "Choose how you want to run your product ads"
-                  : "Set your budget and schedule"}
+              <p style={{ margin: '2px 0 0', fontSize: 13, color: TEXT_MID }}>
+                {step === 'type-selection' ? 'Choose how you want to run your product ads' : 'Set your budget and schedule'}
               </p>
             </div>
           </div>
-          <button
-            onClick={handleClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#f5f5f5] text-[#7b7b7b] transition-colors"
-          >
-            <X size={20} />
+          <button onClick={handleClose} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = BG_SUB)}
+            onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}>
+            <CloseIcon size={18} color={TEXT_MID} />
           </button>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
-          {step === "type-selection" && (
-            <div className="space-y-4">
-              <p className="text-sm text-[#7b7b7b] mb-6">
-                Select a campaign type to get started
-              </p>
+        <div style={{ flex: 1, overflowY: 'auto', padding: 24 }}>
 
-              <div className="grid gap-4">
-                {campaignTypes.map((type) => (
-                  <div
-                    key={type.id}
-                    onClick={() => handleTypeSelect(type.id)}
-                    className={`
-                      relative p-5 rounded-xl border-2 cursor-pointer transition-all
-                      ${
-                        selectedType === type.id
-                          ? "border-[#0097f0] bg-[#f0f9ff]"
-                          : "border-[#efefef] hover:border-[#dedede] bg-white"
-                      }
-                    `}
-                  >
-                    {type.recommended && (
-                      <span className="absolute top-3 right-3 px-2 py-0.5 bg-[#0097f0] text-white text-xs font-medium rounded-full">
-                        Recommended
-                      </span>
-                    )}
-
-                    <div className="flex items-start gap-4">
-                      <div
-                        className={`
-                          w-12 h-12 rounded-xl flex items-center justify-center
-                          ${selectedType === type.id ? "bg-[#0097f0] text-white" : "bg-[#f5f5f5] text-[#7b7b7b]"}
-                        `}
-                      >
-                        <type.icon size={24} />
-                      </div>
-
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-[#404040] mb-1">
-                          {type.name}
-                        </h3>
-                        <p className="text-sm text-[#7b7b7b] mb-3">
-                          {type.description}
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          {type.features.map((feature, idx) => (
-                            <span
-                              key={idx}
-                              className="inline-flex items-center gap-1 px-2 py-1 bg-[#f5f5f5] rounded-md text-xs text-[#666]"
-                            >
-                              <Check size={12} className="text-green-500" />
-                              {feature}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div
-                        className={`
-                          w-6 h-6 rounded-full border-2 flex items-center justify-center
-                          ${selectedType === type.id ? "border-[#0097f0] bg-[#0097f0]" : "border-[#dedede]"}
-                        `}
-                      >
-                        {selectedType === type.id && (
-                          <Check size={14} className="text-white" />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          {/* ── Step: type-selection ── */}
+          {step === 'type-selection' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <p style={{ fontSize: 13, color: TEXT_MID }}>Select a campaign type to get started</p>
+              {campaignTypes.map((type) => (
+                <TypeCard key={type.id} type={type} selected={selectedType === type.id} onClick={() => setSelectedType(type.id)} />
+              ))}
             </div>
           )}
 
-          {step === "configuration" && (
-            <div className="grid grid-cols-5 gap-8">
-              {/* Left - Form */}
-              <div className="col-span-3 space-y-6">
+          {/* ── Step: configuration ── */}
+          {step === 'configuration' && (
+            <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: 32 }}>
+              {/* Left: Form */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                 {/* Daily Budget */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Label className="text-sm font-medium text-[#404040]">
-                      Daily Budget
-                    </Label>
-                    <span className="text-red-500">*</span>
-                    <HelpCircle size={14} className="text-[#b0b0b0]" />
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>Daily Budget</label>
+                    <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
+                    <InfoIcon size={14} color={TEXT_SUB} />
                   </div>
-                  <div className="relative">
-                    <DollarSign
-                      size={16}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7b7b7b]"
-                    />
-                    <Input
-                      type="number"
-                      value={dailyBudget}
-                      onChange={(e) => setDailyBudget(e.target.value)}
-                      className="pl-9 border-[#dedede] focus:border-[#0097f0] focus:ring-[#0097f0]"
-                      placeholder="Enter daily budget"
-                    />
+                  <div style={{ position: 'relative' }}>
+                    <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+                      <DollarSignIcon size={14} color={TEXT_MID} />
+                    </span>
+                    <input type="number" value={dailyBudget} onChange={(e) => setDailyBudget(e.target.value)} placeholder="Enter daily budget" style={inputStyle} />
                   </div>
-                  <p className="text-xs text-[#7b7b7b]">
-                    Minimum daily budget is $10
-                  </p>
+                  <p style={{ fontSize: 12, color: TEXT_SUB, marginTop: 4 }}>Minimum daily budget is $10</p>
                 </div>
 
                 {/* Wallet */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Label className="text-sm font-medium text-[#404040]">
-                      Wallet
-                    </Label>
-                    <span className="text-red-500">*</span>
-                    <HelpCircle size={14} className="text-[#b0b0b0]" />
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>Wallet</label>
+                    <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
+                    <InfoIcon size={14} color={TEXT_SUB} />
                   </div>
                   <Select
                     value={selectedWallet}
-                    onValueChange={setSelectedWallet}
-                  >
-                    <SelectTrigger className="border-[#dedede] focus:border-[#0097f0] focus:ring-[#0097f0]">
-                      <SelectValue placeholder="Select a wallet" />
-                    </SelectTrigger>
-                    <SelectContent className="z-[200]">
-                      {wallets.map((wallet) => (
-                        <SelectItem key={wallet.id} value={wallet.id}>
-                          <div className="flex items-center justify-between w-full">
-                            <span>{wallet.name}</span>
-                            <span className="text-[#7b7b7b] ml-2">
-                              (${wallet.balance.toLocaleString()})
-                            </span>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    onChange={(e) => setSelectedWallet(e.target.value)}
+                    options={walletSelectOptions}
+                    label=""
+                  />
                   {selectedWalletData && (
-                    <p className="text-xs text-[#7b7b7b]">
-                      Wallet Balance: $
-                      {selectedWalletData.balance.toLocaleString()}
+                    <p style={{ fontSize: 12, color: TEXT_MID, marginTop: 4 }}>
+                      Wallet Balance: ${selectedWalletData.balance.toLocaleString()}
                     </p>
                   )}
                 </div>
 
                 {/* Schedule */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Label className="text-sm font-medium text-[#404040]">
-                        Start Date
-                      </Label>
-                      <span className="text-red-500">*</span>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                      <label style={labelStyle}>Start Date</label>
+                      <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
                     </div>
-                    <div className="relative">
-                      <Calendar
-                        size={16}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7b7b7b]"
-                      />
-                      <Input
-                        type="date"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                        className="pl-9 border-[#dedede] focus:border-[#0097f0] focus:ring-[#0097f0]"
-                      />
+                    <div style={{ position: 'relative' }}>
+                      <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+                        <CalendarIcon size={14} color={TEXT_MID} />
+                      </span>
+                      <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} style={{ ...dateInputStyle, paddingLeft: 32 }} />
                     </div>
                   </div>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Label className="text-sm font-medium text-[#404040]">
-                        End Date
-                      </Label>
-                      <span className="text-[#7b7b7b] text-xs">(Optional)</span>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                      <label style={labelStyle}>End Date</label>
+                      <span style={{ fontSize: 12, color: TEXT_SUB }}>(Optional)</span>
                     </div>
-                    <div className="relative">
-                      <Calendar
-                        size={16}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7b7b7b]"
-                      />
-                      <Input
-                        type="date"
-                        value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
-                        className="pl-9 border-[#dedede] focus:border-[#0097f0] focus:ring-[#0097f0]"
-                        placeholder="Select a date"
-                      />
+                    <div style={{ position: 'relative' }}>
+                      <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+                        <CalendarIcon size={14} color={TEXT_MID} />
+                      </span>
+                      <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} style={{ ...dateInputStyle, paddingLeft: 32 }} />
                     </div>
                   </div>
                 </div>
 
                 {/* Max Spend Cap */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Label className="text-sm font-medium text-[#404040]">
-                      Maximum Spend Cap
-                    </Label>
-                    <span className="text-[#7b7b7b] text-xs">(Optional)</span>
-                    <HelpCircle size={14} className="text-[#b0b0b0]" />
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>Maximum Spend Cap</label>
+                    <span style={{ fontSize: 12, color: TEXT_SUB }}>(Optional)</span>
+                    <InfoIcon size={14} color={TEXT_SUB} />
                   </div>
-                  <div className="relative">
-                    <DollarSign
-                      size={16}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7b7b7b]"
-                    />
-                    <Input
-                      type="number"
-                      value={maxSpendCap}
-                      onChange={(e) => setMaxSpendCap(e.target.value)}
-                      className="pl-9 border-[#dedede] focus:border-[#0097f0] focus:ring-[#0097f0]"
-                      placeholder="No cap"
-                    />
+                  <div style={{ position: 'relative' }}>
+                    <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+                      <DollarSignIcon size={14} color={TEXT_MID} />
+                    </span>
+                    <input type="number" value={maxSpendCap} onChange={(e) => setMaxSpendCap(e.target.value)} placeholder="No cap" style={inputStyle} />
                   </div>
-                  <p className="text-xs text-[#7b7b7b]">
-                    Campaign will pause when this limit is reached
-                  </p>
+                  <p style={{ fontSize: 12, color: TEXT_SUB, marginTop: 4 }}>Campaign will pause when this limit is reached</p>
                 </div>
               </div>
 
-              {/* Right - Pacing Options */}
-              <div className="col-span-2">
-                <div className="sticky top-0 p-5 bg-white rounded-xl border border-[#e5e7eb]">
-                  <h3 className="font-semibold text-[#404040] mb-3">Pacing</h3>
-                  <p className="text-sm text-[#7b7b7b] mb-4">
-                    Choose how your budget should be distributed over time
-                  </p>
-
-                  <div className="space-y-3">
+              {/* Right: Pacing */}
+              <div>
+                <div style={{ position: 'sticky', top: 0, padding: 20, background: BG, borderRadius: 12, border: `1px solid ${BORDER}` }}>
+                  <h3 style={{ fontWeight: 600, color: TEXT, marginBottom: 8 }}>Pacing</h3>
+                  <p style={{ fontSize: 13, color: TEXT_MID, marginBottom: 16 }}>Choose how your budget should be distributed over time</p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                     {pacingOptions.map((option) => (
-                      <button
-                        key={option.id}
-                        onClick={() => setPacing(option.id)}
-                        className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
-                          pacing === option.id
-                            ? "border-[#0097f0] bg-[#f0f9ff]"
-                            : "border-[#e5e7eb] hover:border-[#d1d5db] hover:bg-[#f9fafb]"
-                        }`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <span className="text-2xl">{option.icon}</span>
-                          <div className="flex-1">
-                            <div className="font-medium text-[#404040] mb-1">
-                              {option.label}
-                            </div>
-                            <div className="text-xs text-[#7b7b7b]">
-                              {option.description}
-                            </div>
-                          </div>
-                          {pacing === option.id && (
-                            <div className="w-5 h-5 rounded-full bg-[#0097f0] flex items-center justify-center flex-shrink-0">
-                              <Check size={14} className="text-white" />
-                            </div>
-                          )}
-                        </div>
-                      </button>
+                      <PacingBtn key={option.id} option={option} selected={pacing === option.id} onClick={() => setPacing(option.id)} />
                     ))}
                   </div>
                 </div>
@@ -465,49 +348,34 @@ export function ProductAdsWizard({ open, onClose, onLaunch }) {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-[#efefef] bg-[#fafafa]">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderTop: `1px solid ${BORDER}`, background: BG_SUB, flexShrink: 0 }}>
           <div>
-            {step === "configuration" && selectedType && (
-              <div className="flex items-center gap-2 text-sm text-[#7b7b7b]">
-                <span className="px-2 py-1 bg-[#f5f5f5] rounded-md font-medium">
-                  {campaignTypes.find((t) => t.id === selectedType)?.name}
-                </span>
-              </div>
+            {step === 'configuration' && selectedType && (
+              <span style={{ padding: '4px 10px', background: BG_SUB, borderRadius: 6, fontSize: 13, fontWeight: 500, color: TEXT_MID }}>
+                {campaignTypes.find((t) => t.id === selectedType)?.name}
+              </span>
             )}
           </div>
-          <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              onClick={step === "type-selection" ? handleClose : handleBack}
-              className="border-[#dedede] text-[#7b7b7b] hover:bg-[#f5f5f5] bg-transparent"
-            >
-              {step === "type-selection" ? "Cancel" : "Back"}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <Button variant="outline" onClick={step === 'type-selection' ? handleClose : handleBack}>
+              {step === 'type-selection' ? 'Cancel' : 'Back'}
             </Button>
             <Button
-              onClick={
-                step === "type-selection" ? handleContinue : handleLaunch
-              }
-              disabled={
-                (step === "type-selection" && !selectedType) ||
-                (step === "configuration" &&
-                  (!dailyBudget || !selectedWallet)) ||
-                isLaunching
-              }
-              className="px-6 bg-[#0097f0] hover:bg-[#2983d4] text-white"
+              variant="primary"
+              onClick={step === 'type-selection' ? handleContinue : handleLaunch}
+              disabled={!canLaunch}
             >
               {isLaunching ? (
-                <span className="flex items-center gap-2">
-                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ width: 14, height: 14, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', display: 'inline-block', animation: 'spin 0.7s linear infinite' }} />
                   Launching...
+                  <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
                 </span>
-              ) : step === "type-selection" ? (
-                <span className="flex items-center gap-1">
-                  Continue
-                  <ChevronRight size={16} />
+              ) : step === 'type-selection' ? (
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  Continue <ChevronRightIcon size={16} color="#fff" />
                 </span>
-              ) : (
-                "Launch Campaign"
-              )}
+              ) : 'Launch Campaign'}
             </Button>
           </div>
         </div>

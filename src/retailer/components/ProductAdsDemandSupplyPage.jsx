@@ -152,7 +152,7 @@ function getBudgetBadgeStyle(value) {
   if (value >= 60) {
     return {
       color: 'var(--osmos-brand-amber)',
-      background: 'rgba(245,166,35,0.12)',
+      background: 'var(--osmos-brand-amber-muted)',
     };
   }
   return {
@@ -170,7 +170,7 @@ const S = {
     fontFamily: "'Open Sans', sans-serif",
     background: 'var(--osmos-bg-subtle)',
     minHeight: '100vh',
-    padding: '24px',
+    padding: '20px 24px',
     boxSizing: 'border-box',
   },
 

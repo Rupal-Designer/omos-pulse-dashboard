@@ -57,6 +57,7 @@ import AdvertiserOnboardingCatalogPage from './components/AdvertiserOnboardingCa
 import CatalogStatusPage from './components/CatalogStatusPage';
 import DevelopSettingsPage from './components/DevelopSettingsPage';
 import SetupDetailsPage from './components/SetupDetailsPage';
+import BYOTAdminConfigPage from './components/BYOTAdminConfigPage';
 
 /* ── Analytics dashboard (the original page) ─────────────────── */
 function AnalyticsDashboard({ bare = false }) {
@@ -84,7 +85,7 @@ function AnalyticsDashboard({ bare = false }) {
 
 /* ── Root ─────────────────────────────────────────────────────── */
 export default function App() {
-  const [activePage, setActivePage] = useState('advertiser-insights');
+  const [activePage, setActivePage] = useState('home');
 
   function renderPage() {
     switch (activePage) {
@@ -537,6 +538,15 @@ export default function App() {
             <TopBar section="Sponsored Ads" page="Inventory Setup" onNavigate={setActivePage} />
             <main style={{ flex: 1, overflowY: 'auto', background: 'var(--osmos-bg-subtle)' }}>
               <SponsoredAdsInventoryPage />
+            </main>
+          </>
+        );
+      case 'byot-config':
+        return (
+          <>
+            <TopBar section="BYOT" page="Configuration" onNavigate={setActivePage} />
+            <main style={{ flex: 1, overflowY: 'auto', background: 'var(--osmos-bg-subtle)' }}>
+              <BYOTAdminConfigPage />
             </main>
           </>
         );

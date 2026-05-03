@@ -12,7 +12,7 @@ const FONT = "'Open Sans', sans-serif";
  * footer: ReactNode    (optional sticky footer — Cancel/Save buttons etc)
  * width: number (default 480)
  */
-export function Drawer({ open, onClose, title, children, footer, width = 480 }) {
+export function Drawer({ open, onClose, title, subtitle, children, footer, width = 480 }) {
   if (!open) return null;
   return (
     <>
@@ -44,7 +44,20 @@ export function Drawer({ open, onClose, title, children, footer, width = 480 }) 
           borderBottom: '1px solid var(--osmos-border)',
           flexShrink: 0,
         }}>
-          <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--osmos-fg)' }}>{title}</span>
+          <div>
+            <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--osmos-fg)' }}>{title}</span>
+            {subtitle && (
+              <span style={{
+                fontSize: 11,
+                color: 'var(--osmos-fg-subtle)',
+                marginTop: 2,
+                display: 'block',
+                fontWeight: 400,
+              }}>
+                {subtitle}
+              </span>
+            )}
+          </div>
           <button
             onClick={onClose}
             style={{

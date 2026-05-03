@@ -1,14 +1,14 @@
 ---
 name: lineicon-enforcer
-description: "Scans all JSX components for hand-rolled SVG icons and replaces them with matching icons from the Free LINE icons Figma file (WAZd1M7J9YzwnhoO7BRjcV). Use this skill whenever someone says 'use line icons', 'replace icons with line icons', 'enforce line icons', or 'make icons consistent'. The skill audits, looks up Figma, extracts SVG paths, and applies replacements."
+description: "Scans all JSX components for hand-rolled SVG icons and replaces them with matching icons. Primary source: Design-System-OS Figma file (58jL2Gbe53rBhxOysvHM82, Icons page node 1511:805). Fallback source: Free LINE icons Figma file (WAZd1M7J9YzwnhoO7BRjcV). Use this skill whenever someone says 'use line icons', 'replace icons with line icons', 'enforce line icons', 'use design system icons', or 'make icons consistent'. The skill audits, looks up Figma, extracts SVG paths, and applies replacements."
 ---
 
-# LINE Icon Enforcer
+# Icon Enforcer
 
-Scans every `src/components/*.jsx` file for hand-rolled inline SVG paths, identifies the icon's intent from context, fetches the matching LINE icon from the Figma design library, and replaces the old path with the correct line-style SVG.
+Scans every `src/components/*.jsx` file for hand-rolled inline SVG paths, identifies the icon's intent from context, fetches the matching icon from the Figma design library, and replaces the old path with the correct line-style SVG.
 
-**Figma icon library:** `https://www.figma.com/design/WAZd1M7J9YzwnhoO7BRjcV/Free-LINE-icons`  
-**Primary icon page:** `Interface, Essential` (3000 icons, page node 0:1)
+**Primary icon library:** `https://www.figma.com/design/58jL2Gbe53rBhxOysvHM82/Design-System-OS?node-id=1511-805` (Icons page)  
+**Fallback icon library:** `https://www.figma.com/design/WAZd1M7J9YzwnhoO7BRjcV/Free-LINE-icons` (Interface, Essential page, node 0:1)
 
 ---
 
@@ -105,40 +105,110 @@ For each `Ico` usage, determine intent by reading:
 
 ## Phase 2 — Figma Lookup
 
-### Known Icon Lookup Table
+**Two-source strategy — always check in order:**
 
-Pre-mapped Figma node IDs for the most common UI icons. Use these before fetching from Figma:
+1. **Primary: Design-System-OS** (`58jL2Gbe53rBhxOysvHM82`, Icons page `1511:805`)
+2. **Fallback: Free LINE icons** (`WAZd1M7J9YzwnhoO7BRjcV`, Interface Essential page `0:1`)
 
-| Intent | Figma Node ID | Icon Full Name |
-|--------|--------------|----------------|
-| search / zoom | `9:1999` | Interface, Essential/Search, Zoom, Plus |
-| trash / delete / remove | `9:474` | Interface, Essential/Trash, Delete, Remove |
-| user / person / profile | `9:335` | Interface, Essential/User, Single, Select |
-| refresh / reload | `9:2523` | Interface, Essential/Refresh, Update |
-| settings / gear / config | `9:1387` | Interface, Essential/Settings, Switches |
-| plus / add | `9:3057` | Interface, Essential/Plus, Minus, Circle |
-| edit / pen / pencil | `9:3178` | Interface, Essential/Pen, Stop |
-| bell / notification | `9:3516` | Interface, Essential/Notification, Document |
-| menu / hamburger | `9:3826` | Interface, Essential/Menu, Square |
-| lock / padlock | `9:4072` | Interface, Essential/Lock, Warning |
-| info / information | `9:4891` | Interface, Essential/Information, Info |
-| home / house | `9:4980` | Interface, Essential/Home, House, Line |
-| grid / layout | `9:5232` | Interface, Essential/Grid, Layout, Square |
-| chart / analytics / graph | `9:5443` | Interface, Essential/Graph, Analytics, Square |
-| filter / funnel | `9:5728` | Interface, Essential/Filter, Sort |
-| document / file / page | `9:5809` | Interface, Essential/FileUp, Mail |
-| eye / view / visible | `9:5901` | Interface, Essential/Eye, Square |
-| download | `9:6156` | Interface, Essential/Download, Save |
-| calendar / date / schedule | `9:7592` | Interface, Essential/Calendar, Schedule |
-| upload | `9:11655` | Interface, Essential/upload-loading-arrow |
-| close / cross / dismiss | `9:19052` | Interface, Essential/cross-delete-circle |
+If an intent matches a node in Design-System-OS, use that. Fall back to LINE icons only when not found.
 
-### For icons NOT in the table above:
+---
 
-Use the Figma MCP tool to search:
+### Primary Lookup Table — Design-System-OS (`[DS]`)
+
+Pre-mapped node IDs for the most common UI icons in `58jL2Gbe53rBhxOysvHM82`:
+
+| Intent | DS Node ID | Icon name |
+|--------|-----------|-----------|
+| search | `7391:30070` | search-lg |
+| trash / delete | `7391:30064` | trash-03 |
+| edit / pencil | `7391:30049` | edit-03 |
+| eye / view | `7391:30050` | eye |
+| filter / funnel | `7391:30051` | filter-funnel-02 |
+| filter lines | `7391:30052` | filter-lines |
+| menu / hamburger | `7391:30053` | menu-01 |
+| refresh / reload | `7391:30054` | refresh-cw-02 |
+| close / x | `7391:30072` | x-close |
+| plus / add | `7391:30069` | plus |
+| minus | `7391:30091` | minus |
+| download | `7391:30071` | download-01 |
+| upload | `7391:30127` | upload-01 |
+| chevron-left | `7391:30067` | chevron-left |
+| chevron-right | `7391:30068` | chevron-right |
+| arrow-left | `7391:30065` | arrow-narrow-left |
+| arrow-right | `7391:30066` | arrow-narrow-right |
+| home | `7391:30059` | home-03 |
+| help / question | `7391:30058` | help-circle |
+| info | `7391:30090` | i icon |
+| wallet | `7391:30057` | wallet-03 |
+| more / dots-vertical | `7391:30073` | dots-vertical |
+| external-link | `7391:30048` | link-external-01 |
+| check / success | `7391:30092` | check-circle |
+| clock / time | `7391:30093` | clock |
+| alert / warning | `7391:30095` | alert-triangle |
+| calendar | `7391:30110` | calendar |
+| grid / layout | `7391:30099` | grid-01 |
+| user | `7391:30115` | user-01 |
+| users / group | `7391:30135` | users-01 |
+| file / document | `7391:30117` | file-02 |
+| chart / analytics | `7391:30109` | bar-line-chart |
+| line-chart | `7391:30096` | line-chart-up-01 |
+| loading / spinner | `7391:30112` | loading-01 |
+| expand | `7391:30119` | expand-01 |
+| copy | `7391:30139` | copy-06 |
+| share | `7391:30133` | share-07 |
+| link | `7391:30116` | link-01 |
+| image | `7391:30063` | image-01 |
+| tag | `7391:30106` | tag-01 |
+| bookmark | `7391:30105` | bookmark |
+| send | `7391:30140` | send-01 |
+| target | `7391:30089` | target-04 |
+| settings / config | `7391:30107` | Config |
+| log-in | `7391:30081` | log-in-03 |
+| activity | `7391:30047` | Activity |
+| scheduled-reports | `7391:30084` | Scheduled Reports |
+| live-insights | `7391:30082` | Live Insights |
+| advertiser-insights | `7391:30083` | Advertiser Insights |
+| control-center | `7391:30074` | Control Center |
+| finance | `7391:30076` | Finance |
+| onboarding | `7391:30075` | Onboarding |
+| automated-rules | `7391:30080` | Automated rules |
+| dev-settings | `7391:30061` | Dev Settings |
+
+### For DS icons NOT in the table above:
+
+Search within the Icons page (`1511:805`) of `58jL2Gbe53rBhxOysvHM82`:
 
 ```javascript
-// Search Interface Essential page for a new icon
+// Search the DS Icons page for a keyword
+const page = await figma.getNodeByIdAsync('1511:805');
+const results = [];
+for (const child of page.children) {
+  if (child.name.toLowerCase().includes('KEYWORD')) {
+    results.push({ id: child.id, name: child.name, type: child.type });
+  }
+}
+return JSON.stringify(results.slice(0, 10));
+```
+
+---
+
+### Fallback Lookup Table — Free LINE icons (`[LINE]`)
+
+Use these only when the intent is **not found** in Design-System-OS:
+
+| Intent | LINE Node ID | Icon Full Name |
+|--------|-------------|----------------|
+| bell / notification | `9:3516` | Interface, Essential/Notification, Document |
+| lock / padlock | `9:4072` | Interface, Essential/Lock, Warning |
+| settings / gear (generic) | `9:1387` | Interface, Essential/Settings, Switches |
+| user (generic) | `9:335` | Interface, Essential/User, Single, Select |
+| star / favourite | `9:5443` (chart) → search | Interface, Essential/Graph, Analytics |
+
+For icons not in either table, search the LINE icons file:
+
+```javascript
+// Search Interface Essential page in LINE icons
 const page = figma.root.children.find(p => p.name.includes('Interface'));
 const results = page.children
   .filter(f => f.name.toLowerCase().includes('KEYWORD'))
@@ -147,11 +217,9 @@ const results = page.children
 return JSON.stringify(results);
 ```
 
-Replace `KEYWORD` with the icon intent (e.g. `'arrow'`, `'check'`, `'star'`).
-
-Also search these secondary pages for domain-specific icons:
+Also search these secondary LINE icon pages for domain-specific icons:
 - **Users** (page 6:28169) — avatar, group, team icons
-- **Files** (page 6:8525) — document, folder, attachment icons  
+- **Files** (page 6:8525) — document, folder, attachment icons
 - **Content/Edit** (page 6:3170) — edit, text, formatting icons
 - **Money** (page 6:13849) — wallet, currency, payment icons
 - **Arrows Diagrams** (page 6:169) — chevron, arrow, direction icons
@@ -309,16 +377,22 @@ These SVG patterns are intentional and must be kept as-is:
 
 ## Common Icon → Figma Node Quick Reference
 
-For the fastest workflow, use this condensed lookup:
+For the fastest workflow — **always check [DS] first, use [LINE] only as fallback**:
 
 ```
-search      → 9:1999    trash    → 9:474     user     → 9:335
-refresh     → 9:2523    settings → 9:1387    plus     → 9:3057
-edit/pen    → 9:3178    bell     → 9:3516    menu     → 9:3826
-lock        → 9:4072    info     → 9:4891    home     → 9:4980
-grid        → 9:5232    chart    → 9:5443    filter   → 9:5728
-file/doc    → 9:5809    eye      → 9:5901    download → 9:6156
-calendar    → 9:7592    upload   → 9:11655   close    → 9:19052
-```
+[DS] = Design-System-OS file 58jL2Gbe53rBhxOysvHM82
+[LINE] = Free LINE icons file WAZd1M7J9YzwnhoO7BRjcV
 
-All node IDs are in the file: `WAZd1M7J9YzwnhoO7BRjcV`
+search      [DS] 7391:30070    trash       [DS] 7391:30064    edit        [DS] 7391:30049
+eye         [DS] 7391:30050    filter      [DS] 7391:30051    refresh     [DS] 7391:30054
+close/x     [DS] 7391:30072    plus        [DS] 7391:30069    download    [DS] 7391:30071
+upload      [DS] 7391:30127    chevron-L   [DS] 7391:30067    chevron-R   [DS] 7391:30068
+arrow-L     [DS] 7391:30065    arrow-R     [DS] 7391:30066    home        [DS] 7391:30059
+help        [DS] 7391:30058    info        [DS] 7391:30090    wallet      [DS] 7391:30057
+dots/more   [DS] 7391:30073    check       [DS] 7391:30092    alert       [DS] 7391:30095
+calendar    [DS] 7391:30110    grid        [DS] 7391:30099    user        [DS] 7391:30115
+users       [DS] 7391:30135    file        [DS] 7391:30117    image       [DS] 7391:30063
+settings    [DS] 7391:30107    log-in      [DS] 7391:30081    activity    [DS] 7391:30047
+
+bell/notif  [LINE] 9:3516    lock        [LINE] 9:4072    star        [LINE] search DS
+```

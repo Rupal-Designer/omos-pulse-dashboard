@@ -3,6 +3,22 @@ name: design-orchestrator
 description: "Run the full design-to-code pipeline: interpret a screen → wireframe in Figma → implement in React → audit UX. Use this skill whenever someone says 'build this screen end to end', 'full pipeline', 'create this from scratch', 'design and implement this', or provides an image/sketch/PRD and expects both a Figma file and working React code. Also trigger when someone says 'run the chain', 'agent chain', or 'orchestrate'. This skill chains together screen-interpreter → figma-wireframer → react-implementer → ux-auditor in sequence, re-running steps if the audit returns scores below B."
 ---
 
+## ⚡ CARDINAL RULE — Figma is the Source of Truth
+
+> **Every label, structure, group name, column header, button text, nav item name, and data value in the implementation MUST match the Figma design verbatim.** No paraphrasing. No inventing. No "close enough."
+>
+> - If Figma says `"Manage CPM/CPC Rules"` → code says `"Manage CPM/CPC Rules"` (not "Manage CPM Rules")
+> - If Figma says `"Ops User"` (singular) → code says `"Ops User"` (not "Ops Users")
+> - If Figma says `"Super Admin users"` (lowercase u) → code says `"Super Admin users"`
+> - If Figma groups "Manage Segments" under **Audience Manager** → the nav puts it under Audience Manager (not Advertiser Settings)
+> - If a text node is unreadable → mark it `[UNREADABLE]` and surface it to the user before writing any code
+>
+> **Do not trust your own inference about what a label "should" be.** Read the Figma text node. Copy it. Done.
+>
+> This rule overrides all other heuristics, templates, and defaults in this skill.
+
+---
+
 # Design Orchestrator
 
 Chains the 4 agent skills in sequence to go from any input to a fully implemented, audited screen.

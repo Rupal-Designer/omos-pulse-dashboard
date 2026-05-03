@@ -1,371 +1,569 @@
-# @rishikeshjoshi-morpheus/ui — Component API Reference
+# src/ui Component API Reference
 
-108 components built on Chakra UI 3.33. All imported from `@rishikeshjoshi-morpheus/ui`.
+**Source of truth:** `src/ui/index.js` barrel + component source files  
+**Import path (from `src/retailer/components/*.jsx`):** `import { X } from '../../ui'`  
+**Import path (from `src/advertiser/components/*.jsx`):** `import { X } from '../../ui'`  
+**Last verified:** 2026-05-02
 
-## Import Pattern
+> This file documents the **actual** `src/ui/` library used in OMOS TEST.  
+> Do NOT confuse with `@rishikeshjoshi-morpheus/ui` (a different project's Chakra-based library).
+
+---
+
+## Atoms
+
+### Button
 
 ```jsx
-import { ComponentName } from '@rishikeshjoshi-morpheus/ui';
-import '@rishikeshjoshi-morpheus/ui/tokens.css'; // in entry point only
+import { Button } from '../../ui';
+
+<Button
+  variant="primary"   // 'primary' | 'outline' | 'ghost' | 'icon' | 'link'
+  disabled={false}
+  onClick={fn}
+  style={{}}          // merged onto root element
+>
+  Label
+</Button>
+```
+
+**Variants:** `primary` (filled brand blue), `outline` (border only), `ghost` (no border/bg), `icon` (square, no padding for icon-only), `link` (text-only, underline on hover)
+
+---
+
+### Badge + TypeBadge
+
+```jsx
+import { Badge, TypeBadge } from '../../ui';
+
+// Status badge — predefined color semantics
+<Badge
+  status="Active"     // 'Active' | 'Inactive' | 'Paused' | 'Live' | 'Draft' | 'Error'
+  showDot={true}      // boolean — renders colored dot before label (default true)
+  style={{}}
+/>
+
+// Type badge — custom color map
+<TypeBadge
+  type="Gold"         // string — key into colorMap
+  colorMap={{
+    Gold:   { bg: 'var(--osmos-brand-amber)',   color: '#fff' },
+    Silver: { bg: 'var(--osmos-fg-subtle)',      color: '#fff' },
+  }}
+  style={{}}
+/>
+```
+
+**Badge color semantics:**
+| Status | Background | Text |
+|--------|-----------|------|
+| Active / Live | `--osmos-brand-green-muted` | `--osmos-brand-green` |
+| Inactive / Draft | `--osmos-bg-muted` | `--osmos-fg-muted` |
+| Paused | amber muted | amber |
+| Error | red muted | red |
+
+---
+
+### Input + Select
+
+```jsx
+import { Input, Select } from '../../ui';
+
+<Input
+  value={val}
+  onChange={fn}          // receives event — use e.target.value
+  placeholder="..."
+  label="Field label"    // renders label above input
+  type="text"            // 'text' | 'number' | 'email' | 'password' | 'search'
+  disabled={false}
+  required={false}
+  inputStyle={{}}        // styles on <input> element
+  style={{}}             // styles on wrapper div
+  id="field-id"
+/>
+
+<Select
+  value={val}
+  onChange={fn}          // receives event — use e.target.value
+  options={[{ value: 'a', label: 'Option A' }]}
+  placeholder="Select..."
+  label="Field label"
+  disabled={false}
+  style={{}}
+/>
 ```
 
 ---
 
-## ⚠️ CRITICAL: `.Root` Rules — Read Before Writing Any Compound Component
+### Icon + Named Icons
 
-There are TWO patterns in this library. Getting this wrong causes a silent runtime crash ("Element type is invalid: got undefined").
+```jsx
+import { Icon,
+         SearchIcon, PlusIcon, TrashIcon, EditIcon, CloseIcon,
+         ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon,
+         UploadIcon, DownloadIcon, FilterIcon, RefreshIcon,
+         FileIcon, CheckIcon, SortIcon, CalendarIcon, EyeIcon,
+         ColumnsIcon, InfoIcon, MoreIcon } from '../../ui';
 
-### Pattern A — Component IS the root (NO `.Root` sub-key)
-Use `<ComponentName ...>` directly as the wrapper. These components do NOT have a `.Root` property:
+// Base Icon — wrap any SVG path
+<Icon
+  size={16}              // number, pixels (default 16)
+  color="currentColor"   // CSS color string
+  strokeWidth={1.8}      // SVG stroke-width
+>
+  <path d="M5 12h14" />  // raw SVG path children
+</Icon>
 
-| Component | Correct root tag | Sub-components available |
-|-----------|-----------------|--------------------------|
-| `Table`   | `<Table size="sm">` | `.Header` `.Body` `.Row` `.Cell` `.ColumnHeader` `.Caption` `.ScrollArea` |
-| `Tabs`    | `<Tabs defaultValue="x">` | `.List` `.Trigger` `.Content` `.ContentGroup` `.Indicator` |
-| `Timeline`| `<Timeline>` | `.Item` `.Connector` `.Separator` `.Indicator` `.Content` `.Title` `.Description` |
-| `Modal`   | `<Modal open={open} onOpenChange={...}>` | `.Content` `.Header` `.Body` `.Footer` `.Title` `.Description` `.CloseTrigger` `.ActionTrigger` |
-| `Drawer`  | `<Drawer open={open} onOpenChange={...} placement="end">` | `.Content` `.Header` `.Body` `.Footer` `.Title` `.Description` `.CloseTrigger` `.ActionTrigger` |
-| `Menu`    | `<Menu>` | `.Trigger` `.Content` `.Item` `.ItemGroup` `.ItemGroupLabel` `.Separator` `.ItemCommand` `.CheckboxItem` `.RadioItemGroup` `.RadioItem` `.ContextTrigger` `.TriggerItem` |
-| `Card`    | `<Card>` | `.Header` `.Body` `.Footer` `.Title` `.Description` |
-| `Accordion`| `<Accordion>` | `.Item` `.ItemTrigger` `.ItemContent` `.ItemIndicator` `.ItemBody` |
-| `Avatar`  | `<Avatar>` | `.Group` |
-| `Steps`   | `<Steps defaultStep={0} count={n}>` | `.List` `.Item` `.Trigger` `.Indicator` `.Separator` `.Content` `.Title` `.Description` `.NextTrigger` `.PrevTrigger` `.CompletedContent` |
-| `Popover` | `<Popover>` | `.Trigger` `.Content` `.Arrow` `.Header` `.Body` `.Footer` `.Title` `.Description` `.CloseTrigger` |
-| `Stat`    | `<Stat>` | `.Label` `.ValueText` `.HelpText` `.UpIndicator` `.DownIndicator` |
-| `DataList`| `<DataList>` | `.Item` `.ItemLabel` `.ItemValue` |
-| `RadioGroup` | `<RadioGroup>` | `.Item` `.ItemHiddenInput` `.ItemIndicator` `.ItemText` |
-| `RadioCard`  | `<RadioCard>` | `.Item` `.ItemControl` `.ItemText` `.ItemDescription` `.ItemIndicator` `.ItemHiddenInput` `.ItemContent` `.ItemAddon` `.Label` |
-| `Tooltip` | `<Tooltip>` | `.Trigger` `.Content` `.Arrow` `.Positioner` |
+// Named icons — accept size + color props only
+<SearchIcon size={20} color="var(--osmos-fg-muted)" />
+<InfoIcon size={16} color="var(--osmos-brand-primary)" />
+<CloseIcon size={16} />
+// ... all 20 named icons follow the same pattern
+```
 
-### Pattern B — Component has a `.Root` sub-key
-Only `Breadcrumb` explicitly has `.Root` (as an alias to a different component):
-
-| Component | Correct root tag |
-|-----------|-----------------|
-| `Breadcrumb` | `<Breadcrumb.Root>` | `.List` `.Item` `.Link` `.CurrentLink` `.Ellipsis` `.Separator` |
+**All 20 named icons:** `SearchIcon` `PlusIcon` `TrashIcon` `EditIcon` `CloseIcon` `ChevronDownIcon` `ChevronLeftIcon` `ChevronRightIcon` `UploadIcon` `DownloadIcon` `FilterIcon` `RefreshIcon` `FileIcon` `CheckIcon` `SortIcon` `CalendarIcon` `EyeIcon` `ColumnsIcon` `InfoIcon` `MoreIcon`
 
 ---
 
-## Compound Component Usage Examples
+### Checkbox
 
-### Table
 ```jsx
-<Table size="sm">
-  <Table.Header>
-    <Table.Row bg="gray.50">
-      <Table.ColumnHeader scope="col">Name</Table.ColumnHeader>
-      <Table.ColumnHeader scope="col">Value</Table.ColumnHeader>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row _hover={{ bg: 'blue.50' }}>
-      <Table.Cell>Row data</Table.Cell>
-      <Table.Cell>Row data</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-  <Table.Caption>Optional caption</Table.Caption>
-</Table>
+import { Checkbox } from '../../ui';
+
+<Checkbox
+  checked={bool}
+  onChange={fn}       // receives event — use e.target.checked
+  label="Select row"
+  disabled={false}
+  style={{}}
+/>
 ```
 
-### Tabs
-```jsx
-<Tabs defaultValue="tab1" variant="line" size="sm">
-  <Tabs.List>
-    <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
-    <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-  </Tabs.List>
-  <Tabs.Content value="tab1">Content 1</Tabs.Content>
-  <Tabs.Content value="tab2">Content 2</Tabs.Content>
-</Tabs>
-```
-Controlled: `value={val} onValueChange={(e) => setVal(e.value)}`
-Props: `defaultValue`, `value`, `onValueChange`, `variant` ("line"|"enclosed"|"plain"), `size` ("sm"|"md"|"lg")
+---
 
-### Timeline
+### Tag
+
 ```jsx
-<Timeline>
-  <Timeline.Item>
-    <Timeline.Indicator bg="green.500" />
-    <Timeline.Connector />
-    <Timeline.Content>
-      <Timeline.Title>Event title</Timeline.Title>
-      <Timeline.Description>Details here</Timeline.Description>
-    </Timeline.Content>
-  </Timeline.Item>
-</Timeline>
+import { Tag } from '../../ui';
+
+<Tag
+  colorScheme="green" // 'green' | 'amber' | 'blue' | 'gray' | 'red'
+  style={{}}
+>
+  Label text
+</Tag>
 ```
 
-### Modal
+---
+
+### Toast + useToast
+
 ```jsx
-<Modal open={open} onOpenChange={(d) => { if (!d.open) onClose(); }} size="md">
-  <Modal.Content>
-    <Modal.Header>
-      <Modal.Title>Title</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>Content</Modal.Body>
-    <Modal.Footer>
-      <Button variant="outline" onClick={onClose}>Cancel</Button>
-      <Button colorPalette="blue">Save</Button>
-    </Modal.Footer>
-    <Modal.CloseTrigger />
-  </Modal.Content>
-</Modal>
+import { Toast, useToast } from '../../ui';
+
+// In component body:
+const { toast, showToast } = useToast();
+
+// Trigger (e.g. after save):
+showToast('Saved successfully', 'success');
+// type: 'success' | 'error' | 'info'
+
+// Render once, near root of page:
+<Toast
+  visible={toast.visible}
+  message={toast.message}
+  type={toast.type}
+/>
 ```
-Props: `open`, `onOpenChange`, `size` ("sm"|"md"|"lg"|"xl"|"full"), `placement` (default: "center"), `scrollBehavior` (default: "inside"), `closeOnInteractOutside`, `closeOnEscape`
+
+---
+
+## Molecules
 
 ### Drawer
+
 ```jsx
-<Drawer open={open} onOpenChange={(d) => { if (!d.open) onClose(); }} placement="end" size="md">
-  <Drawer.Content>
-    <Drawer.Header><Drawer.Title>Title</Drawer.Title></Drawer.Header>
-    <Drawer.Body>Content</Drawer.Body>
-    <Drawer.Footer>Actions</Drawer.Footer>
-    <Drawer.CloseTrigger />
-  </Drawer.Content>
+import { Drawer } from '../../ui';
+
+<Drawer
+  open={bool}
+  onClose={fn}
+  title="Drawer Title"
+  subtitle="Optional subtitle line"   // small muted text below title
+  footer={
+    <>
+      <Button onClick={onClose}>Cancel</Button>
+      <Button variant="primary">Save</Button>
+    </>
+  }
+  width={480}    // number, pixels (default 480)
+>
+  {/* drawer body content */}
 </Drawer>
 ```
 
-### Menu
+**Figma-verified layout (ia-patterns.md §5):**
+- Header: `padding: '16px 20px'`
+- Body: `padding: 20` (all sides — never 16)
+- Footer: `padding: '14px 20px'`
+
+---
+
+### StatCard
+
 ```jsx
-<Menu>
-  <Menu.Trigger asChild><Button>Actions</Button></Menu.Trigger>
-  <Menu.Content>
-    <Menu.Item value="edit">Edit</Menu.Item>
-    <Menu.Item value="delete">Delete</Menu.Item>
-    <Menu.Separator />
-    <Menu.ItemGroup>
-      <Menu.ItemGroupLabel>More</Menu.ItemGroupLabel>
-      <Menu.Item value="duplicate">Duplicate</Menu.Item>
-    </Menu.ItemGroup>
-  </Menu.Content>
-</Menu>
+import { StatCard } from '../../ui';
+
+<StatCard
+  label="Total Revenue"
+  value="₹4.2L"
+  trend="+12.4%"           // string — trend label text
+  trendDir="up"            // 'up' | 'down' — controls arrow direction + color
+  compValue="₹3.8L"       // optional — comparison period value
+  compPct={12.4}           // optional — number; positive = green, negative = red
+  sub="vs last month"      // optional — subtitle below main value
+  icon={<InfoIcon size={14} />}             // optional — icon in top-right
+  iconColor="var(--osmos-brand-primary)"    // optional — icon color
+  style={{}}
+/>
 ```
 
-### Card
+**Grid layout — ALWAYS `gap: 20`, never `gap: 12` or `gap: 16`:**
 ```jsx
-<Card>
-  <Card.Header><Card.Title>Title</Card.Title></Card.Header>
-  <Card.Body>Content</Card.Body>
-  <Card.Footer>Actions</Card.Footer>
-</Card>
-```
-
-### Accordion
-```jsx
-<Accordion>
-  <Accordion.Item value="a">
-    <Accordion.ItemTrigger>Section A</Accordion.ItemTrigger>
-    <Accordion.ItemContent>Content A</Accordion.ItemContent>
-  </Accordion.Item>
-</Accordion>
-```
-Props: `multiple`, `defaultValue={["a"]}`, `collapsible`
-
-### Popover
-```jsx
-<Popover>
-  <Popover.Trigger asChild><Button>Open</Button></Popover.Trigger>
-  <Popover.Content>
-    <Popover.Header>Title</Popover.Header>
-    <Popover.Body>Content</Popover.Body>
-    <Popover.CloseTrigger />
-  </Popover.Content>
-</Popover>
-```
-
-### Steps
-```jsx
-<Steps defaultStep={0} count={3}>
-  <Steps.List>
-    <Steps.Item index={0}><Steps.Trigger><Steps.Indicator /><Steps.Title>Step 1</Steps.Title></Steps.Trigger><Steps.Separator /></Steps.Item>
-    <Steps.Item index={1}><Steps.Trigger><Steps.Indicator /><Steps.Title>Step 2</Steps.Title></Steps.Trigger><Steps.Separator /></Steps.Item>
-  </Steps.List>
-  <Steps.Content index={0}>Step 1 content</Steps.Content>
-  <Steps.Content index={1}>Step 2 content</Steps.Content>
-  <Steps.CompletedContent>Done!</Steps.CompletedContent>
-  <Steps.PrevTrigger asChild><Button variant="outline">Back</Button></Steps.PrevTrigger>
-  <Steps.NextTrigger asChild><Button>Next</Button></Steps.NextTrigger>
-</Steps>
-```
-
-### Breadcrumb
-```jsx
-// ⚠️ Exception — Breadcrumb DOES use .Root
-<Breadcrumb.Root>
-  <Breadcrumb.List>
-    <Breadcrumb.Item>
-      <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
-      <Breadcrumb.Separator />
-    </Breadcrumb.Item>
-    <Breadcrumb.Item>
-      <Breadcrumb.CurrentLink>Current Page</Breadcrumb.CurrentLink>
-    </Breadcrumb.Item>
-  </Breadcrumb.List>
-</Breadcrumb.Root>
-```
-
-### Stat
-```jsx
-<Stat>
-  <Stat.Label>Revenue</Stat.Label>
-  <Stat.ValueText>$12.4K</Stat.ValueText>
-  <Stat.HelpText>
-    <Stat.UpIndicator /> 8.2% vs last week
-  </Stat.HelpText>
-</Stat>
-```
-
-### DataList
-```jsx
-<DataList>
-  <DataList.Item>
-    <DataList.ItemLabel>Status</DataList.ItemLabel>
-    <DataList.ItemValue>Active</DataList.ItemValue>
-  </DataList.Item>
-</DataList>
-```
-
-### Tooltip
-```jsx
-// Simple usage (wraps child automatically)
-<Tooltip content="Help text">
-  <Button>Hover me</Button>
-</Tooltip>
-```
-
-### RadioGroup
-```jsx
-<RadioGroup value={val} onValueChange={(e) => setVal(e.value)}>
-  <RadioGroup.Item value="a">
-    <RadioGroup.ItemHiddenInput />
-    <RadioGroup.ItemIndicator />
-    <RadioGroup.ItemText>Option A</RadioGroup.ItemText>
-  </RadioGroup.Item>
-</RadioGroup>
-```
-
-### Avatar
-```jsx
-<Avatar name="John Doe" src="/avatar.jpg" size="md" />
-<Avatar.Group>
-  <Avatar name="Alice" />
-  <Avatar name="Bob" />
-</Avatar.Group>
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+  <StatCard label="Impressions" value="1.2M" trendDir="up" trend="+8%" />
+  <StatCard label="Clicks" value="34.5K" trendDir="up" trend="+12%" />
+  <StatCard label="CTR" value="2.88%" trendDir="down" trend="-0.3pp" />
+  <StatCard label="ROAS" value="4.2x" trendDir="up" trend="+0.6x" />
+</div>
 ```
 
 ---
 
-## Simple Components (Direct Use — No Dot Notation)
+### SearchBar
 
-### Alert
 ```jsx
-<Alert status="info" title="Optional title">
-  Body text here
-</Alert>
-```
-Props: `status` ("info"|"warning"|"error"|"success"), `title`, `icon` (false to hide), `closable`, `onClose`
+import { SearchBar } from '../../ui';
 
-### Input
-```jsx
-<Input
-  label="Field Label"
-  placeholder="Type here..."
-  helperText="Optional help"
-  errorText="Error message"
-  invalid={false}
-  required={true}
-  disabled={false}
-  readOnly={false}
-  value={val}
-  onChange={(e) => setVal(e.target.value)}
+<SearchBar
+  value={query}
+  onChange={fn}           // called with string value directly (not event)
+  placeholder="Search..."
+  width={200}             // number, pixels (default 200)
+  style={{}}
 />
 ```
 
-### Select
+---
+
+### Toolbar
+
 ```jsx
-<Select
-  label="Choose"
-  placeholder="Select option"
-  options={[
-    { label: 'Option 1', value: 'opt1' },
-    { label: 'Option 2', value: 'opt2' },
+import { Toolbar } from '../../ui';
+
+<Toolbar
+  left={[
+    <SearchBar value={q} onChange={setQ} />,
+    <Select value={filter} onChange={e => setFilter(e.target.value)} options={...} />,
   ]}
-  invalid={false}
-  required={true}
-  disabled={false}
+  right={[
+    <Button variant="outline"><DownloadIcon size={14} /> Export</Button>,
+    <Button variant="primary"><PlusIcon size={14} /> Create</Button>,
+  ]}
+  noBorder={false}   // boolean — hides bottom border divider
+  style={{}}
 />
 ```
 
-### Button
-```jsx
-<Button variant="solid" colorPalette="blue" size="sm">Primary</Button>
-<Button variant="outline" size="sm">Secondary</Button>
-<Button variant="ghost" size="sm">Tertiary</Button>
-<Button variant="subtle" size="sm">Subtle</Button>
-```
-Props: `variant`, `colorPalette`, `size` ("xs"|"sm"|"md"|"lg"), `loading`, `disabled`, `asChild`
+---
 
-### Badge
-```jsx
-<Badge colorPalette="green" variant="subtle" size="sm">Active</Badge>
-```
-Props: `colorPalette`, `variant` ("subtle"|"solid"|"outline"|"surface"), `size`
+### Pagination
 
-### Tag
 ```jsx
-<Tag colorPalette="blue" variant="subtle" size="sm">Category</Tag>
-```
+import { Pagination } from '../../ui';
 
-### Checkbox
-```jsx
-<Checkbox label="Accept terms" checked={val} onCheckedChange={(e) => setVal(e.checked)} />
-```
-Props: `label`, `checked`, `onCheckedChange`, `disabled`, `invalid`
-
-### Switch
-```jsx
-<Switch label="Enable feature" checked={val} onCheckedChange={(e) => setVal(e.checked)} />
-```
-Props: `label`, `checked`, `onCheckedChange`, `disabled`
-
-### Spinner
-```jsx
-<Spinner size="md" />
-```
-
-### Separator
-```jsx
-<Separator orientation="horizontal" />   // or "vertical"
+<Pagination
+  total={248}           // total record count
+  page={currentPage}    // 1-indexed current page
+  perPage={20}          // records per page (default 20)
+  onChange={fn}         // called with new page number (1-indexed)
+  entityLabel="records" // label in "Showing X–Y of Z records"
+/>
 ```
 
 ---
 
-## Layout & Utility Components
-
-All re-exported from Chakra UI — use style props, NOT inline styles:
-```jsx
-// Box, Flex, Stack, HStack, VStack, Grid, Center, Container, Spacer
-// Text, Heading, Span, Strong, Em, Link, Image
-```
+### Modal
 
 ```jsx
-<Box p="4" bg="bg.subtle" borderRadius="md" borderWidth="1px" borderColor="border">
-<Flex alignItems="center" gap="3" justifyContent="space-between">
-<Stack gap="4">          // vertical stack
-<HStack gap="2">         // horizontal stack
-<Grid templateColumns="repeat(3, 1fr)" gap="4">
-<Text fontSize="sm" color="fg.muted" fontWeight="medium">
-<Heading size="md" color="fg">
-```
+import { Modal } from '../../ui';
 
-**Design token reference:**
-- Spacing: `1`=4px `2`=8px `3`=12px `4`=16px `5`=20px `6`=24px `8`=32px `10`=40px `12`=48px
-- Colors: `fg` `fg.muted` `fg.subtle` `bg` `bg.muted` `bg.subtle` `border` `border.muted`
-- `colorPalette`: `blue` `green` `red` `orange` `yellow` `purple` `teal` `cyan` `pink` `gray`
-- Border radius: `sm` `md` `lg` `xl` `2xl` `full`
+<Modal
+  open={bool}
+  onClose={fn}
+  title="Modal Title"
+  footer={
+    <>
+      <Button onClick={onClose}>Cancel</Button>
+      <Button variant="primary" onClick={handleSubmit}>Confirm</Button>
+    </>
+  }
+  maxWidth={640}   // number, pixels (default 640)
+  zIndex={200}
+>
+  {/* modal body — forms, confirmation text, etc. */}
+</Modal>
+```
 
 ---
 
-## Full Component List (108)
+### SectionCard
 
-Accordion, ActionBar, Alert, AspectRatio, Avatar, Badge, Bleed, Blockquote, Box, Breadcrumb, Button, Card, Carousel, Center, Checkbox, CheckboxCard, Checkmark, ClientOnly, Clipboard, CloseButton, Code, CodeBlock, Collapsible, ColorModeToggle, ColorPicker, ColorSwatch, Combobox, Container, DataList, DatePicker, DownloadTrigger, Drawer, Editable, Em, EmptyState, Environment, Field, Fieldset, FileUpload, Flex, Float, FocusTrap, For, Format, Grid, Group, Heading, Highlight, HoverCard, Icon, Image, Input, InputAddon, InputElement, InputGroup, Kbd, Link, List, Listbox, Loader, Locale, Mark, Marquee, Menu, Modal, NativeSelect, NumberInput, Pagination, PinInput, Popover, Portal, Presence, Progress, ProgressCircle, QrCode, Quote, Radio, RadioCard, Radiomark, Rating, ScrollArea, SegmentedControl, Select, Separator, Show, Skeleton, SkipNav, Slider, Spacer, Span, Spinner, Splitter, Stack, Stat, Status, Steps, Sticky, Strong, Switch, Table, Tabs, Tag, TagsInput, Text, Textarea, Timeline, Toast, Toggle, Tooltip, TreeView, VisuallyHidden, Wrap
+```jsx
+import { SectionCard } from '../../ui';
+
+<SectionCard
+  title="Performance Overview"
+  titleRight={<Button variant="outline">View All</Button>}   // optional
+  headerSize="sm"       // 'sm' | 'md'
+  bodyBg="var(--osmos-bg)"    // optional body background
+  bodyPad={16}          // body padding, number (default 16)
+  style={{}}
+>
+  {/* charts, tables, any content */}
+</SectionCard>
+```
+
+---
+
+### InfoBanner
+
+```jsx
+import { InfoBanner } from '../../ui';
+
+<InfoBanner
+  fileName="upload-template.xlsx"
+  fileDesc="Download the template to see the expected column format"
+  downloadText="Download Template"
+  onDownload={fn}
+/>
+```
+
+---
+
+### KPIChip
+
+```jsx
+import { KPIChip } from '../../ui';
+
+<KPIChip
+  label="CTR"
+  value="3.4%"
+  style={{}}
+/>
+```
+
+---
+
+### EmptyState
+
+```jsx
+import { EmptyState } from '../../ui';
+
+<EmptyState
+  icon={<SearchIcon size={32} />}
+  message="No results found"
+  iconBg="var(--osmos-bg-subtle)"
+  iconColor="var(--osmos-fg-muted)"
+  paddingY={80}    // top + bottom padding (default 80)
+>
+  {/* optional CTA children */}
+  <Button variant="primary">Create First Item</Button>
+</EmptyState>
+```
+
+---
+
+### UploadDropzone
+
+```jsx
+import { UploadDropzone } from '../../ui';
+
+<UploadDropzone
+  onFile={fn}                          // called with File object
+  accept=".xlsx"                       // accepted extension (default '.xlsx')
+  label="Drag & drop or click to upload"
+  successMessage="File uploaded successfully"
+/>
+```
+
+---
+
+### Stepper
+
+```jsx
+import { Stepper } from '../../ui';
+
+<Stepper
+  steps={[
+    { label: 'Basic Info' },
+    { label: 'Configuration' },
+    { label: 'Review & Submit' },
+  ]}
+  current={2}    // 1-indexed active step number
+/>
+```
+
+---
+
+### RadioCard + RadioDot
+
+```jsx
+import { RadioCard, RadioDot } from '../../ui';
+
+{options.map(opt => (
+  <RadioCard
+    key={opt.value}
+    selected={selected === opt.value}
+    onClick={() => setSelected(opt.value)}
+    style={{ display: 'flex', alignItems: 'center', gap: 10 }}
+  >
+    <RadioDot selected={selected === opt.value} size={16} />
+    {opt.label}
+  </RadioCard>
+))}
+```
+
+---
+
+## Patterns
+
+### UploadPage
+
+```jsx
+import { UploadPage } from '../../ui';
+
+<UploadPage
+  fileName="bulk-upload-template.xlsx"
+  fileDesc="Use this template to bulk-upload items"
+  downloadText="Download Template"
+  howItWorksBullets={[
+    'Download the template above',
+    'Fill in required fields (marked with *)',
+    'Upload the completed file below',
+  ]}
+  accept=".xlsx"
+  onFile={fn}    // called with File object when user selects or drops
+/>
+```
+
+---
+
+## Full Export List
+
+```js
+// Atoms (7 exports + 20 named icons)
+export { Button }                    from './atoms/Button';
+export { Badge, TypeBadge }          from './atoms/Badge';
+export { Input, Select }             from './atoms/Input';
+export { Icon,
+         SearchIcon, PlusIcon, TrashIcon, EditIcon, CloseIcon,
+         ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon,
+         UploadIcon, DownloadIcon, FilterIcon, RefreshIcon,
+         FileIcon, CheckIcon, SortIcon, CalendarIcon, EyeIcon,
+         ColumnsIcon, InfoIcon, MoreIcon }  from './atoms/Icon';
+export { Checkbox }                  from './atoms/Checkbox';
+export { Tag }                       from './atoms/Tag';
+export { Toast, useToast }           from './atoms/Toast';
+
+// Molecules (16 exports)
+export { Drawer }                    from './molecules/Drawer';
+export { StatCard }                  from './molecules/StatCard';
+export { SearchBar }                 from './molecules/SearchBar';
+export { Toolbar }                   from './molecules/Toolbar';
+export { Pagination }                from './molecules/Pagination';
+export { InfoBanner }                from './molecules/InfoBanner';
+export { Modal }                     from './molecules/Modal';
+export { KPIChip }                   from './molecules/KPIChip';
+export { EmptyState }                from './molecules/EmptyState';
+export { UploadDropzone }            from './molecules/UploadDropzone';
+export { SectionCard }               from './molecules/SectionCard';
+export { Stepper }                   from './molecules/Stepper';
+export { RadioCard, RadioDot }       from './molecules/RadioCard';
+
+// Patterns (1 export)
+export { UploadPage }                from './patterns/UploadPage';
+```
+
+---
+
+## Common Patterns
+
+### Page outer wrapper
+
+```jsx
+// Figma-verified (ia-patterns.md §5)
+<div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+  {/* KPI row */}
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+    <StatCard label="Impressions" value="..." trendDir="up" trend="..." />
+    <StatCard label="Clicks"      value="..." trendDir="up" trend="..." />
+    <StatCard label="CTR"         value="..." trendDir="down" trend="..." />
+    <StatCard label="ROAS"        value="..." trendDir="up" trend="..." />
+  </div>
+  {/* Section cards — also gap: 20 between them */}
+  <SectionCard title="Performance Chart">...</SectionCard>
+  <SectionCard title="Detail Table">...</SectionCard>
+</div>
+```
+
+### Data table (no Table component in src/ui — always raw HTML)
+
+```jsx
+const TH = { fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)',
+             background: 'var(--osmos-bg-muted)', padding: '8px 12px', textAlign: 'left' };
+const TD = { fontSize: 13, color: 'var(--osmos-fg)', padding: '10px 12px',
+             borderBottom: '1px solid var(--osmos-border)' };
+
+<table style={{ width: '100%', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr>
+      <th style={TH}><Checkbox checked={allSelected} onChange={toggleAll} /></th>
+      <th style={TH}>Name</th>
+      <th style={TH}>Status</th>
+      <th style={TH}>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {rows.map(row => (
+      <tr key={row.id}>
+        <td style={TD}><Checkbox checked={selected.has(row.id)} onChange={() => toggle(row.id)} /></td>
+        <td style={TD}>{row.name}</td>
+        <td style={TD}><Badge status={row.status} /></td>
+        <td style={TD}>
+          <Button variant="icon" onClick={() => edit(row)}><EditIcon size={14} /></Button>
+          <Button variant="icon" onClick={() => del(row)}><TrashIcon size={14} /></Button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+```
+
+### Color constants (declare at top of every file)
+
+```jsx
+const WHITE      = 'var(--osmos-bg)';
+const BG_SUBTLE  = 'var(--osmos-bg-subtle)';
+const BG_MUTED   = 'var(--osmos-bg-muted)';
+const TEXT       = 'var(--osmos-fg)';
+const TEXT_MID   = 'var(--osmos-fg-muted)';
+const TEXT_LIGHT = 'var(--osmos-fg-subtle)';
+const BORDER     = 'var(--osmos-border)';
+const ACCENT     = 'var(--osmos-brand-primary)';
+const ACCENT_M   = 'var(--osmos-brand-primary-muted)';
+const GREEN      = 'var(--osmos-brand-green)';
+const GREEN_M    = 'var(--osmos-brand-green-muted)';
+const AMBER      = 'var(--osmos-brand-amber)';
+const FONT       = "'Open Sans', sans-serif";
+```

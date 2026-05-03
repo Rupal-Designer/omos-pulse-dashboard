@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Icon, EyeIcon } from '../../ui';
+import { Icon, EyeIcon, StatCard } from '../../ui';
 import { Sidebar } from '../components/sidebar';
 import { Header }  from '../components/header';
 
@@ -15,14 +15,14 @@ const ACCENT   = 'var(--osmos-brand-primary)';
 const GREEN    = 'var(--osmos-brand-green)';
 const GREEN_M  = 'var(--osmos-brand-green-muted)';
 const AMBER    = 'var(--osmos-brand-amber)';
-const AMBER_M  = 'rgba(245,166,35,0.12)';
+const AMBER_M  = 'var(--osmos-brand-amber-muted)';
 
 // chart/icon brand colors — intentional hex assignments, not osmos semantic tokens
 const C_RED    = '#d32f2f';
 const C_BLUE   = '#636CFF';  // ACCENT hex equivalent
 const C_ORANGE = '#ef6c00';
 const C_GREEN  = '#1BA87A';  // GREEN hex equivalent
-const C_VIOLET = '#7c3aed';
+const C_VIOLET = 'var(--osmos-brand-violet)';
 
 // ── Hand-rolled icons ─────────────────────────────────────────────────────────
 const TrendingUpIcon = ({ size = 18, color }) => (
@@ -65,13 +65,6 @@ const BarChart3Icon = ({ size = 18, color }) => (
   </Icon>
 );
 
-const ArrowUpRightIcon = ({ size = 14, color }) => (
-  <Icon size={size} color={color}>
-    <path d="M7 7h10v10" />
-    <path d="M7 17 17 7" />
-  </Icon>
-);
-
 // ── HomePage ──────────────────────────────────────────────────────────────────
 export default function HomePage() {
   const [activeAdType, setActiveAdType] = useState('Product Ads');
@@ -103,11 +96,11 @@ export default function HomePage() {
           </div>
 
           {/* ── Key Metrics — 4-column grid ── */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-            <MetricCard label="Total Spend"       value="$45.6M" change="+12.3%" trend="up" icon={<DollarSignIcon        size={20} color={C_RED}    />} color={C_RED}    />
-            <MetricCard label="Total Impressions"  value="68.6M"  change="+8.7%"  trend="up" icon={<EyeIcon               size={20} color={C_BLUE}   />} color={C_BLUE}   />
-            <MetricCard label="Total Clicks"       value="18.3M"  change="+15.2%" trend="up" icon={<MousePointerClickIcon size={20} color={C_ORANGE} />} color={C_ORANGE} />
-            <MetricCard label="Conversions"        value="183.5K" change="+9.8%"  trend="up" icon={<ShoppingCartIcon      size={20} color={C_GREEN}  />} color={C_GREEN}  />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+            <StatCard label="Total Spend"       value="$45.6M" trend="+12.3%" trendDir="up" icon={<DollarSignIcon        size={20} color={C_RED}    />} iconColor={C_RED    + '20'} />
+            <StatCard label="Total Impressions"  value="68.6M"  trend="+8.7%"  trendDir="up" icon={<EyeIcon               size={20} color={C_BLUE}   />} iconColor={C_BLUE   + '20'} />
+            <StatCard label="Total Clicks"       value="18.3M"  trend="+15.2%" trendDir="up" icon={<MousePointerClickIcon size={20} color={C_ORANGE} />} iconColor={C_ORANGE + '20'} />
+            <StatCard label="Conversions"        value="183.5K" trend="+9.8%"  trendDir="up" icon={<ShoppingCartIcon      size={20} color={C_GREEN}  />} iconColor={C_GREEN  + '20'} />
           </div>
 
           {/* ── Ad Type Performance — 2-column grid ── */}
@@ -183,27 +176,7 @@ export default function HomePage() {
   );
 }
 
-// ── MetricCard ────────────────────────────────────────────────────────────────
-function MetricCard({ label, value, change, trend, icon, color }) {
-  const trendColor = trend === 'up' ? C_GREEN : '#EF4444';
-  return (
-    <div style={{ borderRadius: 8, border: `1px solid ${BORDER}`, padding: 16, backgroundColor: BG, fontFamily: FONT }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-        <span style={{ fontSize: 12, fontWeight: 500, color: TEXT_MID }}>{label}</span>
-        <div style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: color + '20' }}>
-          {icon}
-        </div>
-      </div>
-      <div>
-        <p style={{ margin: 0, fontSize: 24, fontWeight: 700, color: TEXT }}>{value}</p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
-          <ArrowUpRightIcon size={14} color={trendColor} />
-          <span style={{ fontSize: 12, fontWeight: 500, color: trendColor }}>{change}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
+// MetricCard — replaced by StatCard from src/ui (with icon + trend props)
 
 // ── AdTypePerformanceCard ─────────────────────────────────────────────────────
 function AdTypePerformanceCard({ adType, icon, metrics, trend, color }) {

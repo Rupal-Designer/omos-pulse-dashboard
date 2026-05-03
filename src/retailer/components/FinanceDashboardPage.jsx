@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Icon } from '../../ui/atoms/Icon';
+import { Icon, StatCard } from '../../ui';
 
 const KPI_CARDS = [
   { label: 'Ad Credits Spend (MTD)', value: '₹24,85,320', change: '+12.4%', positive: true, sub: 'vs ₹22,11,000 last month' },
@@ -27,16 +27,13 @@ const TRANSACTIONS = [
 
 const STATUS_COLORS = {
   Active: { bg: 'var(--osmos-brand-green-muted)', color: 'var(--osmos-brand-green)' },
-  'Low Balance': { bg: 'rgba(245,166,35,0.12)', color: 'var(--osmos-brand-amber)' },
+  'Low Balance': { bg: 'var(--osmos-brand-amber-muted)', color: 'var(--osmos-brand-amber)' },
   Exhausted: { bg: 'rgba(220,38,38,0.1)', color: 'var(--alert-error-primary)' },
   Success: { bg: 'var(--osmos-brand-green-muted)', color: 'var(--osmos-brand-green)' },
   Failed: { bg: 'rgba(220,38,38,0.1)', color: 'var(--alert-error-primary)' },
-  Pending: { bg: 'rgba(245,166,35,0.12)', color: 'var(--osmos-brand-amber)' },
+  Pending: { bg: 'var(--osmos-brand-amber-muted)', color: 'var(--osmos-brand-amber)' },
 };
 
-function Ico({ d, size = 13, stroke = 'currentColor', sw = 1.8 }) {
-  return <Icon size={size} color={stroke} strokeWidth={sw}>{d}</Icon>;
-}
 
 export default function FinanceDashboardPage() {
   const [txnSearch, setTxnSearch] = useState('');
@@ -56,16 +53,16 @@ export default function FinanceDashboardPage() {
     <div style={{ padding: '20px 24px', fontFamily: "'Open Sans', sans-serif", display: 'flex', flexDirection: 'column', gap: 20 }}>
 
       {/* KPI Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
         {KPI_CARDS.map(card => (
-          <div key={card.label} style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 8, padding: '16px 18px' }}>
-            <div style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8 }}>{card.label}</div>
-            <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--osmos-fg)', marginBottom: 6 }}>{card.value}</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: 12, fontWeight: 600, color: card.positive ? 'var(--osmos-brand-green)' : 'var(--alert-error-primary)' }}>{card.change}</span>
-              <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)' }}>{card.sub}</span>
-            </div>
-          </div>
+          <StatCard
+            key={card.label}
+            label={card.label}
+            value={card.value}
+            trend={card.change}
+            trendDir={card.positive ? 'up' : 'down'}
+            sub={card.sub}
+          />
         ))}
       </div>
 
@@ -74,12 +71,12 @@ export default function FinanceDashboardPage() {
         <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{ width: 28, height: 28, background: 'var(--osmos-brand-primary-muted)', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Ico stroke="var(--osmos-brand-primary)" d={<><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></>} />
+              <Icon size={13} color="var(--osmos-brand-primary)" strokeWidth={1.8}><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></Icon>
             </div>
             <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)' }}>Advertiser Wallet Snapshot</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '0 10px', height: 30 }}>
-            <Ico d={<><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>} stroke="var(--osmos-fg-subtle)" />
+            <Icon size={13} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>
             <input value={walletSearch} onChange={e => setWalletSearch(e.target.value)} placeholder="Search advertisers…" style={{ border: 'none', outline: 'none', fontSize: 12, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif", width: 160 }} />
           </div>
         </div>
@@ -121,12 +118,12 @@ export default function FinanceDashboardPage() {
         <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{ width: 28, height: 28, background: 'var(--osmos-brand-primary-muted)', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Ico stroke="var(--osmos-brand-primary)" d={<><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></>} />
+              <Icon size={13} color="var(--osmos-brand-primary)" strokeWidth={1.8}><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></Icon>
             </div>
             <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)' }}>Recent Transactions</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '0 10px', height: 30 }}>
-            <Ico d={<><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>} stroke="var(--osmos-fg-subtle)" />
+            <Icon size={13} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>
             <input value={txnSearch} onChange={e => setTxnSearch(e.target.value)} placeholder="Search transactions…" style={{ border: 'none', outline: 'none', fontSize: 12, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif", width: 160 }} />
           </div>
         </div>

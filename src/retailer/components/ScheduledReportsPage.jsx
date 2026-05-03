@@ -29,10 +29,6 @@ const REPORT_TYPES = [
 
 const TIME_PERIODS = ['Last 7 Days', 'Last 14 Days', 'Last 30 Days', 'Last 90 Days', 'Last 6 Months'];
 
-/* ── Icon helpers ─────────────────────────────────────────────── */
-function Ico({ d, size = 13, stroke = 'currentColor', sw = 1.8 }) {
-  return <Icon size={size} color={stroke} strokeWidth={sw}>{d}</Icon>;
-}
 
 /* ── Create Report Drawer ─────────────────────────────────────── */
 function CreateReportDrawer({ onClose }) {
@@ -57,7 +53,7 @@ function CreateReportDrawer({ onClose }) {
         <div style={{ padding: '18px 24px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--osmos-fg)' }}>Create Report</span>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--osmos-fg-muted)', padding: 4, borderRadius: 4 }}>
-            <Ico d={<><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>} size={16} />
+            <Icon size={16} color="currentColor" strokeWidth={1.8}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></Icon>
           </button>
         </div>
 
@@ -71,7 +67,7 @@ function CreateReportDrawer({ onClose }) {
                 <label style={{ fontSize: 12, fontWeight: 500, color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center', gap: 4, marginBottom: 6 }}>
                   Report Name
                   <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
-                  <Ico d={<><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>} size={12} stroke="var(--osmos-fg-subtle)" />
+                  <Icon size={12} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></Icon>
                 </label>
                 <div style={{ position: 'relative' }}>
                   <input
@@ -97,7 +93,7 @@ function CreateReportDrawer({ onClose }) {
               <div style={{ marginBottom: 20 }}>
                 <label style={{ fontSize: 12, fontWeight: 500, color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center', gap: 4, marginBottom: 6 }}>
                   Report Type
-                  <Ico d={<><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>} size={12} stroke="var(--osmos-fg-subtle)" />
+                  <Icon size={12} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></Icon>
                 </label>
                 <div style={{ position: 'relative' }}>
                   <select
@@ -114,7 +110,7 @@ function CreateReportDrawer({ onClose }) {
                     {REPORT_TYPES.map(t => <option key={t}>{t}</option>)}
                   </select>
                   <div style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-                    <Ico d={<polyline points="6 9 12 15 18 9"/>} size={12} stroke="var(--osmos-fg-muted)" />
+                    <Icon size={12} color="var(--osmos-fg-muted)" strokeWidth={1.8}><polyline points="6 9 12 15 18 9"/></Icon>
                   </div>
                 </div>
               </div>
@@ -124,7 +120,7 @@ function CreateReportDrawer({ onClose }) {
                 <label style={{ fontSize: 12, fontWeight: 500, color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center', gap: 4, marginBottom: 6 }}>
                   Report Time Period
                   <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
-                  <Ico d={<><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>} size={12} stroke="var(--osmos-fg-subtle)" />
+                  <Icon size={12} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></Icon>
                 </label>
                 <div style={{ position: 'relative' }}>
                   <select
@@ -142,7 +138,7 @@ function CreateReportDrawer({ onClose }) {
                     {TIME_PERIODS.map(t => <option key={t}>{t}</option>)}
                   </select>
                   <div style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--osmos-brand-primary)' }}>
-                    <Ico d={<><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></>} size={13} stroke="var(--osmos-brand-primary)" />
+                    <Icon size={13} color="var(--osmos-brand-primary)" strokeWidth={1.8}><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></Icon>
                   </div>
                 </div>
                 <div style={{ fontSize: 10, color: 'var(--osmos-fg-subtle)', marginTop: 4 }}>
@@ -157,7 +153,7 @@ function CreateReportDrawer({ onClose }) {
               <div>
                 <label style={{ fontSize: 12, fontWeight: 500, color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center', gap: 4, marginBottom: 6 }}>
                   Email ids
-                  <Ico d={<><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>} size={12} stroke="var(--osmos-fg-subtle)" />
+                  <Icon size={12} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></Icon>
                 </label>
                 <div style={{
                   display: 'flex', alignItems: 'center',
@@ -174,7 +170,7 @@ function CreateReportDrawer({ onClose }) {
                       fontFamily: "'Open Sans', sans-serif",
                     }}
                   />
-                  <Ico d={<polyline points="6 9 12 15 18 9"/>} size={12} stroke="var(--osmos-fg-muted)" />
+                  <Icon size={12} color="var(--osmos-fg-muted)" strokeWidth={1.8}><polyline points="6 9 12 15 18 9"/></Icon>
                 </div>
               </div>
             </div>
@@ -183,7 +179,7 @@ function CreateReportDrawer({ onClose }) {
             <div style={{ width: 220, flexShrink: 0 }}>
               <label style={{ fontSize: 12, fontWeight: 500, color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center', gap: 4, marginBottom: 12 }}>
                 Report Delivery
-                <Ico d={<><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>} size={12} stroke="var(--osmos-fg-subtle)" />
+                <Icon size={12} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></Icon>
               </label>
               <div style={{ display: 'flex', gap: 16, marginBottom: 10, flexWrap: 'wrap' }}>
                 {['Now', 'Daily', 'Weekly', 'Monthly'].map(opt => (
@@ -251,21 +247,21 @@ export default function ScheduledReportsPage() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)' }}>352 Reports</span>
-          <Ico d={<><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>} size={13} stroke="var(--osmos-fg-subtle)" />
+          <Icon size={13} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></Icon>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {/* Refresh */}
           <button style={{ width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff', border: '1px solid var(--osmos-border)', borderRadius: 6, cursor: 'pointer', color: 'var(--osmos-fg-muted)' }}>
-            <Ico d={<><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></>} />
+            <Icon size={13} color="currentColor" strokeWidth={1.8}><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></Icon>
           </button>
           {/* Columns */}
           <button style={{ height: 32, padding: '0 10px', display: 'flex', alignItems: 'center', gap: 5, background: '#fff', border: '1px solid var(--osmos-border)', borderRadius: 6, cursor: 'pointer', color: 'var(--osmos-fg-muted)', fontSize: 11 }}>
-            <Ico d={<><rect x="3" y="4" width="18" height="16" rx="1"/><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/></>} />
-            <Ico d={<polyline points="6 9 12 15 18 9"/>} size={11} />
+            <Icon size={13} color="currentColor" strokeWidth={1.8}><rect x="3" y="4" width="18" height="16" rx="1"/><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/></Icon>
+            <Icon size={11} color="currentColor" strokeWidth={1.8}><polyline points="6 9 12 15 18 9"/></Icon>
           </button>
           {/* Search */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '0 10px', height: 32 }}>
-            <Ico d={<><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>} stroke="var(--osmos-fg-subtle)" />
+            <Icon size={13} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>
             <input
               value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Search Report Name"
@@ -279,7 +275,7 @@ export default function ScheduledReportsPage() {
             cursor: 'pointer', fontSize: 12, fontWeight: 600, color: '#fff',
             fontFamily: "'Open Sans', sans-serif",
           }}>
-            <Ico d={<><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></>} size={12} stroke="#fff" sw={2.5} />
+            <Icon size={12} color="#fff" strokeWidth={2.5}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></Icon>
             Create Report
           </button>
         </div>
@@ -292,7 +288,7 @@ export default function ScheduledReportsPage() {
         padding: '5px 10px', cursor: 'pointer', fontSize: 11, color: 'var(--osmos-fg-muted)',
         fontFamily: "'Open Sans', sans-serif",
       }}>
-        <Ico d={<><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></>} size={11} sw={2.5} />
+        <Icon size={11} color="currentColor" strokeWidth={2.5}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></Icon>
         Add Filter
       </button>
 
@@ -337,11 +333,11 @@ export default function ScheduledReportsPage() {
                 <td style={{ padding: '9px 12px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--osmos-fg-subtle)', padding: 2 }}>
-                      <Ico d={<><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></>} />
+                      <Icon size={13} color="currentColor" strokeWidth={1.8}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></Icon>
                     </button>
                     {r.enabled && (
                       <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--osmos-fg-subtle)', padding: 2 }}>
-                        <Ico d={<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></>} />
+                        <Icon size={13} color="currentColor" strokeWidth={1.8}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></Icon>
                       </button>
                     )}
                     <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--osmos-fg-subtle)', padding: 2, fontSize: 16, lineHeight: 1 }}>⋮</button>

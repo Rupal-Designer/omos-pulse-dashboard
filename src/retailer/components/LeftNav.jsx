@@ -184,6 +184,20 @@ const NAV_SECTIONS = [
       { id: 'display-ads-targeting',    label: 'Build Your Own Targeting',   group: 'Setup' },
     ],
   },
+  {
+    id: 'byot',
+    label: 'BYOT',
+    dividerBefore: true,
+    icon: (
+      <>
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+      </>
+    ),
+    subnav: [
+      { id: 'byot-config', label: 'Configuration' },
+    ],
+  },
 ];
 
 const BOTTOM_NAV = [
@@ -401,8 +415,8 @@ export default function LeftNav({ activePage, onPageChange }) {
         <div style={{
           height: 80, flexShrink: 0,
           display: 'flex', alignItems: 'center',
-          justifyContent: wide ? 'flex-start' : 'center',
-          padding: wide ? '0 16px' : 0,
+          justifyContent: 'flex-start',
+          padding: '0 16px',
           gap: 10,
           borderBottom: '1px solid var(--osmos-nav-border)',
         }}>
@@ -455,9 +469,9 @@ export default function LeftNav({ activePage, onPageChange }) {
                   style={{
                     width: '100%', height: 44, flexShrink: 0,
                     display: 'flex', alignItems: 'center',
-                    justifyContent: wide ? 'flex-start' : 'center',
+                    justifyContent: 'flex-start',
                     gap: wide ? 12 : 0,
-                    padding: wide ? '0 12px' : 0,
+                    padding: '0 12px',
                     background: isActive ? 'var(--osmos-nav-active-bg)' : 'transparent',
                     border: 'none', borderRadius: 8, cursor: 'pointer',
                     transition: 'background 0.15s',
@@ -504,9 +518,9 @@ export default function LeftNav({ activePage, onPageChange }) {
               style={{
                 width: '100%', height: 40,
                 display: 'flex', alignItems: 'center',
-                justifyContent: wide ? 'flex-start' : 'center',
+                justifyContent: 'flex-start',
                 gap: wide ? 12 : 0,
-                padding: wide ? '0 12px' : 0,
+                padding: '0 12px',
                 background: 'transparent', border: 'none', borderRadius: 8,
                 cursor: 'pointer', whiteSpace: 'nowrap', overflow: 'hidden',
                 transition: 'background 0.15s',
@@ -525,7 +539,7 @@ export default function LeftNav({ activePage, onPageChange }) {
           <div style={{
             width: 34, height: 34, borderRadius: '50%',
             background: 'var(--osmos-nav-accent)',
-            margin: wide ? '4px 12px 2px' : '4px auto 2px',
+            margin: '4px 12px 2px',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 12, fontWeight: 700, color: '#fff', flexShrink: 0,
           }}>R</div>

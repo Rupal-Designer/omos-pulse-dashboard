@@ -24,7 +24,7 @@ Scans JSX/TSX/CSS files for hardcoded design values and produces exact replaceme
 | `var(--osmos-nav-border)` | `rgba(123,130,248,0.25)` | Nav dividers |
 | `var(--osmos-nav-active-bg)` | `rgba(123,130,248,0.20)` | Nav active item background |
 
-### Semantic tokens (from `@rishikeshjoshi-morpheus/ui/tokens.css`)
+### Semantic tokens (defined in `src/index.css` `:root` — same file as brand tokens)
 
 | Token | Use for |
 |---|---|
@@ -36,19 +36,9 @@ Scans JSX/TSX/CSS files for hardcoded design values and produces exact replaceme
 | `var(--osmos-fg-subtle)` | Tertiary text, placeholders |
 | `var(--osmos-border)` | All borders and dividers |
 
-### Chakra prop equivalents (for files using `@rishikeshjoshi-morpheus/ui`)
+### Styling approach for this codebase
 
-When a file imports from the UI library and uses Chakra-style props, use token names directly without `var()`:
-
-| Inline style value | Chakra prop replacement |
-|---|---|
-| `background: 'var(--osmos-bg)'` | `bg="bg"` |
-| `background: 'var(--osmos-bg-subtle)'` | `bg="bg.subtle"` |
-| `background: 'var(--osmos-bg-muted)'` | `bg="bg.muted"` |
-| `color: 'var(--osmos-fg)'` | `color="fg"` |
-| `color: 'var(--osmos-fg-muted)'` | `color="fg.muted"` |
-| `color: 'var(--osmos-fg-subtle)'` | `color="fg.subtle"` |
-| `border: '1px solid var(--osmos-border)'` | `border="1px solid" borderColor="border"` |
+This project uses **inline style objects with CSS vars only**. Chakra-style props (e.g. `bg="bg.subtle"`, `color="fg.muted"`) do not apply — if a file uses them, treat it as a critical violation and flag it to the user immediately.
 
 ### Intentional exceptions (do NOT replace)
 
@@ -75,6 +65,40 @@ margin:\s*\d+px              # hardcoded margins
 
 Run: `grep -rn --include="*.jsx" --include="*.tsx" --include="*.css" -E "(#[0-9a-fA-F]{6}|rgba?\()" src/`
 
+### Step 1.5 — Component Duplication Audit
+
+After the color grep, scan every target file for locally-defined functions that duplicate components already available in `src/ui/`. These are violations **even if they use CSS vars correctly** — the fix is to import from `src/ui/` instead.
+
+**Grep command:**
+```bash
+grep -rn --include="*.jsx" -E "^(export )?function (Badge|Button|Toast|Checkbox|Tag|SearchBar|Toolbar|Drawer|Pagination|StatCard|KPIChip|InfoBanner)\b" src/
+```
+
+Also detect inline upload dropzones:
+```bash
+grep -rn --include="*.jsx" "dashed.*border\|border.*dashed" src/components/
+```
+
+| Pattern detected | `src/ui/` replacement |
+|---|---|
+| `function Badge(` | `import { Badge } from '../ui'` |
+| `function Button(` | `import { Button } from '../ui'` |
+| `function Toast(` + local `setToast` state | `import { Toast, useToast } from '../ui'` |
+| `function Checkbox(` (custom 16×16 div) | `import { Checkbox } from '../ui'` |
+| `function Tag(` (coloured chip) | `import { Tag } from '../ui'` |
+| `function SearchBar(` | `import { SearchBar } from '../ui'` |
+| `function Toolbar(` | `import { Toolbar } from '../ui'` |
+| `function Drawer(` | `import { Drawer } from '../ui'` |
+| `function Pagination(` | `import { Pagination } from '../ui'` |
+| `function StatCard(` | `import { StatCard } from '../ui'` |
+| `function KPIChip(` | `import { KPIChip } from '../ui'` |
+| `function InfoBanner(` | `import { InfoBanner } from '../ui'` |
+| Dashed-border dropzone div | `import { UploadDropzone } from '../ui'` |
+
+**Classification:**
+- **Tier C (Component Duplication):** Local function matches a `src/ui/` export and implements the same UI element. Action: (1) remove the local function, (2) add `import { X } from '../ui'`, (3) update all call sites to use the imported component's prop API.
+- **Exception:** If the local function name matches but the implementation is fundamentally different (e.g. a multi-select `function Select(`), flag for user review rather than auto-replacing.
+
 ### Step 2 — Triage
 
 For each match, classify:
@@ -82,6 +106,7 @@ For each match, classify:
 - **Tier 2 (Replace with brand token)**: Brand color with a `--osmos-brand-*` match
 - **Tier 3 (Intentional exception)**: Heatmap, delta arrows, SVG fills — note it and skip
 - **Tier 4 (Unknown)**: Color not in the token inventory — surface to user for decision
+- **Tier C (Component Duplication)**: Locally-defined function duplicating a `src/ui/` export — replace with import
 
 ### Step 3 — Report
 
@@ -103,7 +128,7 @@ For Tier 4 items, ask the user which token to use before replacing.
 ## Token Audit Report
 
 **Files scanned:** N
-**Violations found:** X (Tier 1: A, Tier 2: B, Tier 3: C intentional, Tier 4: D unknown)
+**Violations found:** X (Tier 1: A, Tier 2: B, Tier 3: C intentional, Tier 4: D unknown, Tier C: E component duplications)
 
 ### Tier 1 — Applied ✅
 [table of replacements made]
@@ -117,5 +142,14 @@ For Tier 4 items, ask the user which token to use before replacing.
 ### Tier 4 — Needs decision ❓
 [list of unknown values requiring user input]
 
-**All replacements applied. Codebase is token-compliant.**
+### Tier C — Component Duplications ⚠️
+
+| File | Line | Local Function | src/ui/ Replacement | Action |
+|------|------|---------------|---------------------|--------|
+| ManageSegmentsPage.jsx | 12 | `function Badge(` | `Badge` from `'../ui'` | Remove + import |
+| ActivityLogPage.jsx | 45 | `function Toast(` | `Toast, useToast` from `'../ui'` | Remove + import |
+
+[Apply replacements: remove local function, add import, update call sites]
+
+**All token violations and component duplications addressed. Codebase is compliant.**
 ```

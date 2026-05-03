@@ -1,0 +1,37 @@
+{
+  "eval_id": 2,
+  "eval_name": "cpm-rules-page-code-critique",
+  "prompt": "Run a design critique on our ManageCPMRules page. Read the file at src/components/ManageCPMRulesPage.jsx — this is where ad ops managers at retailers set CPM floor prices and yield optimization rules. It's one of the most business-critical screens in the platform. Tell me honestly if it's good enough or if it needs major work.",
+  "assertions": [
+    {
+      "name": "reads_actual_source_file",
+      "description": "Critique references specific elements from ManageCPMRulesPage.jsx (not generic placeholders)",
+      "check": "file contains specific component names, props, or JSX patterns from the actual source file"
+    },
+    {
+      "name": "produces_rigor_matrix_table",
+      "description": "Output contains the full Rigor Matrix with all four dimensions",
+      "check": "file contains '| Feasibility' AND '| UX' AND '| Business' AND '| Delight'"
+    },
+    {
+      "name": "has_verdict_section",
+      "description": "Output includes an actionable Verdict section",
+      "check": "file contains '## Verdict' or '**Verdict**' header"
+    },
+    {
+      "name": "ux_cites_specific_friction",
+      "description": "UX analysis names specific friction points (not generic 'needs improvement')",
+      "check": "qualitative — reviewer checks that UX section names specific UI patterns or interactions"
+    },
+    {
+      "name": "business_connects_to_yield",
+      "description": "Business analysis connects CPM rules to yield optimization or revenue impact",
+      "check": "file contains 'yield' or 'revenue' or 'CPM' in business analysis section"
+    },
+    {
+      "name": "covers_all_four_lenses",
+      "description": "All four agent sections are present in the output",
+      "check": "file contains 'Feasibility Analysis' AND 'UX Analysis' AND 'Business Analysis' AND 'Delight Analysis'"
+    }
+  ]
+}

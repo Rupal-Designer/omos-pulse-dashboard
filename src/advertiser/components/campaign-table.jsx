@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Icon, InfoIcon, RefreshIcon, DownloadIcon, PlusIcon, FilterIcon,
-  ChevronDownIcon, SearchIcon, CloseIcon, CheckIcon, Button, Checkbox,
+  ChevronDownIcon, SearchIcon, CloseIcon, CheckIcon, Button, Checkbox, Badge,
 } from '../../ui';
 import { CreateCampaignModal }    from './campaign-wizard/create-campaign-modal';
 import { CampaignWizard }         from './campaign-wizard/campaign-wizard';
@@ -18,7 +18,7 @@ const TEXT_SUB = 'var(--osmos-fg-subtle)';
 const ACCENT   = 'var(--osmos-brand-primary)';
 const ACCENT_M = 'var(--osmos-brand-primary-muted)';
 const GREEN    = 'var(--osmos-brand-green)';
-const AMBER_M  = 'rgba(245,166,35,0.12)';
+
 
 // ── Hand-rolled icons ─────────────────────────────────────────────────────────
 const BarChartIcon = ({ size = 14, color = TEXT_MID }) => (
@@ -37,9 +37,22 @@ const MoreVerticalIcon = ({ size = 14, color = TEXT_MID }) => (
   </Icon>
 );
 
+const SparklesIcon = ({ size = 14, color = ACCENT }) => (
+  <Icon size={size} color={color}>
+    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3z" />
+    <path d="M5 3v4" /><path d="M19 17v4" />
+    <path d="M3 5h4" /><path d="M17 19h4" />
+  </Icon>
+);
+
 // ── Cell style constants ──────────────────────────────────────────────────────
 const TH = { padding: 12, fontSize: 12, fontWeight: 500, color: TEXT_MID, textAlign: 'left', background: BG };
 const TD = { padding: 12, fontSize: 13, color: TEXT, background: BG };
+const MENU_ITEM_STYLE = {
+  display: 'block', width: '100%', padding: '9px 16px', textAlign: 'left',
+  border: 'none', background: 'transparent', cursor: 'pointer',
+  fontSize: 13, color: TEXT, fontFamily: FONT,
+};
 
 // ── Form style ────────────────────────────────────────────────────────────────
 const SELECT_STYLE = {
@@ -124,7 +137,7 @@ const filterOperators = [
 ];
 
 // ── CampaignTable ─────────────────────────────────────────────────────────────
-export function CampaignTable({ activeAdType = 'Product Ads' }) {
+export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign }) {
   const [modalOpen,                  setModalOpen]                  = useState(false);
   const [wizardOpen,                 setWizardOpen]                 = useState(false);
   const [initialData,                setInitialData]                = useState(null);
@@ -135,10 +148,22 @@ export function CampaignTable({ activeAdType = 'Product Ads' }) {
   const [wizardMode,                 setWizardMode]                 = useState('create_campaign');
   const [wizardSelectedCampaign,     setWizardSelectedCampaign]     = useState(null);
   const [hoveredRow,                 setHoveredRow]                 = useState(null);
+  const [openMenuRow,                setOpenMenuRow]                = useState(null);
+  const menuRef = useRef(null);
 
   const [filterBuilderRows, setFilterBuilderRows] = useState([]);
   const [appliedFilters,    setAppliedFilters]    = useState([]);
   const [expandedFilter,    setExpandedFilter]    = useState(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!openMenuRow) return;
+    const handleClick = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setOpenMenuRow(null);
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [openMenuRow]);
 
   const campaigns = campaignsData[activeAdType] || campaignsData['Product Ads'];
   const adGroups  = adGroupsData[activeAdType]  || adGroupsData['Product Ads'];
@@ -413,7 +438,7 @@ export function CampaignTable({ activeAdType = 'Product Ads' }) {
                   style={{ borderBottom: `1px solid ${BORDER}`, backgroundColor: hoveredRow === `c${index}` ? BG_SUBTLE : BG }}
                 >
                   <td style={TD}><Checkbox checked={false} onChange={() => {}} /></td>
-                  <td style={TD}><StatusBadge status={campaign.status} /></td>
+                  <td style={TD}><Badge status={campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1).toLowerCase()} /></td>
                   <td style={TD}>
                     <span style={{ color: ACCENT, cursor: 'pointer', textDecoration: hoveredRow === `c${index}` ? 'underline' : 'none' }}>
                       {campaign.name}
@@ -423,7 +448,7 @@ export function CampaignTable({ activeAdType = 'Product Ads' }) {
                   <td style={TD}>{campaign.date}</td>
                   <td style={{ ...TD, fontWeight: 500, color: ACCENT }}>{campaign.budget}</td>
                   <td style={TD}>{campaign.spend}</td>
-                  <td style={TD}>
+                  <td style={{ ...TD, position: 'relative' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end' }}>
                       {campaign.showContinue ? (
                         <button style={{ padding: '4px 12px', fontSize: 12, border: `1px solid ${BORDER}`, borderRadius: 4, backgroundColor: BG, color: TEXT_MID, cursor: 'pointer', fontFamily: FONT }}>
@@ -434,9 +459,46 @@ export function CampaignTable({ activeAdType = 'Product Ads' }) {
                           <BarChartIcon size={14} color={TEXT_MID} />
                         </button>
                       )}
-                      <button style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}>
-                        <MoreVerticalIcon size={14} color={TEXT_MID} />
-                      </button>
+                      {/* Direct Debug button — visible on row hover */}
+                      {hoveredRow === `c${index}` && (
+                        <button
+                          title="Debug this campaign with AI"
+                          onClick={() => onDebugCampaign && onDebugCampaign({ ...campaign, adType: activeAdType })}
+                          style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: 4 }}
+                        >
+                          <SparklesIcon size={14} color={ACCENT} />
+                        </button>
+                      )}
+                      {/* Ellipsis menu */}
+                      <div ref={openMenuRow === `c${index}` ? menuRef : null} style={{ position: 'relative' }}>
+                        <button
+                          onClick={() => setOpenMenuRow(openMenuRow === `c${index}` ? null : `c${index}`)}
+                          style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}
+                        >
+                          <MoreVerticalIcon size={14} color={TEXT_MID} />
+                        </button>
+                        {openMenuRow === `c${index}` && (
+                          <div style={{
+                            position: 'absolute', right: 0, top: 28, zIndex: 200,
+                            background: BG, border: `1px solid ${BORDER}`, borderRadius: 8,
+                            boxShadow: '0 4px 16px rgba(0,0,0,0.12)', minWidth: 172, overflow: 'hidden',
+                          }}>
+                            {['Edit', 'Duplicate', campaign.status === 'ACTIVE' ? 'Pause' : 'Resume', 'Archive'].map((action) => (
+                              <button key={action} onClick={() => setOpenMenuRow(null)} style={MENU_ITEM_STYLE}>
+                                {action}
+                              </button>
+                            ))}
+                            <div style={{ borderTop: `1px solid ${BORDER}`, margin: '4px 0' }} />
+                            <button
+                              onClick={() => { setOpenMenuRow(null); onDebugCampaign && onDebugCampaign({ ...campaign, adType: activeAdType }); }}
+                              style={{ ...MENU_ITEM_STYLE, color: ACCENT, display: 'flex', alignItems: 'center', gap: 8 }}
+                            >
+                              <SparklesIcon size={13} color={ACCENT} />
+                              Debug with AI
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -486,7 +548,7 @@ export function CampaignTable({ activeAdType = 'Product Ads' }) {
                   style={{ borderBottom: `1px solid ${BORDER}`, backgroundColor: hoveredRow === `ag${index}` ? BG_SUBTLE : BG }}
                 >
                   <td style={TD}><Checkbox checked={false} onChange={() => {}} /></td>
-                  <td style={TD}><StatusBadge status={adGroup.status} /></td>
+                  <td style={TD}><Badge status={adGroup.status.charAt(0).toUpperCase() + adGroup.status.slice(1).toLowerCase()} /></td>
                   <td style={TD}>
                     <span style={{ color: ACCENT, cursor: 'pointer', textDecoration: hoveredRow === `ag${index}` ? 'underline' : 'none' }}>
                       {adGroup.name}
@@ -569,7 +631,7 @@ export function CampaignTable({ activeAdType = 'Product Ads' }) {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                       <span style={{ fontWeight: 500, fontSize: 14, color: TEXT }}>{campaign.name}</span>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <StatusBadge status={campaign.status} />
+                        <Badge status={campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1).toLowerCase()} />
                         <span style={{ fontSize: 12, color: TEXT_MID }}>Budget: {campaign.budget}</span>
                       </div>
                     </div>
@@ -620,28 +682,6 @@ export function CampaignTable({ activeAdType = 'Product Ads' }) {
   );
 }
 
-// ── StatusBadge ───────────────────────────────────────────────────────────────
-function StatusBadge({ status }) {
-  const COLORS = {
-    ACTIVE: { bg: 'transparent', text: GREEN,     dot: GREEN     },
-    PAUSED: { bg: 'transparent', text: '#EF4444', dot: '#EF4444' },
-    DRAFT:  { bg: 'transparent', text: TEXT_MID,  dot: 'transparent' },
-  };
-  const c = COLORS[status] || COLORS.DRAFT;
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-      {status !== 'DRAFT' ? (
-        <div style={{ width: 8, height: 8, borderRadius: 999, backgroundColor: c.dot }} />
-      ) : (
-        <div style={{ width: 16, height: 16, border: `1px solid ${BORDER}`, borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: 8, height: 12, border: `1px solid ${TEXT_SUB}`, borderRadius: 2 }} />
-        </div>
-      )}
-      <span style={{ fontSize: 10, fontWeight: 500, color: c.text, fontFamily: FONT }}>{status}</span>
-    </div>
-  );
-}
 
 // ── IconBtn helper ────────────────────────────────────────────────────────────
 function IconBtn({ children, onClick }) {

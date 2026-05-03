@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SearchIcon, PlusIcon, EditIcon, TrashIcon } from '../../ui/atoms/Icon';
 import { Button } from '../../ui/atoms/Button';
+import { TypeBadge } from '../../ui/atoms/Badge';
 import { Input, Select } from '../../ui/atoms/Input';
 import { Drawer } from '../../ui/molecules/Drawer';
 import { Toast, useToast } from '../../ui/atoms/Toast';
@@ -70,15 +71,6 @@ const TYPE_COLORS = {
   Everyone: { bg: 'rgba(27,168,122,0.10)',             color: 'var(--osmos-brand-green)' },
 };
 
-function TypeBadge({ type }) {
-  const c = TYPE_COLORS[type] || TYPE_COLORS.Trigger;
-  return (
-    <span style={{ padding: '3px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600,
-                   background: c.bg, color: c.color, whiteSpace: 'nowrap', fontFamily: FONT }}>
-      {type}
-    </span>
-  );
-}
 
 // TOGGLE SWITCH
 function Toggle({ checked, onChange }) {
@@ -229,7 +221,7 @@ export default function AutomatedRulesPage() {
                   </td>
                   {/* Rule Type */}
                   <td style={{ padding: '10px 14px', borderRight: '1px solid var(--osmos-border)' }}>
-                    <TypeBadge type={row.type} />
+                    <TypeBadge type={row.type} colorMap={TYPE_COLORS} />
                   </td>
                   {/* Actions */}
                   <td style={{ padding: '10px 14px', color: 'var(--osmos-fg-muted)', maxWidth: 180,

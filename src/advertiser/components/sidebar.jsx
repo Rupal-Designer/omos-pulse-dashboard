@@ -112,10 +112,19 @@ const CAMPAIGN_SUB_ITEMS = [
   { IconComp: MessageNavIcon,     label: 'In-Store Digital Ads' },
 ];
 
+// ── BYOT nav icon ─────────────────────────────────────────────────────────────
+const LinkNavIcon = ({ size = 20, color = WHITE70 }) => (
+  <Icon size={size} color={color}>
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+  </Icon>
+);
+
 // ── Sidebar ───────────────────────────────────────────────────────────────────
-export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads' }) {
-  const [isExpanded, setIsExpanded]     = useState(false);
+export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNavigate }) {
+  const [isExpanded, setIsExpanded]       = useState(false);
   const [campaignsOpen, setCampaignsOpen] = useState(true);
+  const currentRoute = window.location.hash.replace(/^#/, '') || '/';
 
   return (
     <div
@@ -172,12 +181,24 @@ export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads' }) {
                 IconComp={item.IconComp}
                 label={item.label}
                 active={activeAdType === item.label}
-                onClick={() => onAdTypeChange && onAdTypeChange(item.label)}
+                onClick={() => {
+                  onAdTypeChange && onAdTypeChange(item.label);
+                  // Navigate to dashboard when changing ad type from a non-dashboard page (e.g. BYOT)
+                  if (onNavigate) onNavigate('/');
+                }}
               />
             ))}
           </div>
         )}
 
+        <NavItem
+          IconComp={LinkNavIcon}
+          label="BYOT"
+          expanded={isExpanded}
+          active={currentRoute === '/byot'}
+          onClick={() => { if (onNavigate) onNavigate('/byot'); else window.location.hash = '/byot'; }}
+          badge="Beta"
+        />
         <NavItem IconComp={LayoutGridNavIcon} label="Packages"        expanded={isExpanded} hasSubmenu badge="Alpha" />
         <NavItem IconComp={DollarNavIcon}     label="Finance"         expanded={isExpanded} hasSubmenu />
         <NavItem IconComp={ActivityNavIcon}   label="Activity Center" expanded={isExpanded} hasSubmenu />

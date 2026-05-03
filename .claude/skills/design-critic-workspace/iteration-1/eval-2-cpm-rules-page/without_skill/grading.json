@@ -1,0 +1,37 @@
+{
+  "eval_id": 2,
+  "run_type": "without_skill",
+  "expectations": [
+    {
+      "text": "reads_actual_source_file",
+      "passed": true,
+      "evidence": "Critique references specific JSX elements: 'ROWS' and 'COLS' static arrays, 'handleCreate', 'RULE_COLORS' hardcoded hex values, 'onMouseEnter'/'onMouseLeave' inline style mutations, 'RefreshIc'/'ColIc' SVG components, and cites specific line numbers (264–268, 278)."
+    },
+    {
+      "text": "produces_rigor_matrix_table",
+      "passed": true,
+      "evidence": "File contains a Rigor Matrix Summary table at the end with all four dimensions (Feasibility, UX, Business Value, Product Delight) and scores."
+    },
+    {
+      "text": "has_verdict_section",
+      "passed": true,
+      "evidence": "File contains '## Verdict Up Front' at the top and '## One-Line Verdict' at the end, both containing direct verdict statements."
+    },
+    {
+      "text": "ux_cites_specific_friction",
+      "passed": true,
+      "evidence": "UX section names specific interactions: two submit paths (body 'Create User Activity Rule' button vs footer 'Create' button), missing row actions (Edit/Pause/Delete/Duplicate), hardcoded 'left: 48%' reach gauge indicator, and missing aria-label on icon-only buttons."
+    },
+    {
+      "text": "business_connects_to_yield",
+      "passed": true,
+      "evidence": "Business section states 'CPM rules affect revenue directly' and 'yield optimization this is a first-class concern', connecting CPM rule management directly to yield and revenue impact."
+    },
+    {
+      "text": "covers_all_four_lenses",
+      "passed": true,
+      "evidence": "File contains '## 1. Feasibility (Technical Quality)', '## 2. UX Quality', '## 3. Business Value', and '## 4. Product Delight' as section headers, covering all four lenses."
+    }
+  ],
+  "overall_pass_rate": 1.0
+}

@@ -98,7 +98,7 @@ export default function SponsoredAdsInventoryPage() {
   }
 
   return (
-    <div style={{ fontFamily: "'Open Sans', sans-serif", padding: '24px', background: 'var(--osmos-bg)', minHeight: '100vh', color: 'var(--osmos-fg)' }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif", padding: '20px 24px', background: 'var(--osmos-bg)', minHeight: '100vh', color: 'var(--osmos-fg)' }}>
       <Toast {...toast} />
 
       <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: '10px', overflow: 'hidden' }}>

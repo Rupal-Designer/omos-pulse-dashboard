@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Icon, PlusIcon, UploadIcon, CloseIcon } from '../../ui/atoms/Icon';
+import { Checkbox } from '../../ui/atoms/Checkbox';
+import { Button } from '../../ui/atoms/Button';
+import { Modal } from '../../ui/molecules/Modal';
 
 const FONT = "'Open Sans', sans-serif";
 
@@ -67,7 +70,7 @@ const RULE_OPERATOR_OPTIONS = [
 const PERSONA_STYLE = {
   'Luxe':     { bg: 'var(--osmos-brand-green-muted)',   color: 'var(--osmos-brand-green)' },
   'Mass.con': { bg: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)' },
-  'Econ':     { bg: 'rgba(245,166,35,0.12)',             color: 'var(--osmos-brand-amber)' },
+  'Econ':     { bg: 'var(--osmos-brand-amber-muted)',             color: 'var(--osmos-brand-amber)' },
 };
 
 // ─── Shared UI helpers ────────────────────────────────────────────────────────
@@ -94,29 +97,6 @@ function FieldLabel({ children }) {
   );
 }
 
-function Checkbox({ checked, onChange, ariaLabel }) {
-  return (
-    <div
-      onClick={onChange}
-      aria-label={ariaLabel}
-      role="checkbox"
-      aria-checked={checked}
-      style={{
-        width: 16, height: 16, borderRadius: 4, cursor: 'pointer', flexShrink: 0,
-        border: checked ? 'none' : '1.5px solid var(--osmos-border)',
-        background: checked ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        transition: 'all 0.15s',
-      }}
-    >
-      {checked && (
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-          <path d="M2 5l2.5 2.5L8 3" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      )}
-    </div>
-  );
-}
 
 function Toggle({ checked, onChange }) {
   return (
@@ -169,21 +149,6 @@ function ModalFooter({ children }) {
   );
 }
 
-function BtnPrimary({ onClick, children, disabled }) {
-  return (
-    <button onClick={onClick} disabled={disabled} style={{ background: 'var(--osmos-brand-primary)', color: '#fff', border: 'none', borderRadius: 6, padding: '8px 18px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: FONT, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-      {children}
-    </button>
-  );
-}
-
-function BtnOutline({ onClick, children }) {
-  return (
-    <button onClick={onClick} style={{ background: 'var(--osmos-bg)', color: 'var(--osmos-fg-muted)', border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '7px 14px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: FONT }}>
-      {children}
-    </button>
-  );
-}
 
 const TH = {
   textAlign: 'left', padding: '10px 16px', fontSize: 12, fontWeight: 600,
@@ -206,23 +171,14 @@ function AddAdvertiserModal({ open, onClose }) {
   function handleAdd() { onClose(); setStoreId(''); setAdvName(''); setPersona(''); }
 
   return (
-    <>
-      <Overlay onClose={onClose} />
-      <ModalPanel width={440}>
-        <ModalHeader title="Add Advertiser" onClose={onClose} />
-        <ModalBody>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div><FieldLabel>Store(s) ID *</FieldLabel><input style={INPUT_STYLE} placeholder="e.g. B002" value={storeId} onChange={e => setStoreId(e.target.value)} /></div>
-            <div><FieldLabel>Advertiser Name *</FieldLabel><input style={INPUT_STYLE} placeholder="Garnier Fresh" value={advName} onChange={e => setAdvName(e.target.value)} /></div>
-            <div><FieldLabel>Persona *</FieldLabel><input style={INPUT_STYLE} placeholder="Luxe" value={persona} onChange={e => setPersona(e.target.value)} /></div>
-          </div>
-        </ModalBody>
-        <ModalFooter>
-          <BtnOutline onClick={onClose}>Cancel</BtnOutline>
-          <BtnPrimary onClick={handleAdd}>Add</BtnPrimary>
-        </ModalFooter>
-      </ModalPanel>
-    </>
+    <Modal open={open} onClose={onClose} title="Add Advertiser" maxWidth={440}
+      footer={<><Button variant="outline" onClick={onClose}>Cancel</Button><Button variant="primary" onClick={handleAdd}>Add</Button></>}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div><FieldLabel>Store(s) ID *</FieldLabel><input style={INPUT_STYLE} placeholder="e.g. B002" value={storeId} onChange={e => setStoreId(e.target.value)} /></div>
+        <div><FieldLabel>Advertiser Name *</FieldLabel><input style={INPUT_STYLE} placeholder="Garnier Fresh" value={advName} onChange={e => setAdvName(e.target.value)} /></div>
+        <div><FieldLabel>Persona *</FieldLabel><input style={INPUT_STYLE} placeholder="Luxe" value={persona} onChange={e => setPersona(e.target.value)} /></div>
+      </div>
+    </Modal>
   );
 }
 
@@ -321,7 +277,7 @@ function BulkUploadModal({ open, onClose }) {
               <p style={{ margin: 0, fontSize: 12, color: 'var(--osmos-fg-muted)', textAlign: 'center', fontFamily: FONT }}>
                 File has been processed and uploaded successfully. You can<br/>create the associated accounts in the table.
               </p>
-              <BtnPrimary onClick={handleClose}>Done</BtnPrimary>
+              <Button variant="primary" onClick={handleClose}>Done</Button>
             </div>
           )}
         </ModalBody>
@@ -421,8 +377,8 @@ function RuleModal({ open, onClose, editMode = false, initialConditions = null }
           </div>
         </ModalBody>
         <ModalFooter>
-          <BtnOutline onClick={handleClose}>Cancel</BtnOutline>
-          <BtnPrimary onClick={handleSave}>{editMode ? 'Update' : 'Create'}</BtnPrimary>
+          <Button variant="outline" onClick={handleClose}>Cancel</Button>
+          <Button variant="primary" onClick={handleSave}>{editMode ? 'Update' : 'Create'}</Button>
         </ModalFooter>
       </ModalPanel>
     </>
@@ -492,7 +448,7 @@ function ChangeHistoryModal({ open, onClose }) {
           </div>
         </ModalBody>
         <ModalFooter>
-          <BtnOutline onClick={onClose}>Close</BtnOutline>
+          <Button variant="outline" onClick={onClose}>Close</Button>
         </ModalFooter>
       </ModalPanel>
     </>
@@ -580,15 +536,15 @@ export default function AdvertisersPage() {
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <BtnOutline onClick={() => setShowBulkUpload(true)}>
+                <Button variant="outline" onClick={() => setShowBulkUpload(true)}>
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                     <Icon size={13} color="var(--osmos-fg-muted)"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></Icon>
                     Bulk Upload
                   </span>
-                </BtnOutline>
-                <BtnPrimary onClick={() => setShowAddAdvertiser(true)}>
+                </Button>
+                <Button variant="primary" onClick={() => setShowAddAdvertiser(true)}>
                   <PlusIcon size={12} color="#fff" /> Create Advertiser
-                </BtnPrimary>
+                </Button>
               </div>
             </div>
             <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', marginBottom: 12, paddingLeft: 2, fontFamily: FONT }}>

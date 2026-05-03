@@ -23,9 +23,6 @@ const STATUS_COLORS = {
   Suspended: { bg: 'rgba(220,38,38,0.1)', color: 'var(--alert-error-primary)' },
 };
 
-function Ico({ d, size = 13, stroke = 'currentColor', sw = 1.8 }) {
-  return <Icon size={size} color={stroke} strokeWidth={sw}>{d}</Icon>;
-}
 
 function Toggle({ checked, onChange }) {
   return (
@@ -59,7 +56,7 @@ export default function FinanceAdvertiserManagementPage() {
       <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 8, overflow: 'hidden' }}>
         <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 28, height: 28, background: 'var(--osmos-brand-primary-muted)', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Ico stroke="var(--osmos-brand-primary)" d={<><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></>} />
+            <Icon size={13} color="var(--osmos-brand-primary)" strokeWidth={1.8}><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></Icon>
           </div>
           <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)' }}>Finance — Advertiser Management</span>
           <span style={{ marginLeft: 'auto', fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>{filtered.length} advertisers</span>
@@ -70,7 +67,7 @@ export default function FinanceAdvertiserManagementPage() {
             {['All', ...STATUSES].map(s => <option key={s} value={s}>{s === 'All' ? 'All Statuses' : s}</option>)}
           </select>
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '0 10px', height: 30 }}>
-            <Ico d={<><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>} stroke="var(--osmos-fg-subtle)" />
+            <Icon size={13} color="var(--osmos-fg-subtle)" strokeWidth={1.8}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search advertisers…" style={{ border: 'none', outline: 'none', fontSize: 12, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif", width: 180 }} />
           </div>
         </div>

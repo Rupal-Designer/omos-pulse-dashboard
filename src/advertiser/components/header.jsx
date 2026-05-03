@@ -16,9 +16,9 @@ const TEXT       = 'var(--osmos-fg)';
 const TEXT_MID   = 'var(--osmos-fg-muted)';
 const ACCENT     = 'var(--osmos-brand-primary)';
 const AI_COLOR   = '#8b5cf6';   // violet — no osmos token yet
-const AI_BG      = 'rgba(139,92,246,0.12)';
+const AI_BG      = 'var(--osmos-brand-violet-muted)';
 const ERROR      = 'var(--alert-error-primary)';   // intentional — wallet/error states
-const WARN_BG    = 'rgba(245,166,35,0.12)';
+const WARN_BG    = 'var(--osmos-brand-amber-muted)';
 
 // ── Hand-rolled icons (Lucide paths) ─────────────────────────────────────────
 const SparklesIcon = ({ size = 16, color = AI_COLOR }) => (

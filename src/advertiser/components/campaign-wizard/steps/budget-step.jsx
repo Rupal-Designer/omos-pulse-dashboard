@@ -1,90 +1,159 @@
-"use client";
+import { useState } from 'react';
+import { Input, Select, InfoIcon, SearchIcon, Icon } from '../../../../ui';
 
-import {
-  DollarSign,
-  Wallet,
-  Info,
-  AlertCircle,
-  Zap,
-  Search,
-  BarChart3,
-  Rocket,
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { useState } from "react";
+const FONT     = "'Open Sans', sans-serif";
+const TEXT     = 'var(--osmos-fg)';
+const TEXT_MID = 'var(--osmos-fg-muted)';
+const TEXT_SUB = 'var(--osmos-fg-subtle)';
+const BORDER   = 'var(--osmos-border)';
+const BG       = 'var(--osmos-bg)';
+const BG_SUB   = 'var(--osmos-bg-subtle)';
+const ACCENT   = 'var(--osmos-brand-primary)';
+const ACCENT_M = 'var(--osmos-brand-primary-muted)';
+const GREEN    = 'var(--osmos-brand-green)';
+const GREEN_M  = 'var(--osmos-brand-green-muted)';
+const AMBER    = 'var(--osmos-brand-amber)';
+const ERROR    = 'var(--alert-error-primary)';
+const VIOLET   = '#7349a1'; // brand-secondary — no osmos token yet
 
+// ── Icons ─────────────────────────────────────────────────────────────────────
+const DollarSignIcon = (props) => (
+  <Icon {...props}>
+    <line x1="12" x2="12" y1="2" y2="22"/>
+    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+  </Icon>
+);
+
+const WalletIcon = (props) => (
+  <Icon {...props}>
+    <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
+    <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/>
+    <path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>
+  </Icon>
+);
+
+const AlertCircleIcon = (props) => (
+  <Icon {...props}>
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="12" x2="12" y1="8" y2="12"/>
+    <line x1="12" x2="12.01" y1="16" y2="16"/>
+  </Icon>
+);
+
+const ZapIcon = (props) => (
+  <Icon {...props}>
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+  </Icon>
+);
+
+const BarChartIcon = (props) => (
+  <Icon {...props}>
+    <line x1="12" x2="12" y1="20" y2="10"/>
+    <line x1="18" x2="18" y1="20" y2="4"/>
+    <line x1="6"  x2="6"  y1="20" y2="16"/>
+  </Icon>
+);
+
+const RocketIcon = (props) => (
+  <Icon {...props}>
+    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+    <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+    <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+  </Icon>
+);
+
+// ── Data ──────────────────────────────────────────────────────────────────────
 const walletOptions = [
-  {
-    id: "default",
-    name: "Default",
-    balance: 1904753.59,
-    promoBalance: 6089649.19,
-  },
-  {
-    id: "sale2024-pla",
-    name: "Sale 2024 - PLA",
-    balance: 11748280,
-    promoBalance: 0,
-  },
-  { id: "2024q3", name: "2024 Q3", balance: 11599459, promoBalance: 0 },
-  { id: "sale23", name: "Sale23", balance: 10000, promoBalance: 0 },
-  {
-    id: "awareness",
-    name: "Awareness Ads",
-    balance: 19521925.4,
-    promoBalance: 0,
-  },
+  { id: 'default',     name: 'Default',          balance: 1904753.59,  promoBalance: 6089649.19 },
+  { id: 'sale2024-pla',name: 'Sale 2024 - PLA',  balance: 11748280,    promoBalance: 0          },
+  { id: '2024q3',      name: '2024 Q3',           balance: 11599459,    promoBalance: 0          },
+  { id: 'sale23',      name: 'Sale23',            balance: 10000,       promoBalance: 0          },
+  { id: 'awareness',   name: 'Awareness Ads',     balance: 19521925.4,  promoBalance: 0          },
 ];
 
 const budgetTypes = [
-  {
-    id: "daily",
-    label: "Daily Budget",
-    description: "Set a daily spending limit",
-  },
-  {
-    id: "lifetime",
-    label: "Lifetime Budget",
-    description: "Total budget for campaign duration",
-  },
+  { id: 'daily',    label: 'Daily Budget',    description: 'Set a daily spending limit'           },
+  { id: 'lifetime', label: 'Lifetime Budget', description: 'Total budget for campaign duration'   },
 ];
 
 const pacingOptions = [
-  {
-    id: "standard",
-    label: "Standard (Even Distribution)",
-    description:
-      "Spread your budget evenly throughout the day to maintain consistent visibility",
-    icon: <BarChart3 size={24} className="text-[#6366f1]" />,
-  },
-  {
-    id: "accelerated",
-    label: "Accelerated",
-    description:
-      "Spend budget as quickly as possible to maximize early impressions and reach",
-    icon: <Rocket size={24} className="text-[#f59e0b]" />,
-  },
+  { id: 'standard',    label: 'Standard (Even Distribution)', IconComp: BarChartIcon, iconColor: ACCENT,
+    description: 'Spread your budget evenly throughout the day to maintain consistent visibility' },
+  { id: 'accelerated', label: 'Accelerated',                  IconComp: RocketIcon,   iconColor: AMBER,
+    description: 'Spend budget as quickly as possible to maximize early impressions and reach'    },
 ];
 
-export function BudgetStep({
-  data,
-  updateData,
-  onFieldChange,
-  adType = "display",
-}) {
-  const [budgetType, setBudgetType] = useState(data.budgetType || "daily");
-  const [cboEnabled, setCboEnabled] = useState(data.cboEnabled || false);
-  const [walletSearch, setWalletSearch] = useState("");
-  const [walletDropdownOpen, setWalletDropdownOpen] = useState(false);
+// ── Sub-components ────────────────────────────────────────────────────────────
+function Toggle({ checked, onChange }) {
+  return (
+    <button
+      onClick={onChange}
+      style={{
+        position: 'relative', width: 44, height: 24, borderRadius: 999,
+        background: checked ? ACCENT : TEXT_SUB, border: 'none', cursor: 'pointer',
+        transition: 'background 0.15s', flexShrink: 0,
+      }}
+    >
+      <span style={{
+        position: 'absolute', top: 4, width: 16, height: 16, borderRadius: '50%', background: '#fff',
+        transform: checked ? 'translateX(24px)' : 'translateX(4px)', transition: 'transform 0.15s', display: 'block',
+      }} />
+    </button>
+  );
+}
 
-  const isProductAds = adType === "product";
+function PacingCard({ option, selected, onClick }) {
+  const [hov, setHov] = useState(false);
+  const { IconComp, iconColor, label, description } = option;
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        padding: 16, borderRadius: 8, textAlign: 'left',
+        border: `2px solid ${selected ? ACCENT : hov ? TEXT_MID : BORDER}`,
+        background: selected ? ACCENT_M : hov ? BG_SUB : BG,
+        cursor: 'pointer', transition: 'all 0.15s', fontFamily: FONT,
+        display: 'flex', alignItems: 'flex-start', gap: 12,
+      }}
+    >
+      <div style={{ flexShrink: 0, marginTop: 2 }}>
+        <IconComp size={24} color={iconColor} />
+      </div>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontWeight: 500, color: selected ? ACCENT : TEXT, marginBottom: 4 }}>{label}</div>
+        <div style={{ fontSize: 12, color: TEXT_MID }}>{description}</div>
+      </div>
+      {selected && (
+        <div style={{
+          width: 20, height: 20, borderRadius: '50%', background: ACCENT, flexShrink: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"
+            strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+        </div>
+      )}
+    </button>
+  );
+}
 
-  const totalBudget = Number.parseFloat(data.totalBudget) || 0;
-  const dailyBudget = Number.parseFloat(data.dailyBudget) || 0;
-  const estimatedDays =
-    dailyBudget > 0 ? Math.ceil(totalBudget / dailyBudget) : 0;
+// ── BudgetStep ────────────────────────────────────────────────────────────────
+export function BudgetStep({ data, updateData, onFieldChange, adType = 'display' }) {
+  const [budgetType,        setBudgetType]        = useState(data.budgetType || 'daily');
+  const [cboEnabled,        setCboEnabled]        = useState(data.cboEnabled || false);
+  const [walletSearch,      setWalletSearch]      = useState('');
+  const [walletDropdownOpen,setWalletDropdownOpen]= useState(false);
+  const [hovBudgetType,     setHovBudgetType]     = useState(null);
+
+  const isProductAds = adType === 'product';
+
+  const totalBudget    = Number.parseFloat(data.totalBudget) || 0;
+  const dailyBudget    = Number.parseFloat(data.dailyBudget) || 0;
+  const estimatedDays  = dailyBudget > 0 ? Math.ceil(totalBudget / dailyBudget) : 0;
 
   const handleBudgetTypeChange = (type) => {
     setBudgetType(type);
@@ -98,11 +167,8 @@ export function BudgetStep({
   };
 
   const handleFieldChange = (field, value) => {
-    if (onFieldChange) {
-      onFieldChange(field, value);
-    } else {
-      updateData({ [field]: value });
-    }
+    if (onFieldChange) onFieldChange(field, value);
+    else updateData({ [field]: value });
   };
 
   const filteredWallets = walletOptions.filter((w) =>
@@ -111,236 +177,145 @@ export function BudgetStep({
 
   const selectedWallet = walletOptions.find((w) => w.id === data.wallet);
 
-  // Product Ads Layout
+  const cardStyle = {
+    background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24, fontFamily: FONT,
+  };
+
+  const dollarWrapStyle = { position: 'relative', display: 'inline-flex', alignItems: 'center' };
+  const dollarIconStyle = { position: 'absolute', left: 10, pointerEvents: 'none', zIndex: 1 };
+
+  const rawInputStyle = (width) => ({
+    width, paddingLeft: 28, paddingRight: 12, paddingTop: 8, paddingBottom: 8,
+    border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT,
+    background: BG, fontFamily: FONT, outline: 'none', boxSizing: 'border-box',
+  });
+
+  const labelStyle = { display: 'block', fontSize: 13, fontWeight: 500, color: TEXT, marginBottom: 8 };
+  const hintStyle  = { fontSize: 12, color: TEXT_SUB, marginTop: 4 };
+
+  // ── Product Ads Layout ─────────────────────────────────────────────────────
   if (isProductAds) {
     return (
-      <div className="max-w-3xl mx-auto">
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-[#2d2d2d]">
-            Campaign Setup
-          </h2>
-          <p className="text-sm text-[#6b7280] mt-1">
-            Configure your Product Ads campaign budget and schedule.
-          </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: FONT, maxWidth: 720, margin: '0 auto' }}>
+        <div>
+          <h2 style={{ fontSize: 20, fontWeight: 600, color: TEXT, marginBottom: 4 }}>Campaign Setup</h2>
+          <p style={{ fontSize: 13, color: TEXT_MID }}>Configure your Product Ads campaign budget and schedule.</p>
         </div>
 
-        <div className="space-y-6">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           {/* Daily Budget */}
-          <div className="bg-white rounded-xl border border-[#e5e7eb] p-6">
-            <div className="flex items-center gap-2 mb-2">
-              <Label className="text-sm font-medium text-[#2d2d2d]">
-                Daily Budget:
-              </Label>
-              <Info size={14} className="text-[#9ca3af]" />
+          <div style={cardStyle}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+              <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>Daily Budget:</label>
+              <InfoIcon size={14} color={TEXT_SUB} />
             </div>
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6b7280]">
-                  $
-                </span>
-                <Input
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <div style={dollarWrapStyle}>
+                <span style={{ ...dollarIconStyle, fontSize: 13, color: TEXT_MID }}>$</span>
+                <input
                   type="number"
                   value={data.dailyBudget}
-                  onChange={(e) =>
-                    handleFieldChange("dailyBudget", e.target.value)
-                  }
-                  className="pl-7 w-32 border-[#e5e7eb]"
+                  onChange={(e) => handleFieldChange('dailyBudget', e.target.value)}
                   placeholder="100"
+                  style={rawInputStyle(128)}
                 />
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-[#6b7280]">FlexiBudget</span>
-                <Info size={14} className="text-[#9ca3af]" />
-                <Switch
-                  checked={data.flexiBudget}
-                  onCheckedChange={(checked) =>
-                    updateData({ flexiBudget: checked })
-                  }
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: 13, color: TEXT_MID }}>FlexiBudget</span>
+                <InfoIcon size={14} color={TEXT_SUB} />
+                <Toggle
+                  checked={!!data.flexiBudget}
+                  onChange={() => updateData({ flexiBudget: !data.flexiBudget })}
                 />
               </div>
             </div>
-            <p className="text-xs text-[#9ca3af] mt-2">
-              Your average daily budget can be in the range from $12,250 to
-              $15,925. This is based on overall data from 2nd Dec, 2025 - 8th
-              Dec, 2025.
+            <p style={hintStyle}>
+              Your average daily budget can be in the range from $12,250 to $15,925.
+              This is based on overall data from 2nd Dec, 2025 - 8th Dec, 2025.
             </p>
           </div>
 
           {/* Wallet Selection */}
-          <div className="bg-white rounded-xl border border-[#e5e7eb] p-6">
-            <Label className="text-sm font-medium text-[#2d2d2d] mb-3 block">
-              Choose Wallet
-            </Label>
-            <div className="relative">
-              <button
-                onClick={() => setWalletDropdownOpen(!walletDropdownOpen)}
-                className="w-full px-4 py-2.5 border border-[#e5e7eb] rounded-lg text-left bg-white hover:bg-[#f9fafb] transition-colors"
-              >
-                {selectedWallet ? (
-                  <div>
-                    <span className="text-[#2d2d2d]">
-                      {selectedWallet.name} ($
-                      {selectedWallet.balance.toLocaleString()})
-                    </span>
-                  </div>
-                ) : (
-                  <span className="text-[#9ca3af]">Select Wallet</span>
-                )}
-              </button>
-
-              {walletDropdownOpen && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#e5e7eb] rounded-lg shadow-lg z-50 max-h-80 overflow-hidden">
-                  <div className="p-2 border-b border-[#e5e7eb]">
-                    <div className="relative">
-                      <Search
-                        size={14}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af]"
-                      />
-                      <Input
-                        value={walletSearch}
-                        onChange={(e) => setWalletSearch(e.target.value)}
-                        placeholder="Search"
-                        className="pl-9 border-[#e5e7eb]"
-                      />
-                    </div>
-                  </div>
-                  <div className="max-h-60 overflow-y-auto">
-                    {filteredWallets.map((wallet) => (
-                      <button
-                        key={wallet.id}
-                        onClick={() => {
-                          updateData({ wallet: wallet.id });
-                          setWalletDropdownOpen(false);
-                          setWalletSearch("");
-                        }}
-                        className={`w-full px-4 py-3 text-left hover:bg-[#f9fafb] transition-colors ${
-                          data.wallet === wallet.id ? "bg-[#eff6ff]" : ""
-                        }`}
-                      >
-                        <div className="text-sm text-[#2d2d2d]">
-                          {wallet.name} (${wallet.balance.toLocaleString()})
-                        </div>
-                        <div className="text-xs text-[#9ca3af]">
-                          Promotion Balance $
-                          {wallet.promoBalance.toLocaleString()}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Start & End Date */}
-          <div className="bg-white rounded-xl border border-[#e5e7eb] p-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Label className="text-sm font-medium text-[#2d2d2d]">
-                    Start Date
-                  </Label>
-                  <Info size={14} className="text-[#9ca3af]" />
-                </div>
-                <Input
-                  type="date"
-                  value={data.startDate}
-                  onChange={(e) =>
-                    handleFieldChange("startDate", e.target.value)
-                  }
-                  className="border-[#e5e7eb]"
-                />
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Label className="text-sm font-medium text-[#2d2d2d]">
-                    End Date
-                  </Label>
-                  <span className="text-xs text-[#9ca3af]">(Optional)</span>
-                </div>
-                <Input
-                  type="date"
-                  value={data.endDate}
-                  onChange={(e) => handleFieldChange("endDate", e.target.value)}
-                  className="border-[#e5e7eb]"
-                />
-              </div>
-            </div>
-            <p className="text-xs text-[#9ca3af] mt-2">
-              * Date will be set in the Asia/Kolkata (+05:30) timezone
-            </p>
-          </div>
-
-          {/* Maximum Spend Cap */}
-          <div className="bg-white rounded-xl border border-[#e5e7eb] p-6">
-            <div className="flex items-center gap-2 mb-2">
-              <Label className="text-sm font-medium text-[#2d2d2d]">
-                Maximum Spend Cap:
-              </Label>
-              <Info size={14} className="text-[#9ca3af]" />
-              <span className="text-xs text-[#9ca3af]">(Optional)</span>
-            </div>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6b7280]">
-                $
-              </span>
-              <Input
-                type="number"
-                value={data.maxSpendCap}
-                onChange={(e) => updateData({ maxSpendCap: e.target.value })}
-                className="pl-7 w-48 border-[#e5e7eb]"
-                placeholder="Enter amount"
+          <div style={cardStyle}>
+            <label style={labelStyle}>Choose Wallet</label>
+            <div style={{ position: 'relative' }}>
+              <WalletDropdown
+                data={data}
+                updateData={updateData}
+                walletSearch={walletSearch}
+                setWalletSearch={setWalletSearch}
+                walletDropdownOpen={walletDropdownOpen}
+                setWalletDropdownOpen={setWalletDropdownOpen}
+                filteredWallets={filteredWallets}
+                selectedWallet={selectedWallet}
               />
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-[#e5e7eb] p-6">
-            <h3 className="text-sm font-semibold text-[#2d2d2d] mb-3">
-              Pacing
-            </h3>
-            <p className="text-sm text-[#6b7280] mb-4">
+          {/* Start & End Date */}
+          <div style={cardStyle}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                  <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>Start Date</label>
+                  <InfoIcon size={14} color={TEXT_SUB} />
+                </div>
+                <input
+                  type="date"
+                  value={data.startDate}
+                  onChange={(e) => handleFieldChange('startDate', e.target.value)}
+                  style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT, background: BG, fontFamily: FONT, outline: 'none' }}
+                />
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                  <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>End Date</label>
+                  <span style={{ fontSize: 12, color: TEXT_SUB }}>(Optional)</span>
+                </div>
+                <input
+                  type="date"
+                  value={data.endDate}
+                  onChange={(e) => handleFieldChange('endDate', e.target.value)}
+                  style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT, background: BG, fontFamily: FONT, outline: 'none' }}
+                />
+              </div>
+            </div>
+            <p style={hintStyle}>* Date will be set in the Asia/Kolkata (+05:30) timezone</p>
+          </div>
+
+          {/* Maximum Spend Cap */}
+          <div style={cardStyle}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+              <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>Maximum Spend Cap:</label>
+              <InfoIcon size={14} color={TEXT_SUB} />
+              <span style={{ fontSize: 12, color: TEXT_SUB }}>(Optional)</span>
+            </div>
+            <div style={dollarWrapStyle}>
+              <span style={{ ...dollarIconStyle, fontSize: 13, color: TEXT_MID }}>$</span>
+              <input
+                type="number"
+                value={data.maxSpendCap}
+                onChange={(e) => updateData({ maxSpendCap: e.target.value })}
+                placeholder="Enter amount"
+                style={rawInputStyle(192)}
+              />
+            </div>
+          </div>
+
+          {/* Pacing */}
+          <div style={cardStyle}>
+            <h3 style={{ fontSize: 13, fontWeight: 600, color: TEXT, marginBottom: 8 }}>Pacing</h3>
+            <p style={{ fontSize: 13, color: TEXT_MID, marginBottom: 16 }}>
               Choose how your budget should be distributed over time
             </p>
-            <div className="grid grid-cols-2 gap-3">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
               {pacingOptions.map((option) => (
-                <button
+                <PacingCard
                   key={option.id}
+                  option={option}
+                  selected={data.pacing === option.id}
                   onClick={() => updateData({ pacing: option.id })}
-                  className={`p-4 rounded-lg border-2 text-left transition-all ${
-                    data.pacing === option.id
-                      ? "border-[#2563eb] bg-[#eff6ff]"
-                      : "border-[#e5e7eb] hover:border-[#d1d5db] hover:bg-[#f9fafb]"
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0">{option.icon}</div>
-                    <div className="flex-1">
-                      <div className="font-medium text-[#2d2d2d] mb-1">
-                        {option.label}
-                      </div>
-                      <div className="text-xs text-[#6b7280]">
-                        {option.description}
-                      </div>
-                    </div>
-                    {data.pacing === option.id && (
-                      <div className="w-5 h-5 rounded-full bg-[#2563eb] flex items-center justify-center flex-shrink-0">
-                        <svg
-                          className="w-3 h-3 text-white"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={3}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                </button>
+                />
               ))}
             </div>
           </div>
@@ -349,227 +324,282 @@ export function BudgetStep({
     );
   }
 
-  // Display Ads Layout (Redesigned)
+  // ── Display Ads Layout ─────────────────────────────────────────────────────
   return (
-    <div className="max-w-3xl mx-auto">
-      <div className="mb-5">
-        <h2 className="text-xl font-semibold text-[#2d2d2d]">
-          Budget & Schedule
-        </h2>
-        <p className="text-sm text-[#6b7280]">
-          Configure your campaign budget, schedule, and payment settings.
-        </p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: FONT, maxWidth: 720, margin: '0 auto' }}>
+      <div>
+        <h2 style={{ fontSize: 24, fontWeight: 600, color: TEXT, marginBottom: 8 }}>Budget &amp; Schedule</h2>
+        <p style={{ color: TEXT_MID }}>Configure your campaign budget, schedule, and payment settings.</p>
       </div>
 
-      <div className="bg-white rounded-lg border border-[#e5e7eb] p-5 space-y-5">
+      <div style={{ background: BG, borderRadius: 8, border: `1px solid ${BORDER}`, padding: 24, display: 'flex', flexDirection: 'column', gap: 24 }}>
+
+        {/* Campaign Name */}
         <div>
-          <label className="block font-medium text-[#2d2d2d] mb-2">
-            Campaign Name <span className="text-red-500">*</span>
+          <label style={labelStyle}>
+            Campaign Name <span style={{ color: ERROR }}>*</span>
           </label>
-          <Input
+          <input
             value={data.name}
             onChange={(e) => updateData({ name: e.target.value })}
             placeholder="e.g., Summer Sale 2025"
-            className="h-9 border-[#e5e7eb] focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]"
+            style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT, background: BG, fontFamily: FONT, outline: 'none' }}
           />
         </div>
 
-        {/* Budget Type - Compact chip selector */}
-        <div className="pb-4 border-b border-[#f3f4f6]">
-          <Label className="text-sm font-medium text-[#2d2d2d] mb-2 block">
-            Budget Type
-          </Label>
-          <div className="flex gap-2">
-            {budgetTypes.map((type) => (
-              <button
-                key={type.id}
-                onClick={() => handleBudgetTypeChange(type.id)}
-                className={`px-3 py-2 rounded-lg text-sm transition-colors ${
-                  budgetType === type.id
-                    ? "bg-[#2563eb] text-white"
-                    : "bg-[#f3f4f6] text-[#4b5563] hover:bg-[#e5e7eb]"
-                }`}
-              >
-                {type.label}
-              </button>
-            ))}
+        {/* Budget Type chips */}
+        <div style={{ paddingBottom: 24, borderBottom: `1px solid ${BG_SUB}` }}>
+          <label style={labelStyle}>Budget Type</label>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {budgetTypes.map((type) => {
+              const isSelected = budgetType === type.id;
+              const isHov      = hovBudgetType === type.id;
+              return (
+                <button
+                  key={type.id}
+                  onClick={() => handleBudgetTypeChange(type.id)}
+                  onMouseEnter={() => setHovBudgetType(type.id)}
+                  onMouseLeave={() => setHovBudgetType(null)}
+                  style={{
+                    padding: '8px 12px', borderRadius: 8, fontSize: 13, border: 'none',
+                    cursor: 'pointer', transition: 'all 0.15s', fontFamily: FONT,
+                    background: isSelected ? ACCENT : isHov ? BG_SUB : BG_SUB,
+                    color: isSelected ? '#fff' : TEXT_MID,
+                  }}
+                >
+                  {type.label}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* CBO Toggle - Compact inline */}
-        <div className="flex items-center justify-between pb-4 border-b border-[#f3f4f6]">
-          <div className="flex items-center gap-2">
-            <Zap size={16} className="text-[#7c3aed]" />
-            <span className="text-sm font-medium text-[#2d2d2d]">
-              Campaign Budget Optimization
-            </span>
-            <Info size={12} className="text-[#9ca3af]" />
+        {/* CBO Toggle */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          paddingBottom: 24, borderBottom: `1px solid ${BG_SUB}`,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <ZapIcon size={16} color={VIOLET} />
+            <span style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>Campaign Budget Optimization</span>
+            <InfoIcon size={12} color={TEXT_SUB} />
           </div>
-          <Switch checked={cboEnabled} onCheckedChange={handleCboToggle} />
+          <Toggle checked={cboEnabled} onChange={handleCboToggle} />
         </div>
 
-        {/* Budget Inputs - Two columns */}
-        <div className="grid grid-cols-2 gap-4 pb-4 border-b border-[#f3f4f6]">
+        {/* Budget Inputs */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, paddingBottom: 24, borderBottom: `1px solid ${BG_SUB}` }}>
           <div>
-            <Label className="text-sm font-medium text-[#2d2d2d] mb-1.5 block">
-              Total Budget <span className="text-[#ef4444]">*</span>
-            </Label>
-            <div className="relative">
-              <DollarSign
-                size={14}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6b7280]"
-              />
-              <Input
+            <label style={labelStyle}>
+              Total Budget <span style={{ color: ERROR }}>*</span>
+            </label>
+            <div style={dollarWrapStyle}>
+              <span style={{ ...dollarIconStyle, left: 10, fontSize: 13, color: TEXT_MID }}>
+                <DollarSignIcon size={14} color={TEXT_MID} />
+              </span>
+              <input
                 type="number"
                 value={data.totalBudget}
                 onChange={(e) => updateData({ totalBudget: e.target.value })}
                 placeholder="10,000"
-                className="pl-8 h-9 border-[#e5e7eb] text-sm"
+                style={{ ...rawInputStyle('100%'), paddingLeft: 32 }}
               />
             </div>
-            <p className="text-xs text-[#9ca3af] mt-1">Min: $10</p>
+            <p style={hintStyle}>Min: $10</p>
           </div>
           <div>
-            <Label className="text-sm font-medium text-[#2d2d2d] mb-1.5 block">
-              Daily Budget <span className="text-[#ef4444]">*</span>
-            </Label>
-            <div className="relative">
-              <DollarSign
-                size={14}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6b7280]"
-              />
-              <Input
+            <label style={labelStyle}>
+              Daily Budget <span style={{ color: ERROR }}>*</span>
+            </label>
+            <div style={dollarWrapStyle}>
+              <span style={{ ...dollarIconStyle, left: 10, fontSize: 13, color: TEXT_MID }}>
+                <DollarSignIcon size={14} color={TEXT_MID} />
+              </span>
+              <input
                 type="number"
                 value={data.dailyBudget}
                 onChange={(e) => updateData({ dailyBudget: e.target.value })}
                 placeholder="500"
-                className="pl-8 h-9 border-[#e5e7eb] text-sm"
+                style={{ ...rawInputStyle('100%'), paddingLeft: 32 }}
               />
             </div>
-            <p className="text-xs text-[#9ca3af] mt-1">Min: $10</p>
+            <p style={hintStyle}>Min: $10</p>
           </div>
         </div>
 
-        {/* Budget Estimation - Compact inline */}
+        {/* Budget estimation messages */}
         {estimatedDays > 0 && (
-          <div className="flex items-center gap-2 text-sm text-[#16a34a] pb-4 border-b border-[#f3f4f6]">
-            <Info size={14} />
-            <span>
-              Estimated duration: <strong>{estimatedDays} days</strong>
-            </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: GREEN, paddingBottom: 24, borderBottom: `1px solid ${BG_SUB}` }}>
+            <InfoIcon size={14} color={GREEN} />
+            <span>Estimated duration: <strong>{estimatedDays} days</strong></span>
           </div>
         )}
 
         {dailyBudget > totalBudget && totalBudget > 0 && (
-          <div className="flex items-center gap-2 text-sm text-[#d97706] pb-4 border-b border-[#f3f4f6]">
-            <AlertCircle size={14} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: AMBER, paddingBottom: 24, borderBottom: `1px solid ${BG_SUB}` }}>
+            <AlertCircleIcon size={14} color={AMBER} />
             <span>Daily budget exceeds total budget</span>
           </div>
         )}
 
-        {/* Schedule + Wallet - Three columns */}
-        <div className="grid grid-cols-3 gap-4">
+        {/* Schedule + Wallet */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
           <div>
-            <Label className="text-sm font-medium text-[#2d2d2d] mb-1.5 block">
-              Start Date <span className="text-[#ef4444]">*</span>
-            </Label>
-            <Input
+            <label style={labelStyle}>
+              Start Date <span style={{ color: ERROR }}>*</span>
+            </label>
+            <input
               type="date"
               value={data.startDate}
-              onChange={(e) => handleFieldChange("startDate", e.target.value)}
-              className="h-9 border-[#e5e7eb] text-sm"
+              onChange={(e) => handleFieldChange('startDate', e.target.value)}
+              style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT, background: BG, fontFamily: FONT, outline: 'none' }}
             />
           </div>
           <div>
-            <Label className="text-sm font-medium text-[#2d2d2d] mb-1.5 block">
-              End Date
-            </Label>
-            <Input
+            <label style={labelStyle}>End Date</label>
+            <input
               type="date"
               value={data.endDate}
-              onChange={(e) => handleFieldChange("endDate", e.target.value)}
-              className="h-9 border-[#e5e7eb] text-sm"
+              onChange={(e) => handleFieldChange('endDate', e.target.value)}
+              style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT, background: BG, fontFamily: FONT, outline: 'none' }}
             />
           </div>
           <div>
-            <Label className="text-sm font-medium text-[#2d2d2d] mb-1.5 block">
-              Wallet <span className="text-[#ef4444]">*</span>
-            </Label>
+            <label style={labelStyle}>
+              Wallet <span style={{ color: ERROR }}>*</span>
+            </label>
             <select
-              value={data.wallet}
+              value={data.wallet || ''}
               onChange={(e) => updateData({ wallet: e.target.value })}
-              className="w-full px-3 py-2 h-9 border border-[#e5e7eb] rounded-lg text-sm bg-white focus:border-[#2563eb] outline-none"
+              style={{ width: '100%', padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT, background: BG, fontFamily: FONT, outline: 'none' }}
             >
               <option value="">Select</option>
               {walletOptions.map((wallet) => (
-                <option key={wallet.id} value={wallet.id}>
-                  {wallet.name}
-                </option>
+                <option key={wallet.id} value={wallet.id}>{wallet.name}</option>
               ))}
             </select>
           </div>
         </div>
 
-        {/* Wallet Balance - Compact */}
+        {/* Wallet Balance */}
         {selectedWallet && (
-          <div className="flex items-center gap-2 text-sm">
-            <Wallet size={14} className="text-[#16a34a]" />
-            <span className="text-[#16a34a]">
-              Balance: ${selectedWallet.balance.toLocaleString()}
-            </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
+            <WalletIcon size={14} color={GREEN} />
+            <span style={{ color: GREEN }}>Balance: ${selectedWallet.balance.toLocaleString()}</span>
           </div>
         )}
 
-        {/* Pacing Options section */}
-        <div className="bg-white rounded-lg border border-[#e5e7eb] p-5">
-          <h3 className="font-semibold text-[#2d2d2d] mb-3">Pacing</h3>
-          <p className="text-sm text-[#6b7280] mb-4">
+        {/* Pacing */}
+        <div style={{ background: BG, borderRadius: 8, border: `1px solid ${BORDER}`, padding: 20 }}>
+          <h3 style={{ fontWeight: 600, color: TEXT, marginBottom: 8 }}>Pacing</h3>
+          <p style={{ fontSize: 13, color: TEXT_MID, marginBottom: 16 }}>
             Choose how your budget should be distributed over time
           </p>
-          <div className="grid grid-cols-2 gap-3">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
             {pacingOptions.map((option) => (
-              <button
+              <PacingCard
                 key={option.id}
+                option={option}
+                selected={data.pacing === option.id}
                 onClick={() => updateData({ pacing: option.id })}
-                className={`p-4 rounded-lg border-2 text-left transition-all ${
-                  data.pacing === option.id
-                    ? "border-[#2563eb] bg-[#eff6ff]"
-                    : "border-[#e5e7eb] hover:border-[#d1d5db] hover:bg-[#f9fafb]"
-                }`}
-              >
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0">{option.icon}</div>
-                  <div className="flex-1">
-                    <div className="font-medium text-[#2d2d2d] mb-1">
-                      {option.label}
-                    </div>
-                    <div className="text-xs text-[#6b7280]">
-                      {option.description}
-                    </div>
-                  </div>
-                  {data.pacing === option.id && (
-                    <div className="w-5 h-5 rounded-full bg-[#2563eb] flex items-center justify-center flex-shrink-0">
-                      <svg
-                        className="w-3 h-3 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={3}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-              </button>
+              />
             ))}
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+// ── WalletDropdown (Product Ads) ───────────────────────────────────────────────
+function WalletDropdown({ data, updateData, walletSearch, setWalletSearch, walletDropdownOpen, setWalletDropdownOpen, filteredWallets, selectedWallet }) {
+  const [hovBtn, setHovBtn] = useState(false);
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <button
+        onClick={() => setWalletDropdownOpen(!walletDropdownOpen)}
+        onMouseEnter={() => setHovBtn(true)}
+        onMouseLeave={() => setHovBtn(false)}
+        style={{
+          width: '100%', padding: '10px 16px', border: `1px solid ${BORDER}`, borderRadius: 8,
+          textAlign: 'left', background: hovBtn ? BG_SUB : BG, cursor: 'pointer',
+          fontFamily: "'Open Sans', sans-serif", fontSize: 13, transition: 'all 0.15s',
+        }}
+      >
+        {selectedWallet ? (
+          <span style={{ color: 'var(--osmos-fg)' }}>
+            {selectedWallet.name} (${selectedWallet.balance.toLocaleString()})
+          </span>
+        ) : (
+          <span style={{ color: 'var(--osmos-fg-subtle)' }}>Select Wallet</span>
+        )}
+      </button>
+
+      {walletDropdownOpen && (
+        <div style={{
+          position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0,
+          background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)',
+          borderRadius: 8, boxShadow: '0 10px 15px rgba(0,0,0,0.1)', zIndex: 50,
+          maxHeight: 320, overflow: 'hidden', display: 'flex', flexDirection: 'column',
+        }}>
+          {/* Search */}
+          <div style={{ padding: 8, borderBottom: '1px solid var(--osmos-border)' }}>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <SearchIcon size={14} color='var(--osmos-fg-subtle)' style={{ position: 'absolute', left: 10, pointerEvents: 'none' }} />
+              <input
+                value={walletSearch}
+                onChange={(e) => setWalletSearch(e.target.value)}
+                placeholder="Search"
+                style={{
+                  width: '100%', boxSizing: 'border-box', padding: '7px 12px 7px 30px',
+                  border: '1px solid var(--osmos-border)', borderRadius: 8, fontSize: 13,
+                  color: 'var(--osmos-fg)', background: 'var(--osmos-bg)',
+                  fontFamily: "'Open Sans', sans-serif", outline: 'none',
+                }}
+              />
+            </div>
+          </div>
+          {/* Wallet list */}
+          <div style={{ overflowY: 'auto', maxHeight: 240 }}>
+            {filteredWallets.map((wallet) => (
+              <WalletRow
+                key={wallet.id}
+                wallet={wallet}
+                selected={data.wallet === wallet.id}
+                onSelect={() => {
+                  updateData({ wallet: wallet.id });
+                  setWalletDropdownOpen(false);
+                  setWalletSearch('');
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function WalletRow({ wallet, selected, onSelect }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <button
+      onClick={onSelect}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        width: '100%', padding: '12px 16px', textAlign: 'left', border: 'none',
+        background: selected ? 'var(--osmos-brand-primary-muted)' : hov ? 'var(--osmos-bg-subtle)' : 'transparent',
+        cursor: 'pointer', transition: 'all 0.15s', fontFamily: "'Open Sans', sans-serif",
+      }}
+    >
+      <div style={{ fontSize: 13, color: 'var(--osmos-fg)' }}>
+        {wallet.name} (${wallet.balance.toLocaleString()})
+      </div>
+      <div style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>
+        Promotion Balance ${wallet.promoBalance.toLocaleString()}
+      </div>
+    </button>
   );
 }
