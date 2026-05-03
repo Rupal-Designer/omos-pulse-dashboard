@@ -355,7 +355,7 @@ export function ProductSelectionStep({ data, updateData }) {
                 ))
               ) : (
                 <div style={{
-                  padding: 16, background: 'rgba(245,166,35,0.12)',
+                  padding: 16, background: 'var(--osmos-brand-amber-muted)',
                   borderRadius: 8, border: `1px solid ${AMBER}`,
                 }}>
                   <p style={{ fontSize: 13, color: AMBER }}>

@@ -442,7 +442,7 @@ export function TargetingStep({ data, updateData }) {
       {/* Negative Keyword Targeting */}
       <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 8, background: 'rgba(245,166,35,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <div style={{ width: 40, height: 40, borderRadius: 8, background: 'var(--osmos-brand-amber-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <CloseIcon size={20} color={AMBER} />
           </div>
           <div>
@@ -475,7 +475,7 @@ export function TargetingStep({ data, updateData }) {
             {data.targeting.negativeKeywords.map((keyword) => (
               <span key={keyword} style={{
                 display: 'inline-flex', alignItems: 'center', gap: 4,
-                padding: '4px 12px', background: 'rgba(245,166,35,0.12)', color: AMBER,
+                padding: '4px 12px', background: 'var(--osmos-brand-amber-muted)', color: AMBER,
                 borderRadius: 999, fontSize: 13,
               }}>
                 {keyword}
