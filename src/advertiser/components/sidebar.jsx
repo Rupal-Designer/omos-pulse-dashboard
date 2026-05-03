@@ -2,15 +2,13 @@ import { useState } from 'react';
 import { Icon, ChevronRightIcon } from '../../ui';
 
 // ── Design tokens ────────────────────────────────────────────────────────────
-const NAV_GRAD   = 'linear-gradient(to bottom, #3d4a99, #1e1f5e)';
 const FONT       = "'Open Sans', sans-serif";
 const WHITE      = '#fff';
 const WHITE70    = 'rgba(255,255,255,0.7)';
 const WHITE50    = 'rgba(255,255,255,0.5)';
-const WHITE20    = 'rgba(255,255,255,0.2)';
 const WHITE10    = 'rgba(255,255,255,0.1)';
-const ACTIVE_BG  = 'rgba(99,102,241,0.3)';  // #6366f1 @ 30% — nav item active
-const SUBNAV_ACT = '#6366f1';                // sub-item active fill
+const ACTIVE_BG  = 'var(--osmos-nav-active-bg)';
+const SUBNAV_ACT = 'var(--osmos-nav-accent)';
 
 // ── Hand-rolled icon components (Lucide SVG paths, stroke-only) ──────────────
 const RocketNavIcon = ({ size = 20, color = WHITE70 }) => (
@@ -131,21 +129,21 @@ export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNaviga
       onMouseEnter={() => setIsExpanded(true)}
       onMouseLeave={() => setIsExpanded(false)}
       style={{
-        width: isExpanded ? 256 : 64,
-        background: NAV_GRAD,
+        width: isExpanded ? 256 : 68,
+        background: 'var(--osmos-nav-bg)',
         display: 'flex', flexDirection: 'column',
         padding: '16px 0',
         height: '100vh', position: 'fixed', top: 0, left: 0, zIndex: 40,
         overflowY: 'auto',
-        transition: 'width 0.3s',
+        transition: 'width 0.25s ease',
         fontFamily: FONT,
       }}
     >
       {/* Brand logo */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: 12,
-        padding: '0 12px', marginBottom: 24,
-        justifyContent: isExpanded ? 'flex-start' : 'center',
+        padding: '0 16px', marginBottom: 24,
+        justifyContent: 'flex-start',
       }}>
         <div style={{
           width: 40, height: 40, flexShrink: 0,
@@ -225,10 +223,11 @@ function NavItem({ IconComp, label, active, expanded, hasSubmenu, isOpen, onClic
       onMouseLeave={() => setHover(false)}
       style={{
         display: 'flex', alignItems: 'center', gap: 12,
-        padding: '10px 12px', borderRadius: 8,
-        cursor: 'pointer', transition: 'all 0.15s',
+        padding: '0 12px', height: 44, borderRadius: 8,
+        cursor: 'pointer', transition: 'background 0.15s',
         background: active ? ACTIVE_BG : (hover ? WHITE10 : 'transparent'),
-        justifyContent: expanded ? 'flex-start' : 'center',
+        justifyContent: 'flex-start',
+        overflow: 'hidden', whiteSpace: 'nowrap',
       }}
     >
       {/* Icon */}
@@ -239,13 +238,13 @@ function NavItem({ IconComp, label, active, expanded, hasSubmenu, isOpen, onClic
       {/* Label + badge + chevron (only when expanded) */}
       {expanded && (
         <>
-          <span style={{ flex: 1, fontSize: 13, fontWeight: 500, color: iconColor }}>
+          <span style={{ flex: 1, fontSize: 13, fontWeight: active ? 600 : 400, color: iconColor }}>
             {label}
           </span>
           {badge && (
             <span style={{
-              padding: '2px 8px', background: '#f45858',
-              color: WHITE, fontSize: 11, borderRadius: 999,
+              padding: '2px 8px', background: 'var(--osmos-brand-amber)',
+              color: WHITE, fontSize: 11, borderRadius: 999, flexShrink: 0,
             }}>
               {badge}
             </span>
