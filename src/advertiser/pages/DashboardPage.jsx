@@ -27,7 +27,7 @@ export default function DashboardPage({ activeAdType: propAdType, onAdTypeChange
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: BG_SUBTLE, fontFamily: FONT }}>
       <Sidebar onAdTypeChange={handleAdTypeChange} activeAdType={activeAdType} />
 
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', marginLeft: 64, minWidth: 0 }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         {/* Sticky topbar */}
         <div style={{ position: 'sticky', top: 0, zIndex: 30, background: BG }}>
           <Header activeAdType={activeAdType} />

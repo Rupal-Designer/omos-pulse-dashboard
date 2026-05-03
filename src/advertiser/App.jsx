@@ -99,7 +99,7 @@ export default function App() {
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#edf0f5' }}>
       <Sidebar onAdTypeChange={setActiveAdType} activeAdType={activeAdType} onNavigate={(r) => { window.location.hash = r; }} />
-      <div style={{ flex: 1, marginLeft: 64, overflowY: 'auto' }}>
+      <div style={{ flex: 1, overflowY: 'auto' }}>
         {renderPage()}
       </div>
     </div>

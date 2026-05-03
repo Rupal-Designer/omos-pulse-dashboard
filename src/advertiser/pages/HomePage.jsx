@@ -73,7 +73,7 @@ export default function HomePage() {
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', backgroundColor: BG_SUBTLE, fontFamily: FONT }}>
       <Sidebar onAdTypeChange={setActiveAdType} activeAdType={activeAdType} />
 
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', marginLeft: 64, minWidth: 0 }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         {/* Sticky topbar */}
         <div style={{ position: 'sticky', top: 0, zIndex: 30, backgroundColor: BG }}>
           <Header activeAdType={activeAdType} />
