@@ -27,6 +27,7 @@ import WalletRulesPage from './components/WalletRulesPage';
 import FinanceDashboardPage from './components/FinanceDashboardPage';
 import WalletTopUpPage from './components/WalletTopUpPage';
 import FinanceAdvertiserManagementPage from './components/FinanceAdvertiserManagementPage';
+import CampaignBudgetDrawer from './components/CampaignBudgetDrawer';
 
 /* ── Analytics dashboard (the original page) ─────────────────── */
 function AnalyticsDashboard({ bare = false }) {
@@ -54,7 +55,7 @@ function AnalyticsDashboard({ bare = false }) {
 
 /* ── Root ─────────────────────────────────────────────────────── */
 export default function App() {
-  const [activePage, setActivePage] = useState('advertiser-insights');
+  const [activePage, setActivePage] = useState('campaign-budget');
 
   function renderPage() {
     switch (activePage) {
@@ -215,6 +216,15 @@ export default function App() {
             <TopBar section="Finance" page="Wallet Top Up" onNavigate={setActivePage} />
             <main style={{ flex: 1, overflowY: 'auto', background: 'var(--osmos-bg-subtle)' }}>
               <WalletTopUpPage />
+            </main>
+          </>
+        );
+      case 'campaign-budget':
+        return (
+          <>
+            <TopBar section="Campaigns" page="Campaign Budget" onNavigate={setActivePage} />
+            <main style={{ flex: 1, overflowY: 'auto', background: 'var(--osmos-bg-subtle)', position: 'relative' }}>
+              <CampaignBudgetDrawer onClose={() => setActivePage('advertiser-insights')} />
             </main>
           </>
         );

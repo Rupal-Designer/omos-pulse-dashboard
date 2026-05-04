@@ -22,7 +22,23 @@
       "Bash(for skill:*)",
       "Bash(do echo:*)",
       "Bash(grep -E \"^react$|^react-dom$\")",
-      "Bash(for comp:*)"
+      "Bash(for comp:*)",
+      "Bash(kill 26144)",
+      "Bash(/Users/rupal.agarwal/.nvm/versions/node/v24.14.0/bin/pnpm install:*)",
+      "Bash(/Users/rupal.agarwal/.nvm/versions/node/v24.14.0/bin/pnpm store:*)",
+      "Read(//Users/rupal.agarwal/.pnpm-store/v10/**)",
+      "Bash(curl -s -H \"Authorization: Bearer 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\" \"https://npm.pkg.github.com/@rishikeshjoshi-morpheus/ui\")",
+      "Bash(curl -s -H \"Authorization: Bearer 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\" \"https://npm.pkg.github.com/@rishikeshjoshi-morpheus/ui\")",
+      "Bash(curl -s -H \"Authorization: Bearer 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\" \"https://api.github.com/user\")",
+      "Bash(curl -s -H \"Authorization: Bearer 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\" \"https://api.github.com/orgs/rishikeshjoshi-morpheus/members\")",
+      "Bash(curl -s -H \"Authorization: Bearer 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\" \"https://npm.pkg.github.com/@rishikeshjoshi-morpheus/ui\")",
+      "Bash(gh pr create --title 'feat\\(persona-config\\): category tabs, global enable/disable toggle & inline search' --body ':*)",
+      "Bash(curl -s -X POST -H 'Authorization: token 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' -H 'Accept: application/vnd.github.v3+json' https://api.github.com/repos/Rupal-Designer/omos-pulse-dashboard/pulls -d '{:*)",
+      "Bash(curl -s -H 'Authorization: token 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' https://api.github.com/repos/Rupal-Designer/omos-pulse-dashboard/pulls/1)",
+      "Bash(npm install:*)",
+      "Bash(vercel --version)",
+      "Bash(npm run:*)",
+      "Bash(vercel deploy:*)"
     ]
   }
 }
