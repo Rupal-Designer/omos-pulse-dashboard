@@ -220,9 +220,9 @@ function NavRailItem({ item, active, wide, isOpen, onClick, muted = false }) {
           whiteSpace: 'nowrap', overflow: 'hidden',
         }}
       >
-        {/* Icon — always left-pinned, never centred */}
+        {/* Icon — always left-pinned, never centred. size=20 matches nav density. */}
         <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-          <Icon color={iconColor}>{item.icon}</Icon>
+          <Icon size={20} color={iconColor}>{item.icon}</Icon>
         </div>
 
         {/* Label + badge + chevron — visible only when wide */}

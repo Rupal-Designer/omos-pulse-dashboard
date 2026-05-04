@@ -5,7 +5,10 @@ import HomePage from './pages/HomePage';
 import DesignSystemPage from './pages/DesignSystemPage';
 import BYOTDashboardPage from './pages/BYOTDashboardPage';
 import BYOTCampaignDetailPage from './pages/BYOTCampaignDetailPage';
+import CPCControlsPage from './pages/CPCControlsPage';
+import CPMControlsPage from './pages/CPMControlsPage';
 import { Sidebar } from './components/sidebar';
+import { Header } from './components/header';
 
 /**
  * Advertiser ("Beat") Console — root.
@@ -78,6 +81,10 @@ export default function App() {
         return <DashboardPage activeAdType={activeAdType} onAdTypeChange={setActiveAdType} />;
       case '/home':
         return <HomePage />;
+      case '/yield-control/cpc':
+        return <CPCControlsPage />;
+      case '/yield-control/cpm':
+        return <CPMControlsPage />;
       case '/design-system':
         return <DesignSystemPage />;
       default:
@@ -95,12 +102,17 @@ export default function App() {
     return renderPage();
   }
 
-  // BYOT and other new pages — add sidebar wrapper
+  // BYOT and other new pages — add sidebar + header wrapper
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#edf0f5' }}>
       <Sidebar onAdTypeChange={setActiveAdType} activeAdType={activeAdType} onNavigate={(r) => { window.location.hash = r; }} />
-      <div style={{ flex: 1, overflowY: 'auto' }}>
-        {renderPage()}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <div style={{ position: 'sticky', top: 0, zIndex: 30, background: 'var(--osmos-bg)' }}>
+          <Header activeAdType={activeAdType} />
+        </div>
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          {renderPage()}
+        </div>
       </div>
     </div>
   );

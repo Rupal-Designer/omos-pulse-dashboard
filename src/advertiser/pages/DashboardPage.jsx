@@ -5,6 +5,8 @@ import { InteractiveDashboard } from '../components/design-system/interactive-da
 import { CampaignTable } from '../components/campaign-table';
 import { PerformanceTable } from '../components/performance-table';
 import { AIDebuggerPanel } from '../components/ai-debugger-panel';
+import { FunnelSimulationSection } from '../components/funnel-simulation-section';
+import { BudgetAdjustDrawer } from '../components/budget-adjust-drawer';
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
 const FONT      = "'Open Sans', sans-serif";
@@ -14,7 +16,8 @@ const BG_SUBTLE = 'var(--osmos-bg-subtle)';
 // ── DashboardPage ─────────────────────────────────────────────────────────────
 export default function DashboardPage({ activeAdType: propAdType, onAdTypeChange: propOnChange }) {
   const [localAdType, setLocalAdType] = useState('Product Ads');
-  const [debugCampaign, setDebugCampaign] = useState(null);
+  const [debugCampaign, setDebugCampaign]         = useState(null);
+  const [budgetDrawerOpen, setBudgetDrawerOpen]   = useState(false);
 
   // Support both controlled (from App.jsx) and standalone usage
   const activeAdType = propAdType ?? localAdType;
@@ -45,6 +48,14 @@ export default function DashboardPage({ activeAdType: propAdType, onAdTypeChange
             onAdTypeChange={handleAdTypeChange}
             initialSelectedMetrics={['CTR', 'Ad Clicks']}
           />
+
+          {/* 30-Day Funnel Simulation — Product Ads only */}
+          {activeAdType === 'Product Ads' && (
+            <FunnelSimulationSection
+              onAdjustBudget={() => setBudgetDrawerOpen(true)}
+            />
+          )}
+
           <CampaignTable activeAdType={activeAdType} onDebugCampaign={setDebugCampaign} />
           <PerformanceTable />
         </main>
@@ -54,6 +65,20 @@ export default function DashboardPage({ activeAdType: propAdType, onAdTypeChange
         open={!!debugCampaign}
         campaign={debugCampaign}
         onClose={() => setDebugCampaign(null)}
+      />
+
+      <BudgetAdjustDrawer
+        open={budgetDrawerOpen}
+        onClose={() => setBudgetDrawerOpen(false)}
+        campaignName="Summer Sale PLA"
+        currentBudget={5000}
+        aiSuggestedBudget={8200}
+        projectedRevUplift="+₹6,00,000"
+        projectedUpliftPct="+65%"
+        onSave={(newBudget) => {
+          // Phase 1: call PATCH /campaigns/:id/budget with { dailyBudget: newBudget }
+          console.log('[BudgetAdjust] new daily budget:', newBudget);
+        }}
       />
     </div>
   );
