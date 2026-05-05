@@ -207,9 +207,9 @@ export function PerformanceTrend({
       <div style={{
         transition: 'all 0.3s', overflow: 'hidden',
         opacity: hasMetrics ? 1 : 0,
-        maxHeight: hasMetrics ? 300 : 0,
+        maxHeight: hasMetrics ? 480 : 0,
       }}>
-        <div style={{ height: 200 }}>
+        <div style={{ height: 380 }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#efefef" />

@@ -36,7 +36,7 @@ export default function DashboardPage({ activeAdType: propAdType, onAdTypeChange
           <Header activeAdType={activeAdType} onAdTypeChange={handleAdTypeChange} />
         </div>
 
-        {/* Main content — gap: 20 between all sections (ia-patterns.md §5) */}
+        {/* Main content — gap: 20 between all sections */}
         <main style={{
           flex: 1, overflowY: 'auto',
           padding: '20px 24px',
