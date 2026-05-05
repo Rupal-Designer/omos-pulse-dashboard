@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Input, Select, InfoIcon, SearchIcon, Icon } from '../../../../ui';
+import { FunnelSimulationSection } from '../../funnel-simulation-section';
 
 const FONT     = "'Open Sans', sans-serif";
 const TEXT     = 'var(--osmos-fg)';
@@ -234,6 +235,14 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
               This is based on overall data from 2nd Dec, 2025 - 8th Dec, 2025.
             </p>
           </div>
+
+          {/* 30-Day Simulation — appears when a valid daily budget is entered */}
+          {data.dailyBudget !== '' && parseFloat(data.dailyBudget) > 0 && (
+            <FunnelSimulationSection
+              budgetPerDay={parseFloat(data.dailyBudget)}
+              onUseIdealBudget={(val) => handleFieldChange('dailyBudget', String(val))}
+            />
+          )}
 
           {/* Wallet Selection */}
           <div style={cardStyle}>

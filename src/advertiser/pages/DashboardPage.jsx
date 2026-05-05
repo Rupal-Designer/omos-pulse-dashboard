@@ -5,7 +5,6 @@ import { InteractiveDashboard } from '../components/design-system/interactive-da
 import { CampaignTable } from '../components/campaign-table';
 import { PerformanceTable } from '../components/performance-table';
 import { AIDebuggerPanel } from '../components/ai-debugger-panel';
-import { FunnelSimulationSection } from '../components/funnel-simulation-section';
 import { BudgetAdjustDrawer } from '../components/budget-adjust-drawer';
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
@@ -48,13 +47,6 @@ export default function DashboardPage({ activeAdType: propAdType, onAdTypeChange
             onAdTypeChange={handleAdTypeChange}
             initialSelectedMetrics={['CTR', 'Ad Clicks']}
           />
-
-          {/* 30-Day Funnel Simulation — Product Ads only */}
-          {activeAdType === 'Product Ads' && (
-            <FunnelSimulationSection
-              onAdjustBudget={() => setBudgetDrawerOpen(true)}
-            />
-          )}
 
           <CampaignTable activeAdType={activeAdType} onDebugCampaign={setDebugCampaign} />
           <PerformanceTable />
