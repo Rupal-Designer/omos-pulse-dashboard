@@ -33,6 +33,7 @@ export function NavShell({
   subnavPanel,
 }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isPinned, setIsPinned] = useState(true);
   // Track which items with subItems are open
   const [openIds, setOpenIds] = useState(() => {
     // Auto-open item whose subItem is currently active
@@ -40,7 +41,7 @@ export function NavShell({
     return active ? new Set([active.id]) : new Set();
   });
 
-  const wide = isHovered || !!subnavPanel;
+  const wide = isPinned || isHovered || !!subnavPanel;
 
   function handleItemClick(item) {
     if (item.subItems?.length) {
@@ -59,8 +60,8 @@ export function NavShell({
 
       {/* ── Main rail ─────────────────────────────────────────────── */}
       <div
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseEnter={() => { if (!isPinned) setIsHovered(true); }}
+        onMouseLeave={() => { if (!isPinned) setIsHovered(false); }}
         style={{
           width: wide ? 256 : 68,
           minHeight: '100vh',
@@ -78,7 +79,7 @@ export function NavShell({
           height: 80, flexShrink: 0,
           display: 'flex', alignItems: 'center',
           justifyContent: 'flex-start',
-          padding: '0 16px',
+          padding: '0 14px',
           gap: 10,
           borderBottom: '1px solid var(--osmos-nav-border)',
         }}>
@@ -87,7 +88,7 @@ export function NavShell({
 
           {/* Wordmark + badge — only when expanded */}
           {wide && logoText && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1, minWidth: 0 }}>
               <span style={{
                 fontSize: 15, fontWeight: 700, color: '#fff',
                 letterSpacing: 0.5, whiteSpace: 'nowrap',
@@ -105,6 +106,11 @@ export function NavShell({
                 </span>
               )}
             </div>
+          )}
+
+          {/* Collapse / pin toggle — visible whenever nav is wide */}
+          {wide && (
+            <CollapseToggle isPinned={isPinned} onToggle={() => setIsPinned(p => !p)} />
           )}
         </div>
 
@@ -259,6 +265,36 @@ function NavRailItem({ item, active, wide, isOpen, onClick, muted = false }) {
         )}
       </button>
     </>
+  );
+}
+
+// ── CollapseToggle — pin/unpin button in logo header ─────────────────────────
+function CollapseToggle({ isPinned, onToggle }) {
+  const [hover, setHover] = useState(false);
+  return (
+    <button
+      onClick={(e) => { e.stopPropagation(); onToggle(); }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      title={isPinned ? 'Collapse sidebar' : 'Pin sidebar open'}
+      style={{
+        flexShrink: 0,
+        width: 26, height: 26,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: hover ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.07)',
+        border: '1px solid rgba(255,255,255,0.12)',
+        borderRadius: 6, cursor: 'pointer',
+        transition: 'background 0.15s',
+        marginLeft: 'auto',
+      }}
+    >
+      <Icon size={13} color="rgba(255,255,255,0.65)">
+        {isPinned
+          ? <polyline points="15 18 9 12 15 6" />   /* chevron-left  → collapse */
+          : <polyline points="9 18 15 12 9 6" />    /* chevron-right → pin open */
+        }
+      </Icon>
+    </button>
   );
 }
 

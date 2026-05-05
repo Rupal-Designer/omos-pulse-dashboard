@@ -33,7 +33,7 @@ export default function DashboardPage({ activeAdType: propAdType, onAdTypeChange
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         {/* Sticky topbar */}
         <div style={{ position: 'sticky', top: 0, zIndex: 30, background: BG }}>
-          <Header activeAdType={activeAdType} />
+          <Header activeAdType={activeAdType} onAdTypeChange={handleAdTypeChange} />
         </div>
 
         {/* Main content — gap: 20 between all sections (ia-patterns.md §5) */}

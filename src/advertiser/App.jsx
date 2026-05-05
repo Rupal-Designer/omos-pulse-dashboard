@@ -108,7 +108,7 @@ export default function App() {
       <Sidebar onAdTypeChange={setActiveAdType} activeAdType={activeAdType} onNavigate={(r) => { window.location.hash = r; }} />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <div style={{ position: 'sticky', top: 0, zIndex: 30, background: 'var(--osmos-bg)' }}>
-          <Header activeAdType={activeAdType} />
+          <Header activeAdType={activeAdType} onAdTypeChange={setActiveAdType} />
         </div>
         <div style={{ flex: 1, overflowY: 'auto' }}>
           {renderPage()}
