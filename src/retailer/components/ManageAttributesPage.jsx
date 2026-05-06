@@ -154,12 +154,13 @@ export default function ManageAttributesPage() {
   const { toast, showToast }      = useToast();
 
   const thStyle = {
-    padding:'10px 14px', textAlign:'left', fontSize:11, fontWeight:600,
-    color:FG_SUB, fontFamily:FONT, whiteSpace:'nowrap',
+    padding:'9px 14px', textAlign:'left', fontSize:11, fontWeight:600,
+    color:FG_MUT, fontFamily:FONT, whiteSpace:'nowrap',
     borderBottom:`1px solid ${BORDER}`, background:BG_SUB,
+    textTransform:'uppercase', letterSpacing:'0.04em',
   };
   const tdStyle = {
-    padding:'10px 14px', fontSize:12, fontFamily:FONT, color:FG_MUT,
+    padding:'10px 14px', fontSize:13, fontFamily:FONT, color:FG_MUT,
     whiteSpace:'nowrap', borderBottom:`1px solid ${BORDER}`, verticalAlign:'middle',
   };
 
@@ -200,7 +201,7 @@ export default function ManageAttributesPage() {
 
       {/* Table */}
       <div style={{ padding:'0 24px 24px', overflowX:'auto' }}>
-        <div style={{ background:'var(--osmos-bg)', border:`1px solid ${BORDER}`, borderRadius:8, marginTop:16, overflowX:'auto' }}>
+        <div style={{ background:'var(--osmos-bg)', border:`1px solid ${BORDER}`, borderRadius:10, marginTop:16, overflowX:'auto' }}>
           <table style={{ width:'100%', borderCollapse:'collapse', minWidth:1100 }}>
             <thead>
               <tr>

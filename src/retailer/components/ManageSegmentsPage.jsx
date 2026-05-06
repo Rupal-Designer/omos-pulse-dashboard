@@ -55,8 +55,9 @@ function RuleBadge({ value }) {
 function Th({ children, sub, minW = 120, sticky = false }) {
   return (
     <th style={{
-      padding: '10px 12px', textAlign: 'left', whiteSpace: 'nowrap',
+      padding: '9px 14px', textAlign: 'left', whiteSpace: 'nowrap',
       fontSize: 11, fontWeight: 600, color: FG_MID, background: BG_SUB,
+      textTransform: 'uppercase', letterSpacing: '0.04em',
       borderBottom: `1px solid ${BORDER}`, minWidth: minW,
       position: sticky ? 'sticky' : 'static',
       left: sticky ? 0 : undefined,
@@ -71,7 +72,7 @@ function Th({ children, sub, minW = 120, sticky = false }) {
 function Td({ children, sticky = false, minW }) {
   return (
     <td style={{
-      padding: '10px 12px', fontSize: 12, color: FG, whiteSpace: 'nowrap',
+      padding: '10px 14px', fontSize: 13, color: FG, whiteSpace: 'nowrap',
       borderBottom: `1px solid ${BORDER}`,
       position: sticky ? 'sticky' : 'static',
       left: sticky ? 0 : undefined,

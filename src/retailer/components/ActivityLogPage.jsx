@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Icon } from '../../ui/atoms/Icon';
+import { TypeBadge } from '../../ui';
 
 const LOGS = [
   { id: 1, creationTime: '21 Apr 26, 10:30 AM', user: 'Alice Johnson', action: 'Create Advertiser', description: 'Created new advertiser account for Sports World', merchantsAffected: 'OS_M002', fileStatus: '—', file: '—' },
@@ -19,6 +20,12 @@ const STATUS_COLORS = {
   '—': { bg: 'transparent', color: 'var(--osmos-fg-muted)' },
 };
 
+const FILE_STATUS_COLOR_MAP = {
+  'Success': { bg: 'var(--osmos-brand-green-muted)', color: 'var(--osmos-brand-green)' },
+  'Partial Success': { bg: 'var(--osmos-brand-amber-muted)', color: 'var(--osmos-brand-amber)' },
+  'Failed': { bg: 'rgba(220,38,38,0.1)', color: 'var(--alert-error-primary)' },
+};
+
 
 export default function ActivityLogPage() {
   const [search, setSearch] = useState('');
@@ -36,7 +43,7 @@ export default function ActivityLogPage() {
 
   return (
     <div style={{ padding: '20px 24px', fontFamily: "'Open Sans', sans-serif" }}>
-      <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 8, overflow: 'hidden' }}>
+      <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 10, overflow: 'hidden' }}>
         <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 28, height: 28, background: 'var(--osmos-brand-primary-muted)', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Icon size={13} color="var(--osmos-brand-primary)" strokeWidth={1.8}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></Icon>
@@ -60,7 +67,7 @@ export default function ActivityLogPage() {
             <thead>
               <tr style={{ background: 'var(--osmos-bg-subtle)', borderBottom: '1px solid var(--osmos-border)' }}>
                 {['Creation Time', 'User', 'Action', 'Description', 'Merchants Affected', 'File Status', 'File'].map(h => (
-                  <th key={h} style={{ padding: '9px 14px', textAlign: 'left', fontWeight: 500, color: 'var(--osmos-fg-muted)', fontSize: 11, whiteSpace: 'nowrap' }}>{h}</th>
+                  <th key={h} style={{ padding: '9px 14px', textAlign: 'left', fontWeight: 600, color: 'var(--osmos-fg-muted)', fontSize: 11, whiteSpace: 'nowrap', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -80,7 +87,7 @@ export default function ActivityLogPage() {
                     <td style={{ padding: '10px 14px', color: 'var(--osmos-fg-muted)', fontSize: 11 }}>{row.merchantsAffected}</td>
                     <td style={{ padding: '10px 14px' }}>
                       {row.fileStatus !== '—' ? (
-                        <span style={{ padding: '3px 8px', borderRadius: 12, fontSize: 11, fontWeight: 600, background: sc.bg, color: sc.color }}>{row.fileStatus}</span>
+                        <TypeBadge type={row.fileStatus} colorMap={FILE_STATUS_COLOR_MAP} />
                       ) : <span style={{ color: 'var(--osmos-fg-subtle)' }}>—</span>}
                     </td>
                     <td style={{ padding: '10px 14px' }}>
