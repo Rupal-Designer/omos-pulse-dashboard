@@ -6,6 +6,7 @@ import {
   ThemeDropdown, GlobalSearch,
 } from '../../ui';
 import { AISuggestionsPanel } from './ai-suggestions-panel';
+import { SofieChatPanel } from './sofie-chat-panel';
 
 // ── Design tokens ────────────────────────────────────────────────────────────
 const FONT       = "'Open Sans', sans-serif";
@@ -70,6 +71,7 @@ function IconButton({ icon, onClick }) {
 // ── Header ────────────────────────────────────────────────────────────────────
 export function Header({ activeAdType = 'Product Ads' }) {
   const [showAISuggestions, setShowAISuggestions] = useState(false);
+  const [showSofieChat, setShowSofieChat]         = useState(false);
 
   return (
     <>
@@ -128,7 +130,23 @@ export function Header({ activeAdType = 'Product Ads' }) {
           <IconButton icon={<UsersNavIcon size={14} color={TEXT_MID} />} />
           <IconButton icon={<BellIcon size={14} color={TEXT_MID} />} />
 
-          {/* AI suggestions button */}
+          {/* Ask Sofie — persistent chat CTA */}
+          <button
+            onClick={() => setShowSofieChat(true)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '5px 10px', borderRadius: 8, cursor: 'pointer',
+              border: `1px solid ${AI_COLOR}`,
+              background: AI_BG, color: AI_COLOR,
+              fontSize: 12, fontWeight: 600, fontFamily: FONT,
+              transition: 'all 0.15s',
+            }}
+          >
+            <SparklesIcon size={14} color={AI_COLOR} />
+            Ask Sofie
+          </button>
+
+          {/* AI suggestions button (v1 — sparkles dot) */}
           <button
             onClick={() => setShowAISuggestions(true)}
             style={{
@@ -183,10 +201,17 @@ export function Header({ activeAdType = 'Product Ads' }) {
         </div>
       </div>
 
-      {/* ── AI suggestions panel ─────────────────────────────────────────── */}
+      {/* ── AI suggestions panel (v1) ────────────────────────────────────── */}
       <AISuggestionsPanel
         open={showAISuggestions}
         onClose={() => setShowAISuggestions(false)}
+      />
+
+      {/* ── Sofie Chat panel (Pillar 1) ──────────────────────────────────── */}
+      <SofieChatPanel
+        open={showSofieChat}
+        onClose={() => setShowSofieChat(false)}
+        activeAdType={activeAdType}
       />
 
     </>

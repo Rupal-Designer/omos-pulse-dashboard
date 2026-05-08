@@ -5,7 +5,7 @@ name: Icon
 tags: [atom, ui-component, icon, display]
 source-file: src/ui/atoms/Icon.jsx
 export-name: Icon
-last-updated: 2026-04-29T18:00:00Z
+last-updated: 2026-05-07T06:30:04Z
 ---
 
 # Icon

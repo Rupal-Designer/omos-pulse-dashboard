@@ -5,7 +5,7 @@ name: StatCard
 tags: [molecule, ui-component, data, display]
 source-file: src/ui/molecules/StatCard.jsx
 export-name: StatCard
-last-updated: 2026-05-02T00:00:00Z
+last-updated: 2026-05-07T06:30:03Z
 ---
 
 # StatCard

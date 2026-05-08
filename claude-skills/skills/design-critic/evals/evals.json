@@ -1,0 +1,23 @@
+{
+  "skill_name": "design-critic",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Critique this design idea for our Sponsored Ads platform: we want to add a 'Duplicate Campaign' button to each row in the campaign table. Clicking it copies all settings from that campaign and opens a pre-filled campaign creation form in a side drawer. The form highlights what was copied, lets the user rename it, and has a 'Save as Draft' vs 'Launch Now' option at the bottom. Should we build this exactly as described, or is there a better way?",
+      "expected_output": "A full Rigor Matrix with scores across all four dimensions (Feasibility, UX, Business, Delight), a synthesis noting where agents agree/conflict, and a Verdict that clearly states what to build now vs. defer vs. cut.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Run a design critique on our ManageCPMRules page. Read the file at src/components/ManageCPMRulesPage.jsx — this is where ad ops managers at retailers set CPM floor prices and yield optimization rules. It's one of the most business-critical screens in the platform. Tell me honestly if it's good enough or if it needs major work.",
+      "expected_output": "A Rigor Matrix that grounds all four critiques in the actual code from ManageCPMRulesPage.jsx. Should include specific UX issues found in the component, feasibility of fixes, business implications of the current design, and a concrete delight upgrade suggestion.",
+      "files": ["src/components/ManageCPMRulesPage.jsx"]
+    },
+    {
+      "id": 3,
+      "prompt": "I want to build a 'Smart Budget Recommender' feature on the campaign setup flow. When an advertiser is creating a campaign, after they choose their target audience and flight dates, we show them a suggested daily budget based on: historical performance of similar campaigns, seasonal trends for their category, and the retailer's current inventory levels. The recommendation appears as an inline card with a graph showing projected impressions at different budget tiers. Is this a good idea? What should we actually build?",
+      "expected_output": "A Rigor Matrix where Feasibility flags the ML/data complexity, UX evaluates the inline card pattern and progressive disclosure, Business scores the retention and revenue impact, and Delight identifies whether this has a genuine wow moment. Verdict should be opinionated about scope.",
+      "files": []
+    }
+  ]
+}

@@ -68,12 +68,11 @@ const NAV_SECTIONS = [
       </>
     ),
     subnav: [
-      // ── Merchant Management (top-level direct link, no group)
-      { id: 'merchant-management',           label: 'Merchant Management' },
-      // ── Product catalog Management (top-level direct link, no group)
-      { id: 'product-catalog',               label: 'Product catalog Management' },
-      // ── Advertiser Management (Pulse Control Panel — centralized advertiser config hub)
-      { id: 'advertiser-management',         label: 'Advertiser Management',                    group: 'Advertiser Management', isGroupHeader: true },
+      // ── Advertiser Management
+      { id: 'advertisers',                   label: 'Advertisers',                              group: 'Advertiser Management' },
+      { id: 'persona-config',                label: 'Persona Configuration',                    group: 'Advertiser Management' },
+      // ── Product Catalog Management (top-level direct link, no group)
+      { id: 'product-catalog',               label: 'Product Catalog Management' },
       // ── Audience Manager
       { id: 'manage-segments',               label: 'Manage Segments',                         group: 'Audience Manager' },
       { id: 'manage-attributes',             label: 'Manage Attributes',                        group: 'Audience Manager' },
@@ -84,32 +83,17 @@ const NAV_SECTIONS = [
       { id: 'ops-users',                     label: 'Ops User',                                 group: 'User Access Management' },
       { id: 'advertiser-users',              label: 'Advertiser Users',                         group: 'User Access Management' },
       { id: 'account-manager-mapping',       label: 'Advertiser Account Manager Mapping',       group: 'User Access Management' },
-      // ── Advertiser Persona Management
-      { id: 'advertiser-onboarding-catalog', label: 'Advertiser Onboarding & Catalog Management', group: 'Advertiser Persona Management' },
-      { id: 'catalog-status',                label: 'Catalog Status',                           group: 'Advertiser Persona Management' },
-      { id: 'persona-config',                label: 'Persona Configuration',                    group: 'Advertiser Persona Management' },
-      { id: 'persona-allocation',            label: 'Advertiser Persona Allocation',             group: 'Advertiser Persona Management' },
       // ── Advertiser Settings
       { id: 'segment-manager',               label: 'Segment Manager',                          group: 'Advertiser Settings' },
-      { id: 'attribution-overrides',         label: 'Attribution Overrides',                    group: 'Advertiser Settings' },
       // ── Automated Rules
-      { id: 'automated-rules',               label: 'Automated Rules',                          group: 'Automated Rules',  isGroupHeader: true },
       { id: 'wallet-rules',                  label: 'Wallet Rules',                             group: 'Automated Rules' },
       // ── Develop Settings
-      { id: 'develop-settings',              label: 'Develop Settings',                         group: 'Develop Settings', isGroupHeader: true },
       { id: 'setup-details',                 label: 'Setup Details',                            group: 'Develop Settings' },
       { id: 'debug-console',                 label: 'Event Debugging',                          group: 'Develop Settings' },
       // ── Activity Log
-      { id: 'activity-log',                  label: 'Activity Log',                             group: 'Activity Log',     isGroupHeader: true },
       { id: 'event-logs',                    label: 'Event Logs',                               group: 'Activity Log' },
       { id: 'product-ads-request-logs',      label: 'Product Ads Request Logs',                 group: 'Activity Log' },
       { id: 'display-ads-request-logs',      label: 'Display Ads Request Logs',                 group: 'Activity Log' },
-      // ── Onboarding
-      { id: 'seller-onboarding',             label: 'Seller Advertiser Onboarding',             group: 'Onboarding' },
-      { id: 'brand-onboarding',              label: 'Brand Advertiser Onboarding',               group: 'Onboarding' },
-      // ── User Role Management
-      { id: 'admin-user-role',               label: 'Admin User',                               group: 'User Role Management' },
-      { id: 'advertiser-user-role',          label: 'Advertiser User',                          group: 'User Role Management' },
     ],
   },
   {

@@ -65,13 +65,13 @@ See [[Personas/index]] for the full registry.
 
 | Time | Note | Trigger |
 |------|------|---------|
-| 2026-05-05T00:00:00Z | Skills/osmos-design-translator.md | NEW skill |
-| 2026-05-05T00:00:00Z | Skills/ux-ideator.md | 7-phase pipeline expansion |
-| 2026-05-05T00:00:00Z | Skills/design-critic.md | Persona reference loading |
-| 2026-05-05T00:00:00Z | Personas/* (8 notes) | NEW Personas/ directory |
-| 2026-05-05T00:00:00Z | Skills/index.md | Added osmos-design-translator + Personas section |
-| 2026-05-05T06:33:48Z | Components/advertiser/metrics-cards.md | src/advertiser/components/metrics-cards.jsx |
-| 2026-05-05T06:33:44Z | Components/advertiser/funnel-simulation-section.md | src/advertiser/components/funnel-simulation-section.jsx |
-| 2026-05-05T06:33:43Z | Components/advertiser/theme-provider.md | src/advertiser/components/theme-provider.jsx |
-| 2026-05-05T06:33:43Z | Components/advertiser/TopBar.md | src/advertiser/components/TopBar.jsx |
-| 2026-05-05T06:33:43Z | Components/advertiser/budget-adjust-drawer.md | src/advertiser/components/budget-adjust-drawer.jsx |
+| 2026-05-07T06:30:08Z | Components/advertiser/metrics-cards.md | src/advertiser/components/metrics-cards.jsx |
+| 2026-05-07T06:30:07Z | Components/advertiser/funnel-simulation-section.md | src/advertiser/components/funnel-simulation-section.jsx |
+| 2026-05-07T06:30:07Z | Components/advertiser/theme-provider.md | src/advertiser/components/theme-provider.jsx |
+| 2026-05-07T06:30:06Z | Components/advertiser/TopBar.md | src/advertiser/components/TopBar.jsx |
+| 2026-05-07T06:30:06Z | Components/advertiser/sofie-chat-panel.md | src/advertiser/components/sofie-chat-panel.jsx |
+| 2026-05-07T06:30:06Z | Components/advertiser/budget-adjust-drawer.md | src/advertiser/components/budget-adjust-drawer.jsx |
+| 2026-05-07T06:30:06Z | Components/advertiser/sidebar.md | src/advertiser/components/sidebar.jsx |
+| 2026-05-07T06:30:06Z | Components/advertiser/ai-suggestions-panel.md | src/advertiser/components/ai-suggestions-panel.jsx |
+| 2026-05-07T06:30:06Z | Components/advertiser/performance-table.md | src/advertiser/components/performance-table.jsx |
+| 2026-05-07T06:30:06Z | Components/advertiser/filter-builder.md | src/advertiser/components/filter-builder.jsx |

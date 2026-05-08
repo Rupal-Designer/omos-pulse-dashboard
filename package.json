@@ -9,7 +9,10 @@
     "dev:advertiser": "vite --open /advertiser.html",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sync:skills": "node scripts/sync-skills.js",
+    "publish:skills": "pnpm sync:skills && cd claude-skills && pnpm publish --no-git-checks",
+    "setup:vault-cron": "node scripts/setup-cron.js"
   },
   "keywords": [],
   "author": "",

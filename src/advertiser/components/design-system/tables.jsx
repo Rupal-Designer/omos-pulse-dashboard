@@ -3,7 +3,7 @@
 import React from "react";
 
 import { Filter, Info } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from '@rishikeshjoshi-morpheus/ui';
 
 // ============================================================================
 // TABLE HEADER CELL

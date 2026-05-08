@@ -352,6 +352,7 @@ export default function App() {
             </main>
           </>
         );
+      case 'advertisers':
       case 'advertiser-management':
         return (
           <>
