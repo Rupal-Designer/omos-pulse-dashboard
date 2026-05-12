@@ -1,5 +1,5 @@
 import React from 'react';
-import { TableCard, DataTable } from './DataTable';
+import { DataTable, TableCard, ColHeader, useOsmosTable } from '../../shared/components/data-table';
 
 function CampaignIcon() {
   return (
@@ -12,36 +12,45 @@ function CampaignIcon() {
 }
 
 const COLUMNS = [
-  { label: 'Advertiser Name', sort: true },
-  { label: 'No. of Campaigns', info: true },
-  { label: 'No. of Trackers', info: true },
-  { label: 'Link Clicks', info: true },
-  { label: 'Total Product views', info: true },
-  { label: 'Add to Cart', info: true },
-  { label: 'Total Revenue', info: true },
+  { id: 'name',         accessorKey: 'name',         header: 'Advertiser Name',                                      meta: { label: 'Advertiser Name' } },
+  { id: 'campaigns',    accessorKey: 'campaigns',    header: () => <ColHeader label="No. of Campaigns"    info />,    meta: { label: 'No. of Campaigns' },    enableSorting: false },
+  { id: 'trackers',     accessorKey: 'trackers',     header: () => <ColHeader label="No. of Trackers"     info />,    meta: { label: 'No. of Trackers' },     enableSorting: false },
+  { id: 'clicks',       accessorKey: 'clicks',       header: () => <ColHeader label="Link Clicks"         info />,    meta: { label: 'Link Clicks' },         enableSorting: false },
+  { id: 'productViews', accessorKey: 'productViews', header: () => <ColHeader label="Total Product Views" info />,    meta: { label: 'Total Product Views' }, enableSorting: false },
+  { id: 'addToCart',    accessorKey: 'addToCart',    header: () => <ColHeader label="Add to Cart"         info />,    meta: { label: 'Add to Cart' },         enableSorting: false },
+  { id: 'revenue',      accessorKey: 'revenue',      header: () => <ColHeader label="Total Revenue"       info />,    meta: { label: 'Total Revenue' },       enableSorting: false },
 ];
 
-const ROWS = [
-  ['Sunsilk',  '10', '23', '12.6K', '-',    '-',   '$22K'],
-  ['Bingo',    '9',  '14', '28.6K', '445',  '311', '$33K'],
-  ['Sunfeast', '6',  '32', '23.6K', '574',  '113', '$25K'],
-  ['Vivel',    '12', '15', '21.6K', '345',  '644', '$42K'],
-  ['Red Label','14', '45', '32.6K', '455',  '234', '$32K'],
-  ['Dove',     '6',  '42', '37.6K', '667',  '221', '$25K'],
-  ['Vaseline', '13', '56', '64.6K', '322',  '323', '$25K'],
-  ['Lakme',    '5',  '37', '37.6K', '724',  '112', '$41K'],
+const DATA = [
+  { name: 'Sunsilk',   campaigns: '10', trackers: '23', clicks: '12.6K', productViews: '-',   addToCart: '-',   revenue: '$22K' },
+  { name: 'Bingo',     campaigns: '9',  trackers: '14', clicks: '28.6K', productViews: '445', addToCart: '311', revenue: '$33K' },
+  { name: 'Sunfeast',  campaigns: '6',  trackers: '32', clicks: '23.6K', productViews: '574', addToCart: '113', revenue: '$25K' },
+  { name: 'Vivel',     campaigns: '12', trackers: '15', clicks: '21.6K', productViews: '345', addToCart: '644', revenue: '$42K' },
+  { name: 'Red Label', campaigns: '14', trackers: '45', clicks: '32.6K', productViews: '455', addToCart: '234', revenue: '$32K' },
+  { name: 'Dove',      campaigns: '6',  trackers: '42', clicks: '37.6K', productViews: '667', addToCart: '221', revenue: '$25K' },
+  { name: 'Vaseline',  campaigns: '13', trackers: '56', clicks: '64.6K', productViews: '322', addToCart: '323', revenue: '$25K' },
+  { name: 'Lakme',     campaigns: '5',  trackers: '37', clicks: '37.6K', productViews: '724', addToCart: '112', revenue: '$41K' },
 ];
 
-const TOTALS = ['', '49', '126', '1.1M', '8K', '6K', '$'];
+const FOOTER = ['Totals', '49', '126', '1.1M', '8K', '6K', '$265K'];
 
 export default function CampaignsTable() {
+  const { table, globalFilter, setGlobalFilter } = useOsmosTable({
+    columns: COLUMNS,
+    data: DATA,
+    features: { sort: true, search: true, columnVisibility: true },
+  });
+
   return (
     <TableCard
       icon={<CampaignIcon />}
       title="Campaigns"
       searchPlaceholder="Search Brand Name"
+      table={table}
+      globalFilter={globalFilter}
+      onSearch={setGlobalFilter}
     >
-      <DataTable columns={COLUMNS} rows={ROWS} totals={TOTALS} />
+      <DataTable table={table} footer={FOOTER} />
     </TableCard>
   );
 }

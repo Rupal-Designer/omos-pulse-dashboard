@@ -1,22 +1,22 @@
 import React from 'react';
-import { TableCard, DataTable } from './DataTable';
+import { DataTable, TableCard, ColHeader, useOsmosTable } from '../../shared/components/data-table';
 
 const COLUMNS = [
-  { label: 'Device Name', sort: true },
-  { label: 'No. of Campaigns', info: true },
-  { label: 'Link Clicks', info: true },
-  { label: 'Total Product Views', info: true },
-  { label: 'Add to Carts', info: true },
-  { label: 'Orders', info: true },
-  { label: 'Total Revenue', info: true },
+  { id: 'device',       accessorKey: 'device',       header: 'Device Name',                                          meta: { label: 'Device Name' } },
+  { id: 'campaigns',    accessorKey: 'campaigns',    header: () => <ColHeader label="No. of Campaigns" info />,       meta: { label: 'No. of Campaigns' },   enableSorting: false },
+  { id: 'clicks',       accessorKey: 'clicks',       header: () => <ColHeader label="Link Clicks"      info />,       meta: { label: 'Link Clicks' },        enableSorting: false },
+  { id: 'productViews', accessorKey: 'productViews', header: () => <ColHeader label="Total Product Views" info />,    meta: { label: 'Total Product Views' },enableSorting: false },
+  { id: 'addToCart',    accessorKey: 'addToCart',    header: () => <ColHeader label="Add to Carts"     info />,       meta: { label: 'Add to Carts' },       enableSorting: false },
+  { id: 'orders',       accessorKey: 'orders',       header: () => <ColHeader label="Orders"           info />,       meta: { label: 'Orders' },             enableSorting: false },
+  { id: 'revenue',      accessorKey: 'revenue',      header: () => <ColHeader label="Total Revenue"    info />,       meta: { label: 'Total Revenue' },      enableSorting: false },
 ];
 
-const ROWS = [
-  ['Desktop', '15', '3.2M', '3.7M', '4.2M', '4.7M', '$750K'],
-  ['Mobile',  '30', '3.3M', '3.8M', '4.3M', '4.8M', '$700K'],
-  ['Tablet',  '15', '3.4M', '3.9M', '4.4M', '4.9M', '$850K'],
-  ['E-Reader','60', '3.5M', '4.0M', '4.5M', '5.0M', '$950K'],
-  ['Unknown', '45', '3.6M', '4.1M', '4.6M', '5.1M', '$900K'],
+const DATA = [
+  { device: 'Desktop',  campaigns: '15', clicks: '3.2M', productViews: '3.7M', addToCart: '4.2M', orders: '4.7M', revenue: '$750K' },
+  { device: 'Mobile',   campaigns: '30', clicks: '3.3M', productViews: '3.8M', addToCart: '4.3M', orders: '4.8M', revenue: '$700K' },
+  { device: 'Tablet',   campaigns: '15', clicks: '3.4M', productViews: '3.9M', addToCart: '4.4M', orders: '4.9M', revenue: '$850K' },
+  { device: 'E-Reader', campaigns: '60', clicks: '3.5M', productViews: '4.0M', addToCart: '4.5M', orders: '5.0M', revenue: '$950K' },
+  { device: 'Unknown',  campaigns: '45', clicks: '3.6M', productViews: '4.1M', addToCart: '4.6M', orders: '5.1M', revenue: '$900K' },
 ];
 
 function DeviceIcon() {
@@ -30,6 +30,12 @@ function DeviceIcon() {
 }
 
 export default function DeviceTable() {
+  const { table, globalFilter, setGlobalFilter } = useOsmosTable({
+    columns: COLUMNS,
+    data: DATA,
+    features: { sort: true, search: true, columnVisibility: true },
+  });
+
   return (
     <TableCard
       icon={<DeviceIcon />}
@@ -37,8 +43,11 @@ export default function DeviceTable() {
       searchPlaceholder="Search Category L1"
       footerLeft="Comparison mode not applicable"
       footerRight="One Filter Applicable: Date"
+      table={table}
+      globalFilter={globalFilter}
+      onSearch={setGlobalFilter}
     >
-      <DataTable columns={COLUMNS} rows={ROWS} />
+      <DataTable table={table} />
     </TableCard>
   );
 }

@@ -13,7 +13,7 @@ export function DSTable({ children, className }) {
 export function DSTableHeader({ children }) {
   return (
     <thead>
-      <tr className="border-b" style={{ borderColor: "var(--stroke)" }}>
+      <tr className="border-b" style={{ borderColor: "var(--osmos-border)" }}>
         {children}
       </tr>
     </thead>
@@ -28,7 +28,7 @@ export function DSTableHead({ children, className, sortable, onSort }) {
         sortable && "cursor-pointer hover:opacity-80",
         className,
       )}
-      style={{ color: "var(--text-secondary)" }}
+      style={{ color: "var(--osmos-fg-muted)" }}
       onClick={sortable ? onSort : undefined}
     >
       {children}
@@ -49,7 +49,7 @@ export function DSTableRow({ children, className, onClick, hover = true }) {
         onClick && "cursor-pointer",
         className,
       )}
-      style={{ borderColor: "var(--stroke-table)" }}
+      style={{ borderColor: "var(--osmos-border)" }}
       onClick={onClick}
     >
       {children}
@@ -61,7 +61,7 @@ export function DSTableCell({ children, className }) {
   return (
     <td
       className={cn("p-3 text-sm", className)}
-      style={{ color: "var(--text-primary)" }}
+      style={{ color: "var(--osmos-fg)" }}
     >
       {children}
     </td>

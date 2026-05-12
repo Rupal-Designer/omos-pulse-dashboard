@@ -1,11 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import {
-  Icon, InfoIcon, RefreshIcon, DownloadIcon, PlusIcon, FilterIcon,
-  ChevronDownIcon, SearchIcon, CloseIcon, CheckIcon, Button, Checkbox, Badge,
+  Icon, InfoIcon, RefreshIcon, DownloadIcon, PlusIcon,
+  ChevronDownIcon, SearchIcon, CloseIcon, CheckIcon, Button, Badge,
 } from '../../ui';
 import { CreateCampaignModal }    from './campaign-wizard/create-campaign-modal';
 import { CampaignWizard }         from './campaign-wizard/campaign-wizard';
 import { InstoreCampaignWizard }  from './campaign-wizard/instore-campaign-wizard';
+import { DataTable, ColHeader, useOsmosTable } from '../../shared/components/data-table';
 
 // ── Design tokens ────────────────────────────────────────────────────────────
 const FONT     = "'Open Sans', sans-serif";
@@ -17,8 +18,6 @@ const TEXT_MID = 'var(--osmos-fg-muted)';
 const TEXT_SUB = 'var(--osmos-fg-subtle)';
 const ACCENT   = 'var(--osmos-brand-primary)';
 const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-const GREEN    = 'var(--osmos-brand-green)';
-
 
 // ── Hand-rolled icons ─────────────────────────────────────────────────────────
 const BarChartIcon = ({ size = 14, color = TEXT_MID }) => (
@@ -45,16 +44,12 @@ const SparklesIcon = ({ size = 14, color = ACCENT }) => (
   </Icon>
 );
 
-// ── Cell style constants ──────────────────────────────────────────────────────
-const TH = { padding: 12, fontSize: 12, fontWeight: 500, color: TEXT_MID, textAlign: 'left', background: BG };
-const TD = { padding: 12, fontSize: 13, color: TEXT, background: BG };
+// ── Form style ────────────────────────────────────────────────────────────────
 const MENU_ITEM_STYLE = {
   display: 'block', width: '100%', padding: '9px 16px', textAlign: 'left',
   border: 'none', background: 'transparent', cursor: 'pointer',
   fontSize: 13, color: TEXT, fontFamily: FONT,
 };
-
-// ── Form style ────────────────────────────────────────────────────────────────
 const SELECT_STYLE = {
   flex: 1, padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8,
   fontSize: 13, outline: 'none', color: TEXT, background: BG, fontFamily: FONT, cursor: 'pointer',
@@ -129,12 +124,32 @@ const filterFields = [
 ];
 
 const filterOperators = [
-  { label: 'equals (=)',    value: 'equals'     },
-  { label: 'not equals (≠)',value: 'not_equals' },
-  { label: 'contains',      value: 'contains'   },
-  { label: 'greater than (>)', value: 'gt'      },
-  { label: 'less than (<)', value: 'lt'         },
+  { label: 'equals (=)',        value: 'equals'     },
+  { label: 'not equals (≠)',   value: 'not_equals' },
+  { label: 'contains',          value: 'contains'   },
+  { label: 'greater than (>)', value: 'gt'         },
+  { label: 'less than (<)',    value: 'lt'         },
 ];
+
+// ── Filter application ────────────────────────────────────────────────────────
+function applyFilters(data, filters) {
+  if (!filters.length) return data;
+  return data.filter(row =>
+    filters.every(({ field, operator, value }) => {
+      const cell = String(row[field] ?? '').toLowerCase();
+      const val  = String(value ?? '').toLowerCase();
+      switch (operator) {
+        case 'contains':     return cell.includes(val);
+        case 'not_contains': return !cell.includes(val);
+        case 'equals':       return cell === val;
+        case 'not_equals':   return cell !== val;
+        case 'starts_with':  return cell.startsWith(val);
+        case 'ends_with':    return cell.endsWith(val);
+        default:             return cell.includes(val);
+      }
+    })
+  );
+}
 
 // ── CampaignTable ─────────────────────────────────────────────────────────────
 export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign }) {
@@ -147,7 +162,6 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
   const [selectedCampaignForAdGroup, setSelectedCampaignForAdGroup] = useState(null);
   const [wizardMode,                 setWizardMode]                 = useState('create_campaign');
   const [wizardSelectedCampaign,     setWizardSelectedCampaign]     = useState(null);
-  const [hoveredRow,                 setHoveredRow]                 = useState(null);
   const [openMenuRow,                setOpenMenuRow]                = useState(null);
   const menuRef = useRef(null);
 
@@ -167,6 +181,144 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
 
   const campaigns = campaignsData[activeAdType] || campaignsData['Product Ads'];
   const adGroups  = adGroupsData[activeAdType]  || adGroupsData['Product Ads'];
+
+  // Pre-filter data using applied filter chips
+  const filteredCampaigns = useMemo(() => applyFilters(campaigns, appliedFilters), [campaigns, appliedFilters]);
+  const filteredAdGroups  = useMemo(() => applyFilters(adGroups,  appliedFilters), [adGroups,  appliedFilters]);
+
+  // ── Column definitions ────────────────────────────────────────────────────
+  const campaignColumns = useMemo(() => [
+    {
+      id: 'status', accessorKey: 'status', enableSorting: false,
+      header: () => <ColHeader label="Status" />,
+      cell: info => <Badge status={info.getValue().charAt(0).toUpperCase() + info.getValue().slice(1).toLowerCase()} />,
+    },
+    {
+      id: 'name', accessorKey: 'name',
+      header: 'Name',
+      cell: info => <span style={{ color: ACCENT, cursor: 'pointer' }}>{info.getValue()}</span>,
+    },
+    {
+      id: 'bidding', accessorKey: 'bidding', enableSorting: false,
+      header: () => <ColHeader label="Bidding Strategy" info />,
+    },
+    { id: 'date',   accessorKey: 'date',   enableSorting: false, header: 'Creation Date' },
+    {
+      id: 'budget', accessorKey: 'budget', enableSorting: false,
+      header: () => <ColHeader label="Daily Budget" info />,
+      cell: info => <span style={{ fontWeight: 500, color: ACCENT }}>{info.getValue()}</span>,
+    },
+    { id: 'spend',  accessorKey: 'spend',  enableSorting: false, header: 'Ad Spend' },
+    {
+      id: 'actions', header: '', enableSorting: false,
+      accessorFn: row => row.name,
+      cell: info => {
+        const campaign = info.row.original;
+        const rowId    = info.row.id;
+        const isOpen   = openMenuRow === rowId;
+        return (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end' }}>
+            {campaign.showContinue ? (
+              <button style={{ padding: '4px 12px', fontSize: 12, border: `1px solid ${BORDER}`, borderRadius: 4, backgroundColor: BG, color: TEXT_MID, cursor: 'pointer', fontFamily: FONT }}>
+                Continue
+              </button>
+            ) : (
+              <button style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}>
+                <BarChartIcon size={14} color={TEXT_MID} />
+              </button>
+            )}
+            <button
+              title="Debug this campaign with AI"
+              onClick={() => onDebugCampaign && onDebugCampaign({ ...campaign, adType: activeAdType })}
+              style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: 4 }}
+            >
+              <SparklesIcon size={14} color={ACCENT} />
+            </button>
+            <div ref={isOpen ? menuRef : null} style={{ position: 'relative' }}>
+              <button
+                onClick={() => setOpenMenuRow(isOpen ? null : rowId)}
+                style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}
+              >
+                <MoreVerticalIcon size={14} color={TEXT_MID} />
+              </button>
+              {isOpen && (
+                <div style={{
+                  position: 'absolute', right: 0, top: 28, zIndex: 200,
+                  background: BG, border: `1px solid ${BORDER}`, borderRadius: 8,
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.12)', minWidth: 172, overflow: 'hidden',
+                }}>
+                  {['Edit', 'Duplicate', campaign.status === 'ACTIVE' ? 'Pause' : 'Resume', 'Archive'].map((action) => (
+                    <button key={action} onClick={() => setOpenMenuRow(null)} style={MENU_ITEM_STYLE}>
+                      {action}
+                    </button>
+                  ))}
+                  <div style={{ borderTop: `1px solid ${BORDER}`, margin: '4px 0' }} />
+                  <button
+                    onClick={() => { setOpenMenuRow(null); onDebugCampaign && onDebugCampaign({ ...campaign, adType: activeAdType }); }}
+                    style={{ ...MENU_ITEM_STYLE, color: ACCENT, display: 'flex', alignItems: 'center', gap: 8 }}
+                  >
+                    <SparklesIcon size={13} color={ACCENT} />
+                    Debug with AI
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      },
+    },
+  ], [openMenuRow, onDebugCampaign, activeAdType]);
+
+  const adGroupColumns = useMemo(() => [
+    {
+      id: 'status', accessorKey: 'status', enableSorting: false,
+      header: () => <ColHeader label="Status" />,
+      cell: info => <Badge status={info.getValue().charAt(0).toUpperCase() + info.getValue().slice(1).toLowerCase()} />,
+    },
+    {
+      id: 'name', accessorKey: 'name',
+      header: 'Ad Group Name',
+      cell: info => <span style={{ color: ACCENT, cursor: 'pointer' }}>{info.getValue()}</span>,
+    },
+    { id: 'campaign', accessorKey: 'campaign', enableSorting: false, header: 'Campaign' },
+    {
+      id: 'bidding', accessorKey: 'bidding', enableSorting: false,
+      header: () => <ColHeader label="Bidding Strategy" info />,
+    },
+    { id: 'date',   accessorKey: 'date',   enableSorting: false, header: 'Creation Date' },
+    {
+      id: 'budget', accessorKey: 'budget', enableSorting: false,
+      header: () => <ColHeader label="Daily Budget" info />,
+      cell: info => <span style={{ fontWeight: 500, color: ACCENT }}>{info.getValue()}</span>,
+    },
+    { id: 'spend',  accessorKey: 'spend',  enableSorting: false, header: 'Ad Spend' },
+    {
+      id: 'actions', header: '', enableSorting: false,
+      accessorFn: row => row.name,
+      cell: () => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end' }}>
+          <button style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}>
+            <BarChartIcon size={14} color={TEXT_MID} />
+          </button>
+          <button style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}>
+            <MoreVerticalIcon size={14} color={TEXT_MID} />
+          </button>
+        </div>
+      ),
+    },
+  ], []);
+
+  const columns      = view === 'campaigns' ? campaignColumns : adGroupColumns;
+  const data         = view === 'campaigns' ? filteredCampaigns : filteredAdGroups;
+  const footer       = view === 'campaigns'
+    ? ['', '', '', '', '', '', '$13.9 k', '']
+    : ['', '', '', '', '', '', '', '$8.7 k', ''];
+
+  const { table, globalFilter, setGlobalFilter } = useOsmosTable({
+    columns,
+    data,
+    features: { select: true, sort: true, search: true },
+  });
 
   // ── Filter handlers ──
   const handleAddFilterRow = () => {
@@ -231,6 +383,14 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
     setWizardOpen(true);
   };
 
+  function handleViewChange(v) {
+    setView(v);
+    setGlobalFilter('');
+    setAppliedFilters([]);
+    setFilterBuilderRows([]);
+    setOpenMenuRow(null);
+  }
+
   return (
     <>
       <div style={{ borderRadius: 8, border: `1px solid ${BORDER}`, backgroundColor: BG, fontFamily: FONT }}>
@@ -255,23 +415,22 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <IconBtn><RefreshIcon size={14} color={TEXT_MID} /></IconBtn>
             <IconBtn><DownloadIcon size={14} color={TEXT_MID} /></IconBtn>
-            {/* Chart type picker */}
             <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${BORDER}`, borderRadius: 8 }}>
               <button style={{ padding: '6px 12px', border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
                 <BarChartIcon size={14} color={TEXT_MID} />
               </button>
               <ChevronDownIcon size={14} color={TEXT_MID} style={{ marginRight: 8 }} />
             </div>
-            {/* Search */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px', border: `1px solid ${BORDER}`, borderRadius: 8 }}>
               <SearchIcon size={14} color={TEXT_SUB} />
               <input
                 type="text"
+                value={globalFilter}
+                onChange={e => setGlobalFilter(e.target.value)}
                 placeholder={view === 'campaigns' ? 'Search Campaign' : 'Search Ad Group'}
                 style={{ border: 'none', outline: 'none', width: 128, fontSize: 13, color: TEXT, background: 'transparent', fontFamily: FONT }}
               />
             </div>
-            <IconBtn><DownloadIcon size={14} color={TEXT_MID} /></IconBtn>
             <Button variant="primary" onClick={view === 'campaigns' ? handleCreateCampaign : handleCreateAdGroup}>
               <PlusIcon size={13} color="#fff" />
               {view === 'campaigns' ? 'Create Campaign' : 'Create Ad Group'}
@@ -285,7 +444,7 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
             {[['campaigns', `Campaigns (${campaigns.length})`], ['adGroups', `Ad Groups (${adGroups.length})`]].map(([v, label]) => (
               <button
                 key={v}
-                onClick={() => setView(v)}
+                onClick={() => handleViewChange(v)}
                 style={{
                   padding: '8px 16px', borderRadius: 6, border: 'none', cursor: 'pointer',
                   fontSize: 13, fontWeight: 500, fontFamily: FONT, transition: 'all 0.15s',
@@ -403,186 +562,9 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
         </div>
 
         {/* ── Table ── */}
-        {view === 'campaigns' ? (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: `1px solid ${BORDER}` }}>
-                <th style={{ ...TH, width: 40 }}><Checkbox checked={false} onChange={() => {}} /></th>
-                <th style={TH}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                    Status <FilterIcon size={12} color={TEXT_MID} />
-                  </div>
-                </th>
-                <th style={TH}>Name</th>
-                <th style={TH}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                    Bidding Strategy <InfoIcon size={12} color={TEXT_SUB} />
-                  </div>
-                </th>
-                <th style={TH}>Creation Date</th>
-                <th style={TH}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                    Daily Budget <InfoIcon size={12} color={TEXT_SUB} />
-                  </div>
-                </th>
-                <th style={TH}>Ad Spend</th>
-                <th style={{ ...TH, width: 96 }} />
-              </tr>
-            </thead>
-            <tbody>
-              {campaigns.map((campaign, index) => (
-                <tr
-                  key={index}
-                  onMouseEnter={() => setHoveredRow(`c${index}`)}
-                  onMouseLeave={() => setHoveredRow(null)}
-                  style={{ borderBottom: `1px solid ${BORDER}`, backgroundColor: hoveredRow === `c${index}` ? BG_SUBTLE : BG }}
-                >
-                  <td style={TD}><Checkbox checked={false} onChange={() => {}} /></td>
-                  <td style={TD}><Badge status={campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1).toLowerCase()} /></td>
-                  <td style={TD}>
-                    <span style={{ color: ACCENT, cursor: 'pointer', textDecoration: hoveredRow === `c${index}` ? 'underline' : 'none' }}>
-                      {campaign.name}
-                    </span>
-                  </td>
-                  <td style={TD}>{campaign.bidding}</td>
-                  <td style={TD}>{campaign.date}</td>
-                  <td style={{ ...TD, fontWeight: 500, color: ACCENT }}>{campaign.budget}</td>
-                  <td style={TD}>{campaign.spend}</td>
-                  <td style={{ ...TD, position: 'relative' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end' }}>
-                      {campaign.showContinue ? (
-                        <button style={{ padding: '4px 12px', fontSize: 12, border: `1px solid ${BORDER}`, borderRadius: 4, backgroundColor: BG, color: TEXT_MID, cursor: 'pointer', fontFamily: FONT }}>
-                          Continue
-                        </button>
-                      ) : (
-                        <button style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}>
-                          <BarChartIcon size={14} color={TEXT_MID} />
-                        </button>
-                      )}
-                      {/* Direct Debug button — visible on row hover */}
-                      {hoveredRow === `c${index}` && (
-                        <button
-                          title="Debug this campaign with AI"
-                          onClick={() => onDebugCampaign && onDebugCampaign({ ...campaign, adType: activeAdType })}
-                          style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: 4 }}
-                        >
-                          <SparklesIcon size={14} color={ACCENT} />
-                        </button>
-                      )}
-                      {/* Ellipsis menu */}
-                      <div ref={openMenuRow === `c${index}` ? menuRef : null} style={{ position: 'relative' }}>
-                        <button
-                          onClick={() => setOpenMenuRow(openMenuRow === `c${index}` ? null : `c${index}`)}
-                          style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}
-                        >
-                          <MoreVerticalIcon size={14} color={TEXT_MID} />
-                        </button>
-                        {openMenuRow === `c${index}` && (
-                          <div style={{
-                            position: 'absolute', right: 0, top: 28, zIndex: 200,
-                            background: BG, border: `1px solid ${BORDER}`, borderRadius: 8,
-                            boxShadow: '0 4px 16px rgba(0,0,0,0.12)', minWidth: 172, overflow: 'hidden',
-                          }}>
-                            {['Edit', 'Duplicate', campaign.status === 'ACTIVE' ? 'Pause' : 'Resume', 'Archive'].map((action) => (
-                              <button key={action} onClick={() => setOpenMenuRow(null)} style={MENU_ITEM_STYLE}>
-                                {action}
-                              </button>
-                            ))}
-                            <div style={{ borderTop: `1px solid ${BORDER}`, margin: '4px 0' }} />
-                            <button
-                              onClick={() => { setOpenMenuRow(null); onDebugCampaign && onDebugCampaign({ ...campaign, adType: activeAdType }); }}
-                              style={{ ...MENU_ITEM_STYLE, color: ACCENT, display: 'flex', alignItems: 'center', gap: 8 }}
-                            >
-                              <SparklesIcon size={13} color={ACCENT} />
-                              Debug with AI
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr style={{ backgroundColor: BG_SUBTLE }}>
-                <td colSpan={6} style={{ padding: 12 }} />
-                <td style={{ padding: 12, fontSize: 13, fontWeight: 500, color: TEXT }}>$13.9 k</td>
-                <td style={{ padding: 12 }} />
-              </tr>
-            </tfoot>
-          </table>
-        ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: `1px solid ${BORDER}` }}>
-                <th style={{ ...TH, width: 40 }}><Checkbox checked={false} onChange={() => {}} /></th>
-                <th style={TH}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                    Status <FilterIcon size={12} color={TEXT_MID} />
-                  </div>
-                </th>
-                <th style={TH}>Ad Group Name</th>
-                <th style={TH}>Campaign</th>
-                <th style={TH}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                    Bidding Strategy <InfoIcon size={12} color={TEXT_SUB} />
-                  </div>
-                </th>
-                <th style={TH}>Creation Date</th>
-                <th style={TH}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                    Daily Budget <InfoIcon size={12} color={TEXT_SUB} />
-                  </div>
-                </th>
-                <th style={TH}>Ad Spend</th>
-                <th style={{ ...TH, width: 96 }} />
-              </tr>
-            </thead>
-            <tbody>
-              {adGroups.map((adGroup, index) => (
-                <tr
-                  key={index}
-                  onMouseEnter={() => setHoveredRow(`ag${index}`)}
-                  onMouseLeave={() => setHoveredRow(null)}
-                  style={{ borderBottom: `1px solid ${BORDER}`, backgroundColor: hoveredRow === `ag${index}` ? BG_SUBTLE : BG }}
-                >
-                  <td style={TD}><Checkbox checked={false} onChange={() => {}} /></td>
-                  <td style={TD}><Badge status={adGroup.status.charAt(0).toUpperCase() + adGroup.status.slice(1).toLowerCase()} /></td>
-                  <td style={TD}>
-                    <span style={{ color: ACCENT, cursor: 'pointer', textDecoration: hoveredRow === `ag${index}` ? 'underline' : 'none' }}>
-                      {adGroup.name}
-                    </span>
-                  </td>
-                  <td style={{ ...TD, fontSize: 12, color: TEXT_MID }}>{adGroup.campaign}</td>
-                  <td style={TD}>{adGroup.bidding}</td>
-                  <td style={TD}>{adGroup.date}</td>
-                  <td style={{ ...TD, fontWeight: 500, color: ACCENT }}>{adGroup.budget}</td>
-                  <td style={TD}>{adGroup.spend}</td>
-                  <td style={TD}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end' }}>
-                      <button style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}>
-                        <BarChartIcon size={14} color={TEXT_MID} />
-                      </button>
-                      <button style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}>
-                        <MoreVerticalIcon size={14} color={TEXT_MID} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr style={{ backgroundColor: BG_SUBTLE }}>
-                <td colSpan={7} style={{ padding: 12 }} />
-                <td style={{ padding: 12, fontSize: 13, fontWeight: 500, color: TEXT }}>$8.7 k</td>
-                <td style={{ padding: 12 }} />
-              </tr>
-            </tfoot>
-          </table>
-        )}
+        <DataTable table={table} footer={footer} />
 
-        {/* ── Footer ── */}
+        {/* ── Footer bar ── */}
         <div style={{ padding: '8px 16px', display: 'flex', justifyContent: 'space-between', fontSize: 12, color: TEXT_MID, borderTop: `1px solid ${BORDER}` }}>
           <span>Comparison mode not applicable</span>
           <span>One Filter Applicable: <span style={{ color: TEXT, fontWeight: 500 }}>Date</span></span>
@@ -594,7 +576,6 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
         <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)' }} onClick={() => setCampaignSelectModalOpen(false)} />
           <div style={{ position: 'relative', backgroundColor: BG, borderRadius: 12, boxShadow: '0 20px 40px rgba(0,0,0,0.2)', width: '100%', maxWidth: 512, margin: '0 16px', overflow: 'hidden', fontFamily: FONT }}>
-            {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 20, borderBottom: `1px solid ${BORDER}` }}>
               <div>
                 <h2 style={{ margin: 0, fontSize: 18, fontWeight: 600, color: TEXT }}>Select Campaign</h2>
@@ -610,7 +591,6 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
               </button>
             </div>
 
-            {/* Campaign list */}
             <div style={{ padding: 20, maxHeight: 400, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 8 }}>
               {campaigns.map((campaign, index) => {
                 const selected = selectedCampaignForAdGroup === campaign.name;
@@ -645,7 +625,6 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
               })}
             </div>
 
-            {/* Footer */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12, padding: 20, borderTop: `1px solid ${BORDER}`, backgroundColor: BG_SUBTLE }}>
               <Button variant="outline" onClick={() => setCampaignSelectModalOpen(false)}>Cancel</Button>
               <Button variant="primary" onClick={handleCampaignSelectConfirm} disabled={!selectedCampaignForAdGroup}>
@@ -681,7 +660,6 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
     </>
   );
 }
-
 
 // ── IconBtn helper ────────────────────────────────────────────────────────────
 function IconBtn({ children, onClick }) {

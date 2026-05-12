@@ -1,21 +1,21 @@
 import React from 'react';
-import { TableCard, DataTable } from './DataTable';
+import { DataTable, TableCard, ColHeader, useOsmosTable } from '../../shared/components/data-table';
 
 const COLUMNS = [
-  { label: 'Referrer Name', sort: true },
-  { label: 'No. of Campaigns', info: true },
-  { label: 'Link Clicks', info: true },
-  { label: 'Total Product Views', info: true },
-  { label: 'Add to Carts', info: true },
-  { label: 'Orders', info: true },
-  { label: 'Total Revenue', info: true },
+  { id: 'referrer',     accessorKey: 'referrer',     header: 'Referrer Name',                                        meta: { label: 'Referrer Name' } },
+  { id: 'campaigns',    accessorKey: 'campaigns',    header: () => <ColHeader label="No. of Campaigns" info />,       meta: { label: 'No. of Campaigns' },   enableSorting: false },
+  { id: 'clicks',       accessorKey: 'clicks',       header: () => <ColHeader label="Link Clicks"      info />,       meta: { label: 'Link Clicks' },        enableSorting: false },
+  { id: 'productViews', accessorKey: 'productViews', header: () => <ColHeader label="Total Product Views" info />,    meta: { label: 'Total Product Views' },enableSorting: false },
+  { id: 'addToCart',    accessorKey: 'addToCart',    header: () => <ColHeader label="Add to Carts"     info />,       meta: { label: 'Add to Carts' },       enableSorting: false },
+  { id: 'orders',       accessorKey: 'orders',       header: () => <ColHeader label="Orders"           info />,       meta: { label: 'Orders' },             enableSorting: false },
+  { id: 'revenue',      accessorKey: 'revenue',      header: () => <ColHeader label="Total Revenue"    info />,       meta: { label: 'Total Revenue' },      enableSorting: false },
 ];
 
-const ROWS = [
-  ['linkedin.com',    '15', '4.2M', '1.3M', '550K', '149K', '$830K'],
-  ['google.in',       '17', '4.4M', '0.9M', '880K', '770K', '$570K'],
-  ['web.whatsapp.com','21', '910K', '829K', '640K', '750K', '$990K'],
-  ['x.com',           '14', '950K', '960K', '960K', '890K', '$660K'],
+const DATA = [
+  { referrer: 'linkedin.com',     campaigns: '15', clicks: '4.2M', productViews: '1.3M', addToCart: '550K', orders: '149K', revenue: '$830K' },
+  { referrer: 'google.in',        campaigns: '17', clicks: '4.4M', productViews: '0.9M', addToCart: '880K', orders: '770K', revenue: '$570K' },
+  { referrer: 'web.whatsapp.com', campaigns: '21', clicks: '910K', productViews: '829K', addToCart: '640K', orders: '750K', revenue: '$990K' },
+  { referrer: 'x.com',            campaigns: '14', clicks: '950K', productViews: '960K', addToCart: '960K', orders: '890K', revenue: '$660K' },
 ];
 
 function ReferrerIcon() {
@@ -29,6 +29,12 @@ function ReferrerIcon() {
 }
 
 export default function ReferrerTable() {
+  const { table, globalFilter, setGlobalFilter } = useOsmosTable({
+    columns: COLUMNS,
+    data: DATA,
+    features: { sort: true, search: true, columnVisibility: true },
+  });
+
   return (
     <TableCard
       icon={<ReferrerIcon />}
@@ -36,8 +42,11 @@ export default function ReferrerTable() {
       searchPlaceholder="Search Category L1"
       footerLeft="Comparison mode not applicable"
       footerRight="One Filter Applicable: Date"
+      table={table}
+      globalFilter={globalFilter}
+      onSearch={setGlobalFilter}
     >
-      <DataTable columns={COLUMNS} rows={ROWS} />
+      <DataTable table={table} />
     </TableCard>
   );
 }

@@ -14,6 +14,10 @@ export default defineConfig({
       // imports resolve without rewriting every file.
       '@': resolve(__dirname, 'src/advertiser'),
     },
+    // Force a single React instance across the app and all packages (including the
+    // design system's CJS require("react")). Without this, pnpm's per-worktree
+    // node_modules can create a second react@19 instance, breaking hooks.
+    dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
   },
   build: {
     // tokens.css from @rishikeshjoshi-morpheus/ui contains CSS vars with '/' in names

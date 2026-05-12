@@ -1,9 +1,11 @@
 "use client";
 
 import React from "react";
-
 import { Filter, Info } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DataTable as SharedDataTable,
+  useOsmosTable,
+} from "../../../shared/components/data-table";
 
 // ============================================================================
 // TABLE HEADER CELL
@@ -19,7 +21,7 @@ export function TableHeaderCell({
   return (
     <th
       className={`p-3 text-xs font-medium ${className}`}
-      style={{ color: "var(--text-secondary)", width }}
+      style={{ color: "var(--osmos-fg-muted)", width }}
     >
       <div className="flex items-center gap-1">
         {children}
@@ -40,7 +42,7 @@ export function TableCell({ children, align = "left", className = "" }) {
   return (
     <td
       className={`p-3 text-sm ${className}`}
-      style={{ color: "var(--text-primary)", textAlign: align }}
+      style={{ color: "var(--osmos-fg)", textAlign: align }}
     >
       {children}
     </td>
@@ -55,7 +57,7 @@ export function TableRow({ children, hoverable = true, className = "" }) {
   return (
     <tr
       className={`border-b ${hoverable ? "hover:bg-surface-1" : ""} ${className}`}
-      style={{ borderColor: "var(--stroke-light)" }}
+      style={{ borderColor: "var(--osmos-border)" }}
     >
       {children}
     </tr>
@@ -74,83 +76,35 @@ export function DataTable({
   footer,
   className = "",
 }) {
-  const [selectedRows, setSelectedRows] = React.useState([]);
+  // Remap legacy column format { key, label, hasFilter, hasInfo, width, render }
+  // to TanStack column defs, preserving existing TableHeaderCell + TableCell rendering.
+  const tsColumns = React.useMemo(() => columns.map((col) => ({
+    id: col.key,
+    accessorKey: col.key,
+    enableSorting: false,
+    header: () => (
+      <TableHeaderCell hasFilter={col.hasFilter} hasInfo={col.hasInfo} width={col.width}>
+        {col.label}
+      </TableHeaderCell>
+    ),
+    cell: (info) =>
+      col.render
+        ? col.render(info.getValue(), info.row.original)
+        : <TableCell>{info.getValue()}</TableCell>,
+  })), [columns]);
 
-  const toggleAll = () => {
-    if (selectedRows.length === data.length) {
-      setSelectedRows([]);
-      onRowSelect?.([]);
-    } else {
-      setSelectedRows(data.map((_, i) => i));
-      onRowSelect?.(data);
-    }
-  };
-
-  const toggleRow = (index) => {
-    const newSelection = selectedRows.includes(index)
-      ? selectedRows.filter((i) => i !== index)
-      : [...selectedRows, index];
-    setSelectedRows(newSelection);
-    onRowSelect?.(newSelection.map((i) => data[i]));
-  };
+  const { table } = useOsmosTable({
+    columns: tsColumns,
+    data,
+    features: { select: selectable },
+    onRowSelect,
+  });
 
   return (
-    <div className={`overflow-x-auto ${className}`}>
-      <table className="w-full">
-        <thead>
-          <tr
-            className="border-b text-left"
-            style={{ borderColor: "var(--stroke)" }}
-          >
-            {selectable && (
-              <th
-                className="p-3 w-10"
-                style={{ backgroundColor: "var(--screen-bg)" }}
-              >
-                <Checkbox
-                  checked={selectedRows.length === data.length}
-                  onCheckedChange={toggleAll}
-                  style={{ borderColor: "var(--stroke)" }}
-                />
-              </th>
-            )}
-            {columns.map((col) => (
-              <TableHeaderCell
-                key={col.key}
-                hasFilter={col.hasFilter}
-                hasInfo={col.hasInfo}
-                width={col.width}
-              >
-                {col.label}
-              </TableHeaderCell>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row, index) => (
-            <TableRow key={index}>
-              {selectable && (
-                <td
-                  className="p-3"
-                  style={{ backgroundColor: "var(--screen-bg)" }}
-                >
-                  <Checkbox
-                    checked={selectedRows.includes(index)}
-                    onCheckedChange={() => toggleRow(index)}
-                    style={{ borderColor: "var(--stroke)" }}
-                  />
-                </td>
-              )}
-              {columns.map((col) => (
-                <TableCell key={col.key}>
-                  {col.render ? col.render(row[col.key], row) : row[col.key]}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </tbody>
-        {footer && <tfoot>{footer}</tfoot>}
-      </table>
-    </div>
+    <SharedDataTable
+      table={table}
+      footer={footer}
+      className={className}
+    />
   );
 }
