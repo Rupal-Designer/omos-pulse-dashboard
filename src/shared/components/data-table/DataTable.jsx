@@ -122,11 +122,11 @@ export function DataTable({ table, features = {}, footer, className = '' }) {
               key={row.id}
               style={{
                 borderBottom: '1px solid var(--osmos-border)',
-                background: ri % 2 === 0 ? 'var(--osmos-bg)' : 'var(--osmos-bg-muted)',
+                background: 'var(--osmos-bg)',
                 transition: 'background 0.1s',
               }}
               onMouseEnter={e => { e.currentTarget.style.background = 'var(--osmos-bg-subtle)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = ri % 2 === 0 ? 'var(--osmos-bg)' : 'var(--osmos-bg-muted)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'var(--osmos-bg)'; }}
             >
               {row.getVisibleCells().map(cell => (
                 <td
