@@ -5,7 +5,7 @@ name: InfoBanner
 tags: [molecule, ui-component, notification, display]
 source-file: src/ui/molecules/InfoBanner.jsx
 export-name: InfoBanner
-last-updated: 2026-04-29T18:00:00Z
+last-updated: 2026-05-08T06:30:02Z
 ---
 
 # InfoBanner

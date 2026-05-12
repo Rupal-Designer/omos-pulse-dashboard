@@ -5,7 +5,7 @@ name: Stepper
 tags: [molecule, ui-component, navigation, form]
 source-file: src/ui/molecules/Stepper.jsx
 export-name: Stepper
-last-updated: 2026-04-29T18:00:00Z
+last-updated: 2026-05-08T06:30:00Z
 ---
 
 # Stepper

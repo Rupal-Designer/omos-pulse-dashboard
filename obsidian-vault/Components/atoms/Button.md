@@ -5,7 +5,7 @@ name: Button
 tags: [atom, ui-component, interactive]
 source-file: src/ui/atoms/Button.jsx
 export-name: Button
-last-updated: 2026-04-29T18:00:00Z
+last-updated: 2026-05-08T06:30:02Z
 ---
 
 # Button

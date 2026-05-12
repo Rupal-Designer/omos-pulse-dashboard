@@ -1,70 +1,38 @@
-import React from 'react';
+import { Button as MorpheusButton } from '@rishikeshjoshi-morpheus/ui';
 
-const FONT = "'Open Sans', sans-serif";
-
-const BASE = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: 6,
-  fontFamily: FONT,
-  fontSize: 13,
-  fontWeight: 600,
-  borderRadius: 6,
-  cursor: 'pointer',
-  border: 'none',
-  outline: 'none',
-  whiteSpace: 'nowrap',
-  transition: 'opacity 0.15s',
-  textDecoration: 'none',
+// ── Design-system color overrides ────────────────────────────────────────────
+// Chakra resolves colorPalette="blue" → --osmos-colors-blue-* vars.
+// The morpheus theme ships blue.600 = #2563eb, but our Figma spec calls for
+// --primary (#1970e1).  Override the blue palette vars on the element so the
+// full Chakra recipe (default, hover/90%, disabled) resolves to our values.
+// Hover is handled automatically: Chakra uses colorPalette.solid/90 → #1970e1 @ 90%
+const BLUE_PALETTE = {
+  '--osmos-colors-blue-solid':    'var(--primary)',      /* #1970e1 — solid bg  */
+  '--osmos-colors-blue-contrast': '#ffffff',             /* text on solid        */
+  '--osmos-colors-blue-fg':       'var(--primary)',      /* outline/ghost text   */
+  '--osmos-colors-blue-subtle':   'var(--primary-bg)',   /* ghost/outline hover  */
+  '--osmos-colors-blue-muted':    'var(--primary-bg)',   /* active press bg      */
+  '--osmos-colors-blue-border':   'var(--primary)',      /* outline border       */
 };
 
-const VARIANTS = {
-  primary: {
-    background: 'var(--osmos-brand-primary)',
-    color: '#fff',
-    padding: '8px 18px',
-    border: 'none',
-  },
-  outline: {
-    background: 'var(--osmos-bg)',
-    color: 'var(--osmos-fg-muted)',
-    padding: '7px 14px',
-    border: '1px solid var(--osmos-border)',
-  },
-  ghost: {
-    background: 'none',
-    color: 'var(--osmos-fg-muted)',
-    padding: '7px 14px',
-    border: 'none',
-  },
-  icon: {
-    background: 'var(--osmos-bg)',
-    color: 'var(--osmos-fg-muted)',
-    padding: '6px',
-    border: '1px solid var(--osmos-border)',
-    borderRadius: 6,
-  },
-  link: {
-    background: 'none',
-    color: 'var(--osmos-brand-primary)',
-    padding: '0',
-    border: 'none',
-    fontWeight: 600,
-    fontSize: 13,
-    textDecoration: 'underline',
-    textUnderlineOffset: 2,
-  },
+// ── Horizontal padding override ───────────────────────────────────────────────
+// Chakra md=16px, sm=14px — both too wide for our compact product UI.
+// Design system spec (token CSV "ONLY DS Spacing"): Medium=12px, Small=8px.
+const SIZE_PADDING = {
+  sm: { paddingInline: '8px'  },
+  md: { paddingInline: '12px' },
 };
 
-const DISABLED = { opacity: 0.45, cursor: 'not-allowed', pointerEvents: 'none' };
-const SM = { fontSize: 12, padding: '5px 12px' };
+const VARIANT_MAP = {
+  primary: 'solid',
+  outline: 'outline',
+  ghost:   'ghost',
+  icon:    'outline',
+  link:    'plain',
+};
 
-/**
- * Button atom.
- * variant: 'primary' | 'outline' | 'ghost' | 'icon' | 'link'
- * size: 'sm' | 'md' (default)
- */
+const SIZE_MAP = { sm: 'sm', md: 'md' };
+
 export function Button({
   children,
   variant = 'primary',
@@ -74,19 +42,21 @@ export function Button({
   style,
   type = 'button',
   title,
+  ...rest
 }) {
-  const variantStyle = VARIANTS[variant] || VARIANTS.primary;
-  const sizeStyle = size === 'sm' ? SM : {};
-  const disabledStyle = disabled ? DISABLED : {};
-
   return (
-    <button
+    <MorpheusButton
+      colorPalette="blue"
+      variant={VARIANT_MAP[variant] ?? 'solid'}
+      size={SIZE_MAP[size] ?? 'md'}
       type={type}
+      disabled={disabled}
       onClick={disabled ? undefined : onClick}
       title={title}
-      style={{ ...BASE, ...variantStyle, ...sizeStyle, ...disabledStyle, ...style }}
+      style={{ ...BLUE_PALETTE, ...(SIZE_PADDING[size] ?? SIZE_PADDING.md), ...style }}
+      {...rest}
     >
       {children}
-    </button>
+    </MorpheusButton>
   );
 }

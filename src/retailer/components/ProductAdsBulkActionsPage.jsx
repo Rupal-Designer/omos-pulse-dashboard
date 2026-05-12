@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Icon, DownloadIcon } from '../../ui/atoms/Icon';
 import { Toast, useToast } from '../../ui/atoms/Toast';
 
-const TABS = ['Create Campaign', 'Update Campaign', 'Activate Campaign', 'Pause Campaign'];
+const TABS = ['Create Campaign', 'Update Campaign', 'Activate Campaign', 'Pause Campaign', 'Product Selection'];
 
 const HOW_IT_WORKS = {
   'Update Campaign': [

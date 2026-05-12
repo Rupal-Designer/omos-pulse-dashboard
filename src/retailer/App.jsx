@@ -44,6 +44,7 @@ import SponsoredAdsAnalyticsPage from './components/SponsoredAdsAnalyticsPage';
 import ProductAdsAnalyticsPage from './components/ProductAdsAnalyticsPage';
 import DisplayAdsCampaignsPage from './components/DisplayAdsCampaignsPage';
 import ProductAdsYieldControlPage from './components/ProductAdsYieldControlPage';
+import CPMYieldControlPage from './components/CPMYieldControlPage';
 import ProductAdsKeywordBidPage from './components/ProductAdsKeywordBidPage';
 import ProductAdsBulkActionsPage from './components/ProductAdsBulkActionsPage';
 import ProductAdsLivePage from './components/ProductAdsLivePage';
@@ -53,8 +54,12 @@ import ProductAdsDemandSupplyPage from './components/ProductAdsDemandSupplyPage'
 import DisplayAdsDemandSupplyPage from './components/DisplayAdsDemandSupplyPage';
 import SponsoredAdsDemandSupplyPage from './components/SponsoredAdsDemandSupplyPage';
 import MerchantManagementPage from './components/MerchantManagementPage';
+import AdvertiserManagementPage from './components/AdvertiserManagementPage';
 import AdvertiserOnboardingCatalogPage from './components/AdvertiserOnboardingCatalogPage';
 import CatalogStatusPage from './components/CatalogStatusPage';
+import DisplayAdsBulkPage from './components/DisplayAdsBulkPage';
+import DisplayAdsAdFormatPage from './components/DisplayAdsAdFormatPage';
+import DisplayAdsInventoryMgmtPage from './components/DisplayAdsInventoryMgmtPage';
 import DevelopSettingsPage from './components/DevelopSettingsPage';
 import SetupDetailsPage from './components/SetupDetailsPage';
 import BYOTAdminConfigPage from './components/BYOTAdminConfigPage';
@@ -350,12 +355,22 @@ export default function App() {
             </main>
           </>
         );
+      case 'advertisers':
+      case 'advertiser-management':
+        return (
+          <>
+            <TopBar section="Control Center" page="Advertiser Management" onNavigate={setActivePage} />
+            <main style={{ flex: 1, overflowY: 'auto', background: 'var(--osmos-bg-subtle)' }}>
+              <AdvertiserManagementPage />
+            </main>
+          </>
+        );
       case 'merchant-management':
         return (
           <>
             <TopBar section="Control Center" page="Merchant Management" onNavigate={setActivePage} />
             <main style={{ flex: 1, overflowY: 'auto', background: 'var(--osmos-bg-subtle)' }}>
-              <MerchantManagementPage />
+              <AdvertiserManagementPage />
             </main>
           </>
         );
@@ -450,6 +465,33 @@ export default function App() {
             </main>
           </>
         );
+      case 'display-ads-bulk':
+        return (
+          <>
+            <TopBar section="Display Ads" page="Campaign Bulk Management" onNavigate={setActivePage} />
+            <main style={{ flex: 1, overflowY: 'auto', background: 'var(--osmos-bg-subtle)' }}>
+              <DisplayAdsBulkPage />
+            </main>
+          </>
+        );
+      case 'display-ads-ad-format':
+        return (
+          <>
+            <TopBar section="Display Ads" page="Ad Format Setup" onNavigate={setActivePage} />
+            <main style={{ flex: 1, overflowY: 'auto', background: 'var(--osmos-bg-subtle)' }}>
+              <DisplayAdsAdFormatPage />
+            </main>
+          </>
+        );
+      case 'display-ads-inventory':
+        return (
+          <>
+            <TopBar section="Display Ads" page="Inventory Management" onNavigate={setActivePage} />
+            <main style={{ flex: 1, overflowY: 'auto', background: 'var(--osmos-bg)' }}>
+              <DisplayAdsInventoryMgmtPage />
+            </main>
+          </>
+        );
       case 'sponsored-ads-analytics':
       case 'sponsored-ads-live':
         return (
@@ -499,9 +541,18 @@ export default function App() {
       case 'product-ads-yield':
         return (
           <>
-            <TopBar section="Product Ads" page="Yield Control" onNavigate={setActivePage} />
+            <TopBar section="Product Ads" page="CPC Yield Control" onNavigate={setActivePage} />
             <main style={{ flex: 1, overflowY: 'auto', background: 'var(--osmos-bg-subtle)' }}>
               <ProductAdsYieldControlPage />
+            </main>
+          </>
+        );
+      case 'product-ads-yield-cpm':
+        return (
+          <>
+            <TopBar section="Product Ads" page="CPM Yield Control" onNavigate={setActivePage} />
+            <main style={{ flex: 1, overflowY: 'auto', background: 'var(--osmos-bg-subtle)' }}>
+              <CPMYieldControlPage />
             </main>
           </>
         );

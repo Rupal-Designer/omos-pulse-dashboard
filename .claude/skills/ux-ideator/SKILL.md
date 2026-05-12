@@ -174,6 +174,16 @@ Append `prd` node (with Meera reframe appended) to `graphify-out/ux-ideator/[fea
 
 **Before starting:** Noor reads `references/noor.md` + `references/noor-knowledge.md`. Dev reads `references/dev.md`. Arjun reads `../design-critic/references/arjun.md`.
 
+**Pre-phase pattern check — read before proposing any screen:**
+
+Read `obsidian-vault/Patterns/control-center-standard.md` if it exists. This registry documents established UI patterns across the portal:
+- Which screen types already exist and what their IA looks like
+- Which components (atoms, molecules) are available and proven in context
+- Which patterns are canonical (don't re-invent) vs. still open
+- Which T4 exceptions exist (domain-specific deviations that are intentional)
+
+Noor's IA decisions must account for what already exists. If a proposed screen type matches an existing pattern, reuse it — don't propose a parallel pattern that will create drift. If a proposed screen genuinely needs a new pattern, name it explicitly and add it to the registry at the end of Phase 2.
+
 Noor leads. Dev audits for power-user gaps (bulk actions, keyboard paths, dead-ends). **Arjun audits for research-grounded UX gaps** — specifically: does the IA serve the actual workflow patterns in research data (Sofie 343 feedback, 143 debug tickets, Campaign Not Spending SOP), or does it serve an idealized user that doesn't exist? Arjun produces a short "research-flagged risks" list under Dev's audit flags. Raj only speaks if stalemate criteria are met (2+ structural objections that Noor won't concede).
 
 ### IA Map Output Format
@@ -237,6 +247,16 @@ Check `references/ia-patterns.md §5` before proposing any new nav item. New scr
 **Before starting:** Noor re-consults `references/noor.md` §"IA Patterns That Work" before writing Concept A. Dev re-consults `references/dev.md` §"Ad Ops Workflows" and §"Density Benchmarks" before writing Concept B.
 
 **NO Figma at this phase.** Lo-fi is text/ASCII only. Figma is called in Phase 6. The goal here is layout intent and component decisions — not pixels.
+
+**Pattern registry check before wireframing:**
+
+Both Noor and Dev must check `obsidian-vault/Patterns/control-center-standard.md` before producing their concepts. Specifically:
+- Use the exact table header/row style values from Pattern 1 — don't re-derive them
+- Use the exact atoms/molecules listed in the inventory — don't propose custom components if a library component exists
+- Reference established drawer sizes (560px standard, 700px wide) rather than picking new widths
+- If either concept requires a pattern NOT in the registry, flag it explicitly as a "new pattern proposal" in their concept text
+
+This ensures Phase 3 outputs are directly implementable (the visual recipe in Phase 3.5 won't contradict established patterns) and that every new page shipped adds to — not diverges from — the portal's design language.
 
 Noor produces **Concept A**. Dev produces **Concept B**. Each is written entirely in that agent's voice. They do not appear in each other's sections.
 
@@ -519,6 +539,76 @@ Rules inherited from react-implementer:
 - Never invent content — if a label is unverified, mark `[UNVERIFIED]` and ask
 - Token + component choices come from the visual recipe — react-implementer does not re-decide
 
+### Step 4a: Verify import paths against the barrel file (MANDATORY)
+
+**Before declaring the component file done**, read `src/ui/index.js` and cross-check every `src/ui/` import in the new file.
+
+The atom filename does NOT always match the export name. Known mismatches in this codebase:
+
+| Export name | Actual file path |
+|---|---|
+| `TypeBadge`, `Badge` | `src/ui/atoms/Badge.jsx` |
+| `Select` | `src/ui/atoms/Input.jsx` (co-located with `Input`) |
+| Named icons | `src/ui/atoms/Icon.jsx` |
+
+**Rule:** if an import path can't be confirmed by reading `src/ui/index.js`, fix it before moving on. Never guess atom filenames.
+
+### Step 4b: App integration wiring (MANDATORY — a page that isn't wired isn't shipped)
+
+After the component file is written and imports are verified, wire the new page into the app.
+
+**Pre-wiring audit — run this BEFORE adding anything new:**
+
+Read `src/retailer/components/LeftNav.jsx` and `src/retailer/App.jsx` in full. Scan for:
+
+1. **Existing "Coming soon" stubs** — any `MerchantManagementPage`, `ComingSoonPage`, or component whose render output is a placeholder (text like "Coming soon", "Page coming soon", empty state with no real data). If one exists whose label or domain overlaps with the feature being shipped, that stub's nav item and switch case should be **updated to point to the new component**, not left as a dead route alongside the new one.
+
+2. **Near-duplicate nav labels** — if the new feature's label (e.g. "Advertiser Management") is semantically the same as an existing nav item (e.g. "Merchant Management"), they are the same surface. Update the existing item; don't create a parallel entry.
+
+3. **Orphaned cases** — switch cases in `App.jsx` that still render a stub component after the real page ships. Update them to render the new component.
+
+Only after confirming no existing stub needs updating should you add a net-new nav item and switch case.
+
+**1. `src/retailer/components/LeftNav.jsx` — add or update the nav item**
+
+Read the file first to identify:
+- Which top-level section it belongs in (`control-center`, `finance`, `analytics`, etc.) — use the PRD's nav placement from Phase 2 IA Map
+- Which group it belongs to within that section (or `isGroupHeader: true` if it's its own group)
+- Where in the group ordering it should sit (near conceptually related items)
+
+Add one entry to `NAV_SECTIONS[section].subnav` (or update an existing stub entry):
+```js
+{ id: '[page-id]', label: '[Nav Label]', group: '[Group Name]', isGroupHeader: true }
+// or, if it joins an existing group:
+{ id: '[page-id]', label: '[Nav Label]', group: '[Existing Group Name]' }
+```
+
+**2. `src/retailer/App.jsx` — add the import**
+
+Add one line to the import block, alphabetically near similar page imports:
+```js
+import [ComponentName] from './components/[ComponentName]';
+```
+
+**3. `src/retailer/App.jsx` — add the switch case**
+
+Add a case inside `renderPage()` following the exact pattern used by every other case in this file:
+```jsx
+case '[page-id]':
+  return (
+    <>
+      <TopBar section="[Section Label]" page="[Page Label]" onNavigate={setActivePage} />
+      <main style={{ flex: 1, overflowY: 'auto', background: 'var(--osmos-bg-subtle)' }}>
+        <[ComponentName] />
+      </main>
+    </>
+  );
+```
+
+The `section` and `page` values come from the IA Map nav placement (Phase 2).
+
+**After all three changes, run `pnpm build`.** If there are errors, fix them before proceeding. Do not move to Step 5 with a broken build.
+
 ### Step 5: UX Audit
 
 Invoke `ux-auditor`. Run Figma Fidelity Check first (if Figma was produced), then UX Honeycomb scoring.
@@ -543,6 +633,8 @@ Write `ui-output` node. Run `graphify update . 2>/dev/null || true`.
 | 5. design-critic | Rigor Matrix: [X]/20 | ✅ |
 | 5.5. Zara delight | [Delight added: brief / no delight: speed is the craft] | ✅ |
 | 6. Final UI | [ComponentName].jsx + [Figma URL or "no Figma"] + Priya feasibility ✓ | ✅ |
+| 6a. Import verification | All src/ui/ paths confirmed against barrel file | ✅ |
+| 6b. App wiring | LeftNav.jsx nav item + App.jsx import + App.jsx switch case + pnpm build ✓ | ✅ |
 
 **UX Audit:** Useful=[A-D] Usable=[A-D] Desirable=[A-D] Findable=[A-D] Accessible=[A-D] Credible=[A-D] Valuable=[A-D]
 **Knowledge graph:** graphify-out/ux-ideator/[feature-slug]-*.md

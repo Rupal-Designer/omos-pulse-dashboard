@@ -181,13 +181,14 @@ export default function AutomatedRulesPage() {
 
         {/* Table */}
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12, fontFamily: FONT }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, fontFamily: FONT }}>
             <thead>
               <tr style={{ background: 'var(--osmos-bg-subtle)', borderBottom: '1px solid var(--osmos-border)' }}>
                 {['Segment Name', 'Rule', 'Description', 'Rule Type', 'Actions', 'Last executed on', 'Created by', 'Created on', 'Last Edited by', ''].map(h => (
-                  <th key={h} style={{ padding: '9px 14px', textAlign: 'left', fontWeight: 700,
+                  <th key={h} style={{ padding: '9px 14px', textAlign: 'left', fontWeight: 600,
                                        color: 'var(--osmos-fg-muted)', fontSize: 11, whiteSpace: 'nowrap',
-                                       borderRight: h === '' ? 'none' : '1px solid var(--osmos-border)' }}>
+                                       borderRight: h === '' ? 'none' : '1px solid var(--osmos-border)',
+                                       textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                     {h}
                   </th>
                 ))}

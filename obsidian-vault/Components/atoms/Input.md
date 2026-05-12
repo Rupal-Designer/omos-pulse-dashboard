@@ -5,7 +5,7 @@ name: Input
 tags: [atom, ui-component, form, interactive]
 source-file: src/ui/atoms/Input.jsx
 export-name: Input
-last-updated: 2026-04-29T18:00:00Z
+last-updated: 2026-05-08T06:30:02Z
 ---
 
 # Input

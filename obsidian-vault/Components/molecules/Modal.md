@@ -5,7 +5,7 @@ name: Modal
 tags: [molecule, ui-component, layout, interactive]
 source-file: src/ui/molecules/Modal.jsx
 export-name: Modal
-last-updated: 2026-04-29T18:00:00Z
+last-updated: 2026-05-08T06:30:01Z
 ---
 
 # Modal

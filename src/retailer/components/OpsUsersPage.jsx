@@ -3,6 +3,7 @@ import { Icon, SearchIcon, PlusIcon, CloseIcon } from '../../ui/atoms/Icon';
 import { Button } from '../../ui/atoms/Button';
 import { Input, Select } from '../../ui/atoms/Input';
 import { Toast, useToast } from '../../ui/atoms/Toast';
+import { TypeBadge } from '../../ui';
 
 const FONT = "'Open Sans', sans-serif";
 
@@ -15,6 +16,11 @@ const INITIAL_DATA = [
 ];
 
 const ACCESS_OPTIONS = ['Read', 'Write'];
+
+const ACCESS_COLOR_MAP = {
+  'Write': { bg: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)' },
+  'Read':  { bg: 'var(--osmos-brand-green-muted)',   color: 'var(--osmos-brand-green)'   },
+};
 
 export default function OpsUsersPage() {
   const [data, setData]         = useState(INITIAL_DATA);
@@ -50,7 +56,7 @@ export default function OpsUsersPage() {
     <div style={{ padding: '20px 24px', fontFamily: FONT }}>
       <Toast visible={toast.visible} message={toast.message} type={toast.type} />
 
-      <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 8, overflow: 'hidden' }}>
+      <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 10, overflow: 'hidden' }}>
 
         {/* Section header */}
         <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -108,7 +114,8 @@ export default function OpsUsersPage() {
                 {['Name', 'Phone', 'Email', 'Access', 'Actions'].map(h => (
                   <th key={h} style={{
                     padding: '9px 14px', textAlign: 'left',
-                    fontWeight: 500, color: 'var(--osmos-fg-muted)', fontSize: 11, whiteSpace: 'nowrap',
+                    fontWeight: 600, color: 'var(--osmos-fg-muted)', fontSize: 11, whiteSpace: 'nowrap',
+                    textTransform: 'uppercase', letterSpacing: '0.04em',
                   }}>{h}</th>
                 ))}
               </tr>
@@ -131,13 +138,7 @@ export default function OpsUsersPage() {
                   <td style={{ padding: '10px 14px', color: 'var(--osmos-fg-muted)' }}>{row.phone}</td>
                   <td style={{ padding: '10px 14px', color: 'var(--osmos-fg-muted)' }}>{row.email}</td>
                   <td style={{ padding: '10px 14px' }}>
-                    <span style={{
-                      padding: '3px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600,
-                      background: row.access === 'Write' ? 'var(--osmos-brand-primary-muted)' : 'var(--osmos-brand-green-muted)',
-                      color: row.access === 'Write' ? 'var(--osmos-brand-primary)' : 'var(--osmos-brand-green)',
-                    }}>
-                      {row.access}
-                    </span>
+                    <TypeBadge type={row.access} colorMap={ACCESS_COLOR_MAP} />
                   </td>
                   <td style={{ padding: '10px 14px', display: 'flex', gap: 8, alignItems: 'center' }}>
                     <select
