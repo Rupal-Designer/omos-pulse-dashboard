@@ -2,13 +2,19 @@
 type: component
 layer: atom
 name: Toast
+figma-node-id: "99:18351"
+figma-library: "Design System OS"
+figma-path: "design_systems/Design System OS/components/Toast"
 tags: [atom, ui-component, notification, interactive]
 source-file: src/ui/atoms/Toast.jsx
 export-name: Toast
-last-updated: 2026-05-08T06:30:02Z
+png: ../Assets/Components/atoms/Toast.png
+last-updated: 2026-05-15
 ---
 
 # Toast
+
+![Toast](../Assets/Components/atoms/Toast.png)
 
 Fixed top-right notification banner. Always use the `useToast` hook — never manage toast state manually.
 

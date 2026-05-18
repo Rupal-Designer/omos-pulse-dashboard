@@ -5,7 +5,7 @@ name: Toolbar
 tags: [molecule, ui-component, layout, navigation]
 source-file: src/ui/molecules/Toolbar.jsx
 export-name: Toolbar
-last-updated: 2026-05-08T06:30:02Z
+last-updated: 2026-05-15T06:30:03Z
 ---
 
 # Toolbar

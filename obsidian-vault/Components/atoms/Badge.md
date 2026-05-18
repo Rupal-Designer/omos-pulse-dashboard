@@ -2,13 +2,20 @@
 type: component
 layer: atom
 name: Badge
+figma-component-key: "5491:1574"
+figma-node-id: "5491:1574"
+figma-library: "Design System OS"
+figma-path: "design_systems/Design System OS/components/Badges"
 tags: [atom, ui-component, display, status]
 source-file: src/ui/atoms/Badge.jsx
 export-name: Badge
-last-updated: 2026-05-08T06:30:03Z
+png: ../Assets/Components/atoms/Badge.png
+last-updated: 2026-05-15
 ---
 
 # Badge
+
+![Badge](../Assets/Components/atoms/Badge.png)
 
 Status-indicator pill. Also exports `TypeBadge` for arbitrary category chips with custom color maps.
 

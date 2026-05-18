@@ -1,11 +1,12 @@
 ---
 type: component
-layer: molecule
+layer: atom
 name: TypeBadge
-tags: [molecule, ui-component, display]
+figma-node-id: "5491:1574"
+tags: [atom, display, badge, category-label]
 source-file: src/ui/atoms/Badge.jsx
 export-name: TypeBadge
-last-updated: 2026-04-29T12:00:00Z
+last-updated: 2026-05-18T00:00:00Z
 ---
 
 # TypeBadge

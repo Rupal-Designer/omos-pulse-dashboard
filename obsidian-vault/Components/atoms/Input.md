@@ -2,13 +2,20 @@
 type: component
 layer: atom
 name: Input
+figma-component-key: "2952:69107"
+figma-node-id: "2952:69107"
+figma-library: "Design System OS"
+figma-path: "design_systems/Design System OS/components/Input Fields"
 tags: [atom, ui-component, form, interactive]
 source-file: src/ui/atoms/Input.jsx
 export-name: Input
-last-updated: 2026-05-08T06:30:02Z
+png: ../Assets/Components/atoms/Input.png
+last-updated: 2026-05-15
 ---
 
 # Input
+
+![Input](../Assets/Components/atoms/Input.png)
 
 Text input field with label and optional required indicator. Same file also exports `Select` (dropdown).
 

@@ -1,6 +1,6 @@
 ---
 type: nav-structure
-last-updated: 2026-04-29T18:00:00Z
+last-updated: 2026-05-14T00:00:00Z
 tags: [navigation, structure]
 ---
 
@@ -105,6 +105,45 @@ Source: `knowledge-graph.md` §3 + LeftNav.jsx NAV_SECTIONS
 - [[Pages/ProductAdsYieldControlPage]] — `product-ads-yield`
 - [[Pages/ProductAdsKeywordBidPage]] — `product-ads-keyword`
 - [[Pages/ProductAdsBulkActionsPage]] — `product-ads-bulk`
+
+## Product Ads
+
+- [[Pages/ProductAdsDashboardPage]] — `product-ads` (dashboard)
+- [[Pages/ProductAdsAnalyticsPage]] — `product-ads-analytics`
+- [[Pages/ProductAdsDemandSupplyPage]] — `product-ads-demand-supply`
+- [[Pages/ProductAdsLivePage]] — `product-ads-live`
+- [[Pages/ProductAdsYieldControlPage]] — `product-ads-yield`
+- [[Pages/ProductAdsKeywordBidPage]] — `product-ads-keyword`
+- [[Pages/ProductAdsBulkActionsPage]] — `product-ads-bulk`
+- [[Pages/CPCControlsPage]] — CPC Controls (sub-page)
+- [[Pages/CPMControlsPage]] — CPM Controls (sub-page)
+
+## Display Ads
+
+- [[Pages/DisplayAdsDashboardPage]] — `display-ads` (dashboard)
+- [[Pages/DisplayAdsAnalyticsPage]] — `display-ads-analytics` · `display-ads-live`
+- [[Pages/DisplayAdsDemandSupplyPage]] — `display-ads-demand-supply`
+- [[Pages/DisplayAdsCampaignsPage]] — `display-ads-campaigns`
+
+## Offsite Ads
+
+- [[Pages/OffsiteDashboardPage]] — `offsite-ads` (dashboard + wizard entry point)
+
+## In-Store Digital Ads
+
+- [[Pages/InStoreDashboardPage]] — `in-store-digital`
+
+## BYOT (Beta)
+
+- [[Pages/BYOTDashboardPage]] — `byot`
+- [[Pages/BYOTCampaignDetailPage]] — drill-down from BYOTDashboardPage
+
+## Packages (Alpha)
+
+- [[Pages/PackagesDashboardPage]] — `packages`
+- [[Pages/PackagesAnalyticsPage]] — Analytics sub-page
+- [[Pages/PackagesBooking1Page]] — PRE_AUCTION bookings
+- [[Pages/PackagesBooking2Page]] — Flexi bookings
 
 ## Unwired (LeftNav only, no App.jsx case)
 

@@ -54,9 +54,16 @@ Evaluates:
 
 Numbers-first, segmentation-aware. "This won't move M%G for marketplaces — they don't have FCFS guaranteed inventory. For enterprise retailers (Wakefern, GPA), it's a yield lever worth a P0." Cites specific customers and specific metrics.
 
+## Vault Knowledge
+
+| Resource | Path | Why she uses it |
+|---|---|---|
+| Component index | [[Components/index]] | Reference for cost-to-value tradeoffs — components in the index are cheap to compose |
+| Colors | [[Components/tokens/Colors]] | AI/Brand accent `#636cff`, LeftNav `#212563` — for brand differentiation arguments |
+
 ## Reference file
 
-`.claude/skills/design-critic/references/meera.md`
+`.claude/skills/meera/SKILL.md`
 
 ## Loads at runtime
 

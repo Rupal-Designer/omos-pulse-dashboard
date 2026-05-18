@@ -5,7 +5,7 @@ name: EmptyState
 tags: [molecule, ui-component, display]
 source-file: src/ui/molecules/EmptyState.jsx
 export-name: EmptyState
-last-updated: 2026-05-08T06:30:00Z
+last-updated: 2026-05-15T06:30:01Z
 ---
 
 # EmptyState

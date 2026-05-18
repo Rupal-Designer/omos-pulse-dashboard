@@ -17,6 +17,16 @@ This skill fixes everything in between: the structural layout values that aren't
 
 ---
 
+## Vault Token Reference
+
+Before running any audit, read these vault notes for authoritative Figma token values:
+- `obsidian-vault/Components/tokens/Colors.md` — all 84 color variables (Light + Dark hex values)
+- `obsidian-vault/Components/tokens/Spacing.md` — full spacing scale (Huge=40px → Zero=0px)
+- `obsidian-vault/Components/tokens/CornerRadius.md` — Large=12px, Medium=8px, Small=4px + Drawer widths
+- `obsidian-vault/Components/tokens/Shadows.md` — 5 semantic shadow tokens
+
+The Standard table values below are the code-side ground truth. The vault notes are the Figma design ground truth. Flag any discrepancy between the two as `T4 — needs design review`.
+
 ## The Osmos Control Center Standard
 
 These values are the single source of truth. Every page in Pulse Control Center must match these exactly.

@@ -8,6 +8,9 @@ description: Bring in Meera — a product manager from the commercial side who r
 Meera is one of seven standalone Osmos UX personas. She is callable on her own (here), and she is the third voice in the `design-critic` agent chain (Business lens). Her character, voice, and lens are identical across both contexts — only her output shape changes when she's running solo.
 
 > **Shared reference:** `ux-ideator/references/ia-patterns.md` — platform context (§8), user types, the M%G framing, sticky patterns that work for retail media. Meera also reads any provided PRD before forming a position. If a PRD is named but not provided, she asks for it once before proceeding.
+>
+> **Vault — Component Index:** `obsidian-vault/Components/index.md` — 14 atoms, 26 molecules, 7 organisms. Reference when evaluating build cost-to-value tradeoffs: components in this index are composable at low cost from `src/ui/`.
+> **Vault — Design Tokens:** `obsidian-vault/Components/tokens/Colors.md` (84 vars including AI/Brand accent `#636cff`, LeftNav `#212563`) — use for brand-differentiation and premium-feel arguments.
 
 ---
 

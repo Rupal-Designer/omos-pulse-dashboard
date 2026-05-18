@@ -251,6 +251,7 @@ Check this table **before** writing any UI element as raw HTML. If it exists in 
 | Text input with label | `Input` | `label`, `value`, `onChange`, `required`, `helperText` |
 | Dropdown selector | `Select` | `label`, `value`, `onChange`, `options`: [{value, label}] |
 | Checkbox | `Checkbox` | `checked`, `onChange`, `label` |
+| Dismissible filter chip | `Badge` (closable) | `variant="outline"`, `closable`, `onClose` — Figma calls these "Chips" |
 | Toast notification | `Toast` + `useToast` | `const { toast, showToast } = useToast()` |
 
 ### Molecules (import from `'../ui'`)
@@ -264,6 +265,12 @@ Check this table **before** writing any UI element as raw HTML. If it exists in 
 | Dashed upload dropzone | `UploadDropzone` | `onFile`, `accept`, `label`, `successMessage` |
 | KPI metric card | `StatCard` | `label`, `value`, `trend`, `trendDir` |
 | Compact metric chip | `KPIChip` | `label`, `value` |
+| Hover label for icon button | `Tooltip` | `label`, `placement` — never put interactive content inside |
+| Collapsible disclosure panels | `Accordion` | `Accordion.Root` + `.Item`, `.ItemTrigger`, `.ItemContent` |
+| Countdown / elapsed timer | `TimeTicker` | `mode`: countdown\|elapsed\|static, `targetTime` |
+| Error / not-found state | `ErrorStates` — see vault | Full-page or inline error patterns |
+| Conversion funnel chart | `Funnels` — see vault | Multi-stage visualization (organisms/Funnels.md) |
+| Heat map chart | `HeatMap` — see vault | `data[][]`, `xLabels`, `yLabels` (molecules/HeatMap.md) |
 
 ### Patterns (import from `'../ui'`)
 | Need | Component | Key Props |
@@ -284,6 +291,28 @@ Check this table **before** writing any UI element as raw HTML. If it exists in 
 | Tab navigation bar | Hand-rolled using `Button` atoms |
 | Activity log / timeline | Raw `<div>` list with CSS var styles |
 | Charts | `recharts` (already installed) |
+
+## Vault — Full Component Index
+
+Complete list of all 14 atoms, 26 molecules, 7 organisms with Figma nodeIds, PNGs, and prop APIs:
+`obsidian-vault/Components/index.md`
+
+**Figma → Code name mappings** (common gotchas):
+| Figma Name | Code Component |
+|------------|----------------|
+| Chips | `Badge` (variant="outline", closable) |
+| Info Box | `InfoBanner` |
+| Spin Loader | `SpinLoader` |
+| Toggle & Switch | `Toggle` / `Switch` |
+| Steps | `Stepper` |
+| Cards | `StatCard` |
+| Tags | `Tag` |
+
+**Token values sourced from Figma variables** (use these in inline styles):
+- Colors: `obsidian-vault/Components/tokens/Colors.md` — 84 vars, Light + Dark hex
+- Spacing: Huge=40px, XXXLarge=32px, XXLarge=24px, XLarge=20px, Large=16px, Medium=12px, Small=8px, VSmall=4px
+- Radius: Large=12px, Medium=8px, Small=4px
+- Shadows: Card=`#4040401a`, Button=`#40404029`, Container=`#40404014`
 
 ## CSS Variable Reference
 
