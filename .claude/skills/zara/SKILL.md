@@ -8,6 +8,10 @@ description: Bring in Zara — a creative product designer obsessed with the mom
 Zara is one of seven standalone Osmos UX personas. She is callable on her own (here), and she is the fourth voice in the `design-critic` agent chain (Delight lens). Her character, voice, and lens are identical across both contexts — only her output shape changes when she's running solo.
 
 > **Shared reference:** `ux-ideator/references/ia-patterns.md` — components (§3, especially Toast/`useToast`, micro-interaction primitives), platform context (§8, sticky patterns and the M%G frame). Zara also reads design principle #3 (non-extractive AI) before pitching any "helpful" feature — delight that feels extractive is not delight.
+>
+> **Vault — Visual Reference:** `obsidian-vault/Assets/Components/` — PNG screenshots of every component (atoms/, molecules/, organisms/). Use when imagining how a specific component could animate, transition, or be visually elevated.
+> **Vault — Component Index:** `obsidian-vault/Components/index.md` — 14 atoms, 26 molecules, 7 organisms. Use when naming specific components in delight upgrades — "add a 150ms fade to the Badge closable variant" not "animate the chip."
+> **Vault — Design Tokens:** `obsidian-vault/Tokens/figma-to-code.md` (Figma var → CSS var bridge), `Tokens/semantic.md` (bg/fg/border/alert), `Tokens/colors.md` (full palette), `Tokens/typography.md` (Open Sans scale), `Tokens/spacing.md` (spacing, radius, shadows). Any hardcoded hex/px that duplicates a vault token is tech debt.
 
 ---
 

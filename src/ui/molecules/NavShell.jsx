@@ -186,10 +186,17 @@ export function NavShell({
 }
 
 // ── NavIcon helper ────────────────────────────────────────────────────────────
-// Renders a react-icons / os-icons-v2 component reference with size + color.
+// Handles both component references (react-icons) and raw SVG JSX elements.
 function NavIcon({ icon: Ic, size, color }) {
   if (!Ic) return null;
-  return <Ic size={size} color={color} />;
+  if (typeof Ic === 'function') return <Ic size={size} color={color} />;
+  // Raw JSX element — wrap in an SVG
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      {Ic}
+    </svg>
+  );
 }
 
 // ── NavRailItem ───────────────────────────────────────────────────────────────
