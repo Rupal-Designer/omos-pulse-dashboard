@@ -1,8 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { Icon, DownloadIcon } from '../../ui/atoms/Icon';
 import { Toast, useToast } from '../../ui/atoms/Toast';
+import { Tabs } from '../../ui';
 
-const TABS = ['Create Campaign', 'Update Campaign', 'Inventory Level Bid Customization'];
+const TAB_ITEMS = [
+  { id: 'Create Campaign', label: 'Create Campaign' },
+  { id: 'Update Campaign', label: 'Update Campaign' },
+  { id: 'Inventory Level Bid Customization', label: 'Inventory Level Bid Customization' },
+];
 
 const HOW_IT_WORKS = {
   'Update Campaign': [
@@ -109,27 +114,11 @@ function TabContent({ tab, onUpload }) {
 }
 
 export default function DisplayAdsBulkPage() {
-  const [activeTab, setActiveTab] = useState(TABS[0]);
+  const [activeTab, setActiveTab] = useState(TAB_ITEMS[0].id);
   const { toast, showToast } = useToast();
   return (
     <div style={{ padding: 40, background: 'var(--osmos-bg)', minHeight: '100vh', fontFamily: "'Open Sans', sans-serif", boxSizing: 'border-box' }}>
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--osmos-border)', marginBottom: 40, gap: 0 }}>
-        {TABS.map(tab => {
-          const isActive = activeTab === tab;
-          return (
-            <button key={tab} onClick={() => setActiveTab(tab)} style={{
-              padding: '10px 20px', border: 'none',
-              borderBottom: isActive ? '2px solid var(--osmos-brand-primary)' : '2px solid transparent',
-              background: 'transparent', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
-              fontSize: 13, fontWeight: isActive ? 600 : 400,
-              color: isActive ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)',
-              marginBottom: -1, transition: 'color 0.15s, border-color 0.15s', whiteSpace: 'nowrap',
-            }}>
-              {tab}
-            </button>
-          );
-        })}
-      </div>
+      <Tabs value={activeTab} onValueChange={setActiveTab} items={TAB_ITEMS} style={{ marginBottom: 40 }} />
       <TabContent tab={activeTab} onUpload={() => showToast('File uploaded successfully')} />
       <Toast {...toast} />
     </div>

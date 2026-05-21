@@ -1,24 +1,13 @@
 import { useState } from 'react';
-import { Icon, SearchIcon, InfoIcon } from '../../ui';
-import { Toast, useToast } from '../../ui';
-
-// ── Design tokens ────────────────────────────────────────────────────────────
-const WHITE    = 'var(--osmos-bg)';
-const BORDER   = 'var(--osmos-border)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-const GREEN    = 'var(--osmos-brand-green)';
-const GREEN_M  = 'var(--osmos-brand-green-muted)';
-const AMBER    = 'var(--osmos-brand-amber)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const BG_MUT   = 'var(--osmos-bg-muted)';
-const TEXT_HI  = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_LO  = 'var(--osmos-fg-subtle)';
-const FONT     = "'Open Sans', sans-serif";
+import { Icon, SearchIcon, InfoIcon, Tabs, Toast, useToast } from '../../ui';
 
 // ── Tab list ─────────────────────────────────────────────────────────────────
-const TABS = ['General', 'Advertiser Access', 'Limits & Quotas', 'Wallet Rules'];
+const TAB_ITEMS = [
+  { id: 'General',            label: 'General' },
+  { id: 'Advertiser Access',  label: 'Advertiser Access' },
+  { id: 'Limits & Quotas',    label: 'Limits & Quotas' },
+  { id: 'Wallet Rules',       label: 'Wallet Rules' },
+];
 
 // ── Mock data ─────────────────────────────────────────────────────────────────
 const KPI_DATA = [
@@ -41,7 +30,7 @@ const ADVERTISERS = [
 
 // ── Inline icon helpers ───────────────────────────────────────────────────────
 const LinkIcon = () => (
-  <Icon size={16} color={ACCENT}>
+  <Icon size={16} color={'var(--osmos-brand-primary)'}>
     <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
     <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
   </Icon>
@@ -54,7 +43,7 @@ const SaveIcon = () => (
   </Icon>
 );
 const ArrowUpIcon = () => (
-  <Icon size={12} color={GREEN}><polyline points="18 15 12 9 6 15"/></Icon>
+  <Icon size={12} color={'var(--osmos-brand-green)'}><polyline points="18 15 12 9 6 15"/></Icon>
 );
 const ArrowDownIcon = () => (
   <Icon size={12} color="#EF4444"><polyline points="6 9 12 15 18 9"/></Icon>
@@ -68,7 +57,7 @@ function Toggle({ checked, onChange, disabled }) {
       title={checked ? 'Enabled — click to disable' : 'Disabled — click to enable'}
       style={{
         width: 44, height: 24, borderRadius: 12, border: 'none', cursor: disabled ? 'default' : 'pointer',
-        background: checked ? ACCENT : '#d1d5db',
+        background: checked ? 'var(--osmos-brand-primary)' : '#d1d5db',
         position: 'relative', transition: 'background 0.2s',
         flexShrink: 0, opacity: disabled ? 0.5 : 1,
       }}
@@ -88,7 +77,7 @@ function Toggle({ checked, onChange, disabled }) {
 function Card({ children, style: extra }) {
   return (
     <div style={{
-      background: WHITE, border: `1px solid ${BORDER}`, borderRadius: 10,
+      background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 10,
       padding: '20px 24px', marginBottom: 16, ...extra,
     }}>
       {children}
@@ -101,11 +90,11 @@ function SettingRow({ label, help, children }) {
   return (
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '14px 0', borderBottom: `1px solid ${BORDER}`,
+      padding: '14px 0', borderBottom: `1px solid var(--osmos-border)`,
     }}>
       <div style={{ flex: 1, maxWidth: 420 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: TEXT_HI, marginBottom: 2 }}>{label}</div>
-        {help && <div style={{ fontSize: 12, color: TEXT_MID }}>{help}</div>}
+        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 2 }}>{label}</div>
+        {help && <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{help}</div>}
       </div>
       <div style={{ flexShrink: 0 }}>{children}</div>
     </div>
@@ -119,8 +108,8 @@ function InlineSelect({ value, onChange, options, width = 180 }) {
       value={value}
       onChange={e => onChange(e.target.value)}
       style={{
-        width, border: `1px solid ${BORDER}`, borderRadius: 7, padding: '7px 12px',
-        fontFamily: FONT, fontSize: 13, color: TEXT_HI, background: WHITE, cursor: 'pointer',
+        width, border: `1px solid var(--osmos-border)`, borderRadius: 7, padding: '7px 12px',
+        fontFamily: "'Open Sans', sans-serif", fontSize: 13, color: 'var(--osmos-fg)', background: 'var(--osmos-bg)', cursor: 'pointer',
         outline: 'none',
       }}
     >
@@ -132,9 +121,9 @@ function InlineSelect({ value, onChange, options, width = 180 }) {
 // ── Inline input ─────────────────────────────────────────────────────────────
 function InlineInput({ value, onChange, type = 'text', width = 200, prefix, suffix }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${BORDER}`, borderRadius: 7, overflow: 'hidden', width }}>
+    <div style={{ display: 'flex', alignItems: 'center', border: `1px solid var(--osmos-border)`, borderRadius: 7, overflow: 'hidden', width }}>
       {prefix && (
-        <span style={{ padding: '7px 10px', background: BG_SUB, fontSize: 13, color: TEXT_MID, borderRight: `1px solid ${BORDER}` }}>
+        <span style={{ padding: '7px 10px', background: 'var(--osmos-bg-subtle)', fontSize: 13, color: 'var(--osmos-fg-muted)', borderRight: `1px solid var(--osmos-border)` }}>
           {prefix}
         </span>
       )}
@@ -144,11 +133,11 @@ function InlineInput({ value, onChange, type = 'text', width = 200, prefix, suff
         onChange={e => onChange(e.target.value)}
         style={{
           flex: 1, border: 'none', outline: 'none', padding: '7px 12px',
-          fontFamily: FONT, fontSize: 13, color: TEXT_HI, background: WHITE,
+          fontFamily: "'Open Sans', sans-serif", fontSize: 13, color: 'var(--osmos-fg)', background: 'var(--osmos-bg)',
         }}
       />
       {suffix && (
-        <span style={{ padding: '7px 10px', background: BG_SUB, fontSize: 13, color: TEXT_MID, borderLeft: `1px solid ${BORDER}` }}>
+        <span style={{ padding: '7px 10px', background: 'var(--osmos-bg-subtle)', fontSize: 13, color: 'var(--osmos-fg-muted)', borderLeft: `1px solid var(--osmos-border)` }}>
           {suffix}
         </span>
       )}
@@ -160,8 +149,8 @@ function InlineInput({ value, onChange, type = 'text', width = 200, prefix, suff
 function SectionHeader({ title, subtitle }) {
   return (
     <div style={{ marginBottom: 16 }}>
-      <div style={{ fontSize: 14, fontWeight: 700, color: TEXT_HI }}>{title}</div>
-      {subtitle && <div style={{ fontSize: 12, color: TEXT_MID, marginTop: 2 }}>{subtitle}</div>}
+      <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--osmos-fg)' }}>{title}</div>
+      {subtitle && <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', marginTop: 2 }}>{subtitle}</div>}
     </div>
   );
 }
@@ -171,12 +160,12 @@ function ReadOnlyField({ value, note }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2 }}>
       <div style={{
-        padding: '7px 14px', background: BG_MUT, border: `1px solid ${BORDER}`,
-        borderRadius: 7, fontSize: 13, fontWeight: 600, color: TEXT_MID,
+        padding: '7px 14px', background: 'var(--osmos-bg-muted)', border: `1px solid var(--osmos-border)`,
+        borderRadius: 7, fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg-muted)',
       }}>
         {value}
       </div>
-      {note && <div style={{ fontSize: 11, color: TEXT_LO }}>{note}</div>}
+      {note && <div style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)' }}>{note}</div>}
     </div>
   );
 }
@@ -215,7 +204,7 @@ export default function BYOTAdminConfigPage() {
   const handleSave = () => showToast('Configuration saved successfully');
 
   return (
-    <div style={{ fontFamily: FONT, background: BG_SUB, minHeight: '100vh', padding: '20px 24px' }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif", background: 'var(--osmos-bg-subtle)', minHeight: '100vh', padding: '20px 24px' }}>
       <Toast {...toast} />
 
       {/* ── Page header ─────────────────────────────────────────────────────── */}
@@ -223,13 +212,13 @@ export default function BYOTAdminConfigPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
             <LinkIcon />
-            <span style={{ fontSize: 20, fontWeight: 700, color: TEXT_HI }}>BYOT Configuration</span>
+            <span style={{ fontSize: 20, fontWeight: 700, color: 'var(--osmos-fg)' }}>BYOT Configuration</span>
             <span style={{
-              padding: '2px 8px', background: ACCENT_M, color: ACCENT,
+              padding: '2px 8px', background: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)',
               borderRadius: 999, fontSize: 11, fontWeight: 700,
             }}>Beta</span>
           </div>
-          <div style={{ fontSize: 13, color: TEXT_MID }}>
+          <div style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>
             Manage Bring Your Own Traffic settings, advertiser access, and attribution rules.
           </div>
         </div>
@@ -237,8 +226,8 @@ export default function BYOTAdminConfigPage() {
           onClick={handleSave}
           style={{
             display: 'flex', alignItems: 'center', gap: 6,
-            padding: '9px 20px', background: ACCENT, border: 'none',
-            borderRadius: 8, color: '#fff', fontFamily: FONT,
+            padding: '9px 20px', background: 'var(--osmos-brand-primary)', border: 'none',
+            borderRadius: 8, color: '#fff', fontFamily: "'Open Sans', sans-serif",
             fontSize: 13, fontWeight: 600, cursor: 'pointer',
           }}
         >
@@ -251,17 +240,17 @@ export default function BYOTAdminConfigPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, marginBottom: 20 }}>
         {KPI_DATA.map(k => (
           <div key={k.label} style={{
-            background: WHITE, border: `1px solid ${BORDER}`, borderRadius: 10,
+            background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 10,
             padding: '16px 20px',
           }}>
-            <div style={{ fontSize: 12, color: TEXT_MID, marginBottom: 6 }}>{k.label}</div>
+            <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', marginBottom: 6 }}>{k.label}</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-              <span style={{ fontSize: 22, fontWeight: 700, color: TEXT_HI }}>{k.value}</span>
+              <span style={{ fontSize: 22, fontWeight: 700, color: 'var(--osmos-fg)' }}>{k.value}</span>
               {k.delta && (
                 <span style={{
                   display: 'flex', alignItems: 'center', gap: 2,
                   fontSize: 12, fontWeight: 600,
-                  color: k.up ? GREEN : '#EF4444',
+                  color: k.up ? 'var(--osmos-brand-green)' : '#EF4444',
                 }}>
                   {k.up ? <ArrowUpIcon /> : <ArrowDownIcon />}
                   {k.delta}
@@ -273,23 +262,12 @@ export default function BYOTAdminConfigPage() {
       </div>
 
       {/* ── Tabs ────────────────────────────────────────────────────────────── */}
-      <div style={{
-        display: 'flex', gap: 0, borderBottom: `2px solid ${BORDER}`, marginBottom: 20,
-      }}>
-        {TABS.map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            style={{
-              padding: '10px 20px', border: 'none', borderBottom: activeTab === tab ? `2px solid ${ACCENT}` : '2px solid transparent',
-              marginBottom: -2,
-              background: 'transparent', fontFamily: FONT, fontSize: 13, fontWeight: 600,
-              color: activeTab === tab ? ACCENT : TEXT_MID, cursor: 'pointer', transition: 'all 0.15s',
-            }}
-          >
-            {tab}
-          </button>
-        ))}
+      <div style={{ marginBottom: 20 }}>
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          items={TAB_ITEMS}
+        />
       </div>
 
       {/* ── General tab ─────────────────────────────────────────────────────── */}
@@ -396,11 +374,11 @@ export default function BYOTAdminConfigPage() {
           <Card style={{ padding: '16px 20px' }}>
             {/* Toolbar */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: TEXT_HI }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)' }}>
                 Advertisers ({ADVERTISERS.length})
                 <span style={{
                   marginLeft: 8, fontSize: 12, fontWeight: 400,
-                  color: TEXT_MID,
+                  color: 'var(--osmos-fg-muted)',
                 }}>
                   {Object.values(advStatus).filter(Boolean).length} enabled
                 </span>
@@ -408,7 +386,7 @@ export default function BYOTAdminConfigPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: 6,
-                  border: `1px solid ${BORDER}`, borderRadius: 7, padding: '6px 10px', background: WHITE,
+                  border: `1px solid var(--osmos-border)`, borderRadius: 7, padding: '6px 10px', background: 'var(--osmos-bg)',
                 }}>
                   <SearchIcon />
                   <input
@@ -417,7 +395,7 @@ export default function BYOTAdminConfigPage() {
                     placeholder="Search advertisers..."
                     style={{
                       border: 'none', outline: 'none', fontSize: 13,
-                      color: TEXT_HI, background: 'transparent', width: 200, fontFamily: FONT,
+                      color: 'var(--osmos-fg)', background: 'transparent', width: 200, fontFamily: "'Open Sans', sans-serif",
                     }}
                   />
                 </div>
@@ -429,8 +407,8 @@ export default function BYOTAdminConfigPage() {
                     showToast(allOn ? 'All advertisers disabled' : 'All advertisers enabled');
                   }}
                   style={{
-                    padding: '7px 14px', border: `1px solid ${BORDER}`, borderRadius: 7,
-                    background: WHITE, fontFamily: FONT, fontSize: 13, color: TEXT_MID, cursor: 'pointer',
+                    padding: '7px 14px', border: `1px solid var(--osmos-border)`, borderRadius: 7,
+                    background: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif", fontSize: 13, color: 'var(--osmos-fg-muted)', cursor: 'pointer',
                   }}
                 >
                   Toggle All
@@ -439,14 +417,14 @@ export default function BYOTAdminConfigPage() {
             </div>
 
             {/* Table */}
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: FONT }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: "'Open Sans', sans-serif" }}>
               <thead>
-                <tr style={{ background: BG_SUB }}>
+                <tr style={{ background: 'var(--osmos-bg-subtle)' }}>
                   {['Advertiser', 'BYOT Status', 'Campaigns', 'Trackers Used', 'Monthly Spend', 'Action'].map(col => (
                     <th key={col} style={{
                       padding: '10px 14px', textAlign: 'left', fontSize: 11,
-                      fontWeight: 700, color: TEXT_MID, textTransform: 'uppercase',
-                      letterSpacing: '0.04em', borderBottom: `1px solid ${BORDER}`,
+                      fontWeight: 700, color: 'var(--osmos-fg-muted)', textTransform: 'uppercase',
+                      letterSpacing: '0.04em', borderBottom: `1px solid var(--osmos-border)`,
                     }}>{col}</th>
                   ))}
                 </tr>
@@ -455,24 +433,24 @@ export default function BYOTAdminConfigPage() {
                 {filteredAdvs.map((adv, i) => {
                   const enabled = advStatus[adv.id];
                   return (
-                    <tr key={adv.id} style={{ borderBottom: `1px solid ${BORDER}`, background: i % 2 === 0 ? WHITE : BG_SUB }}>
-                      <td style={{ padding: '12px 14px', fontSize: 13, fontWeight: 600, color: TEXT_HI }}>
+                    <tr key={adv.id} style={{ borderBottom: `1px solid var(--osmos-border)`, background: i % 2 === 0 ? 'var(--osmos-bg)' : 'var(--osmos-bg-subtle)' }}>
+                      <td style={{ padding: '12px 14px', fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)' }}>
                         {adv.name}
                       </td>
                       <td style={{ padding: '12px 14px' }}>
                         <span style={{
                           display: 'inline-flex', alignItems: 'center', gap: 6,
                           padding: '3px 10px', borderRadius: 999, fontSize: 12, fontWeight: 600,
-                          background: enabled ? GREEN_M : BG_MUT,
-                          color: enabled ? GREEN : TEXT_MID,
+                          background: enabled ? 'var(--osmos-brand-green-muted)' : 'var(--osmos-bg-muted)',
+                          color: enabled ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-muted)',
                         }}>
-                          <span style={{ width: 6, height: 6, borderRadius: 3, background: enabled ? GREEN : '#d1d5db' }} />
+                          <span style={{ width: 6, height: 6, borderRadius: 3, background: enabled ? 'var(--osmos-brand-green)' : '#d1d5db' }} />
                           {enabled ? 'Enabled' : 'Disabled'}
                         </span>
                       </td>
-                      <td style={{ padding: '12px 14px', fontSize: 13, color: TEXT_HI }}>{adv.campaigns}</td>
-                      <td style={{ padding: '12px 14px', fontSize: 13, color: TEXT_HI }}>{adv.trackers}</td>
-                      <td style={{ padding: '12px 14px', fontSize: 13, color: TEXT_HI }}>{adv.spend}</td>
+                      <td style={{ padding: '12px 14px', fontSize: 13, color: 'var(--osmos-fg)' }}>{adv.campaigns}</td>
+                      <td style={{ padding: '12px 14px', fontSize: 13, color: 'var(--osmos-fg)' }}>{adv.trackers}</td>
+                      <td style={{ padding: '12px 14px', fontSize: 13, color: 'var(--osmos-fg)' }}>{adv.spend}</td>
                       <td style={{ padding: '12px 14px' }}>
                         <Toggle
                           checked={enabled}
@@ -503,11 +481,11 @@ export default function BYOTAdminConfigPage() {
             {/* Info note */}
             <div style={{
               display: 'flex', alignItems: 'flex-start', gap: 8,
-              padding: '12px 14px', background: ACCENT_M, borderRadius: 8, marginBottom: 16,
-              border: `1px solid ${ACCENT}22`,
+              padding: '12px 14px', background: 'var(--osmos-brand-primary-muted)', borderRadius: 8, marginBottom: 16,
+              border: `1px solid var(--osmos-brand-primary)22`,
             }}>
               <InfoIcon />
-              <div style={{ fontSize: 12, color: TEXT_HI }}>
+              <div style={{ fontSize: 12, color: 'var(--osmos-fg)' }}>
                 PRD constraints: 100 trackers/campaign (max), 1000 trackers/brand (max).
                 Increasing limits requires backend config change in addition to updating here.
               </div>
@@ -567,13 +545,13 @@ export default function BYOTAdminConfigPage() {
             ].map(item => (
               <div key={item} style={{
                 display: 'flex', alignItems: 'center', gap: 8,
-                padding: '10px 0', borderBottom: `1px solid ${BORDER}`,
-                fontSize: 13, color: TEXT_MID,
+                padding: '10px 0', borderBottom: `1px solid var(--osmos-border)`,
+                fontSize: 13, color: 'var(--osmos-fg-muted)',
               }}>
                 <span style={{
-                  width: 16, height: 16, borderRadius: 3, background: BG_MUT,
-                  border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 10, color: TEXT_LO, flexShrink: 0,
+                  width: 16, height: 16, borderRadius: 3, background: 'var(--osmos-bg-muted)',
+                  border: `1px solid var(--osmos-border)`, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 10, color: 'var(--osmos-fg-subtle)', flexShrink: 0,
                 }}>✕</span>
                 {item}
               </div>
