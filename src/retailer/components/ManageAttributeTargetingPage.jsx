@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import { SearchIcon } from '../../ui/atoms/Icon';
-import { Button } from '../../ui/atoms/Button';
-import { Checkbox } from '../../ui/atoms/Checkbox';
-import { Toast, useToast } from '../../ui/atoms/Toast';
-
-const FONT = "'Open Sans', sans-serif";
+import { SearchIcon, Button, Checkbox, Toast, useToast } from '../../ui';
 
 const INITIAL_DATA = [
   { name: 'Gillette',          id: '12345', categoryTargeting: true,  brandTargeting: false },
@@ -24,7 +19,7 @@ const TD = {
   fontSize: 13,
   color: 'var(--osmos-fg)',
   borderBottom: '1px solid var(--osmos-border)',
-  fontFamily: FONT,
+  fontFamily: "'Open Sans', sans-serif",
 };
 
 export default function ManageAttributeTargetingPage() {
@@ -42,7 +37,7 @@ export default function ManageAttributeTargetingPage() {
   );
 
   return (
-    <div style={{ fontFamily: FONT, background: 'var(--osmos-bg-subtle)', minHeight: '100vh', padding: '20px 24px' }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif", background: 'var(--osmos-bg-subtle)', minHeight: '100vh', padding: '20px 24px' }}>
       <Toast visible={toast.visible} message={toast.message} type={toast.type} />
 
       <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 10, overflow: 'hidden' }}>
@@ -50,7 +45,7 @@ export default function ManageAttributeTargetingPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderBottom: '1px solid var(--osmos-border)', flexWrap: 'wrap' }}>
           {/* Count badge */}
           <div style={{ display: 'flex', alignItems: 'center', background: 'var(--osmos-bg-subtle)', borderRadius: 20, padding: '4px 12px', gap: 6 }}>
-            <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--osmos-fg)', fontFamily: FONT }}>Advertisers</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>Advertisers</span>
             <span style={{ background: 'var(--osmos-brand-primary)', color: '#fff', borderRadius: 12, fontSize: 11, fontWeight: 700, padding: '1px 7px' }}>120</span>
           </div>
 
@@ -62,7 +57,7 @@ export default function ManageAttributeTargetingPage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search"
-              style={{ border: 'none', outline: 'none', fontFamily: FONT, fontSize: 12, color: 'var(--osmos-fg)', background: 'transparent', flex: 1 }}
+              style={{ border: 'none', outline: 'none', fontFamily: "'Open Sans', sans-serif", fontSize: 12, color: 'var(--osmos-fg)', background: 'transparent', flex: 1 }}
             />
           </div>
 
@@ -81,7 +76,7 @@ export default function ManageAttributeTargetingPage() {
                   <th key={col} style={{
                     padding: '10px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700,
                     color: 'var(--osmos-fg-muted)', borderBottom: '1px solid var(--osmos-border)',
-                    whiteSpace: 'nowrap', letterSpacing: '0.03em', textTransform: 'uppercase', fontFamily: FONT,
+                    whiteSpace: 'nowrap', letterSpacing: '0.03em', textTransform: 'uppercase', fontFamily: "'Open Sans', sans-serif",
                   }}>
                     {col}
                   </th>
@@ -94,7 +89,7 @@ export default function ManageAttributeTargetingPage() {
                   <td colSpan={COLS.length}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '48px 0', gap: 12 }}>
                       <SearchIcon size={36} color="var(--osmos-fg-subtle)" />
-                      <span style={{ fontSize: 14, color: 'var(--osmos-fg-subtle)', fontWeight: 500, fontFamily: FONT }}>No Data Available</span>
+                      <span style={{ fontSize: 14, color: 'var(--osmos-fg-subtle)', fontWeight: 500, fontFamily: "'Open Sans', sans-serif" }}>No Data Available</span>
                     </div>
                   </td>
                 </tr>
@@ -110,7 +105,7 @@ export default function ManageAttributeTargetingPage() {
                       <div style={{ width: 28, height: 28, borderRadius: 6, background: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)', fontWeight: 700, fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                         {row.name[0]}
                       </div>
-                      <span style={{ fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>{row.name}</span>
+                      <span style={{ fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>{row.name}</span>
                     </div>
                   </td>
 
@@ -126,7 +121,7 @@ export default function ManageAttributeTargetingPage() {
                         checked={row.categoryTargeting}
                         onChange={() => toggleField(rows.indexOf(row), 'categoryTargeting')}
                       />
-                      <span style={{ fontSize: 12, color: row.categoryTargeting ? 'var(--osmos-fg)' : 'var(--osmos-fg-subtle)', fontFamily: FONT }}>
+                      <span style={{ fontSize: 12, color: row.categoryTargeting ? 'var(--osmos-fg)' : 'var(--osmos-fg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>
                         {row.categoryTargeting ? 'Enabled' : 'Disabled'}
                       </span>
                     </div>
@@ -138,7 +133,7 @@ export default function ManageAttributeTargetingPage() {
                         checked={row.brandTargeting}
                         onChange={() => toggleField(rows.indexOf(row), 'brandTargeting')}
                       />
-                      <span style={{ fontSize: 12, color: row.brandTargeting ? 'var(--osmos-fg)' : 'var(--osmos-fg-subtle)', fontFamily: FONT }}>
+                      <span style={{ fontSize: 12, color: row.brandTargeting ? 'var(--osmos-fg)' : 'var(--osmos-fg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>
                         {row.brandTargeting ? 'Enabled' : 'Disabled'}
                       </span>
                     </div>
@@ -150,7 +145,7 @@ export default function ManageAttributeTargetingPage() {
         </div>
 
         {/* Footer */}
-        <div style={{ padding: '10px 16px', borderTop: '1px solid var(--osmos-border)', fontSize: 12, color: 'var(--osmos-fg-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: FONT }}>
+        <div style={{ padding: '10px 16px', borderTop: '1px solid var(--osmos-border)', fontSize: 12, color: 'var(--osmos-fg-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: "'Open Sans', sans-serif" }}>
           <span>Showing {filtered.length} of {rows.length} advertisers</span>
           <span style={{ color: 'var(--osmos-fg-muted)' }}>Page 1 of 1</span>
         </div>

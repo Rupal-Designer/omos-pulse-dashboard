@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Icon, CheckIcon } from '../atoms/Icon';
 
-const FONT   = "'Open Sans', sans-serif";
-const ACCENT = 'var(--osmos-brand-primary)';
-
 // ── Hand-rolled theme icons ───────────────────────────────────────────────────
 const SunIcon = ({ size = 14, color = 'var(--osmos-fg-muted)' }) => (
   <Icon size={size} color={color}>
@@ -112,7 +109,7 @@ export function ThemeDropdown() {
           boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
           overflow: 'hidden',
           zIndex: 50,
-          fontFamily: FONT,
+          fontFamily: "'Open Sans', sans-serif",
         }}>
           <div style={{ padding: '4px 0' }}>
             {THEME_OPTIONS.map(({ value, IconComp, label }) => (
@@ -123,7 +120,7 @@ export function ThemeDropdown() {
                   width: '100%', display: 'flex', alignItems: 'center', gap: 10,
                   padding: '8px 12px', border: 'none',
                   background: 'transparent', cursor: 'pointer',
-                  fontFamily: FONT, fontSize: 13, color: 'var(--osmos-fg)',
+                  fontFamily: "'Open Sans', sans-serif", fontSize: 13, color: 'var(--osmos-fg)',
                   transition: 'background 0.12s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.background = 'var(--osmos-bg-subtle)')}
@@ -131,7 +128,7 @@ export function ThemeDropdown() {
               >
                 <IconComp size={15} color="var(--osmos-fg-muted)" />
                 <span style={{ flex: 1, textAlign: 'left' }}>{label}</span>
-                {theme === value && <CheckIcon size={13} color={ACCENT} />}
+                {theme === value && <CheckIcon size={13} color="var(--osmos-brand-primary)" />}
               </button>
             ))}
           </div>

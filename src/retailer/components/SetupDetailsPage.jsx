@@ -15,8 +15,6 @@ const ROWS = [
   { id: 6, field: 'Aditya',         value: 'Aditya'         },
 ];
 
-const FONT = "'Open Sans', sans-serif";
-
 function CopyIcon({ size = 14, color = 'currentColor' }) {
   return (
     <Icon size={size} color={color}>
@@ -35,7 +33,7 @@ export default function SetupDetailsPage() {
   }
 
   return (
-    <div style={{ padding: '20px 24px', fontFamily: FONT, background: 'var(--osmos-bg-subtle)', minHeight: '100vh' }}>
+    <div style={{ padding: '20px 24px', fontFamily: "'Open Sans', sans-serif", background: 'var(--osmos-bg-subtle)', minHeight: '100vh' }}>
       <Toast {...toast} />
 
       <div style={{

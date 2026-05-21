@@ -1,23 +1,10 @@
 import React from 'react';
-import { Icon, ChevronDownIcon, InfoIcon, FilterIcon, SearchIcon, DownloadIcon, ColumnsIcon, SortIcon } from '../../ui/atoms/Icon';
-import { Badge, TypeBadge } from '../../ui/atoms/Badge';
+import { Icon, ChevronDownIcon, InfoIcon, FilterIcon, SearchIcon, DownloadIcon, ColumnsIcon, SortIcon, Badge, TypeBadge } from '../../ui';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, ComposedChart, Bar, Area,
   PieChart, Pie, Cell,
 } from 'recharts';
-
-/* ── tokens ───────────────────────────────────────────────────── */
-const WHITE  = 'var(--osmos-bg)';
-const BORDER = 'var(--osmos-border)';
-const ACCENT = 'var(--osmos-brand-primary)';
-const TEXT_HI  = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_LO  = 'var(--osmos-fg-subtle)';
-const GREEN  = 'var(--alert-success-primary)';          // semantic positive — keep
-const RED    = 'var(--alert-error-primary)';          // semantic negative — keep
-const ORANGE = 'var(--osmos-brand-amber)';
-const COLORS = ['var(--osmos-brand-primary)','#8B5CF6','#10B981','#F59E0B','#EC4899']; // chart palette
 
 
 /* ── Persona color map ────────────────────────────────────────── */
@@ -39,28 +26,28 @@ const FUNNEL = [
 function FunnelCard({ stat, i, last }) {
   const pos = stat.pct >= 0;
   return (
-    <div style={{ background:WHITE, flex:1, minWidth:0, padding:'10px 14px',
-      borderTop:`1px solid ${BORDER}`, borderBottom:`1px solid ${BORDER}`,
-      borderRight: last ? `1px solid ${BORDER}` : 'none',
-      borderLeft:`1px solid ${BORDER}`,
+    <div style={{ background:'var(--osmos-bg)', flex:1, minWidth:0, padding:'10px 14px',
+      borderTop:`1px solid var(--osmos-border)`, borderBottom:`1px solid var(--osmos-border)`,
+      borderRight: last ? `1px solid var(--osmos-border)` : 'none',
+      borderLeft:`1px solid var(--osmos-border)`,
       borderRadius: i===0 ? '8px 0 0 8px' : last ? '0 8px 8px 0' : 0,
       position:'relative', display:'flex', flexDirection:'column', gap:4 }}>
       {!last && (
         <div style={{ position:'absolute', right:-10, top:'50%', transform:'translateY(-50%)',
           width:0, height:0, borderTop:'6px solid transparent',
-          borderBottom:'6px solid transparent', borderLeft:`8px solid ${BORDER}`, zIndex:2 }}/>
+          borderBottom:'6px solid transparent', borderLeft:`8px solid var(--osmos-border)`, zIndex:2 }}/>
       )}
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-        <span style={{ fontSize:11, color:TEXT_MID, fontWeight:500 }}>{stat.label}</span>
+        <span style={{ fontSize:11, color:'var(--osmos-fg-muted)', fontWeight:500 }}>{stat.label}</span>
         <InfoIcon />
       </div>
-      <div style={{ fontSize:16, fontWeight:700, color:TEXT_HI, letterSpacing:'-0.3px', whiteSpace:'nowrap' }}>
+      <div style={{ fontSize:16, fontWeight:700, color:'var(--osmos-fg)', letterSpacing:'-0.3px', whiteSpace:'nowrap' }}>
         {stat.value}
       </div>
       <div style={{ display:'flex', alignItems:'center', gap:5 }}>
-        <span style={{ fontSize:10, color:TEXT_MID }}>{stat.comp}</span>
+        <span style={{ fontSize:10, color:'var(--osmos-fg-muted)' }}>{stat.comp}</span>
         <span style={{ fontSize:10, fontWeight:600, padding:'1px 4px', borderRadius:3,
-          background: pos ? '#ECFDF5' : '#FEF2F2', color: pos ? GREEN : RED }}>
+          background: pos ? '#ECFDF5' : '#FEF2F2', color: pos ? 'var(--alert-success-primary)' : 'var(--alert-error-primary)' }}>
           {pos ? '▲' : '▼'} {Math.abs(stat.pct)}%
         </span>
       </div>
@@ -87,15 +74,15 @@ function Toolbar({ title, icon, count, countLabel }) {
         <div style={{ display:'flex', alignItems:'center', gap:8 }}>
           <div style={{ width:28, height:28, background:'var(--osmos-brand-primary-muted)', borderRadius:6,
             display:'flex', alignItems:'center', justifyContent:'center' }}>
-            <Icon size={13} color={ACCENT}>{icon}</Icon>
+            <Icon size={13} color={'var(--osmos-brand-primary)'}>{icon}</Icon>
           </div>
-          <span style={{ fontSize:14, fontWeight:600, color:TEXT_HI }}>{title}</span>
-          {count != null && <span style={{ fontSize:11, color:TEXT_LO }}>({count} {countLabel})</span>}
+          <span style={{ fontSize:14, fontWeight:600, color:'var(--osmos-fg)' }}>{title}</span>
+          {count != null && <span style={{ fontSize:11, color:'var(--osmos-fg-subtle)' }}>({count} {countLabel})</span>}
           <InfoIcon />
         </div>
         <div style={{ display:'flex', alignItems:'center', gap:7 }}>
           <div style={{ height:30, padding:'0 10px', display:'flex', alignItems:'center', gap:6,
-            border:`1px solid ${BORDER}`, borderRadius:6 }}>
+            border:`1px solid var(--osmos-border)`, borderRadius:6 }}>
             <SearchIcon />
             <input placeholder="Search…" style={{ border:'none', outline:'none', fontSize:11,
               fontFamily:"'Open Sans',sans-serif", width:120, background:'transparent', color:'#333' }} />
@@ -103,18 +90,18 @@ function Toolbar({ title, icon, count, countLabel }) {
           <Btn icon={<FilterIcon />} label="Filter" />
           <Btn icon={<DownloadIcon />} label="Export" />
           {/* D / W toggle */}
-          <div style={{ display:'flex', borderRadius:6, border:`1px solid ${BORDER}`, overflow:'hidden' }}>
+          <div style={{ display:'flex', borderRadius:6, border:`1px solid var(--osmos-border)`, overflow:'hidden' }}>
             {['D','W'].map((l,i) => (
               <button key={l} style={{ width:30, height:30, border:'none', cursor:'pointer',
-                fontSize:11, fontWeight:600, background: i===0 ? ACCENT : WHITE,
-                color: i===0 ? '#fff' : TEXT_MID, fontFamily:"'Open Sans',sans-serif" }}>{l}</button>
+                fontSize:11, fontWeight:600, background: i===0 ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg)',
+                color: i===0 ? '#fff' : 'var(--osmos-fg-muted)', fontFamily:"'Open Sans',sans-serif" }}>{l}</button>
             ))}
           </div>
         </div>
       </div>
       <div style={{ marginTop:8 }}>
         <button style={{ background:'none', border:'none', cursor:'pointer',
-          fontSize:11, color:ACCENT, padding:0, fontFamily:"'Open Sans',sans-serif" }}>
+          fontSize:11, color:'var(--osmos-brand-primary)', padding:0, fontFamily:"'Open Sans',sans-serif" }}>
           + Add a Filter
         </button>
       </div>
@@ -124,8 +111,8 @@ function Toolbar({ title, icon, count, countLabel }) {
 function Btn({ icon, label, primary }) {
   return (
     <button style={{ height:30, padding:'0 10px', display:'flex', alignItems:'center', gap:5,
-      background: primary ? ACCENT : WHITE, color: primary ? '#fff' : TEXT_MID,
-      border: primary ? 'none' : `1px solid ${BORDER}`, borderRadius:6,
+      background: primary ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg)', color: primary ? '#fff' : 'var(--osmos-fg-muted)',
+      border: primary ? 'none' : `1px solid var(--osmos-border)`, borderRadius:6,
       cursor:'pointer', fontSize:11, fontFamily:"'Open Sans',sans-serif", fontWeight: primary ? 600 : 400 }}>
       {icon}{label}
     </button>
@@ -135,9 +122,9 @@ function Btn({ icon, label, primary }) {
 /* ── TH / TD ──────────────────────────────────────────────────── */
 function TH({ children, sortable, align='left', nowrap=true }) {
   return (
-    <th style={{ padding:'9px 14px', textAlign:align, fontWeight:500, color:TEXT_MID,
+    <th style={{ padding:'9px 14px', textAlign:align, fontWeight:500, color:'var(--osmos-fg-muted)',
       fontSize:11, whiteSpace: nowrap ? 'nowrap' : 'normal',
-      background:'var(--osmos-bg-muted)', borderBottom:`1px solid ${BORDER}` }}>
+      background:'var(--osmos-bg-muted)', borderBottom:`1px solid var(--osmos-border)` }}>
       <div style={{ display:'flex', alignItems:'center', gap:3,
         justifyContent: align==='right' ? 'flex-end' : 'flex-start' }}>
         {children}{sortable && <SortIcon />}
@@ -147,7 +134,7 @@ function TH({ children, sortable, align='left', nowrap=true }) {
 }
 function TD({ children, align='left', bold, accent, mono }) {
   return (
-    <td style={{ padding:'9px 14px', fontSize:12, color: accent ? ACCENT : TEXT_HI,
+    <td style={{ padding:'9px 14px', fontSize:12, color: accent ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg)',
       borderBottom:`1px solid var(--osmos-border)`, textAlign:align,
       fontWeight: bold ? 600 : 400,
       fontFamily: mono ? 'monospace' : "'Open Sans',sans-serif",
@@ -175,7 +162,7 @@ function TotalRow({ children }) {
 function FooterNote() {
   return (
     <div style={{ padding:'8px 20px', borderTop:`1px solid var(--osmos-border)` }}>
-      <span style={{ fontSize:10, color:TEXT_LO, fontStyle:'italic' }}>1 Filter applicable: Date</span>
+      <span style={{ fontSize:10, color:'var(--osmos-fg-subtle)', fontStyle:'italic' }}>1 Filter applicable: Date</span>
     </div>
   );
 }
@@ -197,7 +184,7 @@ const CAMPAIGNS = [
 ];
 function CampaignTable() {
   return (
-    <div style={{ background:WHITE, borderRadius:8, border:`1px solid ${BORDER}`, marginBottom:16, overflow:'hidden' }}>
+    <div style={{ background:'var(--osmos-bg)', borderRadius:8, border:`1px solid var(--osmos-border)`, marginBottom:16, overflow:'hidden' }}>
       <Toolbar title="Campaign performance report" count={CAMPAIGNS.length} countLabel="campaigns"
         icon={<><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></>}
       />
@@ -220,7 +207,7 @@ function CampaignTable() {
                 <TD accent>{r.name}</TD>
                 <TD>
                   <span style={{ padding:'2px 8px', borderRadius:4, fontSize:11,
-                    background:'var(--osmos-brand-primary-muted)', color:ACCENT, fontWeight:500 }}>{r.type}</span>
+                    background:'var(--osmos-brand-primary-muted)', color:'var(--osmos-brand-primary)', fontWeight:500 }}>{r.type}</span>
                 </TD>
                 <TD><Badge status={r.status} /></TD>
                 <TD align="right">{r.budget}</TD>
@@ -265,14 +252,14 @@ const SNAPSHOT = [
 ];
 function NumCell({ v, warn }) {
   return (
-    <td style={{ padding:'9px 14px', fontSize:12, color: warn && v > 40 ? RED : TEXT_HI,
+    <td style={{ padding:'9px 14px', fontSize:12, color: warn && v > 40 ? 'var(--alert-error-primary)' : 'var(--osmos-fg)',
       fontWeight: warn && v > 40 ? 600 : 400, textAlign:'right',
       borderBottom:`1px solid var(--osmos-border)` }}>{v}</td>
   );
 }
 function AdvertiserSnapshot() {
   return (
-    <div style={{ background:WHITE, borderRadius:8, border:`1px solid ${BORDER}`, marginBottom:16, overflow:'hidden' }}>
+    <div style={{ background:'var(--osmos-bg)', borderRadius:8, border:`1px solid var(--osmos-border)`, marginBottom:16, overflow:'hidden' }}>
       <Toolbar title="Advertiser snapshot" count={SNAPSHOT.length} countLabel="categories"
         icon={<><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>}
       />
@@ -319,7 +306,7 @@ function AdvertiserSnapshot() {
         </table>
       </div>
       <div style={{ padding:'8px 20px', borderTop:`1px solid var(--osmos-border)`, display:'flex', justifyContent:'space-between' }}>
-        <span style={{ fontSize:10, color:TEXT_LO, fontStyle:'italic' }}>Comparison mode not applicable • One Filter Applicable: Date</span>
+        <span style={{ fontSize:10, color:'var(--osmos-fg-subtle)', fontStyle:'italic' }}>Comparison mode not applicable • One Filter Applicable: Date</span>
       </div>
     </div>
   );
@@ -339,7 +326,7 @@ const BUDGET_DATA = [
 ];
 function BudgetChart() {
   return (
-    <div style={{ background:WHITE, borderRadius:8, border:`1px solid ${BORDER}`, overflow:'hidden', flex:1 }}>
+    <div style={{ background:'var(--osmos-bg)', borderRadius:8, border:`1px solid var(--osmos-border)`, overflow:'hidden', flex:1 }}>
       <div style={{ padding:'14px 20px', borderBottom:`1px solid var(--osmos-border)`,
         display:'flex', alignItems:'center', justifyContent:'space-between' }}>
         <div style={{ display:'flex', alignItems:'center', gap:8 }}>
@@ -347,17 +334,17 @@ function BudgetChart() {
             display:'flex', alignItems:'center', justifyContent:'center' }}>
             <Icon size={13} color="#E53E3E"><path d="M18 20V10M12 20V4M6 20v-6"/></Icon>
           </div>
-          <span style={{ fontSize:14, fontWeight:600, color:TEXT_HI }}>Budget Utilization Trend</span>
+          <span style={{ fontSize:14, fontWeight:600, color:'var(--osmos-fg)' }}>Budget Utilization Trend</span>
           <InfoIcon />
         </div>
         <div style={{ display:'flex', alignItems:'center', gap:10 }}>
           <div style={{ display:'flex', alignItems:'center', gap:4 }}>
             <div style={{ width:10, height:10, borderRadius:2, background:'#10B981' }}/>
-            <span style={{ fontSize:10, color:TEXT_MID }}>Budget Utilization %</span>
+            <span style={{ fontSize:10, color:'var(--osmos-fg-muted)' }}>Budget Utilization %</span>
           </div>
           <div style={{ display:'flex', alignItems:'center', gap:4 }}>
-            <div style={{ width:12, height:2, background:ORANGE }}/>
-            <span style={{ fontSize:10, color:TEXT_MID }}>CTR</span>
+            <div style={{ width:12, height:2, background:'var(--osmos-brand-amber)' }}/>
+            <span style={{ fontSize:10, color:'var(--osmos-fg-muted)' }}>CTR</span>
           </div>
           <button style={{ background:'none', border:'none', cursor:'pointer', padding:4 }}><DownloadIcon /></button>
         </div>
@@ -374,8 +361,8 @@ function BudgetChart() {
               tick={{ fontSize:10, fill:'#999' }} axisLine={false} tickLine={false} />
             <Tooltip />
             <Bar yAxisId="left" dataKey="pct" fill="#10B981" opacity={0.75} radius={[3,3,0,0]} name="Budget Utilization %" />
-            <Line yAxisId="right" type="monotone" dataKey="ctr" stroke={ORANGE} strokeWidth={2}
-              dot={{ r:3, fill:ORANGE, strokeWidth:0 }} name="CTR" />
+            <Line yAxisId="right" type="monotone" dataKey="ctr" stroke={'var(--osmos-brand-amber)'} strokeWidth={2}
+              dot={{ r:3, fill:'var(--osmos-brand-amber)', strokeWidth:0 }} name="CTR" />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -401,7 +388,7 @@ const MOVERS = [
 ];
 function MoversTable() {
   return (
-    <div style={{ background:WHITE, borderRadius:8, border:`1px solid ${BORDER}`, marginBottom:16, overflow:'hidden' }}>
+    <div style={{ background:'var(--osmos-bg)', borderRadius:8, border:`1px solid var(--osmos-border)`, marginBottom:16, overflow:'hidden' }}>
       <Toolbar title="Movers And Shakers" count={MOVERS.length} countLabel="advertisers"
         icon={<><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></>}
       />
@@ -438,7 +425,7 @@ function MoversTable() {
         </table>
       </div>
       <div style={{ padding:'8px 20px', borderTop:`1px solid var(--osmos-border)` }}>
-        <span style={{ fontSize:10, color:TEXT_LO, fontStyle:'italic' }}>Comparison mode not applicable • One Filter Applicable: Date</span>
+        <span style={{ fontSize:10, color:'var(--osmos-fg-subtle)', fontStyle:'italic' }}>Comparison mode not applicable • One Filter Applicable: Date</span>
       </div>
     </div>
   );
@@ -457,25 +444,25 @@ const AD_FORMATS = [
   { fmt:'Product Display Ad', rev:'$12 M', clicks:'15 M', impr:'$12 M', cpc:'$0.45', cpm:'$0.45', viewProd:'15 M', addCart:'15 M', orders:'$25 K', gmv:'13' },
 ];
 const DONUT_DATA = [
-  { name:'PLA Ad',             value:42, color:ACCENT },
+  { name:'PLA Ad',             value:42, color:'var(--osmos-brand-primary)' },
   { name:'Image Ad',           value:28, color:'#8B5CF6' },
   { name:'Product Display Ad', value:18, color:'#10B981' },
-  { name:'Other',              value:12, color:ORANGE },
+  { name:'Other',              value:12, color:'var(--osmos-brand-amber)' },
 ];
 function AdFormatSection() {
   return (
     <div style={{ display:'flex', gap:16, marginBottom:16 }}>
       {/* Donut */}
-      <div style={{ background:WHITE, borderRadius:8, border:`1px solid ${BORDER}`,
+      <div style={{ background:'var(--osmos-bg)', borderRadius:8, border:`1px solid var(--osmos-border)`,
         overflow:'hidden', width:300, flexShrink:0 }}>
         <div style={{ padding:'14px 20px', borderBottom:`1px solid var(--osmos-border)`,
           display:'flex', alignItems:'center', justifyContent:'space-between' }}>
           <div style={{ display:'flex', alignItems:'center', gap:8 }}>
             <div style={{ width:28, height:28, background:'var(--osmos-brand-primary-muted)', borderRadius:6,
               display:'flex', alignItems:'center', justifyContent:'center' }}>
-              <Icon size={13} color={ACCENT}><circle cx="12" cy="12" r="10"/></Icon>
+              <Icon size={13} color={'var(--osmos-brand-primary)'}><circle cx="12" cy="12" r="10"/></Icon>
             </div>
-            <span style={{ fontSize:14, fontWeight:600, color:TEXT_HI }}>Ad Format Performance Report</span>
+            <span style={{ fontSize:14, fontWeight:600, color:'var(--osmos-fg)' }}>Ad Format Performance Report</span>
           </div>
           <button style={{ background:'none', border:'none', cursor:'pointer', padding:4 }}><DownloadIcon /></button>
         </div>
@@ -491,8 +478,8 @@ function AdFormatSection() {
             {/* Center label */}
             <div style={{ position:'absolute', top:'50%', left:'50%',
               transform:'translate(-50%,-50%)', textAlign:'center', pointerEvents:'none' }}>
-              <div style={{ fontSize:18, fontWeight:700, color:TEXT_HI }}>$100</div>
-              <div style={{ fontSize:11, color:TEXT_MID }}>CPC</div>
+              <div style={{ fontSize:18, fontWeight:700, color:'var(--osmos-fg)' }}>$100</div>
+              <div style={{ fontSize:11, color:'var(--osmos-fg-muted)' }}>CPC</div>
             </div>
           </div>
           {/* Legend */}
@@ -501,20 +488,20 @@ function AdFormatSection() {
               <div key={i} style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                 <div style={{ display:'flex', alignItems:'center', gap:6 }}>
                   <div style={{ width:10, height:10, borderRadius:2, background:d.color }}/>
-                  <span style={{ fontSize:11, color:TEXT_MID }}>{d.name}</span>
+                  <span style={{ fontSize:11, color:'var(--osmos-fg-muted)' }}>{d.name}</span>
                 </div>
-                <span style={{ fontSize:11, fontWeight:600, color:TEXT_HI }}>{d.value}%</span>
+                <span style={{ fontSize:11, fontWeight:600, color:'var(--osmos-fg)' }}>{d.value}%</span>
               </div>
             ))}
           </div>
-          <div style={{ fontSize:10, color:TEXT_LO, fontStyle:'italic', alignSelf:'flex-start' }}>
+          <div style={{ fontSize:10, color:'var(--osmos-fg-subtle)', fontStyle:'italic', alignSelf:'flex-start' }}>
             1 Filter applicable: Date
           </div>
         </div>
       </div>
 
       {/* Ad Format table */}
-      <div style={{ background:WHITE, borderRadius:8, border:`1px solid ${BORDER}`, overflow:'hidden', flex:1 }}>
+      <div style={{ background:'var(--osmos-bg)', borderRadius:8, border:`1px solid var(--osmos-border)`, overflow:'hidden', flex:1 }}>
         <Toolbar title="Ad Format Preferences Report" count={AD_FORMATS.length} countLabel="formats"
           icon={<><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></>} />
         <div style={{ overflowX:'auto' }}>
@@ -538,7 +525,7 @@ function AdFormatSection() {
                 <TR key={i}>
                   <TD>
                     <div style={{ display:'flex', alignItems:'center', gap:7 }}>
-                      <div style={{ width:6, height:6, borderRadius:2, background:COLORS[i%COLORS.length] }}/>
+                      <div style={{ width:6, height:6, borderRadius:2, background:(['var(--osmos-brand-primary)','#8B5CF6','#10B981','#F59E0B','#EC4899'][i%5]) }}/>
                       <span style={{ fontWeight:500 }}>{r.fmt}</span>
                     </div>
                   </TD>
@@ -587,7 +574,7 @@ const CHANNELS = [
 ];
 function ChannelTable() {
   return (
-    <div style={{ background:WHITE, borderRadius:8, border:`1px solid ${BORDER}`, marginBottom:16, overflow:'hidden' }}>
+    <div style={{ background:'var(--osmos-bg)', borderRadius:8, border:`1px solid var(--osmos-border)`, marginBottom:16, overflow:'hidden' }}>
       <Toolbar title="Channel performance report" count={CHANNELS.length} countLabel="channels"
         icon={<><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></>} />
       <div style={{ overflowX:'auto' }}>
@@ -612,7 +599,7 @@ function ChannelTable() {
               <TR key={i}>
                 <TD>
                   <div style={{ display:'flex', alignItems:'center', gap:7 }}>
-                    <div style={{ width:6, height:6, borderRadius:'50%', background:COLORS[i] }}/>
+                    <div style={{ width:6, height:6, borderRadius:'50%', background:(['var(--osmos-brand-primary)','#8B5CF6','#10B981','#F59E0B','#EC4899'][i]) }}/>
                     <span style={{ fontWeight:500 }}>{r.type}</span>
                   </div>
                 </TD>
@@ -663,7 +650,7 @@ const AUDIENCES = [
 ];
 function AudienceTable() {
   return (
-    <div style={{ background:WHITE, borderRadius:8, border:`1px solid ${BORDER}`, marginBottom:16, overflow:'hidden' }}>
+    <div style={{ background:'var(--osmos-bg)', borderRadius:8, border:`1px solid var(--osmos-border)`, marginBottom:16, overflow:'hidden' }}>
       <Toolbar title="Audience Performance Report" count={AUDIENCES.length} countLabel="segments"
         icon={<><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></>} />
       <div style={{ overflowX:'auto' }}>
@@ -688,8 +675,8 @@ function AudienceTable() {
               <TR key={i}>
                 <TD>
                   <div style={{ display:'flex', alignItems:'center', gap:7 }}>
-                    <div style={{ width:6, height:6, borderRadius:'50%', background:COLORS[i] }}/>
-                    <span accent style={{ color:ACCENT, cursor:'pointer', fontWeight:500 }}>{r.seg}</span>
+                    <div style={{ width:6, height:6, borderRadius:'50%', background:(['var(--osmos-brand-primary)','#8B5CF6','#10B981','#F59E0B','#EC4899'][i]) }}/>
+                    <span accent style={{ color:'var(--osmos-brand-primary)', cursor:'pointer', fontWeight:500 }}>{r.seg}</span>
                   </div>
                 </TD>
                 <TD align="right">{r.adv}</TD>
@@ -740,7 +727,7 @@ const ADV_DIM = [
 ];
 function AdvDimTable() {
   return (
-    <div style={{ background:WHITE, borderRadius:8, border:`1px solid ${BORDER}`, marginBottom:16, overflow:'hidden' }}>
+    <div style={{ background:'var(--osmos-bg)', borderRadius:8, border:`1px solid var(--osmos-border)`, marginBottom:16, overflow:'hidden' }}>
       <Toolbar title="Advertiser Dimension Report" count={ADV_DIM.length} countLabel="advertisers"
         icon={<><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></>}
       />
@@ -781,7 +768,7 @@ function AdvDimTable() {
                 <TD align="right" bold>{r.lifeSpend}</TD>
                 <TD align="right">{r.lifeTopup}</TD>
                 <TD align="right" bold>
-                  <span style={{ color: parseFloat(r.remaining.replace(/[^0-9.]/g,'')) > 100 ? GREEN : ORANGE }}>
+                  <span style={{ color: parseFloat(r.remaining.replace(/[^0-9.]/g,'')) > 100 ? 'var(--alert-success-primary)' : 'var(--osmos-brand-amber)' }}>
                     {r.remaining}
                   </span>
                 </TD>
@@ -792,18 +779,18 @@ function AdvDimTable() {
       </div>
       <div style={{ padding:'10px 20px', borderTop:`1px solid var(--osmos-border)`,
         display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-        <span style={{ fontSize:10, color:TEXT_LO, fontStyle:'italic' }}>
+        <span style={{ fontSize:10, color:'var(--osmos-fg-subtle)', fontStyle:'italic' }}>
           Comparison mode not applicable • Showing {ADV_DIM.length} advertisers
         </span>
         <div style={{ display:'flex', alignItems:'center', gap:4 }}>
           {[1,2,3].map(p => (
             <button key={p} style={{ width:26, height:26, borderRadius:4, fontSize:11,
-              background: p===1 ? ACCENT : WHITE, color: p===1 ? '#fff' : TEXT_MID,
-              border: p===1 ? 'none' : `1px solid ${BORDER}`, cursor:'pointer', fontWeight: p===1 ? 600:400 }}>{p}</button>
+              background: p===1 ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg)', color: p===1 ? '#fff' : 'var(--osmos-fg-muted)',
+              border: p===1 ? 'none' : `1px solid var(--osmos-border)`, cursor:'pointer', fontWeight: p===1 ? 600:400 }}>{p}</button>
           ))}
-          <span style={{ fontSize:11, color:TEXT_LO }}>…</span>
+          <span style={{ fontSize:11, color:'var(--osmos-fg-subtle)' }}>…</span>
           <button style={{ height:26, padding:'0 10px', borderRadius:4, fontSize:11,
-            background:WHITE, border:`1px solid ${BORDER}`, cursor:'pointer', color:TEXT_MID }}>Next →</button>
+            background:'var(--osmos-bg)', border:`1px solid var(--osmos-border)`, cursor:'pointer', color:'var(--osmos-fg-muted)' }}>Next →</button>
         </div>
       </div>
     </div>
@@ -825,27 +812,27 @@ export default function AdvertiserInsightsPage() {
       {/* ── Two line charts: Ad Revenue vs CTR | Clicks vs CPC ── */}
       <div style={{ display:'flex', gap:16, marginBottom:16 }}>
         {[
-          { left:'Ad Revenue', lKey:'revenue', lColor:ACCENT,    lFmt:v=>`$${v}M`,
+          { left:'Ad Revenue', lKey:'revenue', lColor:'var(--osmos-brand-primary)',    lFmt:v=>`$${v}M`,
             right:'CTR',       rKey:'ctr',     rColor:'#8B5CF6', rFmt:v=>`${v}%`, data:revenueCtData },
           { left:'Clicks',     lKey:'clicks',  lColor:'#EC4899', lFmt:v=>`${v}M`,
             right:'CPC',       rKey:'cpc',     rColor:'#10B981', rFmt:v=>`$${v}`, data:clicksCpcData },
         ].map((chart,ci) => (
-          <div key={ci} style={{ background:WHITE, borderRadius:8, border:`1px solid ${BORDER}`,
+          <div key={ci} style={{ background:'var(--osmos-bg)', borderRadius:8, border:`1px solid var(--osmos-border)`,
             overflow:'hidden', flex:1 }}>
             <div style={{ padding:'12px 16px', borderBottom:`1px solid var(--osmos-border)`,
               display:'flex', alignItems:'center', justifyContent:'space-between' }}>
               <div style={{ display:'flex', alignItems:'center', gap:10 }}>
                 <div style={{ width:26, height:26, background:'var(--osmos-brand-primary-muted)', borderRadius:6,
                   display:'flex', alignItems:'center', justifyContent:'center' }}>
-                  <Icon size={13} color={ACCENT}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></Icon>
+                  <Icon size={13} color={'var(--osmos-brand-primary)'}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></Icon>
                 </div>
                 <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                   {[{label:chart.left,color:chart.lColor},{label:chart.right,color:chart.rColor}].map((m,mi) => (
                     <React.Fragment key={mi}>
-                      {mi>0 && <span style={{ fontSize:11, color:TEXT_LO }}>vs</span>}
+                      {mi>0 && <span style={{ fontSize:11, color:'var(--osmos-fg-subtle)' }}>vs</span>}
                       <div style={{ display:'flex', alignItems:'center', gap:4 }}>
                         <div style={{ width:10, height:10, borderRadius:2, background:m.color }}/>
-                        <span style={{ fontSize:11, color:TEXT_HI, fontWeight:500 }}>{m.label}</span>
+                        <span style={{ fontSize:11, color:'var(--osmos-fg)', fontWeight:500 }}>{m.label}</span>
                         <ChevronDownIcon size={10}/>
                       </div>
                     </React.Fragment>
@@ -868,7 +855,7 @@ export default function AdvertiserInsightsPage() {
               </ResponsiveContainer>
             </div>
             <div style={{ padding:'4px 16px 10px', borderTop:`1px solid var(--osmos-border)` }}>
-              <span style={{ fontSize:10, color:TEXT_LO, fontStyle:'italic' }}>1 Filter applicable: Date</span>
+              <span style={{ fontSize:10, color:'var(--osmos-fg-subtle)', fontStyle:'italic' }}>1 Filter applicable: Date</span>
             </div>
           </div>
         ))}
@@ -886,7 +873,7 @@ export default function AdvertiserInsightsPage() {
       <AdvDimTable />
 
       <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between',
-        padding:'8px 0 16px', fontSize:10, color:TEXT_LO, fontStyle:'italic' }}>
+        padding:'8px 0 16px', fontSize:10, color:'var(--osmos-fg-subtle)', fontStyle:'italic' }}>
         <span>Data as of 14 May 2025 • Refresh every 4 hours</span>
         <span style={{ fontStyle:'normal' }}>© 2017 - 2026 OSK Techlabs Private Ltd. All rights reserved.</span>
       </div>
