@@ -45,7 +45,7 @@ export function Tabs({
         }}
       >
         {items.map((item) => (
-          <T.Trigger key={item.id} value={item.id} style={{ justifyContent: isVertical ? 'flex-start' : undefined }}>
+          <T.Trigger key={item.id} value={item.id} style={{ justifyContent: isVertical ? 'flex-start' : undefined, marginRight: (!isVertical && variant === 'pill') ? 4 : undefined }}>
             {item.icon && <span style={{ marginRight: 6, display: 'inline-flex' }}>{item.icon}</span>}
             {item.label}
           </T.Trigger>

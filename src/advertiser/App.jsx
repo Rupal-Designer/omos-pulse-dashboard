@@ -6,6 +6,7 @@ import DesignSystemPage from './pages/DesignSystemPage';
 import BYOTDashboardPage from './pages/BYOTDashboardPage';
 import BYOTCampaignDetailPage from './pages/BYOTCampaignDetailPage';
 import OffsiteDashboardPage from './pages/OffsiteDashboardPage';
+import ManageBillingPage from './pages/ManageBillingPage';
 import { Sidebar } from './components/sidebar';
 import { Header } from './components/header';
 
@@ -84,6 +85,8 @@ export default function App() {
         return <DesignSystemPage />;
       case '/offsite':
         return <OffsiteDashboardPage />;
+      case '/finance/manage-billing':
+        return <ManageBillingPage />;
       default:
         return <DashboardPage activeAdType={activeAdType} onAdTypeChange={setActiveAdType} />;
     }
