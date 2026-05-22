@@ -1,16 +1,5 @@
 import { InfoIcon, ChevronDownIcon } from '../../ui';
 
-// ── Design tokens ────────────────────────────────────────────────────────────
-const FONT       = "'Open Sans', sans-serif";
-const BG         = 'var(--osmos-bg)';
-const BG_MUTED   = 'var(--osmos-bg-muted)';
-const BORDER     = 'var(--osmos-border)';
-const TEXT       = 'var(--osmos-fg)';
-const TEXT_MID   = 'var(--osmos-fg-muted)';
-const TEXT_SUBTLE= 'var(--osmos-fg-subtle)';
-const ACCENT     = 'var(--osmos-brand-primary)';
-const ACCENT_M   = 'var(--osmos-brand-primary-muted)';
-
 // ── Mock data ────────────────────────────────────────────────────────────────
 const metricsData = {
   'Product Ads': [
@@ -48,7 +37,7 @@ export function MetricsCards({
   const metrics = metricsData[activeAdType] || metricsData['Product Ads'];
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 12, fontFamily: FONT }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 12, fontFamily: "'Open Sans', sans-serif" }}>
       {metrics.map((metric, index) => {
         const isSelected = selectedMetrics.includes(metric.label);
         return (
@@ -71,37 +60,37 @@ function MetricCard({ metric, isSelected, onClick }) {
       onClick={onClick}
       style={{
         padding: 16, borderRadius: 8, border: 'none', cursor: 'pointer',
-        textAlign: 'left', transition: 'all 0.15s', fontFamily: FONT,
-        backgroundColor: isSelected ? ACCENT_M : BG,
-        outline: `1px solid ${isSelected ? ACCENT : BORDER}`,
-        boxShadow: isSelected ? `0 0 0 2px ${ACCENT_M}` : 'none',
+        textAlign: 'left', transition: 'all 0.15s', fontFamily: "'Open Sans', sans-serif",
+        backgroundColor: isSelected ? 'var(--osmos-brand-primary-muted)' : 'var(--osmos-bg)',
+        outline: `1px solid ${isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)'}`,
+        boxShadow: isSelected ? `0 0 0 2px var(--osmos-brand-primary-muted)` : 'none',
       }}
       onMouseEnter={(e) => {
-        if (!isSelected) e.currentTarget.style.backgroundColor = BG_MUTED;
+        if (!isSelected) e.currentTarget.style.backgroundColor = 'var(--osmos-bg-muted)';
       }}
       onMouseLeave={(e) => {
-        if (!isSelected) e.currentTarget.style.backgroundColor = BG;
+        if (!isSelected) e.currentTarget.style.backgroundColor = 'var(--osmos-bg)';
       }}
     >
       {/* Label row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 4 }}>
         <span style={{
           fontSize: 12,
-          color: isSelected ? ACCENT : TEXT_MID,
+          color: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)',
           fontWeight: isSelected ? 500 : 400,
         }}>
           {metric.label}
         </span>
         {metric.hasDropdown && (
-          <ChevronDownIcon size={12} color={isSelected ? ACCENT : TEXT_MID} />
+          <ChevronDownIcon size={12} color={isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)'} />
         )}
         <span style={{ marginLeft: 'auto' }}>
-          <InfoIcon size={12} color={TEXT_SUBTLE} />
+          <InfoIcon size={12} color="var(--osmos-fg-subtle)" />
         </span>
       </div>
 
       {/* Value */}
-      <p style={{ fontSize: 18, fontWeight: 600, color: TEXT, margin: 0 }}>
+      <p style={{ fontSize: 18, fontWeight: 600, color: 'var(--osmos-fg)', margin: 0 }}>
         {metric.value}
       </p>
     </button>

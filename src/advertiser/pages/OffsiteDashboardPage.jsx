@@ -8,17 +8,6 @@ import { DataTable } from '../components/design-system/tables';
 import { PerformanceTrend } from '../components/performance-trend';
 import OffsiteCampaignWizard from '../components/offsite-wizard/OffsiteCampaignWizard';
 
-// ── Design tokens ─────────────────────────────────────────────────────────────
-const FONT     = "'Open Sans', sans-serif";
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const BORDER   = 'var(--osmos-border)';
-const TEXT_HI  = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_LO  = 'var(--osmos-fg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const GREEN    = 'var(--osmos-brand-green)';
-const AMBER    = 'var(--osmos-brand-amber)';
 const RED      = '#EF4444';
 
 // ── Mock data ─────────────────────────────────────────────────────────────────
@@ -39,12 +28,12 @@ const CHANNEL_COLORS = {
 };
 
 const STATUS_CONFIG = {
-  Active:         { color: GREEN, icon: '●' },
-  Paused:         { color: AMBER, icon: '⏸' },
-  Draft:          { color: TEXT_LO, icon: '■' },
+  Active:         { color: 'var(--osmos-brand-green)', icon: '●' },
+  Paused:         { color: 'var(--osmos-brand-amber)', icon: '⏸' },
+  Draft:          { color: 'var(--osmos-fg-subtle)', icon: '■' },
   Rejected:       { color: RED, icon: '⚠' },
-  Delivered:      { color: GREEN, icon: '✓' },
-  'Under Review': { color: AMBER, icon: '🔍' },
+  Delivered:      { color: 'var(--osmos-brand-green)', icon: '✓' },
+  'Under Review': { color: 'var(--osmos-brand-amber)', icon: '🔍' },
 };
 
 const MOCK_CAMPAIGNS = [
@@ -60,9 +49,9 @@ const MOCK_CAMPAIGNS = [
 
 // ── StatusBadge ───────────────────────────────────────────────────────────────
 function StatusBadge({ status }) {
-  const cfg = STATUS_CONFIG[status] || { color: TEXT_LO, icon: '●' };
+  const cfg = STATUS_CONFIG[status] || { color: 'var(--osmos-fg-subtle)', icon: '●' };
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: FONT, fontSize: 12, fontWeight: 500, color: cfg.color }}>
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: "'Open Sans', sans-serif", fontSize: 12, fontWeight: 500, color: cfg.color }}>
       <span style={{ fontSize: 10 }}>{cfg.icon}</span>
       {status}
     </span>
@@ -71,12 +60,12 @@ function StatusBadge({ status }) {
 
 // ── ChannelBadge ──────────────────────────────────────────────────────────────
 function ChannelBadge({ channel }) {
-  const color = CHANNEL_COLORS[channel] || ACCENT;
+  const color = CHANNEL_COLORS[channel] || 'var(--osmos-brand-primary)';
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', padding: '2px 8px',
       borderRadius: 20, border: `1px solid ${color}33`, background: `${color}11`,
-      fontSize: 11, fontWeight: 600, color, fontFamily: FONT,
+      fontSize: 11, fontWeight: 600, color, fontFamily: "'Open Sans', sans-serif",
     }}>
       {channel}
     </span>
@@ -100,10 +89,10 @@ function BulkActionBar({ count, onClear }) {
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: 10, padding: '8px 16px',
-      background: `${ACCENT}0D`, border: `1px solid ${ACCENT}33`, borderRadius: 8,
-      marginBottom: 8, fontFamily: FONT,
+      background: `var(--osmos-brand-primary)0D`, border: `1px solid var(--osmos-brand-primary)33`, borderRadius: 8,
+      marginBottom: 8, fontFamily: "'Open Sans', sans-serif",
     }}>
-      <span style={{ fontSize: 13, fontWeight: 600, color: ACCENT, flexShrink: 0 }}>{count} selected</span>
+      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-brand-primary)', flexShrink: 0 }}>{count} selected</span>
       <div style={{ flex: 1, display: 'flex', gap: 6 }}>
         {['Pause', 'Resume', 'Duplicate', 'Archive'].map(action => (
           <Button key={action} variant="outline">{action}</Button>
@@ -159,12 +148,12 @@ export default function OffsiteDashboardPage() {
   }
 
   return (
-    <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20, fontFamily: FONT, background: BG_SUB, minHeight: '100%' }}>
+    <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20, fontFamily: "'Open Sans', sans-serif", background: 'var(--osmos-bg-subtle)', minHeight: '100%' }}>
 
       {/* Page header — matches BYOT pattern */}
       <Toolbar
         noBorder
-        left={<span style={{ fontSize: 18, fontWeight: 700, color: TEXT_HI }}>Offsite Ads</span>}
+        left={<span style={{ fontSize: 18, fontWeight: 700, color: 'var(--osmos-fg)' }}>Offsite Ads</span>}
         right={
           <Button variant="primary" onClick={() => setWizardOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <PlusIcon size={14} /> Create Campaign
@@ -181,16 +170,16 @@ export default function OffsiteDashboardPage() {
       </div>
 
       {/* Performance trend card */}
-      <div style={{ background: BG, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '16px 20px' }}>
+      <div style={{ background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 10, padding: '16px 20px' }}>
         <PerformanceTrend />
       </div>
 
       {/* Campaigns table card */}
-      <div style={{ background: BG, border: `1px solid ${BORDER}`, borderRadius: 10, overflow: 'hidden' }}>
+      <div style={{ background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 10, overflow: 'hidden' }}>
 
         {/* Table toolbar — uses Toolbar component like BYOT */}
         <Toolbar
-          left={<span style={{ fontSize: 14, fontWeight: 600, color: TEXT_HI }}>Campaigns</span>}
+          left={<span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)' }}>Campaigns</span>}
           right={
             <Button variant="outline" onClick={() => {}} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
               <DownloadIcon size={13} /> Export CSV
@@ -199,7 +188,7 @@ export default function OffsiteDashboardPage() {
         />
 
         {/* Channel filter chips */}
-        <div style={{ display: 'flex', gap: 8, padding: '10px 16px', borderBottom: `1px solid ${BORDER}`, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 8, padding: '10px 16px', borderBottom: `1px solid var(--osmos-border)`, flexWrap: 'wrap' }}>
           {CHANNELS.map(ch => {
             const isActive = activeChannel === ch;
             return (
@@ -208,10 +197,10 @@ export default function OffsiteDashboardPage() {
                 onClick={() => setActiveChannel(ch)}
                 style={{
                   padding: '4px 12px', borderRadius: 20, fontSize: 12,
-                  fontWeight: isActive ? 600 : 400, cursor: 'pointer', fontFamily: FONT,
-                  border: `1px solid ${isActive ? ACCENT : BORDER}`,
-                  background: isActive ? `${ACCENT}11` : 'transparent',
-                  color: isActive ? ACCENT : TEXT_MID,
+                  fontWeight: isActive ? 600 : 400, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
+                  border: `1px solid ${isActive ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)'}`,
+                  background: isActive ? `var(--osmos-brand-primary)11` : 'transparent',
+                  color: isActive ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)',
                   transition: 'all 0.15s',
                 }}
               >
@@ -236,12 +225,12 @@ export default function OffsiteDashboardPage() {
           onRowSelect={setSelectedRows}
           footer={
             <tr>
-              <td colSpan={TABLE_COLUMNS.length + 1} style={{ padding: '10px 16px', borderTop: `1px solid ${BORDER}` }}>
+              <td colSpan={TABLE_COLUMNS.length + 1} style={{ padding: '10px 16px', borderTop: `1px solid var(--osmos-border)` }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: 11, color: TEXT_LO, display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', display: 'flex', alignItems: 'center', gap: 5 }}>
                     <RefreshIcon size={12} /> Last synced 3 min ago
                   </span>
-                  <span style={{ fontSize: 11, color: TEXT_LO }}>
+                  <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)' }}>
                     {filteredCampaigns.length} campaigns
                   </span>
                 </div>

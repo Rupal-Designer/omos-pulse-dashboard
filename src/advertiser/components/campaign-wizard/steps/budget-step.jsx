@@ -2,21 +2,6 @@ import { useState } from 'react';
 import { Input, Select, InfoIcon, SearchIcon, Icon } from '../../../../ui';
 import { FunnelSimulationSection } from '../../funnel-simulation-section';
 
-const FONT     = "'Open Sans', sans-serif";
-const TEXT     = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_SUB = 'var(--osmos-fg-subtle)';
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-const GREEN    = 'var(--osmos-brand-green)';
-const GREEN_M  = 'var(--osmos-brand-green-muted)';
-const AMBER    = 'var(--osmos-brand-amber)';
-const ERROR    = 'var(--alert-error-primary)';
-const VIOLET   = '#7349a1'; // brand-secondary — no osmos token yet
-
 // ── Icons ─────────────────────────────────────────────────────────────────────
 const DollarSignIcon = (props) => (
   <Icon {...props}>
@@ -79,9 +64,9 @@ const budgetTypes = [
 ];
 
 const pacingOptions = [
-  { id: 'standard',    label: 'Standard (Even Distribution)', IconComp: BarChartIcon, iconColor: ACCENT,
+  { id: 'standard',    label: 'Standard (Even Distribution)', IconComp: BarChartIcon, iconColor: 'var(--osmos-brand-primary)',
     description: 'Spread your budget evenly throughout the day to maintain consistent visibility' },
-  { id: 'accelerated', label: 'Accelerated',                  IconComp: RocketIcon,   iconColor: AMBER,
+  { id: 'accelerated', label: 'Accelerated',                  IconComp: RocketIcon,   iconColor: 'var(--osmos-brand-amber)',
     description: 'Spend budget as quickly as possible to maximize early impressions and reach'    },
 ];
 
@@ -92,7 +77,7 @@ function Toggle({ checked, onChange }) {
       onClick={onChange}
       style={{
         position: 'relative', width: 44, height: 24, borderRadius: 999,
-        background: checked ? ACCENT : TEXT_SUB, border: 'none', cursor: 'pointer',
+        background: checked ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-subtle)', border: 'none', cursor: 'pointer',
         transition: 'background 0.15s', flexShrink: 0,
       }}
     >
@@ -114,9 +99,9 @@ function PacingCard({ option, selected, onClick }) {
       onMouseLeave={() => setHov(false)}
       style={{
         padding: 16, borderRadius: 8, textAlign: 'left',
-        border: `2px solid ${selected ? ACCENT : hov ? TEXT_MID : BORDER}`,
-        background: selected ? ACCENT_M : hov ? BG_SUB : BG,
-        cursor: 'pointer', transition: 'all 0.15s', fontFamily: FONT,
+        border: `2px solid ${selected ? 'var(--osmos-brand-primary)' : hov ? 'var(--osmos-fg-muted)' : 'var(--osmos-border)'}`,
+        background: selected ? 'var(--osmos-brand-primary-muted)' : hov ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
+        cursor: 'pointer', transition: 'all 0.15s', fontFamily: "'Open Sans', sans-serif",
         display: 'flex', alignItems: 'flex-start', gap: 12,
       }}
     >
@@ -124,12 +109,12 @@ function PacingCard({ option, selected, onClick }) {
         <IconComp size={24} color={iconColor} />
       </div>
       <div style={{ flex: 1 }}>
-        <div style={{ fontWeight: 500, color: selected ? ACCENT : TEXT, marginBottom: 4 }}>{label}</div>
-        <div style={{ fontSize: 12, color: TEXT_MID }}>{description}</div>
+        <div style={{ fontWeight: 500, color: selected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg)', marginBottom: 4 }}>{label}</div>
+        <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{description}</div>
       </div>
       {selected && (
         <div style={{
-          width: 20, height: 20, borderRadius: '50%', background: ACCENT, flexShrink: 0,
+          width: 20, height: 20, borderRadius: '50%', background: 'var(--osmos-brand-primary)', flexShrink: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"
@@ -179,7 +164,7 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
   const selectedWallet = walletOptions.find((w) => w.id === data.wallet);
 
   const cardStyle = {
-    background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24, fontFamily: FONT,
+    background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 24, fontFamily: "'Open Sans', sans-serif",
   };
 
   const dollarWrapStyle = { position: 'relative', display: 'inline-flex', alignItems: 'center' };
@@ -187,32 +172,32 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
 
   const rawInputStyle = (width) => ({
     width, paddingLeft: 28, paddingRight: 12, paddingTop: 8, paddingBottom: 8,
-    border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT,
-    background: BG, fontFamily: FONT, outline: 'none', boxSizing: 'border-box',
+    border: `1px solid ${'var(--osmos-border)'}`, borderRadius: 8, fontSize: 13, color: 'var(--osmos-fg)',
+    background: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif", outline: 'none', boxSizing: 'border-box',
   });
 
-  const labelStyle = { display: 'block', fontSize: 13, fontWeight: 500, color: TEXT, marginBottom: 8 };
-  const hintStyle  = { fontSize: 12, color: TEXT_SUB, marginTop: 4 };
+  const labelStyle = { display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 8 };
+  const hintStyle  = { fontSize: 12, color: 'var(--osmos-fg-subtle)', marginTop: 4 };
 
   // ── Product Ads Layout ─────────────────────────────────────────────────────
   if (isProductAds) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: FONT, maxWidth: 720, margin: '0 auto' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: "'Open Sans', sans-serif", maxWidth: 720, margin: '0 auto' }}>
         <div>
-          <h2 style={{ fontSize: 20, fontWeight: 600, color: TEXT, marginBottom: 4 }}>Campaign Setup</h2>
-          <p style={{ fontSize: 13, color: TEXT_MID }}>Configure your Product Ads campaign budget and schedule.</p>
+          <h2 style={{ fontSize: 20, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 4 }}>Campaign Setup</h2>
+          <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>Configure your Product Ads campaign budget and schedule.</p>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           {/* Daily Budget */}
           <div style={cardStyle}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-              <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>Daily Budget:</label>
-              <InfoIcon size={14} color={TEXT_SUB} />
+              <label style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>Daily Budget:</label>
+              <InfoIcon size={14} color={'var(--osmos-fg-subtle)'} />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <div style={dollarWrapStyle}>
-                <span style={{ ...dollarIconStyle, fontSize: 13, color: TEXT_MID }}>$</span>
+                <span style={{ ...dollarIconStyle, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>$</span>
                 <input
                   type="number"
                   value={data.dailyBudget}
@@ -222,8 +207,8 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
                 />
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 13, color: TEXT_MID }}>FlexiBudget</span>
-                <InfoIcon size={14} color={TEXT_SUB} />
+                <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>FlexiBudget</span>
+                <InfoIcon size={14} color={'var(--osmos-fg-subtle)'} />
                 <Toggle
                   checked={!!data.flexiBudget}
                   onChange={() => updateData({ flexiBudget: !data.flexiBudget })}
@@ -266,26 +251,26 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                  <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>Start Date</label>
-                  <InfoIcon size={14} color={TEXT_SUB} />
+                  <label style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>Start Date</label>
+                  <InfoIcon size={14} color={'var(--osmos-fg-subtle)'} />
                 </div>
                 <input
                   type="date"
                   value={data.startDate}
                   onChange={(e) => handleFieldChange('startDate', e.target.value)}
-                  style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT, background: BG, fontFamily: FONT, outline: 'none' }}
+                  style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${'var(--osmos-border)'}`, borderRadius: 8, fontSize: 13, color: 'var(--osmos-fg)', background: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif", outline: 'none' }}
                 />
               </div>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                  <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>End Date</label>
-                  <span style={{ fontSize: 12, color: TEXT_SUB }}>(Optional)</span>
+                  <label style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>End Date</label>
+                  <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>(Optional)</span>
                 </div>
                 <input
                   type="date"
                   value={data.endDate}
                   onChange={(e) => handleFieldChange('endDate', e.target.value)}
-                  style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT, background: BG, fontFamily: FONT, outline: 'none' }}
+                  style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${'var(--osmos-border)'}`, borderRadius: 8, fontSize: 13, color: 'var(--osmos-fg)', background: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif", outline: 'none' }}
                 />
               </div>
             </div>
@@ -295,12 +280,12 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
           {/* Maximum Spend Cap */}
           <div style={cardStyle}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-              <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>Maximum Spend Cap:</label>
-              <InfoIcon size={14} color={TEXT_SUB} />
-              <span style={{ fontSize: 12, color: TEXT_SUB }}>(Optional)</span>
+              <label style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>Maximum Spend Cap:</label>
+              <InfoIcon size={14} color={'var(--osmos-fg-subtle)'} />
+              <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>(Optional)</span>
             </div>
             <div style={dollarWrapStyle}>
-              <span style={{ ...dollarIconStyle, fontSize: 13, color: TEXT_MID }}>$</span>
+              <span style={{ ...dollarIconStyle, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>$</span>
               <input
                 type="number"
                 value={data.maxSpendCap}
@@ -313,8 +298,8 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
 
           {/* Pacing */}
           <div style={cardStyle}>
-            <h3 style={{ fontSize: 13, fontWeight: 600, color: TEXT, marginBottom: 8 }}>Pacing</h3>
-            <p style={{ fontSize: 13, color: TEXT_MID, marginBottom: 16 }}>
+            <h3 style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8 }}>Pacing</h3>
+            <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', marginBottom: 16 }}>
               Choose how your budget should be distributed over time
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
@@ -335,29 +320,29 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
 
   // ── Display Ads Layout ─────────────────────────────────────────────────────
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: FONT, maxWidth: 720, margin: '0 auto' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: "'Open Sans', sans-serif", maxWidth: 720, margin: '0 auto' }}>
       <div>
-        <h2 style={{ fontSize: 24, fontWeight: 600, color: TEXT, marginBottom: 8 }}>Budget &amp; Schedule</h2>
-        <p style={{ color: TEXT_MID }}>Configure your campaign budget, schedule, and payment settings.</p>
+        <h2 style={{ fontSize: 24, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8 }}>Budget &amp; Schedule</h2>
+        <p style={{ color: 'var(--osmos-fg-muted)' }}>Configure your campaign budget, schedule, and payment settings.</p>
       </div>
 
-      <div style={{ background: BG, borderRadius: 8, border: `1px solid ${BORDER}`, padding: 24, display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 8, border: `1px solid ${'var(--osmos-border)'}`, padding: 24, display: 'flex', flexDirection: 'column', gap: 24 }}>
 
         {/* Campaign Name */}
         <div>
           <label style={labelStyle}>
-            Campaign Name <span style={{ color: ERROR }}>*</span>
+            Campaign Name <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
           </label>
           <input
             value={data.name}
             onChange={(e) => updateData({ name: e.target.value })}
             placeholder="e.g., Summer Sale 2025"
-            style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT, background: BG, fontFamily: FONT, outline: 'none' }}
+            style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${'var(--osmos-border)'}`, borderRadius: 8, fontSize: 13, color: 'var(--osmos-fg)', background: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif", outline: 'none' }}
           />
         </div>
 
         {/* Budget Type chips */}
-        <div style={{ paddingBottom: 24, borderBottom: `1px solid ${BG_SUB}` }}>
+        <div style={{ paddingBottom: 24, borderBottom: `1px solid ${'var(--osmos-bg-subtle)'}` }}>
           <label style={labelStyle}>Budget Type</label>
           <div style={{ display: 'flex', gap: 8 }}>
             {budgetTypes.map((type) => {
@@ -371,9 +356,9 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
                   onMouseLeave={() => setHovBudgetType(null)}
                   style={{
                     padding: '8px 12px', borderRadius: 8, fontSize: 13, border: 'none',
-                    cursor: 'pointer', transition: 'all 0.15s', fontFamily: FONT,
-                    background: isSelected ? ACCENT : isHov ? BG_SUB : BG_SUB,
-                    color: isSelected ? '#fff' : TEXT_MID,
+                    cursor: 'pointer', transition: 'all 0.15s', fontFamily: "'Open Sans', sans-serif",
+                    background: isSelected ? 'var(--osmos-brand-primary)' : isHov ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg-subtle)',
+                    color: isSelected ? '#fff' : 'var(--osmos-fg-muted)',
                   }}
                 >
                   {type.label}
@@ -386,25 +371,25 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
         {/* CBO Toggle */}
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          paddingBottom: 24, borderBottom: `1px solid ${BG_SUB}`,
+          paddingBottom: 24, borderBottom: `1px solid ${'var(--osmos-bg-subtle)'}`,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <ZapIcon size={16} color={VIOLET} />
-            <span style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>Campaign Budget Optimization</span>
-            <InfoIcon size={12} color={TEXT_SUB} />
+            <ZapIcon size={16} color={'#7349a1'} />
+            <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>Campaign Budget Optimization</span>
+            <InfoIcon size={12} color={'var(--osmos-fg-subtle)'} />
           </div>
           <Toggle checked={cboEnabled} onChange={handleCboToggle} />
         </div>
 
         {/* Budget Inputs */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, paddingBottom: 24, borderBottom: `1px solid ${BG_SUB}` }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, paddingBottom: 24, borderBottom: `1px solid ${'var(--osmos-bg-subtle)'}` }}>
           <div>
             <label style={labelStyle}>
-              Total Budget <span style={{ color: ERROR }}>*</span>
+              Total Budget <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
             </label>
             <div style={dollarWrapStyle}>
-              <span style={{ ...dollarIconStyle, left: 10, fontSize: 13, color: TEXT_MID }}>
-                <DollarSignIcon size={14} color={TEXT_MID} />
+              <span style={{ ...dollarIconStyle, left: 10, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>
+                <DollarSignIcon size={14} color={'var(--osmos-fg-muted)'} />
               </span>
               <input
                 type="number"
@@ -418,11 +403,11 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
           </div>
           <div>
             <label style={labelStyle}>
-              Daily Budget <span style={{ color: ERROR }}>*</span>
+              Daily Budget <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
             </label>
             <div style={dollarWrapStyle}>
-              <span style={{ ...dollarIconStyle, left: 10, fontSize: 13, color: TEXT_MID }}>
-                <DollarSignIcon size={14} color={TEXT_MID} />
+              <span style={{ ...dollarIconStyle, left: 10, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>
+                <DollarSignIcon size={14} color={'var(--osmos-fg-muted)'} />
               </span>
               <input
                 type="number"
@@ -438,15 +423,15 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
 
         {/* Budget estimation messages */}
         {estimatedDays > 0 && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: GREEN, paddingBottom: 24, borderBottom: `1px solid ${BG_SUB}` }}>
-            <InfoIcon size={14} color={GREEN} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--osmos-brand-green)', paddingBottom: 24, borderBottom: `1px solid ${'var(--osmos-bg-subtle)'}` }}>
+            <InfoIcon size={14} color={'var(--osmos-brand-green)'} />
             <span>Estimated duration: <strong>{estimatedDays} days</strong></span>
           </div>
         )}
 
         {dailyBudget > totalBudget && totalBudget > 0 && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: AMBER, paddingBottom: 24, borderBottom: `1px solid ${BG_SUB}` }}>
-            <AlertCircleIcon size={14} color={AMBER} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--osmos-brand-amber)', paddingBottom: 24, borderBottom: `1px solid ${'var(--osmos-bg-subtle)'}` }}>
+            <AlertCircleIcon size={14} color={'var(--osmos-brand-amber)'} />
             <span>Daily budget exceeds total budget</span>
           </div>
         )}
@@ -455,13 +440,13 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
           <div>
             <label style={labelStyle}>
-              Start Date <span style={{ color: ERROR }}>*</span>
+              Start Date <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
             </label>
             <input
               type="date"
               value={data.startDate}
               onChange={(e) => handleFieldChange('startDate', e.target.value)}
-              style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT, background: BG, fontFamily: FONT, outline: 'none' }}
+              style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${'var(--osmos-border)'}`, borderRadius: 8, fontSize: 13, color: 'var(--osmos-fg)', background: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif", outline: 'none' }}
             />
           </div>
           <div>
@@ -470,17 +455,17 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
               type="date"
               value={data.endDate}
               onChange={(e) => handleFieldChange('endDate', e.target.value)}
-              style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT, background: BG, fontFamily: FONT, outline: 'none' }}
+              style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${'var(--osmos-border)'}`, borderRadius: 8, fontSize: 13, color: 'var(--osmos-fg)', background: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif", outline: 'none' }}
             />
           </div>
           <div>
             <label style={labelStyle}>
-              Wallet <span style={{ color: ERROR }}>*</span>
+              Wallet <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
             </label>
             <select
               value={data.wallet || ''}
               onChange={(e) => updateData({ wallet: e.target.value })}
-              style={{ width: '100%', padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT, background: BG, fontFamily: FONT, outline: 'none' }}
+              style={{ width: '100%', padding: '8px 12px', border: `1px solid ${'var(--osmos-border)'}`, borderRadius: 8, fontSize: 13, color: 'var(--osmos-fg)', background: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif", outline: 'none' }}
             >
               <option value="">Select</option>
               {walletOptions.map((wallet) => (
@@ -493,15 +478,15 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
         {/* Wallet Balance */}
         {selectedWallet && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
-            <WalletIcon size={14} color={GREEN} />
-            <span style={{ color: GREEN }}>Balance: ${selectedWallet.balance.toLocaleString()}</span>
+            <WalletIcon size={14} color={'var(--osmos-brand-green)'} />
+            <span style={{ color: 'var(--osmos-brand-green)' }}>Balance: ${selectedWallet.balance.toLocaleString()}</span>
           </div>
         )}
 
         {/* Pacing */}
-        <div style={{ background: BG, borderRadius: 8, border: `1px solid ${BORDER}`, padding: 20 }}>
-          <h3 style={{ fontWeight: 600, color: TEXT, marginBottom: 8 }}>Pacing</h3>
-          <p style={{ fontSize: 13, color: TEXT_MID, marginBottom: 16 }}>
+        <div style={{ background: 'var(--osmos-bg)', borderRadius: 8, border: `1px solid ${'var(--osmos-border)'}`, padding: 20 }}>
+          <h3 style={{ fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8 }}>Pacing</h3>
+          <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', marginBottom: 16 }}>
             Choose how your budget should be distributed over time
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
@@ -531,8 +516,8 @@ function WalletDropdown({ data, updateData, walletSearch, setWalletSearch, walle
         onMouseEnter={() => setHovBtn(true)}
         onMouseLeave={() => setHovBtn(false)}
         style={{
-          width: '100%', padding: '10px 16px', border: `1px solid ${BORDER}`, borderRadius: 8,
-          textAlign: 'left', background: hovBtn ? BG_SUB : BG, cursor: 'pointer',
+          width: '100%', padding: '10px 16px', border: `1px solid ${'var(--osmos-border)'}`, borderRadius: 8,
+          textAlign: 'left', background: hovBtn ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)', cursor: 'pointer',
           fontFamily: "'Open Sans', sans-serif", fontSize: 13, transition: 'all 0.15s',
         }}
       >

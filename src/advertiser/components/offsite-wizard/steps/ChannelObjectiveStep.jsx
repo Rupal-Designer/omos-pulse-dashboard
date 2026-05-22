@@ -1,14 +1,5 @@
 import { StatCard, Checkbox, Badge, RadioCard, RadioDot } from '../../../../ui';
 
-const FONT     = "'Open Sans', sans-serif";
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const TEXT_HI  = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_LO  = 'var(--osmos-fg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-
 const OBJECTIVES = [
   { value: 'Sales',     label: 'Sales',     icon: '🛒', desc: 'Drive purchases and conversions' },
   { value: 'Awareness', label: 'Awareness', icon: '📢', desc: 'Reach new audiences at scale' },
@@ -106,13 +97,13 @@ export default function ChannelObjectiveStep({ campaignData, onChange }) {
     : null;
 
   return (
-    <div style={{ display: 'flex', gap: 32, fontFamily: FONT }}>
+    <div style={{ display: 'flex', gap: 32, fontFamily: "'Open Sans', sans-serif" }}>
       {/* Left — channel cards */}
       <div style={{ flex: 1 }}>
-        <h2 style={{ fontSize: 18, fontWeight: 700, color: TEXT_HI, margin: '0 0 4px' }}>
+        <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--osmos-fg)', margin: '0 0 4px' }}>
           Channel & Objective
         </h2>
-        <p style={{ fontSize: 13, color: TEXT_MID, margin: '0 0 24px' }}>
+        <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', margin: '0 0 24px' }}>
           Select one or more channels to advertise on, then choose a campaign objective for each.
         </p>
 
@@ -128,30 +119,30 @@ export default function ChannelObjectiveStep({ campaignData, onChange }) {
                   onClick={() => !ch.comingSoon && toggleChannel(ch.id)}
                   style={{
                     display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
-                    border: `1.5px solid ${isChecked ? ACCENT : BORDER}`,
+                    border: `1.5px solid ${isChecked ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)'}`,
                     borderRadius: isChecked ? '10px 10px 0 0' : 10,
-                    background: isChecked ? `${ACCENT}08` : BG,
+                    background: isChecked ? `var(--osmos-brand-primary)08` : 'var(--osmos-bg)',
                     cursor: ch.comingSoon ? 'not-allowed' : 'pointer',
                     transition: 'all 0.15s',
-                    borderBottom: isChecked ? `1px dashed ${ACCENT}44` : undefined,
+                    borderBottom: isChecked ? `1px dashed var(--osmos-brand-primary)44` : undefined,
                   }}
                 >
                   {ch.logo}
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
-                      <span style={{ fontSize: 14, fontWeight: 600, color: TEXT_HI }}>{ch.label}</span>
+                      <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)' }}>{ch.label}</span>
                       {ch.popular && (
-                        <Badge style={{ fontSize: 10, padding: '1px 7px', background: `${ACCENT}18`, color: ACCENT, borderColor: `${ACCENT}30` }}>
+                        <Badge style={{ fontSize: 10, padding: '1px 7px', background: `var(--osmos-brand-primary)18`, color: 'var(--osmos-brand-primary)', borderColor: `var(--osmos-brand-primary)30` }}>
                           Most popular
                         </Badge>
                       )}
                       {ch.comingSoon && (
-                        <Badge style={{ fontSize: 10, padding: '1px 7px', background: BG_SUB, color: TEXT_LO }}>
+                        <Badge style={{ fontSize: 10, padding: '1px 7px', background: 'var(--osmos-bg-subtle)', color: 'var(--osmos-fg-subtle)' }}>
                           Coming soon
                         </Badge>
                       )}
                     </div>
-                    <span style={{ fontSize: 12, color: TEXT_MID }}>{ch.desc}</span>
+                    <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{ch.desc}</span>
                   </div>
                   <Checkbox
                     checked={isChecked}
@@ -164,12 +155,12 @@ export default function ChannelObjectiveStep({ campaignData, onChange }) {
                 {isChecked && (
                   <div style={{
                     padding: '14px 16px 16px',
-                    border: `1.5px solid ${ACCENT}`,
+                    border: `1.5px solid var(--osmos-brand-primary)`,
                     borderTop: 'none',
                     borderRadius: '0 0 10px 10px',
-                    background: `${ACCENT}05`,
+                    background: `var(--osmos-brand-primary)05`,
                   }}>
-                    <p style={{ fontSize: 11, fontWeight: 600, color: TEXT_LO, textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 10px' }}>
+                    <p style={{ fontSize: 11, fontWeight: 600, color: 'var(--osmos-fg-subtle)', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 10px' }}>
                       Campaign Objective for {ch.label}
                     </p>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 }}>
@@ -187,9 +178,9 @@ export default function ChannelObjectiveStep({ campaignData, onChange }) {
                               <div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 2 }}>
                                   <span style={{ fontSize: 13 }}>{obj.icon}</span>
-                                  <span style={{ fontSize: 13, fontWeight: 600, color: TEXT_HI }}>{obj.label}</span>
+                                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)' }}>{obj.label}</span>
                                 </div>
-                                <p style={{ fontSize: 11, color: TEXT_MID, margin: 0 }}>{obj.desc}</p>
+                                <p style={{ fontSize: 11, color: 'var(--osmos-fg-muted)', margin: 0 }}>{obj.desc}</p>
                               </div>
                             </div>
                           </RadioCard>
@@ -217,8 +208,8 @@ export default function ChannelObjectiveStep({ campaignData, onChange }) {
             />
           ) : (
             <div style={{
-              border: `1px dashed ${BORDER}`, borderRadius: 10, padding: '20px 16px',
-              textAlign: 'center', color: TEXT_LO, fontSize: 12,
+              border: `1px dashed var(--osmos-border)`, borderRadius: 10, padding: '20px 16px',
+              textAlign: 'center', color: 'var(--osmos-fg-subtle)', fontSize: 12,
             }}>
               <div style={{ fontSize: 28, marginBottom: 8 }}>📊</div>
               Select a channel to see estimated reach

@@ -9,16 +9,6 @@ import CreativeUploadStep from './steps/CreativeUploadStep';
 import BudgetScheduleStep from './steps/BudgetScheduleStep';
 import ReviewLaunchStep from './steps/ReviewLaunchStep';
 
-// ── Design tokens ─────────────────────────────────────────────────────────────
-const FONT     = "'Open Sans', sans-serif";
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const BORDER   = 'var(--osmos-border)';
-const TEXT_HI  = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_LO  = 'var(--osmos-fg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-
 const WIZARD_STEPS = [
   { id: 1, title: 'Channel & Objective', description: 'Choose channels and goals' },
   { id: 2, title: 'Audience & Targeting', description: 'Define your audience' },
@@ -95,20 +85,20 @@ export default function OffsiteCampaignWizard({ onClose, onLaunch }) {
     <div style={{
       position: 'fixed', inset: 0, zIndex: 1000,
       display: 'flex', flexDirection: 'column',
-      background: BG, fontFamily: FONT,
+      background: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif",
     }}>
       {/* ── Header ── */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '14px 24px', borderBottom: `1px solid ${BORDER}`,
-        background: BG, flexShrink: 0,
+        padding: '14px 24px', borderBottom: `1px solid var(--osmos-border)`,
+        background: 'var(--osmos-bg)', flexShrink: 0,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 700, color: TEXT_HI, margin: 0 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--osmos-fg)', margin: 0 }}>
             Create Campaign
           </h2>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 12, color: TEXT_MID }}>Brand Profile:</span>
+            <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>Brand Profile:</span>
             <Select
               value={brandProfile}
               onChange={e => setBrandProfile(e.target.value)}
@@ -119,7 +109,7 @@ export default function OffsiteCampaignWizard({ onClose, onLaunch }) {
         </div>
         <button
           onClick={onClose}
-          style={{ padding: 8, borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', color: TEXT_MID, display: 'flex' }}
+          style={{ padding: 8, borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--osmos-fg-muted)', display: 'flex' }}
           aria-label="Close wizard"
         >
           <CloseIcon size={20} />
@@ -130,13 +120,13 @@ export default function OffsiteCampaignWizard({ onClose, onLaunch }) {
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
         {/* Left sidebar — stepper + summary */}
         <div style={{
-          width: 260, flexShrink: 0, borderRight: `1px solid ${BORDER}`,
-          background: BG_SUB, overflowY: 'auto',
+          width: 260, flexShrink: 0, borderRight: `1px solid var(--osmos-border)`,
+          background: 'var(--osmos-bg-subtle)', overflowY: 'auto',
           display: 'flex', flexDirection: 'column', gap: 0,
         }}>
           {/* Stepper */}
           <div style={{ padding: '20px 16px 16px' }}>
-            <p style={{ fontSize: 10, fontWeight: 600, color: TEXT_LO, textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 12px' }}>
+            <p style={{ fontSize: 10, fontWeight: 600, color: 'var(--osmos-fg-subtle)', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 12px' }}>
               Steps
             </p>
             {WIZARD_STEPS.map(step => {
@@ -158,7 +148,7 @@ export default function OffsiteCampaignWizard({ onClose, onLaunch }) {
           </div>
 
           {/* Divider */}
-          <div style={{ borderTop: `1px solid ${BORDER}`, margin: '0 16px' }} />
+          <div style={{ borderTop: `1px solid var(--osmos-border)`, margin: '0 16px' }} />
 
           {/* Campaign summary */}
           <div style={{ padding: '16px' }}>
@@ -181,8 +171,8 @@ export default function OffsiteCampaignWizard({ onClose, onLaunch }) {
           {currentStep < 6 && (
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '14px 32px', borderTop: `1px solid ${BORDER}`,
-              background: BG, flexShrink: 0,
+              padding: '14px 32px', borderTop: `1px solid var(--osmos-border)`,
+              background: 'var(--osmos-bg)', flexShrink: 0,
             }}>
               <div style={{ display: 'flex', gap: 10 }}>
                 {currentStep > 1 && (

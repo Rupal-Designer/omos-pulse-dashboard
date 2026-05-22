@@ -5,19 +5,6 @@ import {
   TrashIcon, InfoIcon, UploadIcon, SearchBar,
 } from '../../../ui';
 
-const WHITE    = '#ffffff';
-const BORDER   = 'var(--osmos-border)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-const GREEN    = 'var(--osmos-brand-green)';
-const GREEN_M  = 'var(--osmos-brand-green-muted)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const BG_MUT   = 'var(--osmos-bg-muted)';
-const TEXT_HI  = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_LO  = 'var(--osmos-fg-subtle)';
-const FONT     = "'Open Sans', sans-serif";
-
 const GlobeIcon = ({ size = 24, color = 'currentColor' }) => (
   <Icon size={size} color={color}>
     <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
@@ -864,13 +851,13 @@ function GeoLocationModal({ open, onClose, onApply, initialData = [] }) {
   return (
     <div style={{ position:'fixed', inset:0, zIndex:120, display:'flex', alignItems:'center', justifyContent:'center' }}>
       <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.5)' }} onClick={onClose} />
-      <div style={{ position:'relative', background:WHITE, borderRadius:12, boxShadow:'0 20px 60px rgba(0,0,0,0.3)', width:900, maxHeight:'80vh', display:'flex', overflow:'hidden' }}>
+      <div style={{ position:'relative', background:'#ffffff', borderRadius:12, boxShadow:'0 20px 60px rgba(0,0,0,0.3)', width:900, maxHeight:'80vh', display:'flex', overflow:'hidden' }}>
         {/* Main Content */}
         <div style={{ flex:1, display:'flex', flexDirection:'column' }}>
-          <div style={{ padding:24, borderBottom:'1px solid '+BORDER }}>
+          <div style={{ padding:24, borderBottom:'1px solid '+'var(--osmos-border)' }}>
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
-              <h2 style={{ fontFamily:FONT, fontSize:20, fontWeight:600, color:TEXT_HI, margin:0 }}>Geo Location Targeting</h2>
-              <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:4 }}>
+              <h2 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:20, fontWeight:600, color:'var(--osmos-fg)', margin:0 }}>Geo Location Targeting</h2>
+              <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--osmos-fg-muted)', padding:4 }}>
                 <CloseIcon size={20} />
               </button>
             </div>
@@ -887,24 +874,24 @@ function GeoLocationModal({ open, onClose, onApply, initialData = [] }) {
                     key={location.id}
                     style={{
                       display:'flex', alignItems:'center', justifyContent:'space-between',
-                      padding:16, border:'1px solid '+(isSelected ? GREEN : isExcluded ? '#ef4444' : BORDER),
+                      padding:16, border:'1px solid '+(isSelected ? 'var(--osmos-brand-green)' : isExcluded ? '#ef4444' : 'var(--osmos-border)'),
                       borderRadius:8, cursor:'pointer',
-                      background: isSelected ? GREEN_M : isExcluded ? 'rgba(239,68,68,0.06)' : WHITE,
+                      background: isSelected ? 'var(--osmos-brand-green-muted)' : isExcluded ? 'rgba(239,68,68,0.06)' : '#ffffff',
                     }}
                     onClick={() => toggleLocation(location.id)}
                   >
                     <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-                      <GlobeIcon size={20} color={TEXT_MID} />
+                      <GlobeIcon size={20} color={'var(--osmos-fg-muted)'} />
                       <div>
-                        <div style={{ fontFamily:FONT, fontWeight:500, color:TEXT_HI }}>{location.name}</div>
-                        <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID, textTransform:'capitalize' }}>{location.type}</div>
+                        <div style={{ fontFamily:"'Open Sans', sans-serif", fontWeight:500, color:'var(--osmos-fg)' }}>{location.name}</div>
+                        <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)', textTransform:'capitalize' }}>{location.type}</div>
                       </div>
                     </div>
                     <div style={{ display:'flex', alignItems:'center', gap:16 }}>
-                      <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Reach: {(location.reach / 1000000).toFixed(1)}M</span>
-                      {isSelected && <span style={{ background:GREEN, color:WHITE, borderRadius:4, padding:'2px 8px', fontSize:11, fontWeight:600 }}>Included</span>}
-                      {isExcluded && <span style={{ background:'#ef4444', color:WHITE, borderRadius:4, padding:'2px 8px', fontSize:11, fontWeight:600 }}>Excluded</span>}
-                      <Button variant="ghost" onClick={(e) => { e.stopPropagation(); toggleLocation(location.id, true); }} style={{ fontSize:12, color:TEXT_MID }}>Exclude</Button>
+                      <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>Reach: {(location.reach / 1000000).toFixed(1)}M</span>
+                      {isSelected && <span style={{ background:'var(--osmos-brand-green)', color:'#ffffff', borderRadius:4, padding:'2px 8px', fontSize:11, fontWeight:600 }}>Included</span>}
+                      {isExcluded && <span style={{ background:'#ef4444', color:'#ffffff', borderRadius:4, padding:'2px 8px', fontSize:11, fontWeight:600 }}>Excluded</span>}
+                      <Button variant="ghost" onClick={(e) => { e.stopPropagation(); toggleLocation(location.id, true); }} style={{ fontSize:12, color:'var(--osmos-fg-muted)' }}>Exclude</Button>
                     </div>
                   </div>
                 );
@@ -912,8 +899,8 @@ function GeoLocationModal({ open, onClose, onApply, initialData = [] }) {
             </div>
           </div>
 
-          <div style={{ padding:16, borderTop:'1px solid '+BORDER, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-            <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>{selectedLocations.length} locations selected</span>
+          <div style={{ padding:16, borderTop:'1px solid '+'var(--osmos-border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+            <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>{selectedLocations.length} locations selected</span>
             <div style={{ display:'flex', gap:8 }}>
               <Button variant="outline" onClick={onClose}>Cancel</Button>
               <Button variant="primary" onClick={() => onApply({ included: selectedLocations, excluded: excludedLocations })}>Apply</Button>
@@ -922,21 +909,21 @@ function GeoLocationModal({ open, onClose, onApply, initialData = [] }) {
         </div>
 
         {/* Right Sidebar */}
-        <div style={{ width:280, borderLeft:'1px solid '+BORDER, background:BG_SUB, padding:16 }}>
-          <h3 style={{ fontFamily:FONT, fontWeight:600, color:TEXT_HI, marginBottom:16, marginTop:0 }}>Location Summary</h3>
+        <div style={{ width:280, borderLeft:'1px solid '+'var(--osmos-border)', background:'var(--osmos-bg-subtle)', padding:16 }}>
+          <h3 style={{ fontFamily:"'Open Sans', sans-serif", fontWeight:600, color:'var(--osmos-fg)', marginBottom:16, marginTop:0 }}>Location Summary</h3>
           <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
-            <div style={{ background:WHITE, borderRadius:8, padding:16, border:'1px solid '+BORDER }}>
-              <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Est. Reach</div>
-              <div style={{ fontFamily:FONT, fontSize:24, fontWeight:600, color:TEXT_HI }}>{(totalReach / 1000000).toFixed(1)}M</div>
+            <div style={{ background:'#ffffff', borderRadius:8, padding:16, border:'1px solid '+'var(--osmos-border)' }}>
+              <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>Est. Reach</div>
+              <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:24, fontWeight:600, color:'var(--osmos-fg)' }}>{(totalReach / 1000000).toFixed(1)}M</div>
             </div>
             <div>
-              <div style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI, marginBottom:8 }}>Included ({selectedLocations.length})</div>
+              <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:500, color:'var(--osmos-fg)', marginBottom:8 }}>Included ({selectedLocations.length})</div>
               {selectedLocations.map((id) => {
                 const loc = geoLocations.find((l) => l.id === id);
                 return loc ? (
-                  <div key={id} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'4px 0', fontFamily:FONT, fontSize:13 }}>
-                    <span style={{ color:TEXT_HI }}>{loc.name}</span>
-                    <button onClick={() => toggleLocation(id)} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:2 }}>
+                  <div key={id} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'4px 0', fontFamily:"'Open Sans', sans-serif", fontSize:13 }}>
+                    <span style={{ color:'var(--osmos-fg)' }}>{loc.name}</span>
+                    <button onClick={() => toggleLocation(id)} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--osmos-fg-muted)', padding:2 }}>
                       <CloseIcon size={14} />
                     </button>
                   </div>
@@ -945,13 +932,13 @@ function GeoLocationModal({ open, onClose, onApply, initialData = [] }) {
             </div>
             {excludedLocations.length > 0 && (
               <div>
-                <div style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:'#ef4444', marginBottom:8 }}>Excluded ({excludedLocations.length})</div>
+                <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:500, color:'#ef4444', marginBottom:8 }}>Excluded ({excludedLocations.length})</div>
                 {excludedLocations.map((id) => {
                   const loc = geoLocations.find((l) => l.id === id);
                   return loc ? (
-                    <div key={id} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'4px 0', fontFamily:FONT, fontSize:13 }}>
-                      <span style={{ color:TEXT_HI }}>{loc.name}</span>
-                      <button onClick={() => setExcludedLocations((prev) => prev.filter((l) => l !== id))} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:2 }}>
+                    <div key={id} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'4px 0', fontFamily:"'Open Sans', sans-serif", fontSize:13 }}>
+                      <span style={{ color:'var(--osmos-fg)' }}>{loc.name}</span>
+                      <button onClick={() => setExcludedLocations((prev) => prev.filter((l) => l !== id))} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--osmos-fg-muted)', padding:2 }}>
                         <CloseIcon size={14} />
                       </button>
                     </div>
@@ -996,15 +983,15 @@ function StoreTargetingModal({ open, onClose, onApply, initialData = [] }) {
   return (
     <div style={{ position:'fixed', inset:0, zIndex:120, display:'flex', alignItems:'center', justifyContent:'center' }}>
       <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.5)' }} onClick={onClose} />
-      <div style={{ position:'relative', background:WHITE, borderRadius:12, boxShadow:'0 20px 60px rgba(0,0,0,0.3)', width:900, maxHeight:'80vh', display:'flex', overflow:'hidden' }}>
+      <div style={{ position:'relative', background:'#ffffff', borderRadius:12, boxShadow:'0 20px 60px rgba(0,0,0,0.3)', width:900, maxHeight:'80vh', display:'flex', overflow:'hidden' }}>
         <div style={{ flex:1, display:'flex', flexDirection:'column' }}>
-          <div style={{ padding:24, borderBottom:'1px solid '+BORDER }}>
+          <div style={{ padding:24, borderBottom:'1px solid '+'var(--osmos-border)' }}>
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
               <div>
-                <h2 style={{ fontFamily:FONT, fontSize:20, fontWeight:600, color:TEXT_HI, margin:0 }}>Store Targeting</h2>
-                <p style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID, marginTop:4, marginBottom:0 }}>Select stores to localize your ads to specific locations</p>
+                <h2 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:20, fontWeight:600, color:'var(--osmos-fg)', margin:0 }}>Store Targeting</h2>
+                <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)', marginTop:4, marginBottom:0 }}>Select stores to localize your ads to specific locations</p>
               </div>
-              <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:4 }}>
+              <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--osmos-fg-muted)', padding:4 }}>
                 <CloseIcon size={20} />
               </button>
             </div>
@@ -1028,7 +1015,7 @@ function StoreTargetingModal({ open, onClose, onApply, initialData = [] }) {
                 return (
                   <div
                     key={store.id}
-                    style={{ padding:16, border:'1px solid '+(isSel ? GREEN : BORDER), borderRadius:8, cursor:'pointer', background: isSel ? GREEN_M : WHITE }}
+                    style={{ padding:16, border:'1px solid '+(isSel ? 'var(--osmos-brand-green)' : 'var(--osmos-border)'), borderRadius:8, cursor:'pointer', background: isSel ? 'var(--osmos-brand-green-muted)' : '#ffffff' }}
                     onClick={() => toggleStore(store.id)}
                   >
                     <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between' }}>
@@ -1037,21 +1024,21 @@ function StoreTargetingModal({ open, onClose, onApply, initialData = [] }) {
                           <StoreIcon size={20} color="#f59e0b" />
                         </div>
                         <div>
-                          <div style={{ fontFamily:FONT, fontWeight:500, color:TEXT_HI }}>{store.name}</div>
-                          <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>{store.city}, {store.state}</div>
+                          <div style={{ fontFamily:"'Open Sans', sans-serif", fontWeight:500, color:'var(--osmos-fg)' }}>{store.name}</div>
+                          <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>{store.city}, {store.state}</div>
                         </div>
                       </div>
-                      {isSel && <CheckIcon size={20} color={GREEN} />}
+                      {isSel && <CheckIcon size={20} color={'var(--osmos-brand-green)'} />}
                     </div>
-                    <div style={{ marginTop:12, fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Est. Reach: {(store.reach / 1000).toFixed(0)}K</div>
+                    <div style={{ marginTop:12, fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>Est. Reach: {(store.reach / 1000).toFixed(0)}K</div>
                   </div>
                 );
               })}
             </div>
           </div>
 
-          <div style={{ padding:16, borderTop:'1px solid '+BORDER, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-            <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>{selectedStores.length} stores selected</span>
+          <div style={{ padding:16, borderTop:'1px solid '+'var(--osmos-border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+            <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>{selectedStores.length} stores selected</span>
             <div style={{ display:'flex', gap:8 }}>
               <Button variant="outline" onClick={onClose}>Cancel</Button>
               <Button variant="primary" onClick={() => onApply(selectedStores)}>Apply</Button>
@@ -1059,19 +1046,19 @@ function StoreTargetingModal({ open, onClose, onApply, initialData = [] }) {
           </div>
         </div>
 
-        <div style={{ width:280, borderLeft:'1px solid '+BORDER, background:BG_SUB, padding:16 }}>
-          <h3 style={{ fontFamily:FONT, fontWeight:600, color:TEXT_HI, marginBottom:16, marginTop:0 }}>Store Summary</h3>
+        <div style={{ width:280, borderLeft:'1px solid '+'var(--osmos-border)', background:'var(--osmos-bg-subtle)', padding:16 }}>
+          <h3 style={{ fontFamily:"'Open Sans', sans-serif", fontWeight:600, color:'var(--osmos-fg)', marginBottom:16, marginTop:0 }}>Store Summary</h3>
           <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
-            <div style={{ background:WHITE, borderRadius:8, padding:16, border:'1px solid '+BORDER }}>
-              <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Total Reach</div>
-              <div style={{ fontFamily:FONT, fontSize:24, fontWeight:600, color:TEXT_HI }}>{(totalReach / 1000).toFixed(0)}K</div>
+            <div style={{ background:'#ffffff', borderRadius:8, padding:16, border:'1px solid '+'var(--osmos-border)' }}>
+              <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>Total Reach</div>
+              <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:24, fontWeight:600, color:'var(--osmos-fg)' }}>{(totalReach / 1000).toFixed(0)}K</div>
             </div>
-            <div style={{ background:WHITE, borderRadius:8, padding:16, border:'1px solid '+BORDER }}>
-              <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Stores Selected</div>
-              <div style={{ fontFamily:FONT, fontSize:24, fontWeight:600, color:TEXT_HI }}>{selectedStores.length}</div>
+            <div style={{ background:'#ffffff', borderRadius:8, padding:16, border:'1px solid '+'var(--osmos-border)' }}>
+              <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>Stores Selected</div>
+              <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:24, fontWeight:600, color:'var(--osmos-fg)' }}>{selectedStores.length}</div>
             </div>
-            <div style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID, padding:12, background:'#fef3c7', borderRadius:8, display:'flex', alignItems:'flex-start', gap:6 }}>
-              <InfoIcon size={14} color={TEXT_MID} />
+            <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'var(--osmos-fg-muted)', padding:12, background:'#fef3c7', borderRadius:8, display:'flex', alignItems:'flex-start', gap:6 }}>
+              <InfoIcon size={14} color={'var(--osmos-fg-muted)'} />
               Store targeting helps localize your ads to specific retail locations, improving relevance and conversion.
             </div>
           </div>
@@ -1105,26 +1092,26 @@ function AudienceTargetingModal({ open, onClose, onApply, initialData = [] }) {
   return (
     <div style={{ position:'fixed', inset:0, zIndex:120, display:'flex', alignItems:'center', justifyContent:'center' }}>
       <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.5)' }} onClick={onClose} />
-      <div style={{ position:'relative', background:WHITE, borderRadius:12, boxShadow:'0 20px 60px rgba(0,0,0,0.3)', width:950, maxHeight:'85vh', display:'flex', overflow:'hidden' }}>
+      <div style={{ position:'relative', background:'#ffffff', borderRadius:12, boxShadow:'0 20px 60px rgba(0,0,0,0.3)', width:950, maxHeight:'85vh', display:'flex', overflow:'hidden' }}>
         <div style={{ flex:1, display:'flex', flexDirection:'column' }}>
-          <div style={{ padding:24, borderBottom:'1px solid '+BORDER }}>
+          <div style={{ padding:24, borderBottom:'1px solid '+'var(--osmos-border)' }}>
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
-              <h2 style={{ fontFamily:FONT, fontSize:20, fontWeight:600, color:TEXT_HI, margin:0 }}>Audience Targeting</h2>
+              <h2 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:20, fontWeight:600, color:'var(--osmos-fg)', margin:0 }}>Audience Targeting</h2>
               <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-                <Button variant="outline" style={{ color:ACCENT, borderColor:ACCENT }}>
-                  <PlusIcon size={16} color={ACCENT} /> Create New Audience
+                <Button variant="outline" style={{ color:'var(--osmos-brand-primary)', borderColor:'var(--osmos-brand-primary)' }}>
+                  <PlusIcon size={16} color={'var(--osmos-brand-primary)'} /> Create New Audience
                 </Button>
-                <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:4 }}>
+                <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--osmos-fg-muted)', padding:4 }}>
                   <CloseIcon size={20} />
                 </button>
               </div>
             </div>
 
             <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:16 }}>
-              <UsersIcon size={18} color={TEXT_MID} />
-              <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Select Audience Segments to Include or Exclude</span>
+              <UsersIcon size={18} color={'var(--osmos-fg-muted)'} />
+              <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>Select Audience Segments to Include or Exclude</span>
               <span title="Target specific customer segments based on their behavior and attributes">
-                <InfoIcon size={14} color={TEXT_MID} />
+                <InfoIcon size={14} color={'var(--osmos-fg-muted)'} />
               </span>
             </div>
 
@@ -1151,34 +1138,34 @@ function AudienceTargetingModal({ open, onClose, onApply, initialData = [] }) {
               return (
                 <div
                   key={audience.id}
-                  style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:16, cursor:'pointer', background: isSel ? ACCENT_M : WHITE, borderBottom:'1px solid '+BORDER }}
+                  style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:16, cursor:'pointer', background: isSel ? 'var(--osmos-brand-primary-muted)' : '#ffffff', borderBottom:'1px solid '+'var(--osmos-border)' }}
                   onClick={() => toggleAudience(audience.id)}
                 >
                   <div style={{ display:'flex', alignItems:'center', gap:12 }}>
                     <Checkbox checked={isSel} onChange={() => toggleAudience(audience.id)} />
                     <div>
                       <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                        <span style={{ fontFamily:FONT, fontWeight:500, color:TEXT_HI }}>{audience.name}</span>
+                        <span style={{ fontFamily:"'Open Sans', sans-serif", fontWeight:500, color:'var(--osmos-fg)' }}>{audience.name}</span>
                         {audience.recommended && (
-                          <span style={{ background:ACCENT_M, color:ACCENT, borderRadius:4, padding:'2px 6px', fontSize:11, display:'inline-flex', alignItems:'center', gap:3 }}>
-                            <SparklesIcon size={12} color={ACCENT} /> Sofie's Recommended
+                          <span style={{ background:'var(--osmos-brand-primary-muted)', color:'var(--osmos-brand-primary)', borderRadius:4, padding:'2px 6px', fontSize:11, display:'inline-flex', alignItems:'center', gap:3 }}>
+                            <SparklesIcon size={12} color={'var(--osmos-brand-primary)'} /> Sofie's Recommended
                           </span>
                         )}
                       </div>
-                      <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>
+                      <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>
                         Estimated reach: {(audience.reach / 1000000).toFixed(1)}M | {audience.premium} premium on each inventory's minimum CPM
                       </div>
                     </div>
                   </div>
                   <div style={{ display:'flex', alignItems:'center', gap:12 }}>
                     {isSel ? (
-                      <span style={{ color:GREEN, fontFamily:FONT, fontWeight:500, display:'flex', alignItems:'center', gap:4 }}>
-                        <CheckIcon size={16} color={GREEN} /> Selected
+                      <span style={{ color:'var(--osmos-brand-green)', fontFamily:"'Open Sans', sans-serif", fontWeight:500, display:'flex', alignItems:'center', gap:4 }}>
+                        <CheckIcon size={16} color={'var(--osmos-brand-green)'} /> Selected
                       </span>
                     ) : (
-                      <span style={{ color:ACCENT, fontFamily:FONT, fontWeight:500 }}>Select</span>
+                      <span style={{ color:'var(--osmos-brand-primary)', fontFamily:"'Open Sans', sans-serif", fontWeight:500 }}>Select</span>
                     )}
-                    <button style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:4 }}>
+                    <button style={{ background:'none', border:'none', cursor:'pointer', color:'var(--osmos-fg-muted)', padding:4 }}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -1190,47 +1177,47 @@ function AudienceTargetingModal({ open, onClose, onApply, initialData = [] }) {
             })}
           </div>
 
-          <div style={{ padding:16, borderTop:'1px solid '+BORDER, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-            <span style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI }}>Audience selected: {selectedAudiences.length}</span>
+          <div style={{ padding:16, borderTop:'1px solid '+'var(--osmos-border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+            <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:500, color:'var(--osmos-fg)' }}>Audience selected: {selectedAudiences.length}</span>
             <div style={{ display:'flex', gap:8 }}>
-              <Button variant="outline" style={{ color:ACCENT, borderColor:ACCENT }}>
-                <PlusIcon size={16} color={ACCENT} /> Add
+              <Button variant="outline" style={{ color:'var(--osmos-brand-primary)', borderColor:'var(--osmos-brand-primary)' }}>
+                <PlusIcon size={16} color={'var(--osmos-brand-primary)'} /> Add
               </Button>
               <Button variant="primary" onClick={() => onApply(selectedAudiences)}>Apply</Button>
             </div>
           </div>
         </div>
 
-        <div style={{ width:280, borderLeft:'1px solid '+BORDER, background:BG_SUB, display:'flex', flexDirection:'column' }}>
-          <div style={{ padding:16, borderBottom:'1px solid '+BORDER }}>
-            <h3 style={{ fontFamily:FONT, fontWeight:600, color:TEXT_HI, margin:0 }}>Audience Reach</h3>
+        <div style={{ width:280, borderLeft:'1px solid '+'var(--osmos-border)', background:'var(--osmos-bg-subtle)', display:'flex', flexDirection:'column' }}>
+          <div style={{ padding:16, borderBottom:'1px solid '+'var(--osmos-border)' }}>
+            <h3 style={{ fontFamily:"'Open Sans', sans-serif", fontWeight:600, color:'var(--osmos-fg)', margin:0 }}>Audience Reach</h3>
           </div>
           <div style={{ padding:16, flex:1 }}>
             {selectedAudiences.length === 0 ? (
               <div style={{ textAlign:'center', padding:'32px 0' }}>
-                <div style={{ width:64, height:64, margin:'0 auto 16px', background:BG_MUT, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                  <UsersIcon size={32} color={TEXT_MID} />
+                <div style={{ width:64, height:64, margin:'0 auto 16px', background:'var(--osmos-bg-muted)', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  <UsersIcon size={32} color={'var(--osmos-fg-muted)'} />
                 </div>
-                <p style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Add audience from the left panel to see your audience reach or create new audience segment</p>
+                <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>Add audience from the left panel to see your audience reach or create new audience segment</p>
               </div>
             ) : (
-              <div style={{ background:WHITE, borderRadius:8, padding:16, border:'1px solid '+BORDER }}>
-                <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Total Reach</div>
-                <div style={{ fontFamily:FONT, fontSize:24, fontWeight:600, color:TEXT_HI }}>{(totalReach / 1000000).toFixed(1)}M</div>
+              <div style={{ background:'#ffffff', borderRadius:8, padding:16, border:'1px solid '+'var(--osmos-border)' }}>
+                <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>Total Reach</div>
+                <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:24, fontWeight:600, color:'var(--osmos-fg)' }}>{(totalReach / 1000000).toFixed(1)}M</div>
               </div>
             )}
           </div>
-          <div style={{ padding:16, borderTop:'1px solid '+BORDER }}>
-            <h4 style={{ fontFamily:FONT, fontWeight:500, color:TEXT_HI, marginBottom:12, marginTop:0 }}>Audience Summary</h4>
-            <div style={{ display:'flex', flexDirection:'column', gap:8, fontFamily:FONT, fontSize:13 }}>
+          <div style={{ padding:16, borderTop:'1px solid '+'var(--osmos-border)' }}>
+            <h4 style={{ fontFamily:"'Open Sans', sans-serif", fontWeight:500, color:'var(--osmos-fg)', marginBottom:12, marginTop:0 }}>Audience Summary</h4>
+            <div style={{ display:'flex', flexDirection:'column', gap:8, fontFamily:"'Open Sans', sans-serif", fontSize:13 }}>
               <div style={{ display:'flex', justifyContent:'space-between' }}>
-                <span style={{ color:TEXT_MID }}>All Cohorts:</span><span style={{ color:TEXT_HI }}>{selectedAudiences.length}</span>
+                <span style={{ color:'var(--osmos-fg-muted)' }}>All Cohorts:</span><span style={{ color:'var(--osmos-fg)' }}>{selectedAudiences.length}</span>
               </div>
               <div style={{ display:'flex', justifyContent:'space-between' }}>
-                <span style={{ color:TEXT_MID }}>Included:</span><span style={{ color:TEXT_HI }}>{selectedAudiences.length}</span>
+                <span style={{ color:'var(--osmos-fg-muted)' }}>Included:</span><span style={{ color:'var(--osmos-fg)' }}>{selectedAudiences.length}</span>
               </div>
               <div style={{ display:'flex', justifyContent:'space-between' }}>
-                <span style={{ color:TEXT_MID }}>Excluded:</span><span style={{ color:TEXT_HI }}>0</span>
+                <span style={{ color:'var(--osmos-fg-muted)' }}>Excluded:</span><span style={{ color:'var(--osmos-fg)' }}>0</span>
               </div>
             </div>
           </div>
@@ -1278,24 +1265,24 @@ function KeywordTargetingModal({ open, onClose, onApply, initialData = [] }) {
   return (
     <div style={{ position:'fixed', inset:0, zIndex:120, display:'flex', alignItems:'center', justifyContent:'center' }}>
       <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.5)' }} onClick={onClose} />
-      <div style={{ position:'relative', background:WHITE, borderRadius:12, boxShadow:'0 20px 60px rgba(0,0,0,0.3)', width:900, maxHeight:'85vh', display:'flex', overflow:'hidden' }}>
+      <div style={{ position:'relative', background:'#ffffff', borderRadius:12, boxShadow:'0 20px 60px rgba(0,0,0,0.3)', width:900, maxHeight:'85vh', display:'flex', overflow:'hidden' }}>
         <div style={{ flex:1, display:'flex', flexDirection:'column' }}>
-          <div style={{ padding:24, borderBottom:'1px solid '+BORDER }}>
+          <div style={{ padding:24, borderBottom:'1px solid '+'var(--osmos-border)' }}>
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
-              <h2 style={{ fontFamily:FONT, fontSize:20, fontWeight:600, color:TEXT_HI, margin:0 }}>Keyword Targeting</h2>
-              <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:4 }}>
+              <h2 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:20, fontWeight:600, color:'var(--osmos-fg)', margin:0 }}>Keyword Targeting</h2>
+              <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--osmos-fg-muted)', padding:4 }}>
                 <CloseIcon size={20} />
               </button>
             </div>
 
             {/* Hand-rolled tabs */}
-            <div style={{ display:'flex', gap:4, background:BG_SUB, borderRadius:6, padding:4, marginBottom:16 }}>
+            <div style={{ display:'flex', gap:4, background:'var(--osmos-bg-subtle)', borderRadius:6, padding:4, marginBottom:16 }}>
               {[['manual','Manual Entry'],['bulk','Bulk Upload'],['generate','AI Generate']].map(([tab, label]) => (
                 <button key={tab} onClick={() => setActiveTab(tab)} style={{
                   padding:'6px 12px', borderRadius:4, border:'none', cursor:'pointer',
-                  background: activeTab === tab ? WHITE : 'transparent',
-                  color: activeTab === tab ? TEXT_HI : TEXT_MID,
-                  fontFamily: FONT, fontSize:13, fontWeight: activeTab === tab ? 600 : 400,
+                  background: activeTab === tab ? '#ffffff' : 'transparent',
+                  color: activeTab === tab ? 'var(--osmos-fg)' : 'var(--osmos-fg-muted)',
+                  fontFamily: "'Open Sans', sans-serif", fontSize:13, fontWeight: activeTab === tab ? 600 : 400,
                   boxShadow: activeTab === tab ? '0 1px 2px rgba(0,0,0,0.1)' : 'none',
                 }}>{label}</button>
               ))}
@@ -1326,10 +1313,10 @@ function KeywordTargetingModal({ open, onClose, onApply, initialData = [] }) {
                   placeholder={'Enter keywords (one per line)\nelectronics\nsmartphones\nlaptops\ngadgets'}
                   value={bulkInput}
                   onChange={(e) => setBulkInput(e.target.value)}
-                  style={{ width:'100%', minHeight:150, fontFamily:'monospace', fontSize:13, border:'1px solid '+BORDER, borderRadius:6, padding:'8px 12px', resize:'vertical', outline:'none', boxSizing:'border-box' }}
+                  style={{ width:'100%', minHeight:150, fontFamily:'monospace', fontSize:13, border:'1px solid '+'var(--osmos-border)', borderRadius:6, padding:'8px 12px', resize:'vertical', outline:'none', boxSizing:'border-box' }}
                 />
                 <div style={{ marginTop:12, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                  <p style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID, margin:0 }}>Keywords will be considered under Phrase match type. Max 50 keywords.</p>
+                  <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'var(--osmos-fg-muted)', margin:0 }}>Keywords will be considered under Phrase match type. Max 50 keywords.</p>
                   <Button variant="primary" onClick={handleBulkAdd}>Add Keywords</Button>
                 </div>
               </div>
@@ -1340,7 +1327,7 @@ function KeywordTargetingModal({ open, onClose, onApply, initialData = [] }) {
                 <div style={{ background:'#f0f9ff', border:'1px solid #bae6fd', borderRadius:8, padding:16, marginBottom:16 }}>
                   <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:12 }}>
                     <WandIcon size={20} color="#0284c7" />
-                    <span style={{ fontFamily:FONT, fontWeight:500, color:'#0c4a6e' }}>AI Keyword Generator</span>
+                    <span style={{ fontFamily:"'Open Sans', sans-serif", fontWeight:500, color:'#0c4a6e' }}>AI Keyword Generator</span>
                   </div>
                   <div style={{ display:'flex', gap:8 }}>
                     <div style={{ flex:1 }}>
@@ -1357,17 +1344,17 @@ function KeywordTargetingModal({ open, onClose, onApply, initialData = [] }) {
                       />
                     </div>
                     <Button variant="primary" onClick={generateKeywords} style={{ background:'#0284c7' }}>
-                      <SparklesIcon size={16} color={WHITE} /> Generate
+                      <SparklesIcon size={16} color={'#ffffff'} /> Generate
                     </Button>
                   </div>
                 </div>
                 {generatedKeywords.length > 0 && (
-                  <div style={{ border:'1px solid '+BORDER, borderRadius:8, padding:16 }}>
-                    <div style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI, marginBottom:12 }}>Suggested Keywords</div>
+                  <div style={{ border:'1px solid '+'var(--osmos-border)', borderRadius:8, padding:16 }}>
+                    <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:500, color:'var(--osmos-fg)', marginBottom:12 }}>Suggested Keywords</div>
                     <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
                       {generatedKeywords.map((keyword) => (
-                        <span key={keyword} onClick={() => addGeneratedKeyword(keyword)} style={{ border:'1px solid '+BORDER, borderRadius:4, padding:'2px 6px', cursor:'pointer', display:'inline-flex', alignItems:'center', gap:4, fontFamily:FONT, fontSize:12, color:TEXT_MID }}>
-                          <PlusIcon size={12} color={TEXT_MID} /> {keyword}
+                        <span key={keyword} onClick={() => addGeneratedKeyword(keyword)} style={{ border:'1px solid '+'var(--osmos-border)', borderRadius:4, padding:'2px 6px', cursor:'pointer', display:'inline-flex', alignItems:'center', gap:4, fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'var(--osmos-fg-muted)' }}>
+                          <PlusIcon size={12} color={'var(--osmos-fg-muted)'} /> {keyword}
                         </span>
                       ))}
                     </div>
@@ -1379,30 +1366,30 @@ function KeywordTargetingModal({ open, onClose, onApply, initialData = [] }) {
 
           <div style={{ flex:1, overflowY:'auto', padding:16 }}>
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
-              <div style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI }}>NEW KEYWORDS ADDED ({keywords.length})</div>
+              <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:500, color:'var(--osmos-fg)' }}>NEW KEYWORDS ADDED ({keywords.length})</div>
               <div style={{ width:256 }}>
                 <SearchBar placeholder="Search" />
               </div>
             </div>
 
             {keywords.length === 0 ? (
-              <div style={{ textAlign:'center', padding:'48px 0', color:TEXT_MID }}>
-                <div style={{ marginBottom:16, opacity:0.5 }}><TagIcon size={48} color={TEXT_MID} /></div>
-                <p style={{ fontFamily:FONT, fontSize:14 }}>You have not added any keyword to your campaign yet!</p>
+              <div style={{ textAlign:'center', padding:'48px 0', color:'var(--osmos-fg-muted)' }}>
+                <div style={{ marginBottom:16, opacity:0.5 }}><TagIcon size={48} color={'var(--osmos-fg-muted)'} /></div>
+                <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:14 }}>You have not added any keyword to your campaign yet!</p>
               </div>
             ) : (
-              <div style={{ border:'1px solid '+BORDER, borderRadius:8, overflow:'hidden' }}>
-                <div style={{ background:BG_SUB, padding:'8px 16px', borderBottom:'1px solid '+BORDER, display:'flex', alignItems:'center', gap:12 }}>
+              <div style={{ border:'1px solid '+'var(--osmos-border)', borderRadius:8, overflow:'hidden' }}>
+                <div style={{ background:'var(--osmos-bg-subtle)', padding:'8px 16px', borderBottom:'1px solid '+'var(--osmos-border)', display:'flex', alignItems:'center', gap:12 }}>
                   <Checkbox checked={false} onChange={() => {}} />
-                  <span style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_MID }}>Keyword</span>
+                  <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:500, color:'var(--osmos-fg-muted)' }}>Keyword</span>
                 </div>
                 {keywords.map((keyword, index) => (
-                  <div key={index} style={{ padding:'12px 16px', borderBottom: index < keywords.length-1 ? '1px solid '+BORDER : 'none', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                  <div key={index} style={{ padding:'12px 16px', borderBottom: index < keywords.length-1 ? '1px solid '+'var(--osmos-border)' : 'none', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                     <div style={{ display:'flex', alignItems:'center', gap:12 }}>
                       <Checkbox checked={false} onChange={() => {}} />
-                      <span style={{ fontFamily:FONT, color:TEXT_HI }}>{keyword}</span>
+                      <span style={{ fontFamily:"'Open Sans', sans-serif", color:'var(--osmos-fg)' }}>{keyword}</span>
                     </div>
-                    <button onClick={() => removeKeyword(keyword)} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:4 }}>
+                    <button onClick={() => removeKeyword(keyword)} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--osmos-fg-muted)', padding:4 }}>
                       <CloseIcon size={16} />
                     </button>
                   </div>
@@ -1411,20 +1398,20 @@ function KeywordTargetingModal({ open, onClose, onApply, initialData = [] }) {
             )}
           </div>
 
-          <div style={{ padding:16, borderTop:'1px solid '+BORDER, display:'flex', justifyContent:'center' }}>
+          <div style={{ padding:16, borderTop:'1px solid '+'var(--osmos-border)', display:'flex', justifyContent:'center' }}>
             <Button variant="primary" onClick={() => onApply(keywords)} style={{ minWidth:100 }}>Save</Button>
           </div>
         </div>
 
-        <div style={{ width:250, borderLeft:'1px solid '+BORDER, background:BG_SUB, padding:16 }}>
-          <h3 style={{ fontFamily:FONT, fontWeight:600, color:TEXT_HI, marginBottom:16, marginTop:0 }}>Keyword Summary</h3>
+        <div style={{ width:250, borderLeft:'1px solid '+'var(--osmos-border)', background:'var(--osmos-bg-subtle)', padding:16 }}>
+          <h3 style={{ fontFamily:"'Open Sans', sans-serif", fontWeight:600, color:'var(--osmos-fg)', marginBottom:16, marginTop:0 }}>Keyword Summary</h3>
           <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
-            <div style={{ background:WHITE, borderRadius:8, padding:16, border:'1px solid '+BORDER }}>
-              <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Total Keywords</div>
-              <div style={{ fontFamily:FONT, fontSize:24, fontWeight:600, color:TEXT_HI }}>{keywords.length}</div>
+            <div style={{ background:'#ffffff', borderRadius:8, padding:16, border:'1px solid '+'var(--osmos-border)' }}>
+              <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>Total Keywords</div>
+              <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:24, fontWeight:600, color:'var(--osmos-fg)' }}>{keywords.length}</div>
             </div>
-            <div style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID, padding:12, background:'#fef3c7', borderRadius:8, display:'flex', alignItems:'flex-start', gap:6 }}>
-              <InfoIcon size={14} color={TEXT_MID} />
+            <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'var(--osmos-fg-muted)', padding:12, background:'#fef3c7', borderRadius:8, display:'flex', alignItems:'flex-start', gap:6 }}>
+              <InfoIcon size={14} color={'var(--osmos-fg-muted)'} />
               Keywords help match your ads to relevant search queries and content.
             </div>
           </div>
@@ -1458,15 +1445,15 @@ function ProductCatalogModal({ open, onClose, onApply, initialData = [] }) {
   return (
     <div style={{ position:'fixed', inset:0, zIndex:120, display:'flex', alignItems:'center', justifyContent:'center' }}>
       <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.5)' }} onClick={onClose} />
-      <div style={{ position:'relative', background:WHITE, borderRadius:12, boxShadow:'0 20px 60px rgba(0,0,0,0.3)', width:950, maxHeight:'85vh', display:'flex', overflow:'hidden' }}>
+      <div style={{ position:'relative', background:'#ffffff', borderRadius:12, boxShadow:'0 20px 60px rgba(0,0,0,0.3)', width:950, maxHeight:'85vh', display:'flex', overflow:'hidden' }}>
         <div style={{ flex:1, display:'flex', flexDirection:'column' }}>
-          <div style={{ padding:24, borderBottom:'1px solid '+BORDER }}>
+          <div style={{ padding:24, borderBottom:'1px solid '+'var(--osmos-border)' }}>
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
               <div>
-                <h2 style={{ fontFamily:FONT, fontSize:20, fontWeight:600, color:TEXT_HI, margin:0 }}>Product Catalog Targeting</h2>
-                <p style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID, marginTop:4, marginBottom:0 }}>Select products from your catalog to promote</p>
+                <h2 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:20, fontWeight:600, color:'var(--osmos-fg)', margin:0 }}>Product Catalog Targeting</h2>
+                <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)', marginTop:4, marginBottom:0 }}>Select products from your catalog to promote</p>
               </div>
-              <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:4 }}>
+              <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--osmos-fg-muted)', padding:4 }}>
                 <CloseIcon size={20} />
               </button>
             </div>
@@ -1490,24 +1477,24 @@ function ProductCatalogModal({ open, onClose, onApply, initialData = [] }) {
                 return (
                   <div
                     key={product.id}
-                    style={{ padding:16, border:'1px solid '+(isSel ? GREEN : BORDER), borderRadius:8, cursor:'pointer', background: isSel ? GREEN_M : WHITE }}
+                    style={{ padding:16, border:'1px solid '+(isSel ? 'var(--osmos-brand-green)' : 'var(--osmos-border)'), borderRadius:8, cursor:'pointer', background: isSel ? 'var(--osmos-brand-green-muted)' : '#ffffff' }}
                     onClick={() => toggleProduct(product.id)}
                   >
                     <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between' }}>
                       <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-                        <div style={{ width:48, height:48, borderRadius:8, background:BG_MUT, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                          <ShoppingBagIcon size={24} color={TEXT_MID} />
+                        <div style={{ width:48, height:48, borderRadius:8, background:'var(--osmos-bg-muted)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                          <ShoppingBagIcon size={24} color={'var(--osmos-fg-muted)'} />
                         </div>
                         <div>
-                          <div style={{ fontFamily:FONT, fontWeight:500, color:TEXT_HI }}>{product.name}</div>
-                          <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>{product.category}</div>
+                          <div style={{ fontFamily:"'Open Sans', sans-serif", fontWeight:500, color:'var(--osmos-fg)' }}>{product.name}</div>
+                          <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>{product.category}</div>
                         </div>
                       </div>
-                      {isSel && <CheckIcon size={20} color={GREEN} />}
+                      {isSel && <CheckIcon size={20} color={'var(--osmos-brand-green)'} />}
                     </div>
-                    <div style={{ marginTop:12, display:'flex', alignItems:'center', justifyContent:'space-between', fontFamily:FONT, fontSize:13 }}>
-                      <span style={{ fontWeight:600, color:TEXT_HI }}>${product.price}</span>
-                      <span style={{ color:TEXT_MID }}>Stock: {product.inventory}</span>
+                    <div style={{ marginTop:12, display:'flex', alignItems:'center', justifyContent:'space-between', fontFamily:"'Open Sans', sans-serif", fontSize:13 }}>
+                      <span style={{ fontWeight:600, color:'var(--osmos-fg)' }}>${product.price}</span>
+                      <span style={{ color:'var(--osmos-fg-muted)' }}>Stock: {product.inventory}</span>
                     </div>
                   </div>
                 );
@@ -1515,8 +1502,8 @@ function ProductCatalogModal({ open, onClose, onApply, initialData = [] }) {
             </div>
           </div>
 
-          <div style={{ padding:16, borderTop:'1px solid '+BORDER, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-            <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>{selectedProducts.length} products selected</span>
+          <div style={{ padding:16, borderTop:'1px solid '+'var(--osmos-border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+            <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>{selectedProducts.length} products selected</span>
             <div style={{ display:'flex', gap:8 }}>
               <Button variant="outline" onClick={onClose}>Cancel</Button>
               <Button variant="primary" onClick={() => onApply(selectedProducts)}>Apply</Button>
@@ -1524,23 +1511,23 @@ function ProductCatalogModal({ open, onClose, onApply, initialData = [] }) {
           </div>
         </div>
 
-        <div style={{ width:280, borderLeft:'1px solid '+BORDER, background:BG_SUB, padding:16 }}>
-          <h3 style={{ fontFamily:FONT, fontWeight:600, color:TEXT_HI, marginBottom:16, marginTop:0 }}>Product Summary</h3>
+        <div style={{ width:280, borderLeft:'1px solid '+'var(--osmos-border)', background:'var(--osmos-bg-subtle)', padding:16 }}>
+          <h3 style={{ fontFamily:"'Open Sans', sans-serif", fontWeight:600, color:'var(--osmos-fg)', marginBottom:16, marginTop:0 }}>Product Summary</h3>
           <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
-            <div style={{ background:WHITE, borderRadius:8, padding:16, border:'1px solid '+BORDER }}>
-              <div style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Products Selected</div>
-              <div style={{ fontFamily:FONT, fontSize:24, fontWeight:600, color:TEXT_HI }}>{selectedProducts.length}</div>
+            <div style={{ background:'#ffffff', borderRadius:8, padding:16, border:'1px solid '+'var(--osmos-border)' }}>
+              <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>Products Selected</div>
+              <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:24, fontWeight:600, color:'var(--osmos-fg)' }}>{selectedProducts.length}</div>
             </div>
             {selectedProducts.length > 0 && (
               <div>
-                <div style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI, marginBottom:8 }}>Selected Products</div>
+                <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:500, color:'var(--osmos-fg)', marginBottom:8 }}>Selected Products</div>
                 <div style={{ display:'flex', flexDirection:'column', gap:8, maxHeight:300, overflowY:'auto' }}>
                   {selectedProducts.map((id) => {
                     const product = productCatalog.find((p) => p.id === id);
                     return product ? (
-                      <div key={id} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', background:WHITE, padding:8, borderRadius:4, border:'1px solid '+BORDER }}>
-                        <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_HI, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{product.name}</span>
-                        <button onClick={() => toggleProduct(id)} style={{ background:'none', border:'none', cursor:'pointer', color:TEXT_MID, padding:2, flexShrink:0 }}>
+                      <div key={id} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', background:'#ffffff', padding:8, borderRadius:4, border:'1px solid '+'var(--osmos-border)' }}>
+                        <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{product.name}</span>
+                        <button onClick={() => toggleProduct(id)} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--osmos-fg-muted)', padding:2, flexShrink:0 }}>
                           <CloseIcon size={14} />
                         </button>
                       </div>
@@ -2173,16 +2160,16 @@ export function OffsiteAdGroupWizard({
     // Meta Feed Placements (Square/Portrait in feed context)
     if (["feed", "instagram-feed", "marketplace-feed"].includes(placement.id)) {
       return (
-        <div style={{ width:280, background:WHITE, borderRadius:12, border:'1px solid #e5e7eb', boxShadow:'0 1px 2px rgba(0,0,0,0.05)', overflow:'hidden' }}>
+        <div style={{ width:280, background:'#ffffff', borderRadius:12, border:'1px solid #e5e7eb', boxShadow:'0 1px 2px rgba(0,0,0,0.05)', overflow:'hidden' }}>
           <div style={{ display:'flex', alignItems:'center', gap:8, padding:12, borderBottom:'1px solid #e5e7eb' }}>
             <div style={{ width:32, height:32, borderRadius:'50%', background:'linear-gradient(135deg,#1877f2,#0866ff)', flexShrink:0 }} />
             <div style={{ flex:1 }}>
               <div style={{ display:'flex', alignItems:'center', gap:6 }}>
-                <p style={{ fontFamily:FONT, fontSize:12, fontWeight:600, color:'#050505', margin:0 }}>Your Brand</p>
+                <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, fontWeight:600, color:'#050505', margin:0 }}>Your Brand</p>
                 <div style={{ width:4, height:4, borderRadius:'50%', background:'#65676b' }} />
-                <span style={{ fontFamily:FONT, fontSize:10, fontWeight:600, color:'#65676b' }}>Sponsored</span>
+                <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:10, fontWeight:600, color:'#65676b' }}>Sponsored</span>
               </div>
-              <p style={{ fontFamily:FONT, fontSize:10, color:'#65676b', margin:0 }}>2h ago</p>
+              <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:10, color:'#65676b', margin:0 }}>2h ago</p>
             </div>
           </div>
 
@@ -2199,13 +2186,13 @@ export function OffsiteAdGroupWizard({
           )}
 
           <div style={{ padding:12, borderTop:'1px solid #e5e7eb' }}>
-            <p style={{ fontFamily:FONT, fontSize:12, fontWeight:500, color:'#050505', margin:'0 0 4px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
+            <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, fontWeight:500, color:'#050505', margin:'0 0 4px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
               {data.creative.headline || "Your compelling headline goes here"}
             </p>
-            <p style={{ fontFamily:FONT, fontSize:10, color:'#65676b', margin:'0 0 8px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
+            <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:10, color:'#65676b', margin:'0 0 8px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
               {data.creative.description || "Engaging description text"}
             </p>
-            <button style={{ width:'100%', padding:'8px 0', background:'#0866ff', color:WHITE, fontFamily:FONT, fontSize:12, fontWeight:600, border:'none', borderRadius:8, cursor:'pointer' }}>
+            <button style={{ width:'100%', padding:'8px 0', background:'#0866ff', color:'#ffffff', fontFamily:"'Open Sans', sans-serif", fontSize:12, fontWeight:600, border:'none', borderRadius:8, cursor:'pointer' }}>
               {data.creative.cta || "Learn More"}
             </button>
           </div>
@@ -2238,18 +2225,18 @@ export function OffsiteAdGroupWizard({
                     <div style={{ width:20, height:20, borderRadius:'50%', background:'linear-gradient(135deg,#1877f2,#0866ff)' }} />
                   </div>
                   <div style={{ flex:1 }}>
-                    <p style={{ fontFamily:FONT, color:WHITE, fontSize:10, fontWeight:600, margin:0, textShadow:'0 1px 2px rgba(0,0,0,0.5)' }}>Your Brand</p>
-                    <p style={{ fontFamily:FONT, color:'rgba(255,255,255,0.8)', fontSize:8, margin:0, textShadow:'0 1px 2px rgba(0,0,0,0.5)' }}>Sponsored</p>
+                    <p style={{ fontFamily:"'Open Sans', sans-serif", color:'#ffffff', fontSize:10, fontWeight:600, margin:0, textShadow:'0 1px 2px rgba(0,0,0,0.5)' }}>Your Brand</p>
+                    <p style={{ fontFamily:"'Open Sans', sans-serif", color:'rgba(255,255,255,0.8)', fontSize:8, margin:0, textShadow:'0 1px 2px rgba(0,0,0,0.5)' }}>Sponsored</p>
                   </div>
                 </div>
               </div>
 
               <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:16, background:'linear-gradient(to top,rgba(0,0,0,0.6),transparent)' }}>
-                <p style={{ fontFamily:FONT, color:WHITE, fontSize:12, fontWeight:600, margin:'0 0 8px', textShadow:'0 1px 2px rgba(0,0,0,0.5)', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
+                <p style={{ fontFamily:"'Open Sans', sans-serif", color:'#ffffff', fontSize:12, fontWeight:600, margin:'0 0 8px', textShadow:'0 1px 2px rgba(0,0,0,0.5)', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
                   {data.creative.headline || "Swipe up to learn more"}
                 </p>
                 <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, padding:'8px 16px', background:'rgba(255,255,255,0.95)', borderRadius:999 }}>
-                  <span style={{ fontFamily:FONT, fontSize:12, fontWeight:600, color:'#050505' }}>{data.creative.cta || "Learn More"}</span>
+                  <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, fontWeight:600, color:'#050505' }}>{data.creative.cta || "Learn More"}</span>
                   <ChevronRightIcon size={14} color="#050505" />
                 </div>
               </div>
@@ -2279,17 +2266,17 @@ export function OffsiteAdGroupWizard({
             <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:12, background:'linear-gradient(to top,rgba(0,0,0,0.8),transparent)' }}>
               <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                 <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                  <span style={{ padding:'1px 8px', background:'#ffd700', color:'#000', fontFamily:FONT, fontSize:10, fontWeight:700, borderRadius:3 }}>AD</span>
-                  <p style={{ fontFamily:FONT, color:WHITE, fontSize:12, fontWeight:500, margin:0 }}>{data.creative.headline || "Ad Title"}</p>
+                  <span style={{ padding:'1px 8px', background:'#ffd700', color:'#000', fontFamily:"'Open Sans', sans-serif", fontSize:10, fontWeight:700, borderRadius:3 }}>AD</span>
+                  <p style={{ fontFamily:"'Open Sans', sans-serif", color:'#ffffff', fontSize:12, fontWeight:500, margin:0 }}>{data.creative.headline || "Ad Title"}</p>
                 </div>
-                <button style={{ padding:'4px 12px', background:WHITE, color:'#000', fontFamily:FONT, fontSize:12, fontWeight:600, border:'none', borderRadius:4, cursor:'pointer' }}>
+                <button style={{ padding:'4px 12px', background:'#ffffff', color:'#000', fontFamily:"'Open Sans', sans-serif", fontSize:12, fontWeight:600, border:'none', borderRadius:4, cursor:'pointer' }}>
                   {data.creative.cta || "Visit Site"}
                 </button>
               </div>
             </div>
 
             <div style={{ position:'absolute', top:12, right:12 }}>
-              <div style={{ padding:'3px 8px', background:'rgba(0,0,0,0.6)', color:WHITE, fontFamily:FONT, fontSize:10, borderRadius:4 }}>
+              <div style={{ padding:'3px 8px', background:'rgba(0,0,0,0.6)', color:'#ffffff', fontFamily:"'Open Sans', sans-serif", fontSize:10, borderRadius:4 }}>
                 Ad • 0:05
               </div>
             </div>
@@ -2301,18 +2288,18 @@ export function OffsiteAdGroupWizard({
     // Google Search Ads (Text-only search result)
     if (placement.id.includes("search") && !placement.id.includes("shopping")) {
       return (
-        <div style={{ width:400, background:WHITE, borderRadius:8, border:'1px solid #e5e7eb', boxShadow:'0 1px 2px rgba(0,0,0,0.05)', padding:16 }}>
+        <div style={{ width:400, background:'#ffffff', borderRadius:8, border:'1px solid #e5e7eb', boxShadow:'0 1px 2px rgba(0,0,0,0.05)', padding:16 }}>
           <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
-            <div style={{ padding:'1px 6px', background:'#f8f9fa', border:'1px solid #dadce0', borderRadius:3, fontFamily:FONT, fontSize:10, fontWeight:500, color:'#5f6368' }}>Ad</div>
-            <span style={{ fontFamily:FONT, fontSize:12, color:'#202124' }}>www.yourbrand.com</span>
+            <div style={{ padding:'1px 6px', background:'#f8f9fa', border:'1px solid #dadce0', borderRadius:3, fontFamily:"'Open Sans', sans-serif", fontSize:10, fontWeight:500, color:'#5f6368' }}>Ad</div>
+            <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'#202124' }}>www.yourbrand.com</span>
           </div>
-          <h3 style={{ fontFamily:FONT, fontSize:18, color:'#1a0dab', fontWeight:400, margin:'0 0 4px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', cursor:'pointer' }}>
+          <h3 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:18, color:'#1a0dab', fontWeight:400, margin:'0 0 4px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', cursor:'pointer' }}>
             {data.creative.headline || "Your Headline - Brand Name | Product Category"}
           </h3>
-          <p style={{ fontFamily:FONT, fontSize:14, color:'#4d5156', margin:'0 0 8px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
+          <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:14, color:'#4d5156', margin:'0 0 8px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
             {data.creative.description || "Your ad description appears here in the search results. Make it compelling and relevant to the search query."}
           </p>
-          <div style={{ display:'flex', alignItems:'center', gap:12, fontFamily:FONT, fontSize:12, color:'#1a0dab' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:12, fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'#1a0dab' }}>
             <span style={{ cursor:'pointer' }}>Shop Now</span>
             <span style={{ cursor:'pointer' }}>Learn More</span>
             <span style={{ cursor:'pointer' }}>Contact Us</span>
@@ -2324,7 +2311,7 @@ export function OffsiteAdGroupWizard({
     // Google Shopping Ads (Product grid)
     if (placement.id.includes("shopping")) {
       return (
-        <div style={{ width:160, background:WHITE, borderRadius:8, border:'1px solid #e5e7eb', boxShadow:'0 1px 2px rgba(0,0,0,0.05)', overflow:'hidden' }}>
+        <div style={{ width:160, background:'#ffffff', borderRadius:8, border:'1px solid #e5e7eb', boxShadow:'0 1px 2px rgba(0,0,0,0.05)', overflow:'hidden' }}>
           {hasCreative ? (
             <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Product" style={{ width:'100%', aspectRatio:'1/1', objectFit:'cover', display:'block' }} />
           ) : (
@@ -2334,14 +2321,14 @@ export function OffsiteAdGroupWizard({
           )}
           <div style={{ padding:8 }}>
             <div style={{ marginBottom:4 }}>
-              <span style={{ padding:'1px 4px', background:'#f8f9fa', border:'1px solid #dadce0', borderRadius:3, fontFamily:FONT, fontSize:8, fontWeight:500, color:'#5f6368' }}>Sponsored</span>
+              <span style={{ padding:'1px 4px', background:'#f8f9fa', border:'1px solid #dadce0', borderRadius:3, fontFamily:"'Open Sans', sans-serif", fontSize:8, fontWeight:500, color:'#5f6368' }}>Sponsored</span>
             </div>
-            <p style={{ fontFamily:FONT, fontSize:12, fontWeight:500, color:'#202124', margin:'0 0 4px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
+            <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, fontWeight:500, color:'#202124', margin:'0 0 4px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>
               {data.creative.headline || "Product Name"}
             </p>
             <div style={{ display:'flex', alignItems:'baseline', gap:4 }}>
-              <span style={{ fontFamily:FONT, fontSize:14, fontWeight:600, color:'#202124' }}>$49.99</span>
-              <span style={{ fontFamily:FONT, fontSize:10, color:'#70757a', textDecoration:'line-through' }}>$79.99</span>
+              <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:14, fontWeight:600, color:'#202124' }}>$49.99</span>
+              <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:10, color:'#70757a', textDecoration:'line-through' }}>$79.99</span>
             </div>
             <div style={{ display:'flex', alignItems:'center', gap:4, marginTop:4 }}>
               <div style={{ display:'flex' }}>
@@ -2351,7 +2338,7 @@ export function OffsiteAdGroupWizard({
                   </svg>
                 ))}
               </div>
-              <span style={{ fontFamily:FONT, fontSize:9, color:'#70757a' }}>(234)</span>
+              <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:9, color:'#70757a' }}>(234)</span>
             </div>
           </div>
         </div>
@@ -2361,7 +2348,7 @@ export function OffsiteAdGroupWizard({
     // Google Display Network (Banner ads)
     if (placement.id.includes("display") || placement.id.includes("banner")) {
       return (
-        <div style={{ width:320, background:WHITE, borderRadius:8, border:'1px solid '+BORDER, boxShadow:'0 1px 2px rgba(0,0,0,0.05)', overflow:'hidden' }}>
+        <div style={{ width:320, background:'#ffffff', borderRadius:8, border:'1px solid '+'var(--osmos-border)', boxShadow:'0 1px 2px rgba(0,0,0,0.05)', overflow:'hidden' }}>
           {hasCreative ? (
             <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Banner Ad" style={{ width:'100%', height:100, objectFit:'cover' }} />
           ) : (
@@ -2371,10 +2358,10 @@ export function OffsiteAdGroupWizard({
           )}
           <div style={{ padding:8, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
             <div style={{ flex:1 }}>
-              <p style={{ fontFamily:FONT, fontSize:12, fontWeight:500, color:'#202124', margin:'0 0 2px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{data.creative.headline || "Your Ad Headline"}</p>
-              <p style={{ fontFamily:FONT, fontSize:10, color:'#5f6368', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{data.creative.description || "Description"}</p>
+              <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, fontWeight:500, color:'#202124', margin:'0 0 2px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{data.creative.headline || "Your Ad Headline"}</p>
+              <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:10, color:'#5f6368', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{data.creative.description || "Description"}</p>
             </div>
-            <button style={{ padding:'4px 12px', background:'#1a73e8', color:WHITE, fontSize:12, fontWeight:500, borderRadius:4, border:'none', cursor:'pointer', flexShrink:0, marginLeft:8 }}>{data.creative.cta || "Shop"}</button>
+            <button style={{ padding:'4px 12px', background:'#1a73e8', color:'#ffffff', fontSize:12, fontWeight:500, borderRadius:4, border:'none', cursor:'pointer', flexShrink:0, marginLeft:8 }}>{data.creative.cta || "Shop"}</button>
           </div>
         </div>
       );
@@ -2383,7 +2370,7 @@ export function OffsiteAdGroupWizard({
     // Right Column / Sidebar Ads (Small vertical format)
     if (placement.id.includes("right-column") || placement.id.includes("sidebar")) {
       return (
-        <div style={{ width:220, background:WHITE, borderRadius:8, border:'1px solid '+BORDER, boxShadow:'0 1px 2px rgba(0,0,0,0.05)', overflow:'hidden' }}>
+        <div style={{ width:220, background:'#ffffff', borderRadius:8, border:'1px solid '+'var(--osmos-border)', boxShadow:'0 1px 2px rgba(0,0,0,0.05)', overflow:'hidden' }}>
           {hasCreative ? (
             <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Ad" style={{ width:'100%', height:120, objectFit:'cover' }} />
           ) : (
@@ -2393,8 +2380,8 @@ export function OffsiteAdGroupWizard({
           )}
           <div style={{ padding:8 }}>
             <span style={{ fontSize:9, fontWeight:600, color:'#65676b' }}>Sponsored</span>
-            <p style={{ fontFamily:FONT, fontSize:12, fontWeight:500, color:'#050505', margin:'2px 0', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>{data.creative.headline || "Ad Headline"}</p>
-            <p style={{ fontFamily:FONT, fontSize:10, color:'#65676b', margin:0, overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>{data.creative.description || "Description text"}</p>
+            <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, fontWeight:500, color:'#050505', margin:'2px 0', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>{data.creative.headline || "Ad Headline"}</p>
+            <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:10, color:'#65676b', margin:0, overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>{data.creative.description || "Description text"}</p>
           </div>
         </div>
       );
@@ -2419,10 +2406,10 @@ export function OffsiteAdGroupWizard({
             {/* TikTok UI elements */}
             <div style={{ position:'absolute', right:8, bottom:80, display:'flex', flexDirection:'column', gap:12 }}>
               <div style={{ width:40, height:40, borderRadius:'50%', background:'rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                <UsersIcon size={20} color={WHITE} />
+                <UsersIcon size={20} color={'#ffffff'} />
               </div>
               <div style={{ width:40, height:40, borderRadius:'50%', background:'rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                <span style={{ color:WHITE, fontSize:12, fontWeight:700 }}>♥</span>
+                <span style={{ color:'#ffffff', fontSize:12, fontWeight:700 }}>♥</span>
               </div>
             </div>
             {/* Ad info overlay */}
@@ -2430,12 +2417,12 @@ export function OffsiteAdGroupWizard({
               <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
                 <div style={{ width:24, height:24, borderRadius:'50%', background:'rgba(255,255,255,0.9)' }} />
                 <div>
-                  <p style={{ color:WHITE, fontSize:10, fontWeight:600, margin:0 }}>@yourbrand</p>
+                  <p style={{ color:'#ffffff', fontSize:10, fontWeight:600, margin:0 }}>@yourbrand</p>
                   <p style={{ color:'rgba(255,255,255,0.7)', fontSize:8, margin:0 }}>Sponsored</p>
                 </div>
               </div>
-              <p style={{ color:WHITE, fontSize:12, fontWeight:500, margin:'0 0 8px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>{data.creative.headline || "Check this out!"}</p>
-              <button style={{ width:'100%', padding:'6px 0', background:'#fe2c55', color:WHITE, fontSize:12, fontWeight:700, borderRadius:8, border:'none', cursor:'pointer' }}>{data.creative.cta || "Shop Now"}</button>
+              <p style={{ color:'#ffffff', fontSize:12, fontWeight:500, margin:'0 0 8px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>{data.creative.headline || "Check this out!"}</p>
+              <button style={{ width:'100%', padding:'6px 0', background:'#fe2c55', color:'#ffffff', fontSize:12, fontWeight:700, borderRadius:8, border:'none', cursor:'pointer' }}>{data.creative.cta || "Shop Now"}</button>
             </div>
           </div>
         </div>
@@ -2445,21 +2432,21 @@ export function OffsiteAdGroupWizard({
     // Messenger Inbox (Chat interface)
     if (placement.id.includes("messenger")) {
       return (
-        <div style={{ width:280, background:WHITE, borderRadius:12, border:'1px solid '+BORDER, boxShadow:'0 4px 12px rgba(0,0,0,0.1)', overflow:'hidden' }}>
-          <div style={{ padding:12, borderBottom:'1px solid '+BORDER, display:'flex', alignItems:'center', gap:8 }}>
+        <div style={{ width:280, background:'#ffffff', borderRadius:12, border:'1px solid '+'var(--osmos-border)', boxShadow:'0 4px 12px rgba(0,0,0,0.1)', overflow:'hidden' }}>
+          <div style={{ padding:12, borderBottom:'1px solid '+'var(--osmos-border)', display:'flex', alignItems:'center', gap:8 }}>
             <div style={{ width:32, height:32, borderRadius:'50%', background:'linear-gradient(135deg,#00b2ff,#0078ff)' }} />
             <div style={{ flex:1 }}>
-              <p style={{ fontFamily:FONT, fontSize:12, fontWeight:600, color:'#050505', margin:0 }}>Your Brand</p>
-              <p style={{ fontFamily:FONT, fontSize:10, color:'#65676b', margin:0 }}>Sponsored Message</p>
+              <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, fontWeight:600, color:'#050505', margin:0 }}>Your Brand</p>
+              <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:10, color:'#65676b', margin:0 }}>Sponsored Message</p>
             </div>
           </div>
           <div style={{ padding:12, display:'flex', flexDirection:'column', gap:8 }}>
             <div style={{ background:'#e4e6eb', borderRadius:'16px 16px 16px 4px', padding:12, maxWidth:200 }}>
               {hasCreative && <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Ad" style={{ width:'100%', aspectRatio:'16/9', objectFit:'cover', borderRadius:8, marginBottom:8 }} />}
-              <p style={{ fontFamily:FONT, fontSize:12, color:'#050505', margin:'0 0 4px', fontWeight:500 }}>{data.creative.headline || "Hey! Check this out"}</p>
-              <p style={{ fontFamily:FONT, fontSize:10, color:'#65676b', margin:0 }}>{data.creative.description || "Special offer just for you"}</p>
+              <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'#050505', margin:'0 0 4px', fontWeight:500 }}>{data.creative.headline || "Hey! Check this out"}</p>
+              <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:10, color:'#65676b', margin:0 }}>{data.creative.description || "Special offer just for you"}</p>
             </div>
-            <button style={{ width:'100%', padding:'8px 0', background:'#0084ff', color:WHITE, fontSize:12, fontWeight:600, borderRadius:999, border:'none', cursor:'pointer' }}>{data.creative.cta || "View Offer"}</button>
+            <button style={{ width:'100%', padding:'8px 0', background:'#0084ff', color:'#ffffff', fontSize:12, fontWeight:600, borderRadius:999, border:'none', cursor:'pointer' }}>{data.creative.cta || "View Offer"}</button>
           </div>
         </div>
       );
@@ -2468,22 +2455,22 @@ export function OffsiteAdGroupWizard({
     // Gmail Ads (Email-like format)
     if (placement.id.includes("gmail")) {
       return (
-        <div style={{ width:340, background:WHITE, borderRadius:8, border:'1px solid '+BORDER, boxShadow:'0 1px 2px rgba(0,0,0,0.05)' }}>
-          <div style={{ padding:12, borderBottom:'1px solid '+BORDER, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div style={{ width:340, background:'#ffffff', borderRadius:8, border:'1px solid '+'var(--osmos-border)', boxShadow:'0 1px 2px rgba(0,0,0,0.05)' }}>
+          <div style={{ padding:12, borderBottom:'1px solid '+'var(--osmos-border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
             <div style={{ display:'flex', alignItems:'center', gap:8 }}>
               <div style={{ width:32, height:32, borderRadius:'50%', background:'linear-gradient(135deg,#4285f4,#ea4335)' }} />
               <div>
-                <p style={{ fontFamily:FONT, fontSize:12, fontWeight:500, color:'#202124', margin:0 }}>Your Brand</p>
-                <p style={{ fontFamily:FONT, fontSize:10, color:'#5f6368', margin:0 }}>Promotional</p>
+                <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, fontWeight:500, color:'#202124', margin:0 }}>Your Brand</p>
+                <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:10, color:'#5f6368', margin:0 }}>Promotional</p>
               </div>
             </div>
             <span style={{ padding:'2px 8px', background:'#fef7e0', border:'1px solid #fbbc04', borderRadius:4, fontSize:9, fontWeight:500, color:'#ea8600' }}>Ad</span>
           </div>
           <div style={{ padding:12 }}>
-            <h4 style={{ fontFamily:FONT, fontSize:14, fontWeight:500, color:'#202124', margin:'0 0 4px' }}>{data.creative.headline || "Special Offer Inside"}</h4>
-            <p style={{ fontFamily:FONT, fontSize:12, color:'#5f6368', margin:'0 0 12px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>{data.creative.description || "Limited time offer on our best products. Don't miss out!"}</p>
+            <h4 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:14, fontWeight:500, color:'#202124', margin:'0 0 4px' }}>{data.creative.headline || "Special Offer Inside"}</h4>
+            <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'#5f6368', margin:'0 0 12px', overflow:'hidden', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical' }}>{data.creative.description || "Limited time offer on our best products. Don't miss out!"}</p>
             {hasCreative && <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Ad" style={{ width:'100%', height:120, objectFit:'cover', borderRadius:4, marginBottom:12 }} />}
-            <button style={{ width:'100%', padding:'8px 0', background:'#1a73e8', color:WHITE, fontSize:12, fontWeight:500, borderRadius:4, border:'none', cursor:'pointer' }}>{data.creative.cta || "Shop Now"}</button>
+            <button style={{ width:'100%', padding:'8px 0', background:'#1a73e8', color:'#ffffff', fontSize:12, fontWeight:500, borderRadius:4, border:'none', cursor:'pointer' }}>{data.creative.cta || "Shop Now"}</button>
           </div>
         </div>
       );
@@ -2493,14 +2480,14 @@ export function OffsiteAdGroupWizard({
     if (placement.id.includes("audience-network") || placement.id.includes("pangle")) {
       return (
         <div style={{ width:280, background:'#f5f5f5', borderRadius:8, padding:8 }}>
-          <div style={{ background:WHITE, borderRadius:8, border:'1px solid '+BORDER, overflow:'hidden' }}>
+          <div style={{ background:'#ffffff', borderRadius:8, border:'1px solid '+'var(--osmos-border)', overflow:'hidden' }}>
             <div style={{ display:'flex', alignItems:'center', gap:8, padding:8 }}>
               <div style={{ flex:1 }}>
                 <div style={{ display:'flex', alignItems:'center', gap:4, marginBottom:4 }}>
                   <span style={{ fontSize:8, padding:'1px 4px', background:'#f0f2f5', borderRadius:2, color:'#65676b', fontWeight:600 }}>AD</span>
                   <span style={{ fontSize:9, color:'#65676b' }}>Your Brand</span>
                 </div>
-                <p style={{ fontFamily:FONT, fontSize:10, fontWeight:500, color:'#050505', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{data.creative.headline || "Sponsored Content"}</p>
+                <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:10, fontWeight:500, color:'#050505', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{data.creative.headline || "Sponsored Content"}</p>
               </div>
               {hasCreative ? (
                 <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Ad" style={{ width:56, height:56, objectFit:'cover', borderRadius:4 }} />
@@ -2517,12 +2504,12 @@ export function OffsiteAdGroupWizard({
 
     // Default fallback
     return (
-      <div style={{ width:240, background:WHITE, borderRadius:8, border:'1px solid '+BORDER, boxShadow:'0 1px 2px rgba(0,0,0,0.05)', padding:12 }}>
-        <p style={{ fontFamily:FONT, fontSize:12, fontWeight:500, color:TEXT_HI, margin:'0 0 8px' }}>{placement.label}</p>
-        <div style={{ width:'100%', height:128, background:BG_MUT, borderRadius:4, display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ width:240, background:'#ffffff', borderRadius:8, border:'1px solid '+'var(--osmos-border)', boxShadow:'0 1px 2px rgba(0,0,0,0.05)', padding:12 }}>
+        <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, fontWeight:500, color:'var(--osmos-fg)', margin:'0 0 8px' }}>{placement.label}</p>
+        <div style={{ width:'100%', height:128, background:'var(--osmos-bg-muted)', borderRadius:4, display:'flex', alignItems:'center', justifyContent:'center' }}>
           <ImageSvgIcon size={32} color="#9ca3af" />
         </div>
-        <p style={{ fontFamily:FONT, fontSize:10, color:TEXT_MID, marginTop:8, marginBottom:0 }}>{placement.description}</p>
+        <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:10, color:'var(--osmos-fg-muted)', marginTop:8, marginBottom:0 }}>{placement.description}</p>
       </div>
     );
   };
@@ -2530,7 +2517,7 @@ export function OffsiteAdGroupWizard({
   const renderPlacementStep = () => {
     if (!data.platform || !data.adFormat) {
       return (
-        <div style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID }}>
+        <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:14, color:'var(--osmos-fg-muted)' }}>
           Please select a platform and ad format first.
         </div>
       );
@@ -2615,18 +2602,18 @@ export function OffsiteAdGroupWizard({
     return (
       <div style={{ display:'flex', flexDirection:'column', gap:24 }}>
         <div>
-          <h2 style={{ fontFamily:FONT, fontSize:22, fontWeight:600, color:TEXT_HI, margin:'0 0 8px' }}>
+          <h2 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:22, fontWeight:600, color:'var(--osmos-fg)', margin:'0 0 8px' }}>
             Select Placements
           </h2>
-          <p style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, margin:0 }}>
+          <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:14, color:'var(--osmos-fg-muted)', margin:0 }}>
             Choose where your ads will appear across the selected platform.
           </p>
         </div>
 
         <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:16 }}>
           {Object.entries(groupedPlacements).map(([category, placements]) => (
-            <div key={category} style={{ background:WHITE, border:'1px solid '+BORDER, borderRadius:10, padding:24 }}>
-              <h3 style={{ fontFamily:FONT, fontSize:16, fontWeight:600, color:TEXT_HI, margin:'0 0 16px' }}>
+            <div key={category} style={{ background:'#ffffff', border:'1px solid '+'var(--osmos-border)', borderRadius:10, padding:24 }}>
+              <h3 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:16, fontWeight:600, color:'var(--osmos-fg)', margin:'0 0 16px' }}>
                 {category}
               </h3>
               <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
@@ -2648,8 +2635,8 @@ export function OffsiteAdGroupWizard({
         </div>
 
         {/* Live Preview Section */}
-        <div style={{ background:WHITE, border:'1px solid '+BORDER, borderRadius:10, padding:24 }}>
-          <h3 style={{ fontFamily:FONT, fontSize:16, fontWeight:600, color:TEXT_HI, margin:'0 0 16px' }}>
+        <div style={{ background:'#ffffff', border:'1px solid '+'var(--osmos-border)', borderRadius:10, padding:24 }}>
+          <h3 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:16, fontWeight:600, color:'var(--osmos-fg)', margin:'0 0 16px' }}>
             Live Preview
           </h3>
           <div style={{ display:'flex', justifyContent:'center', alignItems:'center', gap:16, flexWrap:'wrap' }}>
@@ -2660,7 +2647,7 @@ export function OffsiteAdGroupWizard({
                 );
                 return placement ? (
                   <div key={placementId} style={{ textAlign:'center' }}>
-                    <p style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID, margin:'0 0 8px' }}>
+                    <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'var(--osmos-fg-muted)', margin:'0 0 8px' }}>
                       {placement.label}
                     </p>
                     {renderPlacementPreview(placement)}
@@ -2668,7 +2655,7 @@ export function OffsiteAdGroupWizard({
                 ) : null;
               })
             ) : (
-              <div style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, textAlign:'center' }}>
+              <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:14, color:'var(--osmos-fg-muted)', textAlign:'center' }}>
                 Select placements to see previews.
               </div>
             )}
@@ -2763,24 +2750,24 @@ export function OffsiteAdGroupWizard({
 
       {/* Drawer Container */}
       <div
-        style={{ position:'fixed', right:0, top:0, zIndex:60, height:'100%', width:'85%', background:BG_SUB, boxShadow:'0 10px 40px rgba(0,0,0,0.18)', display:'flex', flexDirection:'column', transition:'transform 0.3s' }}
+        style={{ position:'fixed', right:0, top:0, zIndex:60, height:'100%', width:'85%', background:'var(--osmos-bg-subtle)', boxShadow:'0 10px 40px rgba(0,0,0,0.18)', display:'flex', flexDirection:'column', transition:'transform 0.3s' }}
       >
         {/* Header */}
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 24px', background:WHITE, borderBottom:'1px solid '+BORDER }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 24px', background:'#ffffff', borderBottom:'1px solid '+'var(--osmos-border)' }}>
           <div style={{ display:'flex', alignItems:'center', gap:16 }}>
             <button
               onClick={onClose}
               style={{ padding:8, background:'transparent', border:'none', borderRadius:8, cursor:'pointer' }}
             >
-              <CloseIcon size={20} color={TEXT_MID} />
+              <CloseIcon size={20} color={'var(--osmos-fg-muted)'} />
             </button>
             <div>
-              <h2 style={{ fontFamily:FONT, fontSize:16, fontWeight:600, color:TEXT_HI, margin:0 }}>
+              <h2 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:16, fontWeight:600, color:'var(--osmos-fg)', margin:0 }}>
                 {mode === "add_ad_group"
                   ? `Add Ad Group to ${selectedCampaign?.name}`
                   : "Create Offsite Ad Group"}
               </h2>
-              <p style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID, margin:0 }}>
+              <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)', margin:0 }}>
                 Step {stepIndex + 1} of {visibleSteps.length} •{" "}
                 {currentStepInfo.description}
               </p>
@@ -2790,13 +2777,13 @@ export function OffsiteAdGroupWizard({
             onClick={onClose}
             style={{ padding:8, background:'transparent', border:'none', borderRadius:8, cursor:'pointer' }}
           >
-            <CloseIcon size={20} color={TEXT_MID} />
+            <CloseIcon size={20} color={'var(--osmos-fg-muted)'} />
           </button>
         </div>
 
         <div style={{ flex:1, display:'flex', overflow:'hidden' }}>
           {/* Steps Sidebar */}
-          <div style={{ width:256, background:WHITE, borderRight:'1px solid '+BORDER, display:'flex', flexDirection:'column', flexShrink:0 }}>
+          <div style={{ width:256, background:'#ffffff', borderRight:'1px solid '+'var(--osmos-border)', display:'flex', flexDirection:'column', flexShrink:0 }}>
             <div style={{ flex:1, padding:16, display:'flex', flexDirection:'column', gap:4, overflowY:'auto' }}>
               {visibleSteps.map((step, index) => {
                 const isCompleted = index < stepIndex;
@@ -2811,8 +2798,8 @@ export function OffsiteAdGroupWizard({
                     style={{
                       width:'100%', display:'flex', alignItems:'center', gap:12,
                       padding:'10px 12px', borderRadius:8, textAlign:'left',
-                      border: isCurrent ? '1px solid '+ACCENT : '1px solid transparent',
-                      background: isCurrent ? ACCENT_M : 'transparent',
+                      border: isCurrent ? '1px solid '+'var(--osmos-brand-primary)' : '1px solid transparent',
+                      background: isCurrent ? 'var(--osmos-brand-primary-muted)' : 'transparent',
                       opacity: isDisabled ? 0.5 : 1,
                       cursor: isDisabled ? 'not-allowed' : 'pointer',
                       transition:'all 0.15s',
@@ -2821,22 +2808,22 @@ export function OffsiteAdGroupWizard({
                     <div
                       style={{
                         width:32, height:32, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center',
-                        fontSize:13, fontFamily:FONT, fontWeight:500, flexShrink:0,
-                        background: isCompleted ? GREEN : isCurrent ? ACCENT : BG_MUT,
-                        color: (isCompleted || isCurrent) ? WHITE : TEXT_MID,
+                        fontSize:13, fontFamily:"'Open Sans', sans-serif", fontWeight:500, flexShrink:0,
+                        background: isCompleted ? 'var(--osmos-brand-green)' : isCurrent ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg-muted)',
+                        color: (isCompleted || isCurrent) ? '#ffffff' : 'var(--osmos-fg-muted)',
                       }}
                     >
-                      {isCompleted ? <CheckIcon size={14} color={WHITE} /> : index + 1}
+                      {isCompleted ? <CheckIcon size={14} color={'#ffffff'} /> : index + 1}
                     </div>
                     <div style={{ flex:1, minWidth:0 }}>
                       <div style={{
-                        fontFamily:FONT, fontSize:13, fontWeight:500,
-                        color: isCurrent ? ACCENT : isCompleted ? TEXT_HI : TEXT_LO,
+                        fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:500,
+                        color: isCurrent ? 'var(--osmos-brand-primary)' : isCompleted ? 'var(--osmos-fg)' : 'var(--osmos-fg-subtle)',
                         overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
                       }}>
                         {step.label}
                       </div>
-                      <div style={{ fontFamily:FONT, fontSize:11, color:TEXT_MID, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+                      <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:11, color:'var(--osmos-fg-muted)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
                         {step.description}
                       </div>
                     </div>
@@ -2846,8 +2833,8 @@ export function OffsiteAdGroupWizard({
             </div>
 
             {/* Ad Group Summary */}
-            <div style={{ borderTop:'1px solid '+BORDER, padding:16, background:BG_SUB }}>
-              <h4 style={{ fontFamily:FONT, fontSize:11, fontWeight:600, color:TEXT_MID, textTransform:'uppercase', letterSpacing:'0.05em', margin:'0 0 12px' }}>
+            <div style={{ borderTop:'1px solid '+'var(--osmos-border)', padding:16, background:'var(--osmos-bg-subtle)' }}>
+              <h4 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:11, fontWeight:600, color:'var(--osmos-fg-muted)', textTransform:'uppercase', letterSpacing:'0.05em', margin:'0 0 12px' }}>
                 Ad Group Summary
               </h4>
               <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
@@ -2859,8 +2846,8 @@ export function OffsiteAdGroupWizard({
                   { label:'Budget', value: data.budget ? `$${data.budget}/day` : '-' },
                 ].map(({ label, value, truncate }) => (
                   <div key={label} style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-                    <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>{label}</span>
-                    <span style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI, maxWidth:truncate?120:undefined, overflow:truncate?'hidden':undefined, textOverflow:truncate?'ellipsis':undefined, whiteSpace:truncate?'nowrap':undefined }}>
+                    <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>{label}</span>
+                    <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:500, color:'var(--osmos-fg)', maxWidth:truncate?120:undefined, overflow:truncate?'hidden':undefined, textOverflow:truncate?'ellipsis':undefined, whiteSpace:truncate?'nowrap':undefined }}>
                       {value}
                     </span>
                   </div>
@@ -2868,12 +2855,12 @@ export function OffsiteAdGroupWizard({
               </div>
 
               {/* Media Estimator FAB */}
-              <div style={{ marginTop:16, paddingTop:16, borderTop:'1px solid '+BORDER }}>
+              <div style={{ marginTop:16, paddingTop:16, borderTop:'1px solid '+'var(--osmos-border)' }}>
                 <button
                   onClick={() => setEstimatorOpen(!estimatorOpen)}
-                  style={{ width:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:8, padding:'10px 16px', background:ACCENT, color:WHITE, border:'none', borderRadius:8, fontFamily:FONT, fontSize:13, fontWeight:500, cursor:'pointer' }}
+                  style={{ width:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:8, padding:'10px 16px', background:'var(--osmos-brand-primary)', color:'#ffffff', border:'none', borderRadius:8, fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:500, cursor:'pointer' }}
                 >
-                  <BarChartIcon size={16} color={WHITE} />
+                  <BarChartIcon size={16} color={'#ffffff'} />
                   Media Estimator
                 </button>
               </div>
@@ -2888,26 +2875,26 @@ export function OffsiteAdGroupWizard({
                   style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.3)' }}
                   onClick={() => setEstimatorOpen(false)}
                 />
-                <div style={{ position:'relative', background:WHITE, borderRadius:16, border:'1px solid '+BORDER, boxShadow:'0 20px 60px rgba(0,0,0,0.18)', width:380, overflow:'hidden' }}>
+                <div style={{ position:'relative', background:'#ffffff', borderRadius:16, border:'1px solid '+'var(--osmos-border)', boxShadow:'0 20px 60px rgba(0,0,0,0.18)', width:380, overflow:'hidden' }}>
                   {/* Estimator Header */}
-                  <div style={{ background:ACCENT, padding:16, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                  <div style={{ background:'var(--osmos-brand-primary)', padding:16, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                     <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                      <BarChartIcon size={20} color={WHITE} />
-                      <span style={{ fontFamily:FONT, fontWeight:600, color:WHITE, fontSize:14 }}>Media Estimator</span>
+                      <BarChartIcon size={20} color={'#ffffff'} />
+                      <span style={{ fontFamily:"'Open Sans', sans-serif", fontWeight:600, color:'#ffffff', fontSize:14 }}>Media Estimator</span>
                     </div>
                     <button
                       onClick={() => setEstimatorOpen(false)}
                       style={{ padding:4, background:'transparent', border:'none', borderRadius:4, cursor:'pointer' }}
                     >
-                      <CloseIcon size={16} color={WHITE} />
+                      <CloseIcon size={16} color={'#ffffff'} />
                     </button>
                   </div>
 
                   {/* Estimator Content */}
                   <div style={{ padding:16, display:'flex', flexDirection:'column', gap:16 }}>
                     {/* Estimated Results */}
-                    <div style={{ background:GREEN_M, border:'1px solid '+GREEN, borderRadius:8, padding:16 }}>
-                      <div style={{ fontFamily:FONT, fontSize:12, color:GREEN, fontWeight:500, marginBottom:8 }}>
+                    <div style={{ background:'var(--osmos-brand-green-muted)', border:'1px solid '+'var(--osmos-brand-green)', borderRadius:8, padding:16 }}>
+                      <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'var(--osmos-brand-green)', fontWeight:500, marginBottom:8 }}>
                         Estimated Results
                       </div>
                       {[
@@ -2916,20 +2903,20 @@ export function OffsiteAdGroupWizard({
                         { label:'Est. CPM', value:'$4.50 - $8.20' },
                       ].map(({ label, value }) => (
                         <div key={label} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:8 }}>
-                          <span style={{ fontFamily:FONT, fontSize:13, color:GREEN }}>{label}</span>
-                          <span style={{ fontFamily:FONT, fontSize:13, fontWeight:600, color:GREEN }}>{value}</span>
+                          <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-brand-green)' }}>{label}</span>
+                          <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:600, color:'var(--osmos-brand-green)' }}>{value}</span>
                         </div>
                       ))}
                     </div>
 
                     {/* Targeting Summary (hand-rolled accordion) */}
-                    <div style={{ border:'1px solid '+BORDER, borderRadius:8 }}>
+                    <div style={{ border:'1px solid '+'var(--osmos-border)', borderRadius:8 }}>
                       <button
                         onClick={() => setAccordionOpen(!accordionOpen)}
                         style={{ width:'100%', display:'flex', alignItems:'center', justifyContent:'space-between', padding:'8px 12px', background:'transparent', border:'none', cursor:'pointer', borderRadius:8 }}
                       >
-                        <span style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI }}>Targeting Summary</span>
-                        <ChevronRightIcon size={14} color={TEXT_MID} style={{ transform: accordionOpen ? 'rotate(90deg)' : 'rotate(0deg)', transition:'transform 0.2s' }} />
+                        <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:500, color:'var(--osmos-fg)' }}>Targeting Summary</span>
+                        <ChevronRightIcon size={14} color={'var(--osmos-fg-muted)'} style={{ transform: accordionOpen ? 'rotate(90deg)' : 'rotate(0deg)', transition:'transform 0.2s' }} />
                       </button>
                       {accordionOpen && (
                         <div style={{ padding:'0 12px 12px', display:'flex', flexDirection:'column', gap:8 }}>
@@ -2940,8 +2927,8 @@ export function OffsiteAdGroupWizard({
                             { label:'Stores', value: data.targeting.stores.length > 0 ? `${data.targeting.stores.length} selected` : 'None' },
                           ].map(({ label, value }) => (
                             <div key={label} style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                              <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>{label}</span>
-                              <span style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:TEXT_HI }}>{value}</span>
+                              <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>{label}</span>
+                              <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:500, color:'var(--osmos-fg)' }}>{value}</span>
                             </div>
                           ))}
                         </div>
@@ -2950,10 +2937,10 @@ export function OffsiteAdGroupWizard({
 
                     {/* Budget Impact */}
                     <div style={{ background:'#fefce8', border:'1px solid #fde047', borderRadius:8, padding:12 }}>
-                      <div style={{ fontFamily:FONT, fontSize:12, color:'#713f12', fontWeight:500, marginBottom:4 }}>
+                      <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'#713f12', fontWeight:500, marginBottom:4 }}>
                         Budget Impact
                       </div>
-                      <div style={{ fontFamily:FONT, fontSize:13, color:'#854d0e' }}>
+                      <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'#854d0e' }}>
                         With ${data.budget || "50"}/day budget, you could reach
                         up to{" "}
                         <span style={{ fontWeight:600 }}>~17K users daily</span>
@@ -2967,15 +2954,15 @@ export function OffsiteAdGroupWizard({
             {currentStepInfo.id === "basics" && (
               <div style={{ display:'flex', flexDirection:'column', gap:24 }}>
                 <div>
-                  <h2 style={{ fontFamily:FONT, fontSize:22, fontWeight:600, color:TEXT_HI, margin:'0 0 8px' }}>
+                  <h2 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:22, fontWeight:600, color:'var(--osmos-fg)', margin:'0 0 8px' }}>
                     Ad Group Basics
                   </h2>
-                  <p style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, margin:0 }}>
+                  <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:14, color:'var(--osmos-fg-muted)', margin:0 }}>
                     Name your ad group and select the advertising platform.
                   </p>
                 </div>
 
-                <div style={{ background:WHITE, border:'1px solid '+BORDER, borderRadius:10, padding:24, display:'flex', flexDirection:'column', gap:24 }}>
+                <div style={{ background:'#ffffff', border:'1px solid '+'var(--osmos-border)', borderRadius:10, padding:24, display:'flex', flexDirection:'column', gap:24 }}>
                   <Input
                     label="Ad Group Name *"
                     value={data.name}
@@ -2985,9 +2972,9 @@ export function OffsiteAdGroupWizard({
 
                   <div>
                     <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:16 }}>
-                      <span style={{ fontFamily:FONT, fontSize:13, fontWeight:600, color:TEXT_HI }}>Select Platform *</span>
+                      <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:600, color:'var(--osmos-fg)' }}>Select Platform *</span>
                       <span title="Choose where your ads will run. Each platform has different strengths and audience types.">
-                        <InfoIcon size={14} color={TEXT_MID} />
+                        <InfoIcon size={14} color={'var(--osmos-fg-muted)'} />
                       </span>
                     </div>
 
@@ -2997,8 +2984,8 @@ export function OffsiteAdGroupWizard({
                           key={platform.id}
                           style={{
                             padding:16, borderRadius:8, cursor:'pointer', transition:'all 0.15s',
-                            border: data.platform === platform.id ? '2px solid '+ACCENT : '1px solid '+BORDER,
-                            background: data.platform === platform.id ? ACCENT_M : WHITE,
+                            border: data.platform === platform.id ? '2px solid '+'var(--osmos-brand-primary)' : '1px solid '+'var(--osmos-border)',
+                            background: data.platform === platform.id ? 'var(--osmos-brand-primary-muted)' : '#ffffff',
                             boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
                           }}
                           onClick={() =>
@@ -3007,8 +2994,8 @@ export function OffsiteAdGroupWizard({
                         >
                           <div style={{ display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', gap:8 }}>
                             <div style={{ width:40, height:40 }}>{platform.icon}</div>
-                            <div style={{ fontFamily:FONT, fontWeight:600, color:TEXT_HI }}>{platform.name}</div>
-                            <div style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID }}>{platform.description}</div>
+                            <div style={{ fontFamily:"'Open Sans', sans-serif", fontWeight:600, color:'var(--osmos-fg)' }}>{platform.name}</div>
+                            <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'var(--osmos-fg-muted)' }}>{platform.description}</div>
                           </div>
                         </div>
                       ))}
@@ -3021,10 +3008,10 @@ export function OffsiteAdGroupWizard({
             {currentStepInfo.id === "format" && data.platform && (
               <div style={{ display:'flex', flexDirection:'column', gap:24 }}>
                 <div>
-                  <h2 style={{ fontFamily:FONT, fontSize:22, fontWeight:600, color:TEXT_HI, margin:'0 0 8px' }}>
+                  <h2 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:22, fontWeight:600, color:'var(--osmos-fg)', margin:'0 0 8px' }}>
                     Choose Ad Format
                   </h2>
-                  <p style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, margin:0 }}>
+                  <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:14, color:'var(--osmos-fg-muted)', margin:0 }}>
                     Select the type of ad you want to create on{" "}
                     {data.platform === "meta" ? "Meta" : data.platform === "google" ? "Google" : "TikTok"}{" "}
                     Ads.
@@ -3037,25 +3024,25 @@ export function OffsiteAdGroupWizard({
                       key={format.id}
                       style={{
                         position:'relative', cursor:'pointer', transition:'all 0.15s', borderRadius:8,
-                        border: data.adFormat === format.id ? '2px solid '+ACCENT : '1px solid '+BORDER,
-                        background: data.adFormat === format.id ? '#fafafa' : WHITE,
+                        border: data.adFormat === format.id ? '2px solid '+'var(--osmos-brand-primary)' : '1px solid '+'var(--osmos-border)',
+                        background: data.adFormat === format.id ? '#fafafa' : '#ffffff',
                         boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
                       }}
                       onClick={() => setData({ ...data, adFormat: format.id })}
                     >
                       {data.adFormat === format.id && (
-                        <div style={{ position:'absolute', top:12, right:12, zIndex:1, width:20, height:20, background:GREEN, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 1px 3px rgba(0,0,0,0.2)' }}>
-                          <CheckIcon size={12} color={WHITE} />
+                        <div style={{ position:'absolute', top:12, right:12, zIndex:1, width:20, height:20, background:'var(--osmos-brand-green)', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 1px 3px rgba(0,0,0,0.2)' }}>
+                          <CheckIcon size={12} color={'#ffffff'} />
                         </div>
                       )}
-                      <div style={{ padding:12, background:BG_MUT, borderRadius:'8px 8px 0 0', display:'flex', alignItems:'center', justifyContent:'center', height:140 }}>
+                      <div style={{ padding:12, background:'var(--osmos-bg-muted)', borderRadius:'8px 8px 0 0', display:'flex', alignItems:'center', justifyContent:'center', height:140 }}>
                         {format.illustration}
                       </div>
                       <div style={{ padding:16 }}>
-                        <div style={{ fontFamily:FONT, fontWeight:600, color:TEXT_HI, marginBottom:4 }}>{format.name}</div>
-                        <div style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID, marginBottom:8 }}>{format.description}</div>
-                        <div style={{ display:'flex', alignItems:'center', gap:4, fontFamily:FONT, fontSize:12, color:ACCENT }}>
-                          <InfoIcon size={12} color={ACCENT} />
+                        <div style={{ fontFamily:"'Open Sans', sans-serif", fontWeight:600, color:'var(--osmos-fg)', marginBottom:4 }}>{format.name}</div>
+                        <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'var(--osmos-fg-muted)', marginBottom:8 }}>{format.description}</div>
+                        <div style={{ display:'flex', alignItems:'center', gap:4, fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'var(--osmos-brand-primary)' }}>
+                          <InfoIcon size={12} color={'var(--osmos-brand-primary)'} />
                           <span>Specs: {format.specs}</span>
                         </div>
                       </div>
@@ -3136,10 +3123,10 @@ export function OffsiteAdGroupWizard({
             {currentStepInfo.id === "targeting" && (
               <div>
                 <div style={{ marginBottom:24 }}>
-                  <h2 style={{ fontFamily:FONT, fontSize:22, fontWeight:600, color:TEXT_HI, margin:'0 0 8px' }}>
+                  <h2 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:22, fontWeight:600, color:'var(--osmos-fg)', margin:'0 0 8px' }}>
                     Set Your Targets
                   </h2>
-                  <p style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, margin:0 }}>
+                  <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:14, color:'var(--osmos-fg-muted)', margin:0 }}>
                     Select your preferred targeting options for this campaign.
                   </p>
                 </div>
@@ -3148,10 +3135,10 @@ export function OffsiteAdGroupWizard({
                   {targetingOptions.map((option) => (
                     <div
                       key={option.id}
-                      style={{ position:'relative', padding:24, border:'1px solid '+BORDER, borderRadius:12, cursor:'pointer', transition:'all 0.15s', background:WHITE }}
+                      style={{ position:'relative', padding:24, border:'1px solid '+'var(--osmos-border)', borderRadius:12, cursor:'pointer', transition:'all 0.15s', background:'#ffffff' }}
                       onClick={option.onClick}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.boxShadow = 'none'; }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--osmos-brand-primary)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--osmos-border)'; e.currentTarget.style.boxShadow = 'none'; }}
                     >
                       <div style={{ display:'flex', alignItems:'flex-start', gap:16 }}>
                         <div style={{ width:64, height:64, borderRadius:16, background:option.iconBg, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
@@ -3160,31 +3147,31 @@ export function OffsiteAdGroupWizard({
 
                         <div style={{ flex:1, minWidth:0 }}>
                           <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:8, marginBottom:8 }}>
-                            <h3 style={{ fontFamily:FONT, fontWeight:600, fontSize:14, color:TEXT_HI, margin:0 }}>{option.title}</h3>
+                            <h3 style={{ fontFamily:"'Open Sans', sans-serif", fontWeight:600, fontSize:14, color:'var(--osmos-fg)', margin:0 }}>{option.title}</h3>
                             <span style={{
-                              flexShrink:0, padding:'2px 8px', borderRadius:4, fontSize:11, fontFamily:FONT, fontWeight:600,
-                              background: option.configured ? GREEN_M : BG_MUT,
-                              color: option.configured ? GREEN : TEXT_MID,
-                              border: '1px solid ' + (option.configured ? GREEN : BORDER),
+                              flexShrink:0, padding:'2px 8px', borderRadius:4, fontSize:11, fontFamily:"'Open Sans', sans-serif", fontWeight:600,
+                              background: option.configured ? 'var(--osmos-brand-green-muted)' : 'var(--osmos-bg-muted)',
+                              color: option.configured ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-muted)',
+                              border: '1px solid ' + (option.configured ? 'var(--osmos-brand-green)' : 'var(--osmos-border)'),
                             }}>
                               {option.configured ? "CONFIGURED" : "NOT SET"}
                             </span>
                           </div>
 
-                          <p style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID, margin:'0 0 12px', lineHeight:1.5 }}>
+                          <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)', margin:'0 0 12px', lineHeight:1.5 }}>
                             {option.description}
                           </p>
 
                           {option.summary && (
                             <div style={{ display:'flex', alignItems:'center', gap:8, fontSize:13 }}>
-                              <div style={{ height:1, flex:1, background:BORDER }} />
-                              <span style={{ fontFamily:FONT, color:ACCENT, fontWeight:500 }}>{option.summary}</span>
-                              <div style={{ height:1, flex:1, background:BORDER }} />
+                              <div style={{ height:1, flex:1, background:'var(--osmos-border)' }} />
+                              <span style={{ fontFamily:"'Open Sans', sans-serif", color:'var(--osmos-brand-primary)', fontWeight:500 }}>{option.summary}</span>
+                              <div style={{ height:1, flex:1, background:'var(--osmos-border)' }} />
                             </div>
                           )}
                         </div>
 
-                        <ChevronRightIcon size={20} color={TEXT_LO} style={{ flexShrink:0 }} />
+                        <ChevronRightIcon size={20} color={'var(--osmos-fg-subtle)'} style={{ flexShrink:0 }} />
                       </div>
                     </div>
                   ))}
@@ -3195,17 +3182,17 @@ export function OffsiteAdGroupWizard({
             {currentStepInfo.id === "creative" && (
               <div style={{ display:'flex', flexDirection:'column', gap:24 }}>
                 <div>
-                  <h2 style={{ fontFamily:FONT, fontSize:22, fontWeight:600, color:TEXT_HI, margin:'0 0 8px' }}>
+                  <h2 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:22, fontWeight:600, color:'var(--osmos-fg)', margin:'0 0 8px' }}>
                     Ad Creative
                   </h2>
-                  <p style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, margin:0 }}>
+                  <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:14, color:'var(--osmos-fg-muted)', margin:0 }}>
                     Create compelling ad content that drives engagement.
                   </p>
                 </div>
 
                 <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:24 }}>
                   {/* Creative inputs */}
-                  <div style={{ background:WHITE, border:'1px solid '+BORDER, borderRadius:10, padding:24, display:'flex', flexDirection:'column', gap:20 }}>
+                  <div style={{ background:'#ffffff', border:'1px solid '+'var(--osmos-border)', borderRadius:10, padding:24, display:'flex', flexDirection:'column', gap:20 }}>
                     <div>
                       <Input
                         label="Headline *"
@@ -3214,22 +3201,22 @@ export function OffsiteAdGroupWizard({
                         placeholder="Your attention-grabbing headline"
                         maxLength={60}
                       />
-                      <p style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID, marginTop:4 }}>
+                      <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'var(--osmos-fg-muted)', marginTop:4 }}>
                         {data.creative.headline.length}/60 characters
                       </p>
                     </div>
 
                     <div>
-                      <span style={{ fontFamily:FONT, fontSize:13, fontWeight:600, color:TEXT_HI, display:'block', marginBottom:6 }}>Description *</span>
+                      <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:600, color:'var(--osmos-fg)', display:'block', marginBottom:6 }}>Description *</span>
                       <textarea
                         value={data.creative.description}
                         onChange={(e) => setData({ ...data, creative: { ...data.creative, description: e.target.value } })}
                         placeholder="Describe your product or service"
                         rows={3}
                         maxLength={150}
-                        style={{ width:'100%', fontFamily:FONT, fontSize:13, color:TEXT_HI, border:'1px solid '+BORDER, borderRadius:6, padding:'8px 10px', resize:'vertical', boxSizing:'border-box', outline:'none' }}
+                        style={{ width:'100%', fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg)', border:'1px solid '+'var(--osmos-border)', borderRadius:6, padding:'8px 10px', resize:'vertical', boxSizing:'border-box', outline:'none' }}
                       />
-                      <p style={{ fontFamily:FONT, fontSize:12, color:TEXT_MID, marginTop:4 }}>
+                      <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'var(--osmos-fg-muted)', marginTop:4 }}>
                         {data.creative.description.length}/150 characters
                       </p>
                     </div>
@@ -3256,8 +3243,8 @@ export function OffsiteAdGroupWizard({
                             <div style={{ display:'flex', alignItems:'flex-start', gap:8, marginBottom:12 }}>
                               <InfoIcon size={16} color="#0284c7" style={{ marginTop:2 }} />
                               <div>
-                                <div style={{ fontFamily:FONT, fontSize:13, fontWeight:500, color:'#0c4a6e' }}>Performance Max Assets</div>
-                                <div style={{ fontFamily:FONT, fontSize:12, color:'#075985', marginTop:4 }}>
+                                <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:500, color:'#0c4a6e' }}>Performance Max Assets</div>
+                                <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'#075985', marginTop:4 }}>
                                   Upload custom images or connect your product catalog. Minimum: 1 landscape (1.91:1) and 1 square (1:1) image.
                                 </div>
                               </div>
@@ -3273,18 +3260,18 @@ export function OffsiteAdGroupWizard({
                           </div>
                         )}
 
-                        <span style={{ fontFamily:FONT, fontSize:13, fontWeight:600, color:TEXT_HI, display:'block', marginBottom:6 }}>
+                        <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:600, color:'var(--osmos-fg)', display:'block', marginBottom:6 }}>
                           {data.adFormat === "performanceMax" ? "Upload Images (Landscape & Square) *" : "Upload Image *"}
                         </span>
                         <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} style={{ display:'none' }} multiple={data.adFormat === "performanceMax"} />
                         {data.creative.imageUrl ? (
                           <div style={{ marginTop:8, position:'relative' }}>
-                            <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Uploaded creative" style={{ width:'100%', maxHeight:200, objectFit:'cover', borderRadius:8, border:'1px solid '+BORDER }} />
-                            <button onClick={() => removeMedia("image")} style={{ position:'absolute', top:8, right:8, padding:6, background:WHITE, border:'none', borderRadius:'50%', boxShadow:'0 1px 4px rgba(0,0,0,0.2)', cursor:'pointer' }}>
+                            <img src={data.creative.imageUrl || "/placeholder.svg"} alt="Uploaded creative" style={{ width:'100%', maxHeight:200, objectFit:'cover', borderRadius:8, border:'1px solid '+'var(--osmos-border)' }} />
+                            <button onClick={() => removeMedia("image")} style={{ position:'absolute', top:8, right:8, padding:6, background:'#ffffff', border:'none', borderRadius:'50%', boxShadow:'0 1px 4px rgba(0,0,0,0.2)', cursor:'pointer' }}>
                               <TrashIcon size={16} color="#dc2626" />
                             </button>
                             {data.adFormat === "performanceMax" && (
-                              <div style={{ position:'absolute', top:8, left:8, padding:'2px 8px', background:'rgba(255,255,255,0.9)', borderRadius:4, fontFamily:FONT, fontSize:12, fontWeight:500 }}>
+                              <div style={{ position:'absolute', top:8, left:8, padding:'2px 8px', background:'rgba(255,255,255,0.9)', borderRadius:4, fontFamily:"'Open Sans', sans-serif", fontSize:12, fontWeight:500 }}>
                                 Landscape (1.91:1)
                               </div>
                             )}
@@ -3292,13 +3279,13 @@ export function OffsiteAdGroupWizard({
                         ) : (
                           <button
                             onClick={() => fileInputRef.current?.click()}
-                            style={{ marginTop:8, width:'100%', height:150, border:'2px dashed '+BORDER, borderRadius:8, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, background:'transparent', cursor:'pointer', transition:'all 0.15s' }}
+                            style={{ marginTop:8, width:'100%', height:150, border:'2px dashed '+'var(--osmos-border)', borderRadius:8, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, background:'transparent', cursor:'pointer', transition:'all 0.15s' }}
                           >
-                            <UploadIcon size={24} color={TEXT_MID} />
-                            <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>
+                            <UploadIcon size={24} color={'var(--osmos-fg-muted)'} />
+                            <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>
                               {data.adFormat === "performanceMax" ? "Click to upload images (landscape & square)" : "Click to upload image"}
                             </span>
-                            <span style={{ fontFamily:FONT, fontSize:12, color:TEXT_LO }}>
+                            <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'var(--osmos-fg-subtle)' }}>
                               {data.adFormat === "performanceMax" ? "1200x628px (landscape), 1200x1200px (square)" : "PNG, JPG up to 10MB"}
                             </span>
                           </button>
@@ -3309,23 +3296,23 @@ export function OffsiteAdGroupWizard({
                     {/* Video Upload */}
                     {(data.adFormat === "video" || data.adFormat === "infeed" || data.adFormat === "youtube-watch" || data.adFormat === "youtube-shorts" || data.adFormat === "fb-instream-reels" || data.adFormat === "audience-network-rewarded") && (
                       <div>
-                        <span style={{ fontFamily:FONT, fontSize:13, fontWeight:600, color:TEXT_HI, display:'block', marginBottom:6 }}>Upload Video *</span>
+                        <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:600, color:'var(--osmos-fg)', display:'block', marginBottom:6 }}>Upload Video *</span>
                         <input ref={videoInputRef} type="file" accept="video/*" onChange={handleVideoUpload} style={{ display:'none' }} />
                         {data.creative.videoUrl ? (
                           <div style={{ marginTop:8, position:'relative' }}>
-                            <video src={data.creative.videoUrl} controls style={{ width:'100%', maxHeight:200, objectFit:'cover', borderRadius:8, border:'1px solid '+BORDER }} />
-                            <button onClick={() => removeMedia("video")} style={{ position:'absolute', top:8, right:8, padding:6, background:WHITE, border:'none', borderRadius:'50%', boxShadow:'0 1px 4px rgba(0,0,0,0.2)', cursor:'pointer' }}>
+                            <video src={data.creative.videoUrl} controls style={{ width:'100%', maxHeight:200, objectFit:'cover', borderRadius:8, border:'1px solid '+'var(--osmos-border)' }} />
+                            <button onClick={() => removeMedia("video")} style={{ position:'absolute', top:8, right:8, padding:6, background:'#ffffff', border:'none', borderRadius:'50%', boxShadow:'0 1px 4px rgba(0,0,0,0.2)', cursor:'pointer' }}>
                               <TrashIcon size={16} color="#dc2626" />
                             </button>
                           </div>
                         ) : (
                           <button
                             onClick={() => videoInputRef.current?.click()}
-                            style={{ marginTop:8, width:'100%', height:150, border:'2px dashed '+BORDER, borderRadius:8, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, background:'transparent', cursor:'pointer', transition:'all 0.15s' }}
+                            style={{ marginTop:8, width:'100%', height:150, border:'2px dashed '+'var(--osmos-border)', borderRadius:8, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, background:'transparent', cursor:'pointer', transition:'all 0.15s' }}
                           >
-                            <VideoIcon size={24} color={TEXT_MID} />
-                            <span style={{ fontFamily:FONT, fontSize:13, color:TEXT_MID }}>Click to upload video</span>
-                            <span style={{ fontFamily:FONT, fontSize:12, color:TEXT_LO }}>MP4, MOV up to 500MB</span>
+                            <VideoIcon size={24} color={'var(--osmos-fg-muted)'} />
+                            <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)' }}>Click to upload video</span>
+                            <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:12, color:'var(--osmos-fg-subtle)' }}>MP4, MOV up to 500MB</span>
                           </button>
                         )}
                       </div>
@@ -3333,8 +3320,8 @@ export function OffsiteAdGroupWizard({
                   </div>
 
                   {/* Live Preview */}
-                  <div style={{ background:WHITE, border:'1px solid '+BORDER, borderRadius:10, padding:24 }}>
-                    <h3 style={{ fontFamily:FONT, fontSize:14, fontWeight:500, color:TEXT_HI, margin:'0 0 16px' }}>
+                  <div style={{ background:'#ffffff', border:'1px solid '+'var(--osmos-border)', borderRadius:10, padding:24 }}>
+                    <h3 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:14, fontWeight:500, color:'var(--osmos-fg)', margin:'0 0 16px' }}>
                       Live Preview
                     </h3>
                     <div style={{ display:'flex', justifyContent:'center', alignItems:'center', height:'100%' }}>
@@ -3358,13 +3345,13 @@ export function OffsiteAdGroupWizard({
                           return representativePlacement ? (
                             renderPlacementPreview(representativePlacement)
                           ) : (
-                            <div style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, textAlign:'center' }}>
+                            <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:14, color:'var(--osmos-fg-muted)', textAlign:'center' }}>
                               No preview available for this format.
                             </div>
                           );
                         })()
                       ) : (
-                        <div style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, textAlign:'center' }}>
+                        <div style={{ fontFamily:"'Open Sans', sans-serif", fontSize:14, color:'var(--osmos-fg-muted)', textAlign:'center' }}>
                           Select platform and ad format to see preview.
                         </div>
                       )}
@@ -3381,20 +3368,20 @@ export function OffsiteAdGroupWizard({
             {currentStepInfo.id === "config" && (
               <div style={{ display:'flex', flexDirection:'column', gap:24 }}>
                 <div>
-                  <h2 style={{ fontFamily:FONT, fontSize:22, fontWeight:600, color:TEXT_HI, margin:'0 0 8px' }}>
+                  <h2 style={{ fontFamily:"'Open Sans', sans-serif", fontSize:22, fontWeight:600, color:'var(--osmos-fg)', margin:'0 0 8px' }}>
                     Budget & Bidding
                   </h2>
-                  <p style={{ fontFamily:FONT, fontSize:14, color:TEXT_MID, margin:0 }}>
+                  <p style={{ fontFamily:"'Open Sans', sans-serif", fontSize:14, color:'var(--osmos-fg-muted)', margin:0 }}>
                     Set your daily budget and bidding strategy.
                   </p>
                 </div>
 
-                <div style={{ background:WHITE, border:'1px solid '+BORDER, borderRadius:10, padding:24 }}>
+                <div style={{ background:'#ffffff', border:'1px solid '+'var(--osmos-border)', borderRadius:10, padding:24 }}>
                   <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:16 }}>
                     <div>
-                      <span style={{ fontFamily:FONT, fontSize:13, fontWeight:600, color:TEXT_HI, display:'block', marginBottom:6 }}>Daily Budget *</span>
+                      <span style={{ fontFamily:"'Open Sans', sans-serif", fontSize:13, fontWeight:600, color:'var(--osmos-fg)', display:'block', marginBottom:6 }}>Daily Budget *</span>
                       <div style={{ position:'relative' }}>
-                        <span style={{ position:'absolute', left:10, top:'50%', transform:'translateY(-50%)', fontFamily:FONT, fontSize:13, color:TEXT_MID, pointerEvents:'none' }}>$</span>
+                        <span style={{ position:'absolute', left:10, top:'50%', transform:'translateY(-50%)', fontFamily:"'Open Sans', sans-serif", fontSize:13, color:'var(--osmos-fg-muted)', pointerEvents:'none' }}>$</span>
                         <Input
                           type="number"
                           value={data.budget}
@@ -3424,7 +3411,7 @@ export function OffsiteAdGroupWizard({
         </div>
 
         {/* Footer */}
-        <div style={{ borderTop:'1px solid '+BORDER, background:WHITE, padding:'16px 24px' }}>
+        <div style={{ borderTop:'1px solid '+'var(--osmos-border)', background:'#ffffff', padding:'16px 24px' }}>
           <div style={{ display:'flex', alignItems:'center', justifyContent:'flex-end', gap:12 }}>
             <Button variant="outline" onClick={onClose}>Cancel</Button>
             {stepIndex > 0 && (

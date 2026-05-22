@@ -27,17 +27,6 @@ const MinusIcon = (props) => (
   <Icon {...props}><path d="M5 12h14" /></Icon>
 );
 
-// ── design tokens ─────────────────────────────────────────────────────────────
-const FONT      = "'Open Sans', sans-serif";
-const BG        = 'var(--osmos-bg)';
-const BG_SUBTLE = 'var(--osmos-bg-subtle)';
-const BG_MUTED  = 'var(--osmos-bg-muted)';
-const BORDER    = 'var(--osmos-border)';
-const TEXT      = 'var(--osmos-fg)';
-const TEXT_MID  = 'var(--osmos-fg-muted)';
-const TEXT_SUB  = 'var(--osmos-fg-subtle)';
-const ACCENT    = 'var(--osmos-brand-primary)';
-const ACCENT_M  = 'var(--osmos-brand-primary-muted)';
 const VI        = 'var(--osmos-brand-violet)';   // AI/smart violet
 const INC       = 'var(--alert-success-primary)';   // include semantic green — intentional
 const EXC       = 'var(--alert-error-primary)';   // exclude semantic red — intentional
@@ -132,28 +121,28 @@ export function ProductSelectionDrawer({ open, onClose, onSave, existingSelectio
       <div style={{
         position: 'fixed', top: 0, right: 0, bottom: 0,
         width: 'calc(100% - 80px)',
-        backgroundColor: BG_SUBTLE, zIndex: 51,
+        backgroundColor: 'var(--osmos-bg-subtle)', zIndex: 51,
         display: 'flex', flexDirection: 'column',
         boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
-        fontFamily: FONT,
+        fontFamily: "'Open Sans', sans-serif",
       }}>
         {/* Header */}
-        <div style={{ backgroundColor: BG, borderBottom: `1px solid ${BORDER}`, padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+        <div style={{ backgroundColor: 'var(--osmos-bg)', borderBottom: `1px solid var(--osmos-border)`, padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {currentView !== 'entry' && (
               <button
                 onClick={() => setCurrentView('entry')}
                 style={{ padding: 6, border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: 8, display: 'flex' }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = BG_MUTED)}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--osmos-bg-muted)')}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
               >
-                <ChevronLeftIcon size={20} color={TEXT_MID} />
+                <ChevronLeftIcon size={20} color={'var(--osmos-fg-muted)'} />
               </button>
             )}
-            <PackageIcon size={24} color={ACCENT} />
+            <PackageIcon size={24} color={'var(--osmos-brand-primary)'} />
             <div>
-              <h2 style={{ margin: 0, fontSize: 18, fontWeight: 600, color: TEXT }}>Product Selection</h2>
-              <p style={{ margin: 0, fontSize: 13, color: TEXT_MID }}>
+              <h2 style={{ margin: 0, fontSize: 18, fontWeight: 600, color: 'var(--osmos-fg)' }}>Product Selection</h2>
+              <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>
                 {currentView === 'entry'      && 'Choose how you want to select products'}
                 {currentView === 'filter'     && 'Use filters to select products'}
                 {currentView === 'individual' && `${selectionMode === 'include' ? 'Include' : 'Exclude'} specific products`}
@@ -164,10 +153,10 @@ export function ProductSelectionDrawer({ open, onClose, onSave, existingSelectio
           <button
             onClick={onClose}
             style={{ padding: 8, border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: 8, display: 'flex' }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = BG_MUTED)}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--osmos-bg-muted)')}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
           >
-            <CloseIcon size={20} color={TEXT_MID} />
+            <CloseIcon size={20} color={'var(--osmos-fg-muted)'} />
           </button>
         </div>
 
@@ -215,12 +204,12 @@ export function ProductSelectionDrawer({ open, onClose, onSave, existingSelectio
         </div>
 
         {/* Footer */}
-        <div style={{ backgroundColor: BG, borderTop: `1px solid ${BORDER}`, padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+        <div style={{ backgroundColor: 'var(--osmos-bg)', borderTop: `1px solid var(--osmos-border)`, padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             {currentView !== 'entry' && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
-                <span style={{ color: TEXT_MID }}>Selected:</span>
-                <span style={{ fontWeight: 600, color: ACCENT }}>{totalSelected} products</span>
+                <span style={{ color: 'var(--osmos-fg-muted)' }}>Selected:</span>
+                <span style={{ fontWeight: 600, color: 'var(--osmos-brand-primary)' }}>{totalSelected} products</span>
                 {excludedProducts.length > 0 && (
                   <span style={{ color: EXC }}>({excludedProducts.length} excluded)</span>
                 )}
@@ -251,7 +240,7 @@ function EntryPointView({ mode, setMode, manualMode, setManualMode, totalSelecte
   return (
     <div style={{ maxWidth: 720, margin: '0 auto' }}>
       {/* Mode selector */}
-      <h3 style={{ margin: '0 0 16px', fontSize: 18, fontWeight: 600, color: TEXT }}>Choose Selection Mode</h3>
+      <h3 style={{ margin: '0 0 16px', fontSize: 18, fontWeight: 600, color: 'var(--osmos-fg)' }}>Choose Selection Mode</h3>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 32 }}>
         {/* Smart Mode */}
         <RadioCard selected={mode === 'smart'} onClick={() => setMode('smart')} style={{ padding: 24, position: 'relative' }}>
@@ -263,8 +252,8 @@ function EntryPointView({ mode, setMode, manualMode, setManualMode, totalSelecte
           <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #8b5cf6, #6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
             <SparklesIcon size={24} color="#fff" />
           </div>
-          <h4 style={{ margin: '0 0 8px', fontWeight: 600, color: TEXT }}>Smart Mode</h4>
-          <p style={{ margin: 0, fontSize: 13, color: TEXT_MID }}>AI handles everything. Sit back and let our algorithm optimize product selection for maximum performance.</p>
+          <h4 style={{ margin: '0 0 8px', fontWeight: 600, color: 'var(--osmos-fg)' }}>Smart Mode</h4>
+          <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>AI handles everything. Sit back and let our algorithm optimize product selection for maximum performance.</p>
         </RadioCard>
 
         {/* Manual Mode */}
@@ -277,10 +266,10 @@ function EntryPointView({ mode, setMode, manualMode, setManualMode, totalSelecte
           <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #2563eb, #0ea5e9)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
             <FilterIcon size={24} color="#fff" />
           </div>
-          <h4 style={{ margin: '0 0 8px', fontWeight: 600, color: TEXT }}>Manual Mode</h4>
-          <p style={{ margin: 0, fontSize: 13, color: TEXT_MID }}>
+          <h4 style={{ margin: '0 0 8px', fontWeight: 600, color: 'var(--osmos-fg)' }}>Manual Mode</h4>
+          <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>
             You control. Choose products by filters or individually.
-            {totalSelected > 0 && <span style={{ marginLeft: 4, color: ACCENT, fontWeight: 500 }}>({totalSelected} products selected)</span>}
+            {totalSelected > 0 && <span style={{ marginLeft: 4, color: 'var(--osmos-brand-primary)', fontWeight: 500 }}>({totalSelected} products selected)</span>}
           </p>
         </RadioCard>
       </div>
@@ -288,24 +277,24 @@ function EntryPointView({ mode, setMode, manualMode, setManualMode, totalSelecte
       {/* Manual sub-mode */}
       {mode === 'manual' && (
         <>
-          <h3 style={{ margin: '0 0 16px', fontSize: 18, fontWeight: 600, color: TEXT }}>How would you like to select products?</h3>
+          <h3 style={{ margin: '0 0 16px', fontSize: 18, fontWeight: 600, color: 'var(--osmos-fg)' }}>How would you like to select products?</h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
             {/* Filter-Based */}
             <RadioCard selected={manualMode === 'filter'} onClick={() => setManualMode('filter')} style={{ padding: 20 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
                 <RadioDot selected={manualMode === 'filter'} />
-                <h4 style={{ margin: 0, fontWeight: 600, color: TEXT }}>Filter-Based Selection</h4>
+                <h4 style={{ margin: 0, fontWeight: 600, color: 'var(--osmos-fg)' }}>Filter-Based Selection</h4>
               </div>
-              <p style={{ margin: 0, fontSize: 13, color: TEXT_MID, paddingLeft: 28 }}>Select products by brand, category, price range, and more. Perfect for bulk selection.</p>
+              <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)', paddingLeft: 28 }}>Select products by brand, category, price range, and more. Perfect for bulk selection.</p>
             </RadioCard>
 
             {/* Individual */}
             <RadioCard selected={manualMode === 'individual'} onClick={() => setManualMode('individual')} style={{ padding: 20 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
                 <RadioDot selected={manualMode === 'individual'} />
-                <h4 style={{ margin: 0, fontWeight: 600, color: TEXT }}>Individual Selection</h4>
+                <h4 style={{ margin: 0, fontWeight: 600, color: 'var(--osmos-fg)' }}>Individual Selection</h4>
               </div>
-              <p style={{ margin: 0, fontSize: 13, color: TEXT_MID, paddingLeft: 28 }}>Search and select specific products one by one. Best for precise control.</p>
+              <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)', paddingLeft: 28 }}>Search and select specific products one by one. Best for precise control.</p>
             </RadioCard>
           </div>
 
@@ -320,13 +309,13 @@ function EntryPointView({ mode, setMode, manualMode, setManualMode, totalSelecte
 
       {/* Smart Mode info panel */}
       {mode === 'smart' && (
-        <div style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.06), rgba(37,99,235,0.06))', borderRadius: 12, padding: 24, border: `1px solid ${BORDER}` }}>
+        <div style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.06), rgba(37,99,235,0.06))', borderRadius: 12, padding: 24, border: `1px solid var(--osmos-border)` }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
             <div style={{ width: 40, height: 40, borderRadius: 8, backgroundColor: VI, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <SparklesIcon size={20} color="#fff" />
             </div>
             <div>
-              <h4 style={{ margin: '0 0 8px', fontWeight: 600, color: TEXT }}>How Smart Mode Works</h4>
+              <h4 style={{ margin: '0 0 8px', fontWeight: 600, color: 'var(--osmos-fg)' }}>How Smart Mode Works</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {[
                   'AI analyzes your campaign goals and target audience',
@@ -336,7 +325,7 @@ function EntryPointView({ mode, setMode, manualMode, setManualMode, totalSelecte
                 ].map((point) => (
                   <div key={point} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
                     <CheckIcon size={16} color={INC} style={{ marginTop: 1, flexShrink: 0 }} />
-                    <span style={{ fontSize: 13, color: TEXT_MID }}>{point}</span>
+                    <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{point}</span>
                   </div>
                 ))}
               </div>
@@ -357,18 +346,18 @@ function FilterBasedView({ products, selectedBrands, setSelectedBrands, selected
     <div style={{ display: 'flex', gap: 24 }}>
       {/* Filters sidebar */}
       <div style={{ width: 288, flexShrink: 0 }}>
-        <SectionCard title="Filters" titleRight={<span style={{ fontSize: 12, color: ACCENT, cursor: 'pointer' }} onClick={() => { setSelectedBrands([]); setSelectedCategories([]); }}>Clear All</span>} bodyBg={BG} bodyPad={16}>
+        <SectionCard title="Filters" titleRight={<span style={{ fontSize: 12, color: 'var(--osmos-brand-primary)', cursor: 'pointer' }} onClick={() => { setSelectedBrands([]); setSelectedCategories([]); }}>Clear All</span>} bodyBg={'var(--osmos-bg)'} bodyPad={16}>
           {/* Logic toggle */}
-          <div style={{ marginBottom: 16, padding: 12, backgroundColor: BG_SUBTLE, borderRadius: 8 }}>
-            <p style={{ margin: '0 0 8px', fontSize: 12, color: TEXT_MID }}>Match products that meet:</p>
+          <div style={{ marginBottom: 16, padding: 12, backgroundColor: 'var(--osmos-bg-subtle)', borderRadius: 8 }}>
+            <p style={{ margin: '0 0 8px', fontSize: 12, color: 'var(--osmos-fg-muted)' }}>Match products that meet:</p>
             <div style={{ display: 'flex', gap: 8 }}>
               {['AND','OR'].map((logic) => (
                 <button key={logic} onClick={() => setFilterLogic(logic)} style={{
                   flex: 1, padding: '6px 0', fontSize: 13, borderRadius: 6, cursor: 'pointer', transition: 'all 0.15s',
-                  backgroundColor: filterLogic === logic ? ACCENT : BG,
-                  color: filterLogic === logic ? '#fff' : TEXT_MID,
-                  border: filterLogic === logic ? 'none' : `1px solid ${BORDER}`,
-                  fontFamily: FONT,
+                  backgroundColor: filterLogic === logic ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg)',
+                  color: filterLogic === logic ? '#fff' : 'var(--osmos-fg-muted)',
+                  border: filterLogic === logic ? 'none' : `1px solid var(--osmos-border)`,
+                  fontFamily: "'Open Sans', sans-serif",
                 }}>
                   {logic === 'AND' ? 'All Filters (AND)' : 'Any Filter (OR)'}
                 </button>
@@ -384,7 +373,7 @@ function FilterBasedView({ products, selectedBrands, setSelectedBrands, selected
                   checked={selectedBrands.includes(brand)}
                   onChange={() => setSelectedBrands((prev) => prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand])}
                 />
-                <span style={{ fontSize: 13, color: TEXT_MID }}>{brand}</span>
+                <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{brand}</span>
               </label>
             ))}
           </FilterSection>
@@ -397,7 +386,7 @@ function FilterBasedView({ products, selectedBrands, setSelectedBrands, selected
                   checked={selectedCategories.includes(cat)}
                   onChange={() => setSelectedCategories((prev) => prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat])}
                 />
-                <span style={{ fontSize: 13, color: TEXT_MID }}>{cat}</span>
+                <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{cat}</span>
               </label>
             ))}
           </FilterSection>
@@ -407,12 +396,12 @@ function FilterBasedView({ products, selectedBrands, setSelectedBrands, selected
             <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
               {[['min','Min'],['max','Max']].map(([key, lbl]) => (
                 <div key={key} style={{ flex: 1 }}>
-                  <div style={{ fontSize: 11, color: TEXT_MID, marginBottom: 4 }}>{lbl}</div>
+                  <div style={{ fontSize: 11, color: 'var(--osmos-fg-muted)', marginBottom: 4 }}>{lbl}</div>
                   <input
                     type="number"
                     value={priceRange[key]}
                     onChange={(e) => setPriceRange((prev) => ({ ...prev, [key]: Number(e.target.value) }))}
-                    style={{ width: '100%', padding: '6px 8px', border: `1px solid ${BORDER}`, borderRadius: 6, fontSize: 13, fontFamily: FONT, color: TEXT, backgroundColor: BG, boxSizing: 'border-box' }}
+                    style={{ width: '100%', padding: '6px 8px', border: `1px solid var(--osmos-border)`, borderRadius: 6, fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)', backgroundColor: 'var(--osmos-bg)', boxSizing: 'border-box' }}
                   />
                 </div>
               ))}
@@ -424,8 +413,8 @@ function FilterBasedView({ products, selectedBrands, setSelectedBrands, selected
       {/* Products grid */}
       <div style={{ flex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-          <p style={{ margin: 0, fontSize: 13, color: TEXT_MID }}>
-            <span style={{ fontWeight: 600, color: TEXT }}>{products.length}</span> products match your filters
+          <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>
+            <span style={{ fontWeight: 600, color: 'var(--osmos-fg)' }}>{products.length}</span> products match your filters
           </p>
           {excludedProducts.length > 0 && <p style={{ margin: 0, fontSize: 13, color: EXC }}>{excludedProducts.length} excluded</p>}
         </div>
@@ -435,22 +424,22 @@ function FilterBasedView({ products, selectedBrands, setSelectedBrands, selected
             const isExcluded = excludedProducts.includes(product.id);
             return (
               <div key={product.id} style={{
-                backgroundColor: isExcluded ? 'rgba(239,68,68,0.04)' : BG,
-                border: isExcluded ? `1px solid rgba(239,68,68,0.3)` : `1px solid ${BORDER}`,
+                backgroundColor: isExcluded ? 'rgba(239,68,68,0.04)' : 'var(--osmos-bg)',
+                border: isExcluded ? `1px solid rgba(239,68,68,0.3)` : `1px solid var(--osmos-border)`,
                 borderRadius: 12, padding: 16,
                 opacity: isExcluded ? 0.65 : 1,
                 transition: 'all 0.15s',
               }}>
                 <div style={{ display: 'flex', gap: 12 }}>
-                  <img src={product.image || '/placeholder.svg'} alt={product.name} style={{ width: 64, height: 64, borderRadius: 8, objectFit: 'cover', backgroundColor: BG_MUTED, flexShrink: 0 }} />
+                  <img src={product.image || '/placeholder.svg'} alt={product.name} style={{ width: 64, height: 64, borderRadius: 8, objectFit: 'cover', backgroundColor: 'var(--osmos-bg-muted)', flexShrink: 0 }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <h4 style={{ margin: '0 0 2px', fontWeight: 500, color: TEXT, fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{product.name}</h4>
-                    <p style={{ margin: 0, fontSize: 12, color: TEXT_MID }}>{product.brand}</p>
-                    <p style={{ margin: '4px 0 0', fontSize: 13, fontWeight: 600, color: ACCENT }}>${product.price}</p>
+                    <h4 style={{ margin: '0 0 2px', fontWeight: 500, color: 'var(--osmos-fg)', fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{product.name}</h4>
+                    <p style={{ margin: 0, fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{product.brand}</p>
+                    <p style={{ margin: '4px 0 0', fontSize: 13, fontWeight: 600, color: 'var(--osmos-brand-primary)' }}>${product.price}</p>
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 }}>
-                  <span style={{ fontSize: 12, color: TEXT_SUB }}>{product.stock} in stock</span>
+                  <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>{product.stock} in stock</span>
                   <ExcludeBtn excluded={isExcluded} onClick={() => toggleExclude(product.id)} />
                 </div>
               </div>
@@ -468,29 +457,29 @@ function IndividualSelectionView({ searchQuery, setSearchQuery, selectionMode, s
     <div>
       {/* Mode toggle */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
-        <div style={{ display: 'flex', backgroundColor: BG_MUTED, borderRadius: 8, padding: 4 }}>
+        <div style={{ display: 'flex', backgroundColor: 'var(--osmos-bg-muted)', borderRadius: 8, padding: 4 }}>
           <button
             onClick={() => setSelectionMode('include')}
             style={{
-              padding: '8px 16px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 500, fontFamily: FONT, display: 'flex', alignItems: 'center', gap: 6, transition: 'all 0.15s',
+              padding: '8px 16px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 500, fontFamily: "'Open Sans', sans-serif", display: 'flex', alignItems: 'center', gap: 6, transition: 'all 0.15s',
               backgroundColor: selectionMode === 'include' ? INC : 'transparent',
-              color: selectionMode === 'include' ? '#fff' : TEXT_MID,
+              color: selectionMode === 'include' ? '#fff' : 'var(--osmos-fg-muted)',
             }}
           >
-            <PlusIcon size={13} color={selectionMode === 'include' ? '#fff' : TEXT_MID} /> Include Mode
+            <PlusIcon size={13} color={selectionMode === 'include' ? '#fff' : 'var(--osmos-fg-muted)'} /> Include Mode
           </button>
           <button
             onClick={() => setSelectionMode('exclude')}
             style={{
-              padding: '8px 16px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 500, fontFamily: FONT, display: 'flex', alignItems: 'center', gap: 6, transition: 'all 0.15s',
+              padding: '8px 16px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 500, fontFamily: "'Open Sans', sans-serif", display: 'flex', alignItems: 'center', gap: 6, transition: 'all 0.15s',
               backgroundColor: selectionMode === 'exclude' ? EXC : 'transparent',
-              color: selectionMode === 'exclude' ? '#fff' : TEXT_MID,
+              color: selectionMode === 'exclude' ? '#fff' : 'var(--osmos-fg-muted)',
             }}
           >
-            <MinusIcon size={13} color={selectionMode === 'exclude' ? '#fff' : TEXT_MID} /> Exclude Mode
+            <MinusIcon size={13} color={selectionMode === 'exclude' ? '#fff' : 'var(--osmos-fg-muted)'} /> Exclude Mode
           </button>
         </div>
-        <p style={{ margin: 0, fontSize: 13, color: TEXT_MID }}>
+        <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>
           {selectionMode === 'include' ? 'Click products to add them to your campaign' : 'Click products to exclude them from your campaign'}
         </p>
       </div>
@@ -498,14 +487,14 @@ function IndividualSelectionView({ searchQuery, setSearchQuery, selectionMode, s
       {/* Search */}
       <div style={{ position: 'relative', marginBottom: 24 }}>
         <div style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-          <SearchIcon size={17} color={TEXT_SUB} />
+          <SearchIcon size={17} color={'var(--osmos-fg-subtle)'} />
         </div>
         <input
           type="text"
           placeholder="Search products by name, SKU, or brand..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          style={{ width: '100%', padding: '10px 12px 10px 40px', border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, fontFamily: FONT, color: TEXT, backgroundColor: BG, boxSizing: 'border-box', outline: 'none' }}
+          style={{ width: '100%', padding: '10px 12px 10px 40px', border: `1px solid var(--osmos-border)`, borderRadius: 8, fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)', backgroundColor: 'var(--osmos-bg)', boxSizing: 'border-box', outline: 'none' }}
         />
       </div>
 
@@ -519,8 +508,8 @@ function IndividualSelectionView({ searchQuery, setSearchQuery, selectionMode, s
               key={product.id}
               onClick={() => toggleProduct(product.id)}
               style={{
-                backgroundColor: isIncluded ? 'rgba(34,197,94,0.05)' : isExcluded ? 'rgba(239,68,68,0.05)' : BG,
-                border: isIncluded ? `2px solid ${INC}` : isExcluded ? `2px solid ${EXC}` : `1px solid ${BORDER}`,
+                backgroundColor: isIncluded ? 'rgba(34,197,94,0.05)' : isExcluded ? 'rgba(239,68,68,0.05)' : 'var(--osmos-bg)',
+                border: isIncluded ? `2px solid ${INC}` : isExcluded ? `2px solid ${EXC}` : `1px solid var(--osmos-border)`,
                 borderRadius: 12, padding: 16, cursor: 'pointer', position: 'relative', transition: 'all 0.15s',
               }}
             >
@@ -529,10 +518,10 @@ function IndividualSelectionView({ searchQuery, setSearchQuery, selectionMode, s
                   {isIncluded ? <PlusIcon size={13} color="#fff" /> : <MinusIcon size={13} color="#fff" />}
                 </div>
               )}
-              <img src={product.image || '/placeholder.svg'} alt={product.name} style={{ width: '100%', height: 96, borderRadius: 8, objectFit: 'cover', backgroundColor: BG_MUTED, marginBottom: 12, display: 'block' }} />
-              <h4 style={{ margin: '0 0 2px', fontWeight: 500, color: TEXT, fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{product.name}</h4>
-              <p style={{ margin: 0, fontSize: 12, color: TEXT_MID }}>{product.brand}</p>
-              <p style={{ margin: '4px 0 0', fontSize: 13, fontWeight: 600, color: ACCENT }}>${product.price}</p>
+              <img src={product.image || '/placeholder.svg'} alt={product.name} style={{ width: '100%', height: 96, borderRadius: 8, objectFit: 'cover', backgroundColor: 'var(--osmos-bg-muted)', marginBottom: 12, display: 'block' }} />
+              <h4 style={{ margin: '0 0 2px', fontWeight: 500, color: 'var(--osmos-fg)', fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{product.name}</h4>
+              <p style={{ margin: 0, fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{product.brand}</p>
+              <p style={{ margin: '4px 0 0', fontSize: 13, fontWeight: 600, color: 'var(--osmos-brand-primary)' }}>${product.price}</p>
             </div>
           );
         })}
@@ -550,9 +539,9 @@ function PreviewView({ includedProducts, excludedProducts, allProducts, filterCr
     <div style={{ maxWidth: 800, margin: '0 auto' }}>
       {/* Summary stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
-        <div style={{ backgroundColor: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 16 }}>
-          <p style={{ margin: '0 0 4px', fontSize: 13, color: TEXT_MID }}>Total Products</p>
-          <p style={{ margin: 0, fontSize: 24, fontWeight: 600, color: TEXT }}>{filterCriteria ? allProducts.length : includedProducts.length}</p>
+        <div style={{ backgroundColor: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid var(--osmos-border)`, padding: 16 }}>
+          <p style={{ margin: '0 0 4px', fontSize: 13, color: 'var(--osmos-fg-muted)' }}>Total Products</p>
+          <p style={{ margin: 0, fontSize: 24, fontWeight: 600, color: 'var(--osmos-fg)' }}>{filterCriteria ? allProducts.length : includedProducts.length}</p>
         </div>
         <div style={{ backgroundColor: 'rgba(34,197,94,0.06)', borderRadius: 12, border: '1px solid rgba(34,197,94,0.3)', padding: 16 }}>
           <p style={{ margin: '0 0 4px', fontSize: 13, color: INC }}>Included</p>
@@ -566,11 +555,11 @@ function PreviewView({ includedProducts, excludedProducts, allProducts, filterCr
 
       {/* Active filters */}
       {filterCriteria && (filterCriteria.brands.length > 0 || filterCriteria.categories.length > 0) && (
-        <div style={{ backgroundColor: BG_SUBTLE, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 16, marginBottom: 24 }}>
-          <h4 style={{ margin: '0 0 12px', fontWeight: 500, color: TEXT }}>Active Filters</h4>
+        <div style={{ backgroundColor: 'var(--osmos-bg-subtle)', borderRadius: 12, border: `1px solid var(--osmos-border)`, padding: 16, marginBottom: 24 }}>
+          <h4 style={{ margin: '0 0 12px', fontWeight: 500, color: 'var(--osmos-fg)' }}>Active Filters</h4>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {filterCriteria.brands.map((brand) => (
-              <span key={brand} style={{ padding: '4px 12px', backgroundColor: ACCENT, color: '#fff', fontSize: 13, borderRadius: 999 }}>Brand: {brand}</span>
+              <span key={brand} style={{ padding: '4px 12px', backgroundColor: 'var(--osmos-brand-primary)', color: '#fff', fontSize: 13, borderRadius: 999 }}>Brand: {brand}</span>
             ))}
             {filterCriteria.categories.map((cat) => (
               <span key={cat} style={{ padding: '4px 12px', backgroundColor: VI, color: '#fff', fontSize: 13, borderRadius: 999 }}>Category: {cat}</span>
@@ -583,16 +572,16 @@ function PreviewView({ includedProducts, excludedProducts, allProducts, filterCr
       {/* Included list */}
       {includedData.length > 0 && (
         <div style={{ marginBottom: 24 }}>
-          <h4 style={{ margin: '0 0 12px', fontWeight: 500, color: TEXT, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <h4 style={{ margin: '0 0 12px', fontWeight: 500, color: 'var(--osmos-fg)', display: 'flex', alignItems: 'center', gap: 8 }}>
             <PlusIcon size={15} color={INC} /> Included Products ({includedData.length})
           </h4>
-          <div style={{ backgroundColor: BG, borderRadius: 12, border: `1px solid ${BORDER}`, overflow: 'hidden' }}>
+          <div style={{ backgroundColor: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid var(--osmos-border)`, overflow: 'hidden' }}>
             {includedData.map((product, i) => (
-              <div key={product.id} style={{ padding: 16, display: 'flex', alignItems: 'center', gap: 16, borderTop: i === 0 ? 'none' : `1px solid ${BORDER}` }}>
-                <img src={product.image || '/placeholder.svg'} alt={product.name} style={{ width: 48, height: 48, borderRadius: 8, objectFit: 'cover', backgroundColor: BG_MUTED, flexShrink: 0 }} />
+              <div key={product.id} style={{ padding: 16, display: 'flex', alignItems: 'center', gap: 16, borderTop: i === 0 ? 'none' : `1px solid var(--osmos-border)` }}>
+                <img src={product.image || '/placeholder.svg'} alt={product.name} style={{ width: 48, height: 48, borderRadius: 8, objectFit: 'cover', backgroundColor: 'var(--osmos-bg-muted)', flexShrink: 0 }} />
                 <div style={{ flex: 1 }}>
-                  <h5 style={{ margin: '0 0 2px', fontWeight: 500, color: TEXT, fontSize: 14 }}>{product.name}</h5>
-                  <p style={{ margin: 0, fontSize: 13, color: TEXT_MID }}>{product.brand} • ${product.price}</p>
+                  <h5 style={{ margin: '0 0 2px', fontWeight: 500, color: 'var(--osmos-fg)', fontSize: 14 }}>{product.name}</h5>
+                  <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{product.brand} • ${product.price}</p>
                 </div>
                 <button onClick={() => onRemoveIncluded(product.id)} style={{ padding: 8, border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: 8, display: 'flex', color: EXC }}
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(239,68,68,0.08)')}
@@ -608,16 +597,16 @@ function PreviewView({ includedProducts, excludedProducts, allProducts, filterCr
       {/* Excluded list */}
       {excludedData.length > 0 && (
         <div>
-          <h4 style={{ margin: '0 0 12px', fontWeight: 500, color: TEXT, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <h4 style={{ margin: '0 0 12px', fontWeight: 500, color: 'var(--osmos-fg)', display: 'flex', alignItems: 'center', gap: 8 }}>
             <MinusIcon size={15} color={EXC} /> Excluded Products ({excludedData.length})
           </h4>
-          <div style={{ backgroundColor: BG, borderRadius: 12, border: `1px solid ${BORDER}`, overflow: 'hidden' }}>
+          <div style={{ backgroundColor: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid var(--osmos-border)`, overflow: 'hidden' }}>
             {excludedData.map((product, i) => (
-              <div key={product.id} style={{ padding: 16, display: 'flex', alignItems: 'center', gap: 16, opacity: 0.6, borderTop: i === 0 ? 'none' : `1px solid ${BORDER}` }}>
-                <img src={product.image || '/placeholder.svg'} alt={product.name} style={{ width: 48, height: 48, borderRadius: 8, objectFit: 'cover', backgroundColor: BG_MUTED, flexShrink: 0 }} />
+              <div key={product.id} style={{ padding: 16, display: 'flex', alignItems: 'center', gap: 16, opacity: 0.6, borderTop: i === 0 ? 'none' : `1px solid var(--osmos-border)` }}>
+                <img src={product.image || '/placeholder.svg'} alt={product.name} style={{ width: 48, height: 48, borderRadius: 8, objectFit: 'cover', backgroundColor: 'var(--osmos-bg-muted)', flexShrink: 0 }} />
                 <div style={{ flex: 1 }}>
-                  <h5 style={{ margin: '0 0 2px', fontWeight: 500, color: TEXT, fontSize: 14 }}>{product.name}</h5>
-                  <p style={{ margin: 0, fontSize: 13, color: TEXT_MID }}>{product.brand} • ${product.price}</p>
+                  <h5 style={{ margin: '0 0 2px', fontWeight: 500, color: 'var(--osmos-fg)', fontSize: 14 }}>{product.name}</h5>
+                  <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{product.brand} • ${product.price}</p>
                 </div>
                 <button onClick={() => onRemoveExcluded(product.id)} style={{ padding: 8, border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: 8, display: 'flex' }}
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(34,197,94,0.08)')}
@@ -633,7 +622,7 @@ function PreviewView({ includedProducts, excludedProducts, allProducts, filterCr
       {/* Empty state */}
       {includedData.length === 0 && excludedData.length === 0 && !filterCriteria && (
         <EmptyState
-          icon={<AlertCircleIcon size={28} color={TEXT_SUB} />}
+          icon={<AlertCircleIcon size={28} color={'var(--osmos-fg-subtle)'} />}
           iconBg="transparent"
           message="No products selected. Go back and select some products to include in your campaign."
           paddingY={48}
@@ -646,10 +635,10 @@ function PreviewView({ includedProducts, excludedProducts, allProducts, filterCr
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function FilterSection({ label, filterKey, expanded, onToggle, children }) {
   return (
-    <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: 12, marginTop: 12 }}>
-      <button onClick={onToggle} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: 'none', background: 'transparent', cursor: 'pointer', padding: '4px 0', fontFamily: FONT }}>
-        <span style={{ fontWeight: 500, color: TEXT, fontSize: 13 }}>{label}</span>
-        {expanded ? <ChevronDownIcon size={15} color={TEXT_MID} /> : <ChevronRightIcon size={15} color={TEXT_MID} />}
+    <div style={{ borderTop: `1px solid var(--osmos-border)`, paddingTop: 12, marginTop: 12 }}>
+      <button onClick={onToggle} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: 'none', background: 'transparent', cursor: 'pointer', padding: '4px 0', fontFamily: "'Open Sans', sans-serif" }}>
+        <span style={{ fontWeight: 500, color: 'var(--osmos-fg)', fontSize: 13 }}>{label}</span>
+        {expanded ? <ChevronDownIcon size={15} color={'var(--osmos-fg-muted)'} /> : <ChevronRightIcon size={15} color={'var(--osmos-fg-muted)'} />}
       </button>
       {expanded && <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>{children}</div>}
     </div>
@@ -664,9 +653,9 @@ function ExcludeBtn({ excluded, onClick }) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
-        fontSize: 12, padding: '3px 10px', borderRadius: 6, cursor: 'pointer', border: 'none', fontFamily: FONT, transition: 'all 0.15s',
-        backgroundColor: excluded ? EXC : hover ? 'rgba(239,68,68,0.1)' : BG_MUTED,
-        color: excluded ? '#fff' : hover ? EXC : TEXT_MID,
+        fontSize: 12, padding: '3px 10px', borderRadius: 6, cursor: 'pointer', border: 'none', fontFamily: "'Open Sans', sans-serif", transition: 'all 0.15s',
+        backgroundColor: excluded ? EXC : hover ? 'rgba(239,68,68,0.1)' : 'var(--osmos-bg-muted)',
+        color: excluded ? '#fff' : hover ? EXC : 'var(--osmos-fg-muted)',
       }}
     >
       {excluded ? 'Excluded' : 'Exclude'}

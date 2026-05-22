@@ -15,19 +15,6 @@ import {
 } from "../../../ui";
 import { InstoreAdGroupWizard } from "./instore-ad-group-wizard";
 
-// ─── Design Tokens ────────────────────────────────────────────────────────────
-const FONT    = "'Open Sans', sans-serif";
-const TEXT    = 'var(--osmos-fg)';
-const TEXT_MID= 'var(--osmos-fg-muted)';
-const TEXT_SUB= 'var(--osmos-fg-subtle)';
-const BORDER  = 'var(--osmos-border)';
-const BG      = 'var(--osmos-bg)';
-const BG_SUB  = 'var(--osmos-bg-subtle)';
-const ACCENT  = 'var(--osmos-brand-primary)';
-const ACCENT_M= 'var(--osmos-brand-primary-muted)';
-const GREEN   = 'var(--osmos-brand-green)';
-const AMBER   = 'var(--osmos-brand-amber)';
-
 // ─── Hand-rolled lucide icons not in ui/index.js ──────────────────────────────
 const MonitorIcon = (props) => (
   <Icon {...props}>
@@ -266,8 +253,8 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
   const s = {
     overlay: {
       position: 'fixed', inset: 0, zIndex: 100,
-      background: BG, display: 'flex',
-      height: '100vh', overflow: 'hidden', fontFamily: FONT,
+      background: 'var(--osmos-bg)', display: 'flex',
+      height: '100vh', overflow: 'hidden', fontFamily: "'Open Sans', sans-serif",
     },
     inner: {
       position: 'relative', display: 'flex',
@@ -275,16 +262,16 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
     },
     // Sidebar
     sidebar: {
-      width: 288, background: BG_SUB,
-      borderRight: `1px solid ${BORDER}`,
+      width: 288, background: 'var(--osmos-bg-subtle)',
+      borderRight: `1px solid var(--osmos-border)`,
       display: 'flex', flexDirection: 'column',
       flexShrink: 0, height: '100%', overflow: 'hidden',
     },
     sidebarHeader: {
-      padding: 24, borderBottom: `1px solid ${BORDER}`, flexShrink: 0,
+      padding: 24, borderBottom: `1px solid var(--osmos-border)`, flexShrink: 0,
     },
     sidebarTitle: {
-      fontWeight: 600, color: TEXT,
+      fontWeight: 600, color: 'var(--osmos-fg)',
       fontSize: 14, margin: 0,
       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
     },
@@ -296,15 +283,15 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
     },
     instoreBadge: {
       padding: '2px 8px', fontSize: 10, fontWeight: 500,
-      background: ACCENT, color: '#fff', borderRadius: 999,
+      background: 'var(--osmos-brand-primary)', color: '#fff', borderRadius: 999,
     },
     sidebarScroll: { flex: 1, overflowY: 'auto', padding: 24 },
     stepsContainer: { display: 'flex', flexDirection: 'column', gap: 8 },
     stepBtn: (isActive, isPast, isFuture) => ({
       width: '100%', display: 'flex', alignItems: 'flex-start', gap: 12,
       padding: 12, borderRadius: 8, border: 'none', cursor: isFuture ? 'not-allowed' : 'pointer',
-      background: isActive ? BG : 'transparent',
-      outline: isActive ? `1px solid ${ACCENT}22` : 'none',
+      background: isActive ? 'var(--osmos-bg)' : 'transparent',
+      outline: isActive ? `1px solid var(--osmos-brand-primary)22` : 'none',
       opacity: isFuture ? 0.5 : 1,
       transition: 'all 0.15s', textAlign: 'left',
     }),
@@ -312,18 +299,18 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
       width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       fontSize: 13, fontWeight: 500,
-      background: isActive ? ACCENT : isPast ? GREEN : BG_SUB,
-      color: (isActive || isPast) ? '#fff' : TEXT_SUB,
+      background: isActive ? 'var(--osmos-brand-primary)' : isPast ? 'var(--osmos-brand-green)' : 'var(--osmos-bg-subtle)',
+      color: (isActive || isPast) ? '#fff' : 'var(--osmos-fg-subtle)',
     }),
     stepLabel: (isActive, isPast) => ({
       fontSize: 13, fontWeight: 500,
-      color: isActive ? ACCENT : isPast ? TEXT : TEXT_SUB,
+      color: isActive ? 'var(--osmos-brand-primary)' : isPast ? 'var(--osmos-fg)' : 'var(--osmos-fg-subtle)',
       margin: 0,
     }),
-    stepDesc: { fontSize: 12, color: TEXT_SUB, margin: 0 },
-    summarySection: { marginTop: 24, paddingTop: 16, borderTop: `1px solid ${BORDER}` },
+    stepDesc: { fontSize: 12, color: 'var(--osmos-fg-subtle)', margin: 0 },
+    summarySection: { marginTop: 24, paddingTop: 16, borderTop: `1px solid var(--osmos-border)` },
     summaryTitle: {
-      fontSize: 11, fontWeight: 600, color: TEXT_SUB,
+      fontSize: 11, fontWeight: 600, color: 'var(--osmos-fg-subtle)',
       textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12,
     },
     summaryRows: { display: 'flex', flexDirection: 'column', gap: 8 },
@@ -332,42 +319,42 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
     main: { flex: 1, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' },
     topBar: {
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '16px 32px', borderBottom: `1px solid ${BORDER}`, flexShrink: 0,
+      padding: '16px 32px', borderBottom: `1px solid var(--osmos-border)`, flexShrink: 0,
     },
     topBarLeft: { display: 'flex', alignItems: 'center', gap: 12 },
     iconBox: {
-      width: 40, height: 40, background: ACCENT_M, borderRadius: 8,
+      width: 40, height: 40, background: 'var(--osmos-brand-primary-muted)', borderRadius: 8,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
     },
-    mainTitle: { fontSize: 20, fontWeight: 600, color: TEXT, margin: 0 },
-    mainSub:   { fontSize: 13, color: TEXT_MID, margin: 0 },
+    mainTitle: { fontSize: 20, fontWeight: 600, color: 'var(--osmos-fg)', margin: 0 },
+    mainSub:   { fontSize: 13, color: 'var(--osmos-fg-muted)', margin: 0 },
     closeBtn: {
       background: 'none', border: 'none', cursor: 'pointer',
-      color: TEXT_MID, display: 'flex', alignItems: 'center',
+      color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center',
     },
     contentScroll: { flex: 1, overflowY: 'auto', padding: 32 },
     footer: {
       display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
-      gap: 12, padding: '16px 32px', borderTop: `1px solid ${BORDER}`, flexShrink: 0,
+      gap: 12, padding: '16px 32px', borderTop: `1px solid var(--osmos-border)`, flexShrink: 0,
     },
     // Step content
-    stepHeading: { fontSize: 20, fontWeight: 600, color: TEXT, marginBottom: 4 },
-    stepSubhead: { fontSize: 14, color: TEXT_MID, marginBottom: 0 },
+    stepHeading: { fontSize: 20, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 4 },
+    stepSubhead: { fontSize: 14, color: 'var(--osmos-fg-muted)', marginBottom: 0 },
     card: {
-      background: BG, border: `1px solid ${BORDER}`,
+      background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`,
       borderRadius: 12, padding: 24,
     },
     cardDashed: {
-      background: BG, border: `1px dashed ${BORDER}`,
+      background: 'var(--osmos-bg)', border: `1px dashed var(--osmos-border)`,
       borderRadius: 12, padding: 48,
     },
-    fieldLabel: { fontSize: 13, fontWeight: 500, color: TEXT, marginBottom: 0 },
-    helperText: { fontSize: 13, color: TEXT_MID, marginTop: 8 },
+    fieldLabel: { fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 0 },
+    helperText: { fontSize: 13, color: 'var(--osmos-fg-muted)', marginTop: 8 },
     inlineLabel: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 },
     // Switch
     switchBtn: (checked) => ({
       position: 'relative', width: 44, height: 24, borderRadius: 999,
-      background: checked ? ACCENT : TEXT_SUB, border: 'none',
+      background: checked ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-subtle)', border: 'none',
       cursor: 'pointer', transition: 'background 0.15s',
     }),
     switchThumb: (checked) => ({
@@ -380,16 +367,16 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
     grid2: { display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 24 },
     // Ad groups list
     adGroupCard: {
-      background: BG, border: `1px solid ${BORDER}`,
+      background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`,
       borderRadius: 12, padding: 16,
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
     },
     adGroupLeft: { display: 'flex', alignItems: 'center', gap: 16 },
-    adGroupName: { fontSize: 14, fontWeight: 500, color: TEXT, margin: 0 },
-    adGroupMeta: { fontSize: 13, color: TEXT_MID, margin: 0 },
+    adGroupName: { fontSize: 14, fontWeight: 500, color: 'var(--osmos-fg)', margin: 0 },
+    adGroupMeta: { fontSize: 13, color: 'var(--osmos-fg-muted)', margin: 0 },
     adGroupActions: { display: 'flex', alignItems: 'center', gap: 8 },
     // Review table rows
-    reviewRow: { display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: `1px solid ${BORDER}`, fontSize: 13 },
+    reviewRow: { display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: `1px solid var(--osmos-border)`, fontSize: 13 },
     reviewRowLast: { display: 'flex', justifyContent: 'space-between', padding: '8px 0', fontSize: 13 },
     // Screen modal
     modalOverlay: {
@@ -397,36 +384,36 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
       display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 60,
     },
     modalBox: {
-      background: BG, borderRadius: 8, width: 900, maxHeight: '80vh',
+      background: 'var(--osmos-bg)', borderRadius: 8, width: 900, maxHeight: '80vh',
       display: 'flex', flexDirection: 'column',
     },
     modalHeader: {
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '16px 24px', borderBottom: `1px solid ${BORDER}`,
+      padding: '16px 24px', borderBottom: `1px solid var(--osmos-border)`,
     },
-    modalTitle: { fontSize: 16, fontWeight: 600, color: TEXT, margin: 0 },
+    modalTitle: { fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)', margin: 0 },
     modalBody: { padding: 24, flex: 1, overflowY: 'auto' },
-    modalFooter: { padding: '16px 24px', borderTop: `1px solid ${BORDER}`, display: 'flex', justifyContent: 'center' },
-    tableWrap: { border: `1px solid ${BORDER}`, borderRadius: 8, overflow: 'hidden' },
-    tableHead: { background: BG_SUB },
-    tableHeadCell: { padding: '12px 16px', textAlign: 'left', fontSize: 13, fontWeight: 500, color: TEXT_MID },
-    tableRow: (hover) => ({ borderTop: `1px solid ${BORDER}`, background: hover ? BG_SUB : BG }),
-    tableCell: { padding: '12px 16px', fontSize: 13, color: TEXT_MID },
+    modalFooter: { padding: '16px 24px', borderTop: `1px solid var(--osmos-border)`, display: 'flex', justifyContent: 'center' },
+    tableWrap: { border: `1px solid var(--osmos-border)`, borderRadius: 8, overflow: 'hidden' },
+    tableHead: { background: 'var(--osmos-bg-subtle)' },
+    tableHeadCell: { padding: '12px 16px', textAlign: 'left', fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg-muted)' },
+    tableRow: (hover) => ({ borderTop: `1px solid var(--osmos-border)`, background: hover ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)' }),
+    tableCell: { padding: '12px 16px', fontSize: 13, color: 'var(--osmos-fg-muted)' },
     // Badges in filter row
     filterBadge: {
       display: 'inline-flex', alignItems: 'center', gap: 6,
-      padding: '4px 10px', background: BG_SUB, borderRadius: 6,
-      border: `1px solid ${BORDER}`, fontSize: 13, color: TEXT,
+      padding: '4px 10px', background: 'var(--osmos-bg-subtle)', borderRadius: 6,
+      border: `1px solid var(--osmos-border)`, fontSize: 13, color: 'var(--osmos-fg)',
     },
     filterBadgeClose: {
       background: 'none', border: 'none', cursor: 'pointer',
-      color: TEXT_MID, marginLeft: 4, lineHeight: 1,
+      color: 'var(--osmos-fg-muted)', marginLeft: 4, lineHeight: 1,
     },
     // Input prefix wrapper
     prefixWrap: { position: 'relative' },
     prefixSymbol: {
       position: 'absolute', left: 12, top: '50%',
-      transform: 'translateY(-50%)', color: TEXT_MID, pointerEvents: 'none',
+      transform: 'translateY(-50%)', color: 'var(--osmos-fg-muted)', pointerEvents: 'none',
     },
     searchIconWrap: {
       position: 'absolute', left: 12, top: '50%',
@@ -439,11 +426,11 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
       alignItems: 'center', justifyContent: 'center', textAlign: 'center',
     },
     emptyIcon: {
-      width: 64, height: 64, background: ACCENT_M, borderRadius: '50%',
+      width: 64, height: 64, background: 'var(--osmos-brand-primary-muted)', borderRadius: '50%',
       display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16,
     },
-    emptyH3: { fontSize: 16, fontWeight: 600, color: TEXT, marginBottom: 8 },
-    emptyP: { fontSize: 14, color: TEXT_MID, marginBottom: 24, maxWidth: 400 },
+    emptyH3: { fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8 },
+    emptyP: { fontSize: 14, color: 'var(--osmos-fg-muted)', marginBottom: 24, maxWidth: 400 },
   };
 
   return (
@@ -494,16 +481,16 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
               <p style={s.summaryTitle}>Campaign Summary</p>
               <div style={s.summaryRows}>
                 <div style={s.summaryRow}>
-                  <span style={{ color: TEXT_MID }}>Daily Budget</span>
-                  <span style={{ fontWeight: 500, color: TEXT }}>{dailyBudget ? `$${dailyBudget}` : "-"}</span>
+                  <span style={{ color: 'var(--osmos-fg-muted)' }}>Daily Budget</span>
+                  <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>{dailyBudget ? `$${dailyBudget}` : "-"}</span>
                 </div>
                 <div style={s.summaryRow}>
-                  <span style={{ color: TEXT_MID }}>Start Date</span>
-                  <span style={{ fontWeight: 500, color: TEXT }}>{startDate || "-"}</span>
+                  <span style={{ color: 'var(--osmos-fg-muted)' }}>Start Date</span>
+                  <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>{startDate || "-"}</span>
                 </div>
                 <div style={s.summaryRow}>
-                  <span style={{ color: TEXT_MID }}>Ad Groups</span>
-                  <span style={{ fontWeight: 500, color: TEXT }}>{adGroups.length}</span>
+                  <span style={{ color: 'var(--osmos-fg-muted)' }}>Ad Groups</span>
+                  <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>{adGroups.length}</span>
                 </div>
               </div>
             </div>
@@ -516,7 +503,7 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
           <div style={s.topBar}>
             <div style={s.topBarLeft}>
               <div style={s.iconBox}>
-                <LayersIcon size={20} color={ACCENT} />
+                <LayersIcon size={20} color={'var(--osmos-brand-primary)'} />
               </div>
               <div>
                 <h1 style={s.mainTitle}>Create Campaign</h1>
@@ -544,7 +531,7 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
                   <div style={s.card}>
                     <div style={s.inlineLabel}>
                       <label style={s.fieldLabel}>Daily Budget:</label>
-                      <InfoIcon size={16} color={TEXT_MID} />
+                      <InfoIcon size={16} color={'var(--osmos-fg-muted)'} />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                       <div style={s.prefixWrap}>
@@ -557,8 +544,8 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
                         />
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ fontSize: 13, color: TEXT }}>FlexiBudget</span>
-                        <InfoIcon size={16} color={TEXT_MID} />
+                        <span style={{ fontSize: 13, color: 'var(--osmos-fg)' }}>FlexiBudget</span>
+                        <InfoIcon size={16} color={'var(--osmos-fg-muted)'} />
                         <button
                           onClick={() => setFlexiBudget(!flexiBudget)}
                           style={s.switchBtn(flexiBudget)}
@@ -589,7 +576,7 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
                       <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                           <label style={s.fieldLabel}>Start Date</label>
-                          <InfoIcon size={16} color={TEXT_MID} />
+                          <InfoIcon size={16} color={'var(--osmos-fg-muted)'} />
                         </div>
                         <Input
                           type="date"
@@ -600,7 +587,7 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
                       <div>
                         <label style={{ ...s.fieldLabel, display: 'block', marginBottom: 8 }}>
                           End Date{' '}
-                          <span style={{ fontWeight: 400, color: TEXT_MID }}>(Optional)</span>
+                          <span style={{ fontWeight: 400, color: 'var(--osmos-fg-muted)' }}>(Optional)</span>
                         </label>
                         <Input
                           type="date"
@@ -616,8 +603,8 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
                   <div style={s.card}>
                     <div style={s.inlineLabel}>
                       <label style={s.fieldLabel}>Maximum Spend Cap:</label>
-                      <InfoIcon size={16} color={TEXT_MID} />
-                      <span style={{ fontSize: 13, color: TEXT_MID }}>(Optional)</span>
+                      <InfoIcon size={16} color={'var(--osmos-fg-muted)'} />
+                      <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>(Optional)</span>
                     </div>
                     <div style={{ ...s.prefixWrap, width: 192 }}>
                       <span style={s.prefixSymbol}>$</span>
@@ -656,7 +643,7 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
                   <div style={s.cardDashed}>
                     <div style={s.emptyCenter}>
                       <div style={s.emptyIcon}>
-                        <LayersIcon size={32} color={ACCENT} />
+                        <LayersIcon size={32} color={'var(--osmos-brand-primary)'} />
                       </div>
                       <h3 style={s.emptyH3}>No Ad Groups Yet</h3>
                       <p style={s.emptyP}>
@@ -674,7 +661,7 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
                       <div key={adGroup.id} style={s.adGroupCard}>
                         <div style={s.adGroupLeft}>
                           <div style={s.iconBox}>
-                            <MonitorIcon size={20} color={ACCENT} />
+                            <MonitorIcon size={20} color={'var(--osmos-brand-primary)'} />
                           </div>
                           <div>
                             <p style={s.adGroupName}>{adGroup.name}</p>
@@ -709,38 +696,38 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                   <div style={s.card}>
-                    <h3 style={{ fontSize: 14, fontWeight: 600, color: TEXT, marginBottom: 16 }}>Campaign Details</h3>
+                    <h3 style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 16 }}>Campaign Details</h3>
                     <div>
                       <div style={s.reviewRow}>
-                        <span style={{ color: TEXT_MID }}>Campaign Name</span>
-                        <span style={{ fontWeight: 500, color: TEXT }}>{campaignName}</span>
+                        <span style={{ color: 'var(--osmos-fg-muted)' }}>Campaign Name</span>
+                        <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>{campaignName}</span>
                       </div>
                       <div style={s.reviewRow}>
-                        <span style={{ color: TEXT_MID }}>Daily Budget</span>
-                        <span style={{ fontWeight: 500, color: TEXT }}>${dailyBudget}</span>
+                        <span style={{ color: 'var(--osmos-fg-muted)' }}>Daily Budget</span>
+                        <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>${dailyBudget}</span>
                       </div>
                       <div style={s.reviewRow}>
-                        <span style={{ color: TEXT_MID }}>Start Date</span>
-                        <span style={{ fontWeight: 500, color: TEXT }}>{startDate || "Not set"}</span>
+                        <span style={{ color: 'var(--osmos-fg-muted)' }}>Start Date</span>
+                        <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>{startDate || "Not set"}</span>
                       </div>
                       <div style={s.reviewRowLast}>
-                        <span style={{ color: TEXT_MID }}>Ad Groups</span>
-                        <span style={{ fontWeight: 500, color: TEXT }}>{adGroups.length}</span>
+                        <span style={{ color: 'var(--osmos-fg-muted)' }}>Ad Groups</span>
+                        <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>{adGroups.length}</span>
                       </div>
                     </div>
                   </div>
 
                   {adGroups.length > 0 && (
                     <div style={s.card}>
-                      <h3 style={{ fontSize: 14, fontWeight: 600, color: TEXT, marginBottom: 16 }}>Ad Groups Summary</h3>
+                      <h3 style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 16 }}>Ad Groups Summary</h3>
                       <div>
                         {adGroups.map((adGroup, idx) => (
                           <div
                             key={adGroup.id}
                             style={idx === adGroups.length - 1 ? s.reviewRowLast : s.reviewRow}
                           >
-                            <span style={{ color: TEXT_MID }}>{adGroup.name}</span>
-                            <span style={{ fontWeight: 500, color: TEXT }}>{adGroup.applicableScreens} screens</span>
+                            <span style={{ color: 'var(--osmos-fg-muted)' }}>{adGroup.name}</span>
+                            <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>{adGroup.applicableScreens} screens</span>
                           </div>
                         ))}
                       </div>
@@ -776,12 +763,12 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
 
             <div style={s.modalBody}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                <div style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>
+                <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>
                   {selectedScreens.length} Screens Selected
                 </div>
                 <div style={{ position: 'relative' }}>
                   <span style={s.searchIconWrap}>
-                    <SearchIcon size={16} color={TEXT_MID} />
+                    <SearchIcon size={16} color={'var(--osmos-fg-muted)'} />
                   </span>
                   <Input
                     placeholder="Search Screen Name"
@@ -834,13 +821,13 @@ export function InstoreCampaignWizard({ open, onClose, campaignData }) {
                         </td>
                         <td style={s.tableCell}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                            <div style={{ width: 48, height: 32, background: BG_SUB, borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                              <MonitorIcon size={16} color={TEXT_MID} />
+                            <div style={{ width: 48, height: 32, background: 'var(--osmos-bg-subtle)', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <MonitorIcon size={16} color={'var(--osmos-fg-muted)'} />
                             </div>
                             <div>
-                              <div style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>{screen.name}</div>
+                              <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>{screen.name}</div>
                               {screen.id > "5" && (
-                                <span style={{ fontSize: 11, fontWeight: 500, background: GREEN, color: '#fff', borderRadius: 4, padding: '2px 6px' }}>
+                                <span style={{ fontSize: 11, fontWeight: 500, background: 'var(--osmos-brand-green)', color: '#fff', borderRadius: 4, padding: '2px 6px' }}>
                                   New
                                 </span>
                               )}

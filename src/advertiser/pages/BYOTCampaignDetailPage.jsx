@@ -6,18 +6,6 @@ import {
 } from '../../ui';
 
 // ── Tokens ────────────────────────────────────────────────────────────────────
-const FONT     = "'Open Sans', sans-serif";
-const TEXT     = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_SUB = 'var(--osmos-fg-subtle)';
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-const GREEN    = 'var(--osmos-brand-green)';
-const WHITE    = '#fff';
-
 // ── Icons ─────────────────────────────────────────────────────────────────────
 function CopyIcon(props) {
   return (
@@ -104,19 +92,19 @@ export default function BYOTCampaignDetailPage({ campaign, onBack }) {
   const stats = campaign || { clicks: totalClicks, atcs: 3200, orders: 920, revenue: 46000 };
 
   return (
-    <div style={{ fontFamily: FONT, background: BG_SUB, minHeight: '100vh', padding: 24 }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif", background: 'var(--osmos-bg-subtle)', minHeight: '100vh', padding: 24 }}>
       <Toast {...toast} />
 
       {/* Breadcrumb */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
         <button
           onClick={onBack}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, color: ACCENT, fontSize: 13, padding: 0 }}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, color: 'var(--osmos-brand-primary)', fontSize: 13, padding: 0 }}
         >
-          <ChevronLeftIcon size={14} color={ACCENT} /> BYOT
+          <ChevronLeftIcon size={14} color={'var(--osmos-brand-primary)'} /> BYOT
         </button>
-        <span style={{ fontSize: 13, color: TEXT_MID }}>›</span>
-        <span style={{ fontSize: 13, color: TEXT }}>{campaign?.name || 'Campaign Detail'}</span>
+        <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>›</span>
+        <span style={{ fontSize: 13, color: 'var(--osmos-fg)' }}>{campaign?.name || 'Campaign Detail'}</span>
       </div>
 
       {/* Top bar */}
@@ -124,7 +112,7 @@ export default function BYOTCampaignDetailPage({ campaign, onBack }) {
         noBorder
         left={
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 18, fontWeight: 700, color: TEXT }}>{campaign?.name || 'Campaign Detail'}</span>
+            <span style={{ fontSize: 18, fontWeight: 700, color: 'var(--osmos-fg)' }}>{campaign?.name || 'Campaign Detail'}</span>
             {campaign?.status && <Badge status={campaign.status} />}
           </div>
         }
@@ -140,7 +128,7 @@ export default function BYOTCampaignDetailPage({ campaign, onBack }) {
       {/* Stat bar */}
       <div style={{
         display: 'flex', gap: 0,
-        background: BG, border: `1px solid ${BORDER}`, borderRadius: 10,
+        background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 10,
         marginBottom: 20, overflow: 'hidden',
       }}>
         {[
@@ -152,10 +140,10 @@ export default function BYOTCampaignDetailPage({ campaign, onBack }) {
         ].map((stat, i, arr) => (
           <div key={stat.label} style={{
             flex: 1, padding: '14px 20px', textAlign: 'center',
-            borderRight: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none',
+            borderRight: i < arr.length - 1 ? `1px solid var(--osmos-border)` : 'none',
           }}>
-            <div style={{ fontSize: 18, fontWeight: 700, color: TEXT }}>{stat.value}</div>
-            <div style={{ fontSize: 11, color: TEXT_MID, marginTop: 2 }}>{stat.label}</div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--osmos-fg)' }}>{stat.value}</div>
+            <div style={{ fontSize: 11, color: 'var(--osmos-fg-muted)', marginTop: 2 }}>{stat.label}</div>
           </div>
         ))}
       </div>
@@ -163,7 +151,7 @@ export default function BYOTCampaignDetailPage({ campaign, onBack }) {
       {/* Tabs */}
       <div style={{
         display: 'flex', gap: 0,
-        borderBottom: `2px solid ${BORDER}`, marginBottom: 20,
+        borderBottom: `2px solid var(--osmos-border)`, marginBottom: 20,
       }}>
         {[
           { key: 'trackers', label: 'Tracker Links' },
@@ -175,8 +163,8 @@ export default function BYOTCampaignDetailPage({ campaign, onBack }) {
             style={{
               padding: '10px 20px', border: 'none', background: 'none',
               cursor: 'pointer', fontSize: 13, fontWeight: activeTab === tab.key ? 600 : 400,
-              color: activeTab === tab.key ? ACCENT : TEXT_MID,
-              borderBottom: activeTab === tab.key ? `2px solid ${ACCENT}` : '2px solid transparent',
+              color: activeTab === tab.key ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)',
+              borderBottom: activeTab === tab.key ? `2px solid var(--osmos-brand-primary)` : '2px solid transparent',
               marginBottom: -2,
               transition: 'all 0.15s',
             }}
@@ -187,7 +175,7 @@ export default function BYOTCampaignDetailPage({ campaign, onBack }) {
       </div>
 
       {activeTab === 'trackers' && (
-        <div style={{ background: BG, border: `1px solid ${BORDER}`, borderRadius: 10 }}>
+        <div style={{ background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 10 }}>
           {/* Toolbar */}
           <Toolbar
             left={
@@ -208,7 +196,7 @@ export default function BYOTCampaignDetailPage({ campaign, onBack }) {
             right={
               selected.length > 0 ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 12, color: TEXT_MID }}>{selected.length} selected</span>
+                  <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{selected.length} selected</span>
                   <Button variant="outline" onClick={handleBulkCopy}>Copy Links</Button>
                   <Button variant="outline" onClick={() => { showToast(`${selected.length} tracker(s) paused`); setSelected([]); }}>Pause</Button>
                   <Button variant="outline" onClick={() => { showToast(`${selected.length} tracker(s) archived`); setSelected([]); }}>Archive</Button>
@@ -219,7 +207,7 @@ export default function BYOTCampaignDetailPage({ campaign, onBack }) {
                   <Button variant="outline"><DownloadIcon size={14} /> Export</Button>
                   <Button variant="outline">Bulk Upload</Button>
                   <Button variant="primary" onClick={() => setAddDrawerOpen(true)}>
-                    <PlusIcon size={13} color={WHITE} /> Add Tracker
+                    <PlusIcon size={13} color={'#ffffff'} /> Add Tracker
                   </Button>
                 </div>
               )
@@ -228,13 +216,13 @@ export default function BYOTCampaignDetailPage({ campaign, onBack }) {
 
           {/* Table */}
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: FONT }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: "'Open Sans', sans-serif" }}>
               <thead>
-                <tr style={{ background: BG_SUB, borderBottom: `1px solid ${BORDER}` }}>
+                <tr style={{ background: 'var(--osmos-bg-subtle)', borderBottom: `1px solid var(--osmos-border)` }}>
                   {['', 'Tracker Name', 'Destination URL', 'Clicks', 'Status', 'Created', 'Created By', 'Actions'].map(col => (
                     <th key={col} style={{
                       padding: '10px 14px', textAlign: 'left', fontSize: 12,
-                      fontWeight: 600, color: TEXT_MID, whiteSpace: 'nowrap',
+                      fontWeight: 600, color: 'var(--osmos-fg-muted)', whiteSpace: 'nowrap',
                     }}>
                       {col === '' ? (
                         <input type="checkbox" checked={allSelected} onChange={toggleAll}
@@ -247,7 +235,7 @@ export default function BYOTCampaignDetailPage({ campaign, onBack }) {
               <tbody>
                 {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={8} style={{ textAlign: 'center', padding: '48px 0', color: TEXT_SUB, fontSize: 13 }}>
+                    <td colSpan={8} style={{ textAlign: 'center', padding: '48px 0', color: 'var(--osmos-fg-subtle)', fontSize: 13 }}>
                       No trackers found. Add your first tracker link above.
                     </td>
                   </tr>
@@ -267,23 +255,23 @@ export default function BYOTCampaignDetailPage({ campaign, onBack }) {
             </table>
           </div>
 
-          <div style={{ padding: '12px 16px', borderTop: `1px solid ${BORDER}` }}>
+          <div style={{ padding: '12px 16px', borderTop: `1px solid var(--osmos-border)` }}>
             <Pagination total={filtered.length} page={page} perPage={20} onChange={setPage} entityLabel="trackers" />
           </div>
         </div>
       )}
 
       {activeTab === 'diagnostics' && (
-        <div style={{ background: BG, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '32px 24px' }}>
-          <p style={{ fontSize: 14, fontWeight: 600, color: TEXT, marginBottom: 8 }}>Attribution Diagnostics</p>
-          <p style={{ fontSize: 13, color: TEXT_MID, marginBottom: 20 }}>
+        <div style={{ background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 10, padding: '32px 24px' }}>
+          <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8 }}>Attribution Diagnostics</p>
+          <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', marginBottom: 20 }}>
             Shows sessions where a tracker link click was recorded but no downstream commerce event (ATC, order) was attributed. Use this to identify tracking gaps or validate attribution.
           </p>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ background: BG_SUB, borderBottom: `1px solid ${BORDER}` }}>
+              <tr style={{ background: 'var(--osmos-bg-subtle)', borderBottom: `1px solid var(--osmos-border)` }}>
                 {['Tracker Name', 'Click Time', 'Session ID', 'Attribution Status', 'Reason'].map(col => (
-                  <th key={col} style={{ padding: '10px 14px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: TEXT_MID }}>
+                  <th key={col} style={{ padding: '10px 14px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)' }}>
                     {col}
                   </th>
                 ))}
@@ -295,10 +283,10 @@ export default function BYOTCampaignDetailPage({ campaign, onBack }) {
                 { name: 'Influencer1-02', time: '2026-04-29 15:10', session: 'sess_def456', status: 'MISS', reason: 'Session expired before ATC' },
                 { name: 'Beauty-03', time: '2026-04-30 09:45', session: 'sess_ghi789', status: 'PARTIAL', reason: 'ATC recorded, no order' },
               ].map((row, i) => (
-                <tr key={i} style={{ borderBottom: `1px solid ${BORDER}` }}>
-                  <td style={{ padding: '10px 14px', fontSize: 13, color: TEXT }}>{row.name}</td>
-                  <td style={{ padding: '10px 14px', fontSize: 13, color: TEXT_MID }}>{row.time}</td>
-                  <td style={{ padding: '10px 14px', fontSize: 12, color: TEXT_SUB, fontFamily: 'monospace' }}>{row.session}</td>
+                <tr key={i} style={{ borderBottom: `1px solid var(--osmos-border)` }}>
+                  <td style={{ padding: '10px 14px', fontSize: 13, color: 'var(--osmos-fg)' }}>{row.name}</td>
+                  <td style={{ padding: '10px 14px', fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{row.time}</td>
+                  <td style={{ padding: '10px 14px', fontSize: 12, color: 'var(--osmos-fg-subtle)', fontFamily: 'monospace' }}>{row.session}</td>
                   <td style={{ padding: '10px 14px' }}>
                     <span style={{
                       padding: '2px 8px', borderRadius: 4, fontSize: 11, fontWeight: 600,
@@ -308,7 +296,7 @@ export default function BYOTCampaignDetailPage({ campaign, onBack }) {
                       {row.status}
                     </span>
                   </td>
-                  <td style={{ padding: '10px 14px', fontSize: 13, color: TEXT_MID }}>{row.reason}</td>
+                  <td style={{ padding: '10px 14px', fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{row.reason}</td>
                 </tr>
               ))}
             </tbody>
@@ -347,7 +335,7 @@ export default function BYOTCampaignDetailPage({ campaign, onBack }) {
             onChange={e => setNewTracker(d => ({ ...d, url: e.target.value }))}
             placeholder="https://retailer.com/product/..."
           />
-          <p style={{ fontSize: 12, color: TEXT_SUB }}>
+          <p style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>
             A tracker link will be generated by appending a unique tracking tag to your destination URL. Only HTTPS URLs from allowed retailer domains are accepted.
           </p>
         </div>
@@ -364,41 +352,41 @@ function TrackerRow({ tracker: t, selected, onToggle, onCopy, copied, onPause, o
     <tr
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      style={{ background: hover ? BG_SUB : BG, borderBottom: `1px solid ${BORDER}` }}
+      style={{ background: hover ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)', borderBottom: `1px solid var(--osmos-border)` }}
     >
       <td style={{ padding: '10px 14px' }}>
         <input type="checkbox" checked={selected} onChange={onToggle}
           style={{ cursor: 'pointer', width: 14, height: 14 }} />
       </td>
-      <td style={{ padding: '10px 14px', fontSize: 13, fontWeight: 500, color: TEXT }}>{t.name}</td>
+      <td style={{ padding: '10px 14px', fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>{t.name}</td>
       <td style={{ padding: '10px 14px' }}>
         <span style={{
-          fontSize: 12, color: TEXT_MID, maxWidth: 180,
+          fontSize: 12, color: 'var(--osmos-fg-muted)', maxWidth: 180,
           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
           display: 'inline-block',
         }} title={t.destinationUrl}>
           {t.destinationUrl}
         </span>
       </td>
-      <td style={{ padding: '10px 14px', fontSize: 13, color: TEXT }}>{t.clicks.toLocaleString()}</td>
+      <td style={{ padding: '10px 14px', fontSize: 13, color: 'var(--osmos-fg)' }}>{t.clicks.toLocaleString()}</td>
       <td style={{ padding: '10px 14px' }}><Badge status={t.status} /></td>
-      <td style={{ padding: '10px 14px', fontSize: 12, color: TEXT_MID }}>{t.created}</td>
-      <td style={{ padding: '10px 14px', fontSize: 12, color: TEXT_MID }}>{t.createdBy}</td>
+      <td style={{ padding: '10px 14px', fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{t.created}</td>
+      <td style={{ padding: '10px 14px', fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{t.createdBy}</td>
       <td style={{ padding: '10px 14px' }}>
         <div style={{ display: 'flex', gap: 4 }}>
           <Button
             variant="icon"
             onClick={onCopy}
             title="Copy tracker link"
-            style={{ color: copied ? GREEN : TEXT_MID }}
+            style={{ color: copied ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-muted)' }}
           >
-            {copied ? <CheckIcon size={14} color={GREEN} /> : <CopyIcon color={TEXT_MID} />}
+            {copied ? <CheckIcon size={14} color={'var(--osmos-brand-green)'} /> : <CopyIcon color={'var(--osmos-fg-muted)'} />}
           </Button>
           <Button variant="icon" onClick={onPause} title="Pause tracker">
-            <PauseIcon color={TEXT_MID} />
+            <PauseIcon color={'var(--osmos-fg-muted)'} />
           </Button>
           <Button variant="icon" onClick={onArchive} title="Archive tracker">
-            <ArchiveIcon color={TEXT_MID} />
+            <ArchiveIcon color={'var(--osmos-fg-muted)'} />
           </Button>
         </div>
       </td>

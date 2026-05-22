@@ -2,16 +2,6 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Button, Select, CalendarIcon, CheckIcon, ChevronRightIcon, ChevronLeftIcon, CloseIcon, InfoIcon, Icon } from '../../../ui';
 
-const FONT    = "'Open Sans', sans-serif";
-const TEXT    = 'var(--osmos-fg)';
-const TEXT_MID= 'var(--osmos-fg-muted)';
-const TEXT_SUB= 'var(--osmos-fg-subtle)';
-const BORDER  = 'var(--osmos-border)';
-const BG      = 'var(--osmos-bg)';
-const BG_SUB  = 'var(--osmos-bg-subtle)';
-const ACCENT  = 'var(--osmos-brand-primary)';
-const ACCENT_M= 'var(--osmos-brand-primary-muted)';
-
 // ── Icons ─────────────────────────────────────────────────────────────────────
 const SparklesIcon = (props) => (
   <Icon {...props}><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></Icon>
@@ -76,33 +66,33 @@ function TypeCard({ type, selected, onClick }) {
       onMouseLeave={() => setHov(false)}
       style={{
         position: 'relative', padding: 20, borderRadius: 12, cursor: 'pointer',
-        border: `2px solid ${isSelected ? ACCENT : hov ? TEXT_MID : BORDER}`,
-        background: isSelected ? ACCENT_M : hov ? BG_SUB : BG,
-        transition: 'all 0.15s', fontFamily: FONT,
+        border: `2px solid ${isSelected ? 'var(--osmos-brand-primary)' : hov ? 'var(--osmos-fg-muted)' : 'var(--osmos-border)'}`,
+        background: isSelected ? 'var(--osmos-brand-primary-muted)' : hov ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
+        transition: 'all 0.15s', fontFamily: "'Open Sans', sans-serif",
       }}
     >
       {recommended && (
-        <span style={{ position: 'absolute', top: 12, right: 12, padding: '2px 10px', background: ACCENT, color: '#fff', fontSize: 11, fontWeight: 600, borderRadius: 999 }}>
+        <span style={{ position: 'absolute', top: 12, right: 12, padding: '2px 10px', background: 'var(--osmos-brand-primary)', color: '#fff', fontSize: 11, fontWeight: 600, borderRadius: 999 }}>
           Recommended
         </span>
       )}
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
-        <div style={{ width: 48, height: 48, borderRadius: 12, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: isSelected ? ACCENT : BG_SUB }}>
-          <IconComp size={24} color={isSelected ? '#fff' : TEXT_MID} />
+        <div style={{ width: 48, height: 48, borderRadius: 12, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg-subtle)' }}>
+          <IconComp size={24} color={isSelected ? '#fff' : 'var(--osmos-fg-muted)'} />
         </div>
         <div style={{ flex: 1 }}>
-          <h3 style={{ fontWeight: 600, color: isSelected ? ACCENT : TEXT, marginBottom: 4 }}>{name}</h3>
-          <p style={{ fontSize: 13, color: TEXT_MID, marginBottom: 12 }}>{description}</p>
+          <h3 style={{ fontWeight: 600, color: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg)', marginBottom: 4 }}>{name}</h3>
+          <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', marginBottom: 12 }}>{description}</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {features.map((f) => (
-              <span key={f} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 8px', background: BG_SUB, borderRadius: 6, fontSize: 12, color: TEXT_MID }}>
+              <span key={f} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 8px', background: 'var(--osmos-bg-subtle)', borderRadius: 6, fontSize: 12, color: 'var(--osmos-fg-muted)' }}>
                 <CheckIcon size={12} color='var(--osmos-brand-green)' />
                 {f}
               </span>
             ))}
           </div>
         </div>
-        <div style={{ width: 24, height: 24, borderRadius: '50%', flexShrink: 0, border: `2px solid ${isSelected ? ACCENT : BORDER}`, background: isSelected ? ACCENT : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}>
+        <div style={{ width: 24, height: 24, borderRadius: '50%', flexShrink: 0, border: `2px solid ${isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)'}`, background: isSelected ? 'var(--osmos-brand-primary)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}>
           {isSelected && <CheckIcon size={14} color="#fff" />}
         </div>
       </div>
@@ -120,19 +110,19 @@ function PacingBtn({ option, selected, onClick }) {
       onMouseLeave={() => setHov(false)}
       style={{
         width: '100%', padding: 16, borderRadius: 8, textAlign: 'left',
-        border: `2px solid ${selected ? ACCENT : hov ? TEXT_MID : BORDER}`,
-        background: selected ? ACCENT_M : hov ? BG_SUB : BG,
-        cursor: 'pointer', transition: 'all 0.15s', fontFamily: FONT,
+        border: `2px solid ${selected ? 'var(--osmos-brand-primary)' : hov ? 'var(--osmos-fg-muted)' : 'var(--osmos-border)'}`,
+        background: selected ? 'var(--osmos-brand-primary-muted)' : hov ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
+        cursor: 'pointer', transition: 'all 0.15s', fontFamily: "'Open Sans', sans-serif",
         display: 'flex', alignItems: 'flex-start', gap: 12,
       }}
     >
-      <IconComp size={20} color={selected ? ACCENT : TEXT_MID} />
+      <IconComp size={20} color={selected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)'} />
       <div style={{ flex: 1 }}>
-        <div style={{ fontWeight: 500, color: selected ? ACCENT : TEXT, marginBottom: 4 }}>{label}</div>
-        <div style={{ fontSize: 12, color: TEXT_MID }}>{description}</div>
+        <div style={{ fontWeight: 500, color: selected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg)', marginBottom: 4 }}>{label}</div>
+        <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{description}</div>
       </div>
       {selected && (
-        <div style={{ width: 20, height: 20, borderRadius: '50%', background: ACCENT, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ width: 20, height: 20, borderRadius: '50%', background: 'var(--osmos-brand-primary)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <CheckIcon size={12} color="#fff" />
         </div>
       )}
@@ -142,17 +132,17 @@ function PacingBtn({ option, selected, onClick }) {
 
 const inputStyle = {
   width: '100%', boxSizing: 'border-box', padding: '8px 12px 8px 32px',
-  border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT,
-  background: BG, fontFamily: FONT, outline: 'none',
+  border: `1px solid var(--osmos-border)`, borderRadius: 8, fontSize: 13, color: 'var(--osmos-fg)',
+  background: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif", outline: 'none',
 };
 
 const dateInputStyle = {
   width: '100%', boxSizing: 'border-box', padding: '8px 12px',
-  border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 13, color: TEXT,
-  background: BG, fontFamily: FONT, outline: 'none',
+  border: `1px solid var(--osmos-border)`, borderRadius: 8, fontSize: 13, color: 'var(--osmos-fg)',
+  background: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif", outline: 'none',
 };
 
-const labelStyle = { display: 'block', fontSize: 13, fontWeight: 500, color: TEXT, marginBottom: 8 };
+const labelStyle = { display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 8 };
 
 // ── ProductAdsWizard ──────────────────────────────────────────────────────────
 export function ProductAdsWizard({ open, onClose, onLaunch }) {
@@ -199,36 +189,36 @@ export function ProductAdsWizard({ open, onClose, onLaunch }) {
   const canLaunch = step === 'configuration' ? !!dailyBudget && !!selectedWallet && !isLaunching : !!selectedType;
 
   return createPortal(
-    <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT }}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Open Sans', sans-serif" }}>
       {/* Backdrop */}
       <div onClick={handleClose} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)' }} />
 
       {/* Modal */}
-      <div style={{ position: 'relative', width: '100%', maxWidth: 900, maxHeight: '90vh', background: BG, borderRadius: 12, boxShadow: '0 24px 64px rgba(0,0,0,0.18)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ position: 'relative', width: '100%', maxWidth: 900, maxHeight: '90vh', background: 'var(--osmos-bg)', borderRadius: 12, boxShadow: '0 24px 64px rgba(0,0,0,0.18)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
 
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: `1px solid ${BORDER}`, flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: `1px solid var(--osmos-border)`, flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {step === 'configuration' && (
               <button onClick={handleBack} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = BG_SUB)}
+                onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--osmos-bg-subtle)')}
                 onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}>
-                <ChevronLeftIcon size={20} color={TEXT_MID} />
+                <ChevronLeftIcon size={20} color={'var(--osmos-fg-muted)'} />
               </button>
             )}
             <div>
-              <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: TEXT }}>
+              <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)' }}>
                 {step === 'type-selection' ? 'Create Product Ads Campaign' : 'Configure Campaign'}
               </h2>
-              <p style={{ margin: '2px 0 0', fontSize: 13, color: TEXT_MID }}>
+              <p style={{ margin: '2px 0 0', fontSize: 13, color: 'var(--osmos-fg-muted)' }}>
                 {step === 'type-selection' ? 'Choose how you want to run your product ads' : 'Set your budget and schedule'}
               </p>
             </div>
           </div>
           <button onClick={handleClose} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = BG_SUB)}
+            onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--osmos-bg-subtle)')}
             onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}>
-            <CloseIcon size={18} color={TEXT_MID} />
+            <CloseIcon size={18} color={'var(--osmos-fg-muted)'} />
           </button>
         </div>
 
@@ -238,7 +228,7 @@ export function ProductAdsWizard({ open, onClose, onLaunch }) {
           {/* ── Step: type-selection ── */}
           {step === 'type-selection' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <p style={{ fontSize: 13, color: TEXT_MID }}>Select a campaign type to get started</p>
+              <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>Select a campaign type to get started</p>
               {campaignTypes.map((type) => (
                 <TypeCard key={type.id} type={type} selected={selectedType === type.id} onClick={() => setSelectedType(type.id)} />
               ))}
@@ -253,25 +243,25 @@ export function ProductAdsWizard({ open, onClose, onLaunch }) {
                 {/* Daily Budget */}
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>Daily Budget</label>
+                    <label style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>Daily Budget</label>
                     <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
-                    <InfoIcon size={14} color={TEXT_SUB} />
+                    <InfoIcon size={14} color={'var(--osmos-fg-subtle)'} />
                   </div>
                   <div style={{ position: 'relative' }}>
                     <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-                      <DollarSignIcon size={14} color={TEXT_MID} />
+                      <DollarSignIcon size={14} color={'var(--osmos-fg-muted)'} />
                     </span>
                     <input type="number" value={dailyBudget} onChange={(e) => setDailyBudget(e.target.value)} placeholder="Enter daily budget" style={inputStyle} />
                   </div>
-                  <p style={{ fontSize: 12, color: TEXT_SUB, marginTop: 4 }}>Minimum daily budget is $10</p>
+                  <p style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', marginTop: 4 }}>Minimum daily budget is $10</p>
                 </div>
 
                 {/* Wallet */}
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>Wallet</label>
+                    <label style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>Wallet</label>
                     <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
-                    <InfoIcon size={14} color={TEXT_SUB} />
+                    <InfoIcon size={14} color={'var(--osmos-fg-subtle)'} />
                   </div>
                   <Select
                     value={selectedWallet}
@@ -280,7 +270,7 @@ export function ProductAdsWizard({ open, onClose, onLaunch }) {
                     label=""
                   />
                   {selectedWalletData && (
-                    <p style={{ fontSize: 12, color: TEXT_MID, marginTop: 4 }}>
+                    <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', marginTop: 4 }}>
                       Wallet Balance: ${selectedWalletData.balance.toLocaleString()}
                     </p>
                   )}
@@ -295,7 +285,7 @@ export function ProductAdsWizard({ open, onClose, onLaunch }) {
                     </div>
                     <div style={{ position: 'relative' }}>
                       <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-                        <CalendarIcon size={14} color={TEXT_MID} />
+                        <CalendarIcon size={14} color={'var(--osmos-fg-muted)'} />
                       </span>
                       <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} style={{ ...dateInputStyle, paddingLeft: 32 }} />
                     </div>
@@ -303,11 +293,11 @@ export function ProductAdsWizard({ open, onClose, onLaunch }) {
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                       <label style={labelStyle}>End Date</label>
-                      <span style={{ fontSize: 12, color: TEXT_SUB }}>(Optional)</span>
+                      <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>(Optional)</span>
                     </div>
                     <div style={{ position: 'relative' }}>
                       <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-                        <CalendarIcon size={14} color={TEXT_MID} />
+                        <CalendarIcon size={14} color={'var(--osmos-fg-muted)'} />
                       </span>
                       <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} style={{ ...dateInputStyle, paddingLeft: 32 }} />
                     </div>
@@ -317,25 +307,25 @@ export function ProductAdsWizard({ open, onClose, onLaunch }) {
                 {/* Max Spend Cap */}
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>Maximum Spend Cap</label>
-                    <span style={{ fontSize: 12, color: TEXT_SUB }}>(Optional)</span>
-                    <InfoIcon size={14} color={TEXT_SUB} />
+                    <label style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>Maximum Spend Cap</label>
+                    <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>(Optional)</span>
+                    <InfoIcon size={14} color={'var(--osmos-fg-subtle)'} />
                   </div>
                   <div style={{ position: 'relative' }}>
                     <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-                      <DollarSignIcon size={14} color={TEXT_MID} />
+                      <DollarSignIcon size={14} color={'var(--osmos-fg-muted)'} />
                     </span>
                     <input type="number" value={maxSpendCap} onChange={(e) => setMaxSpendCap(e.target.value)} placeholder="No cap" style={inputStyle} />
                   </div>
-                  <p style={{ fontSize: 12, color: TEXT_SUB, marginTop: 4 }}>Campaign will pause when this limit is reached</p>
+                  <p style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', marginTop: 4 }}>Campaign will pause when this limit is reached</p>
                 </div>
               </div>
 
               {/* Right: Pacing */}
               <div>
-                <div style={{ position: 'sticky', top: 0, padding: 20, background: BG, borderRadius: 12, border: `1px solid ${BORDER}` }}>
-                  <h3 style={{ fontWeight: 600, color: TEXT, marginBottom: 8 }}>Pacing</h3>
-                  <p style={{ fontSize: 13, color: TEXT_MID, marginBottom: 16 }}>Choose how your budget should be distributed over time</p>
+                <div style={{ position: 'sticky', top: 0, padding: 20, background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid var(--osmos-border)` }}>
+                  <h3 style={{ fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8 }}>Pacing</h3>
+                  <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', marginBottom: 16 }}>Choose how your budget should be distributed over time</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                     {pacingOptions.map((option) => (
                       <PacingBtn key={option.id} option={option} selected={pacing === option.id} onClick={() => setPacing(option.id)} />
@@ -348,10 +338,10 @@ export function ProductAdsWizard({ open, onClose, onLaunch }) {
         </div>
 
         {/* Footer */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderTop: `1px solid ${BORDER}`, background: BG_SUB, flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderTop: `1px solid var(--osmos-border)`, background: 'var(--osmos-bg-subtle)', flexShrink: 0 }}>
           <div>
             {step === 'configuration' && selectedType && (
-              <span style={{ padding: '4px 10px', background: BG_SUB, borderRadius: 6, fontSize: 13, fontWeight: 500, color: TEXT_MID }}>
+              <span style={{ padding: '4px 10px', background: 'var(--osmos-bg-subtle)', borderRadius: 6, fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg-muted)' }}>
                 {campaignTypes.find((t) => t.id === selectedType)?.name}
               </span>
             )}

@@ -4,21 +4,8 @@ import {
   ResponsiveContainer, CartesianGrid,
 } from 'recharts';
 
-// ── Design tokens ────────────────────────────────────────────────────────────
-const FONT       = "'Open Sans', sans-serif";
-const BG         = 'var(--osmos-bg)';
-const BG_SUBTLE  = 'var(--osmos-bg-subtle)';
-const BORDER     = 'var(--osmos-border)';
-const TEXT       = 'var(--osmos-fg)';
-const TEXT_MID   = 'var(--osmos-fg-muted)';
-const ACCENT     = 'var(--osmos-brand-primary)';
-const GREEN      = 'var(--osmos-brand-green)';
-const AMBER      = 'var(--osmos-brand-amber)';
-const AI_COLOR   = '#8b5cf6';
-const AI_BG      = 'var(--osmos-brand-violet-muted)';
-
 // ── Hand-rolled Sparkles icon ─────────────────────────────────────────────────
-const SparklesIcon = ({ size = 14, color = AI_COLOR }) => (
+const SparklesIcon = ({ size = 14, color = '#8b5cf6' }) => (
   <Icon size={size} color={color}>
     <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3z" />
     <path d="M5 3v4" /><path d="M19 17v4" />
@@ -147,9 +134,9 @@ export function PerformanceTrend({
 
   return (
     <div style={{
-      borderRadius: 8, border: `1px solid ${BORDER}`, padding: 16,
+      borderRadius: 8, border: `1px solid var(--osmos-border)`, padding: 16,
       position: 'relative', transition: 'all 0.3s',
-      backgroundColor: BG, fontFamily: FONT,
+      backgroundColor: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif",
     }}>
       {/* ── Header ── */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -158,19 +145,19 @@ export function PerformanceTrend({
           <div style={{
             width: 24, height: 24, borderRadius: 4,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            backgroundColor: AI_BG,
+            backgroundColor: 'var(--osmos-brand-violet-muted)',
           }}>
-            <SparklesIcon size={14} color={AI_COLOR} />
+            <SparklesIcon size={14} color="#8b5cf6" />
           </div>
-          <span style={{ fontWeight: 500, color: TEXT }}>Performance Trend</span>
-          <InfoIcon size={14} color={TEXT_MID} />
+          <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>Performance Trend</span>
+          <InfoIcon size={14} color="var(--osmos-fg-muted)" />
         </div>
 
         {/* Right controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {/* D/W/M granularity toggle */}
           <div style={{
-            display: 'flex', border: `1px solid ${BORDER}`,
+            display: 'flex', border: `1px solid var(--osmos-border)`,
             borderRadius: 8, overflow: 'hidden',
           }}>
             {['D', 'W', 'M'].map((period, i) => (
@@ -178,9 +165,9 @@ export function PerformanceTrend({
                 key={period}
                 style={{
                   padding: '6px 12px', border: 'none', cursor: 'pointer',
-                  fontSize: 12, fontWeight: i === 0 ? 500 : 400, fontFamily: FONT,
-                  backgroundColor: i === 0 ? BG_SUBTLE : 'transparent',
-                  color: i === 0 ? TEXT : TEXT_MID,
+                  fontSize: 12, fontWeight: i === 0 ? 500 : 400, fontFamily: "'Open Sans', sans-serif",
+                  backgroundColor: i === 0 ? 'var(--osmos-bg-subtle)' : 'transparent',
+                  color: i === 0 ? 'var(--osmos-fg)' : 'var(--osmos-fg-muted)',
                   transition: 'all 0.15s',
                 }}
                 onMouseEnter={(e) => { if (i !== 0) e.currentTarget.style.opacity = '0.8'; }}
@@ -195,10 +182,10 @@ export function PerformanceTrend({
           <button style={{
             width: 32, height: 32,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            border: `1px solid ${BORDER}`, borderRadius: 8,
+            border: `1px solid var(--osmos-border)`, borderRadius: 8,
             background: 'transparent', cursor: 'pointer',
           }}>
-            <DownloadIcon size={14} color={TEXT_MID} />
+            <DownloadIcon size={14} color="var(--osmos-fg-muted)" />
           </button>
         </div>
       </div>
@@ -254,8 +241,8 @@ export function PerformanceTrend({
                 width: 12, height: 12, borderRadius: 2,
                 backgroundColor: metricColors[metric],
               }} />
-              <span style={{ fontSize: 12, color: TEXT_MID }}>{metric}</span>
-              <span style={{ fontSize: 12, fontWeight: 500, color: TEXT }}>
+              <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{metric}</span>
+              <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--osmos-fg)' }}>
                 {metrics[metric]?.value || '-'}
               </span>
             </div>
