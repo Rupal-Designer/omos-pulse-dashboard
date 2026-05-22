@@ -1,56 +1,63 @@
 ---
 type: component
 layer: molecule
-name: Dropdown Menu
-figma-component-key: "22ce992b290442c680c30a27ff64fcf1d91becc4"
-figma-node-id: "1947:23250"
-figma-library: "Design System OS"
-figma-path: "design_systems/Design System OS/components/Dropdown Menu"
-tags: [molecule, input, select, menu, overlay]
-png: ../Assets/Components/molecules/DropdownMenu.png
-last-updated: 2026-05-15
+name: DropdownMenu
+source-file: src/ui/molecules/DropdownMenu.jsx
+figma-node: "1947:23250"
+last-updated: 2026-05-22T00:00:00Z
+tags: [molecule, ui-component]
 ---
 
-# Dropdown Menu
+# DropdownMenu
 
-![DropdownMenu](../Assets/Components/molecules/DropdownMenu.png)
+Trigger-anchored dropdown with a list of action items; supports separators, icons, disabled items, and danger styling.
 
-Trigger + floating list overlay. Used for single-select from a list of options, contextual action menus, and option pickers. When options > 5, prefer this over RadioGroup.
+![[Assets/Components/molecules/DropdownMenu.png]]
 
-## Variants
+---
 
-| Variant | Description |
-|---------|-------------|
-| Select | Single-value picker (replaces native `<select>`) |
-| Context Menu | Right-click / kebab action menu (no selection state) |
-| Multi-select | Checkbox-inside-list for multi-pick |
+## Props
 
-## Props / API (React)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| trigger | ReactNode | — | Element that opens the menu (rendered via `asChild`) |
+| items | `Item[]` | `[]` | Array of menu item definitions (see Item shape below) |
+| placement | string | `'bottom-end'` | Positioning relative to the trigger |
 
-| Prop | Type | Default | Notes |
-|------|------|---------|-------|
-| options | {label, value}[] | — | |
-| value | string | — | Controlled single value |
-| onChange | function | — | |
-| placeholder | string | "Select..." | |
-| isMulti | boolean | false | |
-| disabled | boolean | false | |
-| menuWidth | number | trigger width | |
+### Item shape
 
-## Usage Guidelines
-- Use for 5+ options that would clutter the screen as RadioGroup
-- Use [[Components/atoms/RadioButton]] + RadioGroup for 2–4 visible options
-- In tables, contextual menus (edit, delete, view) use context-menu variant
+| Key | Type | Description |
+|-----|------|-------------|
+| label | string | Display text for the item |
+| icon | ReactNode | Optional icon rendered to the left of the label |
+| onClick | () => void | Click handler |
+| disabled | boolean | Greys out the item and blocks clicks |
+| danger | boolean | Renders the label in red (`--osmos-colors-red-500`) |
+| separator | boolean | Renders a `Menu.Separator` rule instead of a clickable item |
 
-## Code Import
-```js
-import { Select, Menu } from '@onlinesales-ai/ui';
+---
+
+## Usage
+
+```jsx
+import { DropdownMenu } from '../../ui';
+
+<DropdownMenu
+  trigger={<Button variant="ghost">Actions</Button>}
+  items={[
+    { label: 'Edit', icon: <EditIcon />, onClick: handleEdit },
+    { separator: true },
+    { label: 'Delete', icon: <TrashIcon />, onClick: handleDelete, danger: true },
+  ]}
+/>
 ```
 
-## Related Components
-- [[Components/atoms/RadioButton]] — visible options when count ≤ 4
-- [[Components/molecules/Calendar]] — date-picking dropdown
+---
 
-## Figma Reference
-Component key: `22ce992b290442c680c30a27ff64fcf1d91becc4`
-Library: Design System OS
+## Notes
+
+- Wraps `Menu` from `@rishikeshjoshi-morpheus/ui` using `.Root` + `.Trigger` + `.Content` + `.Item` + `.Separator`.
+- When `item.separator` is true all other item keys are ignored for that entry.
+- Item icons are rendered in a `<span>` with `opacity: 0.7` and `marginRight: 8px`.
+- Figma node `1947:23250`; Figma library: Design System OS.
+- For a value-selection dropdown (single or multi), use the `Select` component from the design system instead.

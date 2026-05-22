@@ -1,53 +1,54 @@
 ---
 type: component
 layer: atom
-name: Toggle / Switch
-figma-node-id: "925:30922"
-figma-library: "Design System OS"
-figma-path: "design_systems/Design System OS/components/Toggle & Switch"
-tags: [atom, form, toggle, switch, boolean, interactive]
-png: ../Assets/Components/atoms/Toggle.png
-last-updated: 2026-05-15
+name: Toggle
+source-file: src/ui/atoms/Toggle.jsx
+figma-node: "925:30922"
+last-updated: 2026-05-22T00:00:00Z
+tags: [atom, ui-component]
 ---
 
-# Toggle / Switch
+# Toggle
 
-![Toggle](../Assets/Components/atoms/Toggle.png)
+Boolean on/off control (Figma name: "Toggle & Switch") for feature flags, notification preferences, and any immediate binary setting.
 
-Boolean on/off control. Two design variants: Toggle (rounded pill) and Switch (rectangular). Used for feature flags, notification preferences, and any binary setting.
+![[Assets/Components/atoms/Toggle.png]]
 
-## Variants
+---
 
-| Variant | Description |
-|---------|-------------|
-| Toggle On | Filled with brand-primary, thumb right |
-| Toggle Off | Muted/gray fill, thumb left |
-| Switch On | Rectangular filled |
-| Switch Off | Rectangular muted |
-| Disabled | Opacity 0.45, not interactive |
+## Props
 
-## Props / API (React)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| checked | boolean | — | Controlled on/off state |
+| onCheckedChange | `(checked: boolean) => void` | — | Called with the new boolean value when toggled |
+| disabled | boolean | `false` | Prevents interaction and applies reduced opacity |
+| label | string | — | Inline label text rendered via `Switch.Label` |
+| size | `'sm' \| 'md'` | `'md'` | Toggle size |
+| style | CSSProperties | — | Forwarded to the root `Switch` element |
 
-| Prop | Type | Default | Notes |
-|------|------|---------|-------|
-| checked | boolean | false | Controlled |
-| onCheckedChange | function | — | `(e) => setVal(e.checked)` |
-| disabled | boolean | false | |
-| label | string | — | Inline label |
-| size | sm\|md | md | |
+---
 
-## Usage Guidelines
-- Use for immediate binary settings (no "Save" required — changes apply on toggle)
-- Always include a label describing what is being toggled
-- Don't use Toggle for conditional form sections — use [[Components/atoms/Checkbox]] instead
+## Usage
 
-## Code Import
-```js
-import { Switch } from '@onlinesales-ai/ui';
-// Usage:
-<Switch checked={val} onCheckedChange={(e) => setVal(e.checked)} />
+```jsx
+import { Toggle } from '../../ui';
+
+<Toggle
+  checked={enabled}
+  onCheckedChange={setEnabled}
+  label="Enable feature"
+/>
+
+// Disabled state
+<Toggle checked={false} onCheckedChange={() => {}} disabled label="Read-only setting" />
 ```
 
-## Figma Reference
-Node ID: `925:30922`
-Library: Design System OS
+---
+
+## Notes
+
+- Wraps `Switch` from `@rishikeshjoshi-morpheus/ui`. The `onCheckedChange` callback unwraps the event object so callers receive a plain `boolean` directly (not `e.checked`).
+- Figma node `925:30922`; Figma page: `❖Toggle & Switch`.
+- Use for settings that apply immediately on toggle — no Save button required. For conditional form sections use [[Components/atoms/Checkbox]] instead.
+- Always supply a `label` so the control is accessible; if the label must be visually hidden, apply a screen-reader-only CSS class externally.

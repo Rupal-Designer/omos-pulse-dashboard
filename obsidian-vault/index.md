@@ -1,6 +1,6 @@
 ---
 type: vault-index
-last-updated: 2026-05-14T00:00:00Z
+last-updated: 2026-05-18T00:00:00Z
 tags: [index, vault]
 ---
 
@@ -13,10 +13,10 @@ Last full rebuild: 2026-05-14T00:00:00Z (phases 5–7b: InStore, BYOT, Packages,
 
 | Entity | Count |
 |--------|-------|
-| Components (atoms) | **14** (NEW: Chips; Icon now has Figma nodeId + PNG) |
-| Components (molecules) | **26** (NEW: Tooltip note created) |
+| Components (atoms) | **15** |
+| Components (molecules) | **28** |
 | Components (organisms) | **7** |
-| Components (patterns) | 1 |
+| Components (patterns) | **5** |
 | Components (tokens) | **6** (NEW: Spacing, CornerRadius, Shadows — all with actual Figma variable values) |
 | Figma DS components mapped | **41 pages, all reconciled** |
 | **PNGs downloaded** | **42** (atoms ×10, molecules ×19, organisms ×7, tokens ×3, cover ×1) |
@@ -37,11 +37,44 @@ Last full rebuild: 2026-05-14T00:00:00Z (phases 5–7b: InStore, BYOT, Packages,
 - [[Pages/index]] — All pages with nav IDs, sections, and screen types
 - [[Navigation/structure]] — Full LeftNav tree with wikilinks
 - [[Figma/index]] — Known Figma frames (app screens)
+- [[Tokens/index]] — **Token system overview + decision rules**
+- [[Tokens/figma-to-code]] — **Figma variable → CSS var bridge table** (start here for any color decision)
+- [[Tokens/colors]] — Full primitive palette with hex values
+- [[Tokens/semantic]] — Semantic surface tokens: bg, fg, border, alerts, brand
+- [[Tokens/typography]] — Type scale (Open Sans, sizes 10–40px)
+- [[Tokens/spacing]] — Spacing, radius, shadows, icon sizes, drawer widths
 - [[Tokens/audit]] — Latest token violation report
 - [[Skills/index]] — All 17 Claude Code skills with invocation guide
 - [[Personas/index]] — 7 first-class persona voice models
 - [[_meta/shared-ui-reference]] — Canonical design system reference
 - [[Assets/Components/design-system-cover.png]] — **NEW** Design System OS cover PNG
+
+## What's new (2026-05-19) — Phase 1–4 Batch A: DS Component Expansion + Migration
+
+### New src/ui/ components shipped
+- **Atoms:** `SpinLoader`, `Toggle` — now wired in src/ui/atoms/ and exported from src/ui/index.js
+- **Molecules:** `Tabs`, `FormField`, `FormDrawer`, `Accordion`, `Popover`, `DropdownMenu` — all in src/ui/molecules/
+- **Patterns:** `DataListPage`, `AnalyticsDashPage`, `SettingsPage`, `OnboardingWizard` — all in src/ui/patterns/
+
+### Page migrations (Batch A)
+- `AdvertiserManagementPage.jsx` — removed 13 token const declarations (FONT, BG, BG_SUBTLE…), replaced local TabBar → `<Tabs>`, ConfirmDialog → `<Modal>`, local SectionCard → DS SectionCard, stripped all `fontFamily: FONT` refs
+- `AdvertisersPage.jsx`, `ManageAttributesPage.jsx`, `ManageSegmentsPage.jsx`, `OpsUsersPage.jsx` — same token const block removal + component reuse enforcement
+
+### NavShell NavIcon fix
+- Fixed crash when `icon` prop is a raw SVG JSX element (`<path>`) instead of a function component ref
+- `NavIcon` now branches on `typeof Ic === 'function'`; raw JSX wrapped in `<svg stroke={color}>`
+- See [[Components/molecules/NavShell]] for full dual-mode documentation
+
+### Token Const Block anti-pattern documented
+- Grep: `grep -rn --include="*.jsx" -E "^\s*const (FONT|BG|BG_SUBTLE|BORDER|TEXT|...) ="` 
+- Classification: Tier C2 in token-enforcer skill — delete block, inline all refs
+- ~50 files in codebase still contain these blocks (Batch B+ targets)
+
+### Worktree pnpm install rule
+- New worktrees do NOT share node_modules with the main project dir
+- Must run `pnpm install --frozen-lockfile` in the worktree before `npm run dev` works
+
+---
 
 ## What's new (2026-05-15) — Sweep 3: full page audit + Figma token variables
 
@@ -117,13 +150,13 @@ Last full rebuild: 2026-05-14T00:00:00Z (phases 5–7b: InStore, BYOT, Packages,
 
 | Time | Note | Trigger |
 |------|------|---------|
-| 2026-05-15T06:30:12Z | Components/advertiser/metrics-cards.md | src/advertiser/components/metrics-cards.jsx |
-| 2026-05-15T06:30:09Z | Components/advertiser/funnel-simulation-section.md | src/advertiser/components/funnel-simulation-section.jsx |
-| 2026-05-15T06:30:09Z | Components/advertiser/theme-provider.md | src/advertiser/components/theme-provider.jsx |
-| 2026-05-15T06:30:09Z | Components/advertiser/TopBar.md | src/advertiser/components/TopBar.jsx |
-| 2026-05-15T06:30:09Z | Components/advertiser/sofie-chat-panel.md | src/advertiser/components/sofie-chat-panel.jsx |
-| 2026-05-15T06:30:08Z | Components/advertiser/budget-adjust-drawer.md | src/advertiser/components/budget-adjust-drawer.jsx |
-| 2026-05-15T06:30:08Z | Components/advertiser/sidebar.md | src/advertiser/components/sidebar.jsx |
-| 2026-05-15T06:30:08Z | Components/advertiser/ai-suggestions-panel.md | src/advertiser/components/ai-suggestions-panel.jsx |
-| 2026-05-15T06:30:08Z | Components/advertiser/performance-table.md | src/advertiser/components/performance-table.jsx |
-| 2026-05-15T06:30:08Z | Components/advertiser/filter-builder.md | src/advertiser/components/filter-builder.jsx |
+| 2026-05-21T06:38:15Z | Components/advertiser/metrics-cards.md | src/advertiser/components/metrics-cards.jsx |
+| 2026-05-21T06:38:12Z | Components/advertiser/funnel-simulation-section.md | src/advertiser/components/funnel-simulation-section.jsx |
+| 2026-05-21T06:38:11Z | Components/advertiser/theme-provider.md | src/advertiser/components/theme-provider.jsx |
+| 2026-05-21T06:38:11Z | Components/advertiser/TopBar.md | src/advertiser/components/TopBar.jsx |
+| 2026-05-21T06:38:11Z | Components/advertiser/sofie-chat-panel.md | src/advertiser/components/sofie-chat-panel.jsx |
+| 2026-05-21T06:38:11Z | Components/advertiser/budget-adjust-drawer.md | src/advertiser/components/budget-adjust-drawer.jsx |
+| 2026-05-21T06:38:11Z | Components/advertiser/sidebar.md | src/advertiser/components/sidebar.jsx |
+| 2026-05-21T06:38:10Z | Components/advertiser/ai-suggestions-panel.md | src/advertiser/components/ai-suggestions-panel.jsx |
+| 2026-05-21T06:38:10Z | Components/advertiser/performance-table.md | src/advertiser/components/performance-table.jsx |
+| 2026-05-21T06:38:10Z | Components/advertiser/filter-builder.md | src/advertiser/components/filter-builder.jsx |

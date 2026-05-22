@@ -2,59 +2,63 @@
 type: component
 layer: molecule
 name: Accordion
-figma-node-id: "5684:1685"
-figma-library: "Design System OS"
-figma-page: "❖Accordion"
-tags: [molecule, accordion, collapsible, disclosure]
-png: ../Assets/Components/molecules/Accordion.png
-last-updated: 2026-05-15
+source-file: src/ui/molecules/Accordion.jsx
+figma-node: "5684:1685"
+last-updated: 2026-05-22T00:00:00Z
+tags: [molecule, ui-component]
 ---
 
 # Accordion
 
-![Accordion](../Assets/Components/molecules/Accordion.png)
+Vertically stacked collapsible disclosure panels; each item has a clickable header that expands or collapses its content area.
 
-Vertically stacked disclosure panels. Each item has a clickable header that expands or collapses its content area.
+![[Assets/Components/molecules/Accordion.png]]
 
-## Variants
+---
 
-| Variant | Description |
-|---------|-------------|
-| Default | Single expand at a time |
-| Multiple | Multiple panels can be open |
-| Flush | No border/card wrapper — flush with parent |
+## Props
 
-## Props / API
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| items | `{ id: string, label: ReactNode, content?: ReactNode, children?: ReactNode }[]` | `[]` | Array of panel definitions |
+| multiple | boolean | `false` | Allow more than one panel open at a time |
+| defaultOpen | string[] | `[]` | IDs of panels open on first render (uncontrolled) |
+| style | CSSProperties | — | Styles applied to the root element |
 
-| Prop | Type | Default | Notes |
-|------|------|---------|-------|
-| value | string[] | [] | Controlled open items |
-| onValueChange | function | — | `(e) => setValue(e.value)` |
-| multiple | boolean | false | Allow multiple open |
-| collapsible | boolean | false | Allow closing all |
+---
 
-## Code Import
-```js
-import { Accordion } from '@onlinesales-ai/ui';
+## Usage
 
-// Usage (dot notation):
-<Accordion.Root>
-  <Accordion.Item value="item-1">
-    <Accordion.ItemTrigger>Title</Accordion.ItemTrigger>
-    <Accordion.ItemContent>Content</Accordion.ItemContent>
+```jsx
+import { Accordion } from '../../ui';
+
+// Items API (most common)
+<Accordion
+  items={[
+    { id: 'a', label: 'Section A', content: <p>Content A</p> },
+    { id: 'b', label: 'Section B', content: <p>Content B</p> },
+  ]}
+  multiple
+  defaultOpen={['a']}
+/>
+
+// Compound API (custom content)
+<Accordion.Root multiple>
+  <Accordion.Item value="a">
+    <Accordion.Trigger>Section A</Accordion.Trigger>
+    <Accordion.Content>
+      <Accordion.Body><p>Content A</p></Accordion.Body>
+    </Accordion.Content>
   </Accordion.Item>
 </Accordion.Root>
 ```
 
-## Usage Guidelines
-- Use for FAQs, settings panels, and long-form content with clear sections
-- Keep header labels concise — one line max
-- Default to single-expand to reduce cognitive load
+---
 
-## Related Components
-- [[Components/molecules/Drawer]] — for more complex side-panel content
-- [[Components/molecules/Tabs]] — for peer-level content switching
+## Notes
 
-## Figma Reference
-Page: ❖Accordion (node `5684:1685`)
-Library: Design System OS
+- The convenience `items` API delegates to the full compound API internally.
+- Compound sub-components exposed on `Accordion`: `.Root`, `.Item`, `.Trigger`, `.Content`, `.Body`.
+- Each item's content can use either `content` or `children` key — both are supported.
+- Figma node `5684:1685` in Design System OS library; Figma page: `❖Accordion`.
+- Use for FAQs, settings groups, and long-form content with distinct sections. Default to single-expand (`multiple={false}`) to reduce cognitive load.

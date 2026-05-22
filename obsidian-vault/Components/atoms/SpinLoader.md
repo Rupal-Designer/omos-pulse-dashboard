@@ -1,59 +1,51 @@
 ---
 type: component
 layer: atom
-name: Spin Loader
-figma-component-key: "07e786860228ad9be057839ff65426d19c9f52f6"
-figma-alt-key: "380c8c256f7797e8bba83d1a5242b5ce634cb59a"
-figma-node-id: "5664:34408"
-figma-library: "Design System OS"
-figma-path: "design_systems/Design System OS/components/Spin Loader"
-tags: [atom, feedback, loading, state]
-png: ../Assets/Components/atoms/SpinLoader.png
-last-updated: 2026-05-15
+name: SpinLoader
+source-file: src/ui/atoms/SpinLoader.jsx
+figma-node: "5664:34408"
+last-updated: 2026-05-22T00:00:00Z
+tags: [atom, ui-component]
 ---
 
-# Spin Loader
+# SpinLoader
 
-![SpinLoader](../Assets/Components/atoms/SpinLoader.png)
+Animated spinner for loading states; available as a bare spinner or inside a rounded background pill.
 
-Animated spinner indicating an in-progress operation. Two variants: bare spinner and spinner with a background pill.
+![[Assets/Components/atoms/SpinLoader.png]]
 
-## Variants
+---
 
-| Name | Key | Description |
-|------|-----|-------------|
-| Spin Loader | `07e786860228ad9be057839ff65426d19c9f52f6` | Bare SVG spinner, no background |
-| Spiner With BG | `380c8c256f7797e8bba83d1a5242b5ce634cb59a` | Spinner inside a rounded pill with bg fill |
-| loading-01 | `6279fea632255441a390607fdcf8257f0ad0044a` | Icon variant (single 24px path) |
+## Props
 
-## Sizes
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| size | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Controls spinner diameter (xs=16px, sm=20px, md=24px, lg=32px, xl=48px) |
+| withBg | boolean | `false` | Wraps the spinner in a rounded pill with `bg-subtle` background |
+| style | CSSProperties | — | Applied to the spinner element (or the pill wrapper when `withBg` is true) |
 
-| Size | Diameter |
-|------|----------|
-| xs | 16px |
-| sm | 20px |
-| md (default) | 24px |
-| lg | 32px |
-| xl | 48px |
+---
 
-## Props / API (React)
+## Usage
 
-| Prop | Type | Default | Notes |
-|------|------|---------|-------|
-| size | xs\|sm\|md\|lg\|xl | md | |
-| color | string | brand-primary | CSS color or token |
-| withBg | boolean | false | Enables pill background |
+```jsx
+import { SpinLoader } from '../../ui';
 
-## Usage Guidelines
-- Inline inside [[Components/atoms/Button]] via `isLoading` prop — don't compose manually
-- Use full-page or section-level spinner for initial data fetch
-- Prefer skeleton screens for list/table loading (less jarring than spinner)
+// Bare spinner
+<SpinLoader />
 
-## Code Import
-```js
-import { Spinner, Loader } from '@onlinesales-ai/ui';
+// Large spinner with background pill
+<SpinLoader size="lg" withBg />
+
+// Full-page loading overlay (xl, centered by parent)
+<SpinLoader size="xl" />
 ```
 
-## Figma Reference
-Component key: `07e786860228ad9be057839ff65426d19c9f52f6`
-Library: Design System OS
+---
+
+## Notes
+
+- Wraps `Spinner` from `@rishikeshjoshi-morpheus/ui`.
+- When `withBg` is true, the `style` prop is applied to the outer pill `<span>`, not the inner `Spinner`.
+- Figma node `5664:34408`; Figma library: Design System OS. Two Figma variants: bare (`07e786860...`) and With BG (`380c8c256...`).
+- Prefer skeleton screens for table/list loading; use SpinLoader for overlay blocking states and button loading indicators.
