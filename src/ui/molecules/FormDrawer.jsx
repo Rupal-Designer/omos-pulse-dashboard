@@ -8,6 +8,15 @@ import { Button } from '../atoms/Button';
  * Replaces the 15+ inline drawer implementations that all repeat the same
  * overlay + panel + field layout structure.
  *
+ * WCAG 2.4.3 — Focus order / focus trap:
+ *   The Morpheus Drawer is built on Ark UI's Dialog primitive, which internally:
+ *   - Traps focus within D.Content when open (Tab / Shift+Tab cycle within the panel)
+ *   - Returns focus to the previously focused trigger element on close
+ *   - Closes on Escape key press automatically
+ *   - Renders with role="dialog" aria-modal="true" on the Content element
+ *   - D.Title is linked to the dialog via aria-labelledby automatically
+ *   No manual focus-trap or Escape-key handler is required.
+ *
  * Usage:
  *   <FormDrawer
  *     open={open}
