@@ -1,6 +1,6 @@
 ---
 type: page-index
-last-updated: 2026-05-14T00:00:00Z
+last-updated: 2026-05-25T00:00:00Z
 tags: [index, pages]
 ---
 
@@ -8,7 +8,7 @@ tags: [index, pages]
 
 Source: `knowledge-graph.md` §1 Wired Pages Registry
 
-## Wired Pages (57 nav IDs → 57+ unique components, phases 1–7b)
+## Wired Pages (58 nav IDs → 58+ unique components, phases 1–7b)
 
 | Nav ID | Page | Section | Group | Screen Type |
 |--------|------|---------|-------|-------------|
@@ -45,6 +45,7 @@ Source: `knowledge-graph.md` §1 Wired Pages Registry
 | `finance-dashboard` | [[Pages/FinanceDashboardPage]] | Finance | — | dashboard |
 | `wallet-topup` | [[Pages/WalletTopUpPage]] | Finance | — | upload-page |
 | `finance-advertisers` | [[Pages/FinanceAdvertiserManagementPage]] | Finance | — | data-management-list |
+| `finance/manage-billing` | [[Pages/ManageBillingPage]] | Finance | — | finance-billing | *(advertiser portal)* |
 | `overview` | [[Pages/HealthReportPage]] | Health | — | dashboard |
 | `budget-health` | [[Pages/HealthReportPage]] | Health | — | dashboard |
 | `delivery-health` | [[Pages/HealthReportPage]] | Health | — | dashboard |

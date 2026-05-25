@@ -24,3 +24,6 @@ __pycache__/
 # Graphify
 graphify-out/
 .claude/settings.local.json
+
+# Offline team reference screenshots (not committed)
+.temp/
