@@ -7,6 +7,7 @@ import BYOTDashboardPage from './pages/BYOTDashboardPage';
 import BYOTCampaignDetailPage from './pages/BYOTCampaignDetailPage';
 import OffsiteDashboardPage from './pages/OffsiteDashboardPage';
 import ManageBillingPage from './pages/ManageBillingPage';
+import TransactionLogPage from './pages/TransactionLogPage';
 import { Sidebar } from './components/sidebar';
 import { Header } from './components/header';
 
@@ -87,6 +88,8 @@ export default function App() {
         return <OffsiteDashboardPage />;
       case '/finance/manage-billing':
         return <ManageBillingPage />;
+      case '/finance/transaction-log':
+        return <TransactionLogPage />;
       default:
         return <DashboardPage activeAdType={activeAdType} onAdTypeChange={setActiveAdType} />;
     }

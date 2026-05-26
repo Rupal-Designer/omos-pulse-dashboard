@@ -123,6 +123,12 @@ export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNaviga
           active: currentRoute === '/finance/manage-billing',
           onClick: () => navigate('/finance/manage-billing'),
         },
+        {
+          id: 'transaction-log',
+          label: 'Transaction Log',
+          active: currentRoute === '/finance/transaction-log',
+          onClick: () => navigate('/finance/transaction-log'),
+        },
       ],
     },
     { id: 'activity-center', label: 'Activity Center', icon: ICON_ACTIVITY,    hasSub: true },

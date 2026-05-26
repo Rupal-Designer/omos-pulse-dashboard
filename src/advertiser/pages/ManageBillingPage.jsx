@@ -30,9 +30,8 @@ const TABLE_ROWS = [
 const QUICK_AMOUNTS = [500, 1000, 1500];
 
 const TAB_ITEMS = [
-  { id: 'campaign-type',   label: 'Campaign Type' },
-  { id: 'transaction-log', label: 'Transaction Log' },
-  { id: 'wallet',          label: 'Wallet' },
+  { id: 'campaign-type', label: 'Campaign Type' },
+  { id: 'wallet',        label: 'Wallet' },
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -93,17 +92,13 @@ export default function ManageBillingPage() {
           </button>
         </div>
 
-        {/* TDS info banner — compact single line */}
+        {/* TDS info banner */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: 8,
           background: 'var(--osmos-brand-primary-muted)',
           border: '1px solid var(--osmos-brand-primary)',
-          borderRadius: 6,
-          padding: '8px 14px',
-          marginBottom: 16,
-          fontSize: 12,
-          color: 'var(--osmos-fg)',
-          lineHeight: 1.5,
+          borderRadius: 6, padding: '8px 14px', marginBottom: 16,
+          fontSize: 12, color: 'var(--osmos-fg)', lineHeight: 1.5,
         }}>
           <InfoIcon size={14} color="var(--osmos-brand-primary)" style={{ flexShrink: 0 }} />
           <span>
@@ -114,38 +109,22 @@ export default function ManageBillingPage() {
         </div>
 
         {/* Inline stat row: Default Profile | Balance | Promo Balance | Max usage */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 0,
-          marginBottom: 16,
-          flexWrap: 'wrap',
-        }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 16, flexWrap: 'wrap' }}>
           {/* Default Profile */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, paddingRight: 24, marginRight: 24, borderRight: '1px solid var(--osmos-border)' }}>
             <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', whiteSpace: 'nowrap' }}>Default Profile</span>
             <select style={{
-              padding: '5px 10px',
-              border: '1px solid var(--osmos-border)',
-              borderRadius: 6,
-              background: 'var(--osmos-bg)',
-              color: 'var(--osmos-fg)',
-              fontSize: 13,
-              cursor: 'pointer',
+              padding: '5px 10px', border: '1px solid var(--osmos-border)',
+              borderRadius: 6, background: 'var(--osmos-bg)', color: 'var(--osmos-fg)',
+              fontSize: 13, cursor: 'pointer',
             }}>
               <option>Default Profile</option>
               <option>Profile 2</option>
             </select>
           </div>
-
-          {/* Balance */}
-          <KpiStat label="Balance" value={fmt(WALLET_SUMMARY.balance)} divider />
-
-          {/* Promotional Balance */}
-          <KpiStat label="Promotional Balance" value={fmt(WALLET_SUMMARY.promoBalance)} divider />
-
-          {/* Max usage allowed */}
-          <KpiStat label="Max usage allowed" value={fmt(WALLET_SUMMARY.maxUsage)} />
+          <KpiStat label="Balance"              value={fmt(WALLET_SUMMARY.balance)}      divider />
+          <KpiStat label="Promotional Balance"  value={fmt(WALLET_SUMMARY.promoBalance)} divider />
+          <KpiStat label="Max usage allowed"    value={fmt(WALLET_SUMMARY.maxUsage)} />
         </div>
 
         {/* Top-up row */}
@@ -154,17 +133,14 @@ export default function ManageBillingPage() {
             Top-up Amount:
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-            {/* ₹ prefixed input */}
             <div style={{
               display: 'flex', alignItems: 'center',
               border: '1px solid var(--osmos-border)', borderRadius: 6, overflow: 'hidden',
               background: 'var(--osmos-bg)',
             }}>
               <span style={{
-                padding: '7px 10px', fontSize: 14,
-                color: 'var(--osmos-fg-muted)',
-                borderRight: '1px solid var(--osmos-border)',
-                background: 'var(--osmos-bg-subtle)',
+                padding: '7px 10px', fontSize: 14, color: 'var(--osmos-fg-muted)',
+                borderRight: '1px solid var(--osmos-border)', background: 'var(--osmos-bg-subtle)',
               }}>₹</span>
               <input
                 type="number"
@@ -173,30 +149,16 @@ export default function ManageBillingPage() {
                 placeholder="Enter Amount"
                 style={{
                   padding: '7px 12px', border: 'none', outline: 'none',
-                  fontSize: 13, color: 'var(--osmos-fg)',
-                  background: 'var(--osmos-bg)', width: 160,
+                  fontSize: 13, color: 'var(--osmos-fg)', background: 'var(--osmos-bg)', width: 160,
                 }}
               />
             </div>
-
-            {/* Quick amounts with + prefix */}
             {QUICK_AMOUNTS.map(amt => (
-              <Button
-                key={amt}
-                variant="outline"
-                size="sm"
-                onClick={() => setTopupAmount(String(amt))}
-              >
+              <Button key={amt} variant="outline" size="sm" onClick={() => setTopupAmount(String(amt))}>
                 +₹{amt.toLocaleString('en-IN')}
               </Button>
             ))}
-
-            {/* Add Money — pushed to far right */}
-            <Button
-              variant="primary"
-              onClick={() => {/* TODO */}}
-              style={{ marginLeft: 'auto' }}
-            >
+            <Button variant="primary" onClick={() => {}} style={{ marginLeft: 'auto' }}>
               Add Money
             </Button>
           </div>
@@ -205,33 +167,22 @@ export default function ManageBillingPage() {
           </div>
         </div>
 
-        {/* Invoice info banner (read-only, not a checkbox) */}
+        {/* Invoice info banner (read-only) */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: 8,
-          background: 'var(--osmos-brand-primary-muted)',
-          borderRadius: 6,
-          padding: '8px 14px',
-          fontSize: 13,
-          color: 'var(--osmos-fg-muted)',
+          background: 'var(--osmos-brand-primary-muted)', borderRadius: 6,
+          padding: '8px 14px', fontSize: 13, color: 'var(--osmos-fg-muted)',
         }}>
           <InfoIcon size={14} color="var(--osmos-brand-primary)" style={{ flexShrink: 0 }} />
           <span>Invoice will be issued in next 4 working days to your registered Email ID</span>
         </div>
       </div>
 
-      {/* ── Tabs + Table (no outer card border) ── */}
+      {/* ── Tabs + Table ── */}
       <div>
-        <Tabs
-          value={activeTab}
-          onValueChange={setActiveTab}
-          items={TAB_ITEMS}
-          variant="pill"
-        >
+        <Tabs value={activeTab} onValueChange={setActiveTab} items={TAB_ITEMS} variant="pill">
           <Tabs.Content value="campaign-type">
             <CampaignTypeTab rows={filteredRows} search={search} onSearch={setSearch} />
-          </Tabs.Content>
-          <Tabs.Content value="transaction-log">
-            <EmptyTab label="Transaction log — coming soon" />
           </Tabs.Content>
           <Tabs.Content value="wallet">
             <EmptyTab label="Wallet details — coming soon" />
@@ -262,7 +213,6 @@ function KpiStat({ label, value, divider }) {
 function CampaignTypeTab({ rows, search, onSearch }) {
   return (
     <div style={{ marginTop: 16 }}>
-      {/* Toolbar */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
         <Button variant="outline" size="sm">
           <FilterIcon size={14} style={{ marginRight: 4 }} />
@@ -276,8 +226,6 @@ function CampaignTypeTab({ rows, search, onSearch }) {
           <DownloadIcon size={15} color="var(--osmos-fg-muted)" />
         </button>
       </div>
-
-      {/* Table */}
       <div style={{ border: '1px solid var(--osmos-border)', borderRadius: 8, overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
           <thead>
@@ -328,33 +276,21 @@ function EmptyTab({ label }) {
 // ── Style constants ───────────────────────────────────────────────────────────
 
 const thStyle = {
-  padding: '10px 16px',
-  textAlign: 'left',
-  fontSize: 12,
-  fontWeight: 600,
-  color: 'var(--osmos-fg-muted)',
-  whiteSpace: 'nowrap',
+  padding: '10px 16px', textAlign: 'left',
+  fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)', whiteSpace: 'nowrap',
 };
 
 const tdStyle = {
-  padding: '12px 16px',
-  color: 'var(--osmos-fg)',
-  verticalAlign: 'middle',
+  padding: '12px 16px', color: 'var(--osmos-fg)', verticalAlign: 'middle',
 };
 
 const iconBtnStyle = {
   width: 30, height: 30,
   display: 'flex', alignItems: 'center', justifyContent: 'center',
-  background: 'transparent',
-  border: '1px solid var(--osmos-border)',
-  borderRadius: 6,
-  cursor: 'pointer',
-  padding: 0,
+  background: 'transparent', border: '1px solid var(--osmos-border)',
+  borderRadius: 6, cursor: 'pointer', padding: 0,
 };
 
 const ghostBtnStyle = {
-  background: 'none',
-  border: 'none',
-  cursor: 'pointer',
-  padding: 0,
+  background: 'none', border: 'none', cursor: 'pointer', padding: 0,
 };
