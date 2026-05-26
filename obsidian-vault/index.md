@@ -150,13 +150,13 @@ Last full rebuild: 2026-05-14T00:00:00Z (phases 5–7b: InStore, BYOT, Packages,
 
 | Time | Note | Trigger |
 |------|------|---------|
-| 2026-05-25T06:30:14Z | Components/advertiser/metrics-cards.md | src/advertiser/components/metrics-cards.jsx |
-| 2026-05-25T06:30:11Z | Components/advertiser/funnel-simulation-section.md | src/advertiser/components/funnel-simulation-section.jsx |
-| 2026-05-25T06:30:11Z | Components/advertiser/theme-provider.md | src/advertiser/components/theme-provider.jsx |
-| 2026-05-25T06:30:11Z | Components/advertiser/TopBar.md | src/advertiser/components/TopBar.jsx |
-| 2026-05-25T06:30:11Z | Components/advertiser/sofie-chat-panel.md | src/advertiser/components/sofie-chat-panel.jsx |
-| 2026-05-25T06:30:10Z | Components/advertiser/budget-adjust-drawer.md | src/advertiser/components/budget-adjust-drawer.jsx |
-| 2026-05-25T06:30:10Z | Components/advertiser/sidebar.md | src/advertiser/components/sidebar.jsx |
-| 2026-05-25T06:30:10Z | Components/advertiser/ai-suggestions-panel.md | src/advertiser/components/ai-suggestions-panel.jsx |
-| 2026-05-25T06:30:10Z | Components/advertiser/performance-table.md | src/advertiser/components/performance-table.jsx |
-| 2026-05-25T06:30:10Z | Components/advertiser/filter-builder.md | src/advertiser/components/filter-builder.jsx |
+| 2026-05-26T06:31:16Z | Components/advertiser/metrics-cards.md | src/advertiser/components/metrics-cards.jsx |
+| 2026-05-26T06:31:13Z | Components/advertiser/funnel-simulation-section.md | src/advertiser/components/funnel-simulation-section.jsx |
+| 2026-05-26T06:31:12Z | Components/advertiser/theme-provider.md | src/advertiser/components/theme-provider.jsx |
+| 2026-05-26T06:31:12Z | Components/advertiser/TopBar.md | src/advertiser/components/TopBar.jsx |
+| 2026-05-26T06:31:12Z | Components/advertiser/sofie-chat-panel.md | src/advertiser/components/sofie-chat-panel.jsx |
+| 2026-05-26T06:31:12Z | Components/advertiser/budget-adjust-drawer.md | src/advertiser/components/budget-adjust-drawer.jsx |
+| 2026-05-26T06:31:12Z | Components/advertiser/sidebar.md | src/advertiser/components/sidebar.jsx |
+| 2026-05-26T06:31:11Z | Components/advertiser/ai-suggestions-panel.md | src/advertiser/components/ai-suggestions-panel.jsx |
+| 2026-05-26T06:31:11Z | Components/advertiser/performance-table.md | src/advertiser/components/performance-table.jsx |
+| 2026-05-26T06:31:11Z | Components/advertiser/filter-builder.md | src/advertiser/components/filter-builder.jsx |
