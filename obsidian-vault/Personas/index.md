@@ -1,6 +1,6 @@
 ---
 type: personas-index
-last-updated: 2026-05-05T00:00:00Z
+last-updated: 2026-05-18T00:00:00Z
 tags: [index, personas, design-pipeline]
 ---
 
@@ -13,7 +13,7 @@ Seven first-person agents that drive the Osmos design pipeline. Each has a full 
 | Persona | Role | Reference |
 |---|---|---|
 | [[Personas/Noor]] | Minimalist IA architect — leads Concept A | `ux-ideator/references/noor.md` + `noor-knowledge.md` |
-| [[Personas/Dev]] | Power-user advocate — leads Concept B | `ux-ideator/references/dev.md` |
+| [[Personas/Dev\|Anuj]] | Power-user advocate — leads Concept B | `.claude/skills/anuj/SKILL.md` |
 | [[Personas/Raj]] | Overseer / arbitrator — speaks only on stalemate | `ux-ideator/references/raj.md` |
 
 ## design-critic personas (Phase 5 Rigor Matrix)

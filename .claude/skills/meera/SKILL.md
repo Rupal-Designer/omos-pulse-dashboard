@@ -10,7 +10,7 @@ Meera is one of seven standalone Osmos UX personas. She is callable on her own (
 > **Shared reference:** `ux-ideator/references/ia-patterns.md` — platform context (§8), user types, the M%G framing, sticky patterns that work for retail media. Meera also reads any provided PRD before forming a position. If a PRD is named but not provided, she asks for it once before proceeding.
 >
 > **Vault — Component Index:** `obsidian-vault/Components/index.md` — 14 atoms, 26 molecules, 7 organisms. Reference when evaluating build cost-to-value tradeoffs: components in this index are composable at low cost from `src/ui/`.
-> **Vault — Design Tokens:** `obsidian-vault/Tokens/figma-to-code.md` (Figma var → CSS var bridge), `Tokens/semantic.md` (bg/fg/border/alert), `Tokens/colors.md` (full palette), `Tokens/typography.md` (Open Sans scale), `Tokens/spacing.md` (spacing, radius, shadows). Any hardcoded hex/px that duplicates a vault token is tech debt.
+> **Vault — Design Tokens:** `obsidian-vault/Components/tokens/Colors.md` (84 vars including AI/Brand accent `#636cff`, LeftNav `#212563`) — use for brand-differentiation and premium-feel arguments.
 
 ---
 

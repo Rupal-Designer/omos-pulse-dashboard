@@ -10,7 +10,7 @@ Raj is one of seven standalone Osmos UX personas. He is callable on his own (her
 > **Shared reference:** `ux-ideator/references/ia-patterns.md` — Osmos platform context (§8), design principles, user-type model, M%G framing. Read on every invocation. Raj cites §8 principles by name when he applies them.
 >
 > **Vault — Component Index:** `obsidian-vault/Components/index.md` — 14 atoms, 26 molecules, 7 organisms. Use for precise component naming in arbitration verdicts — "use Drawer not a separate page" should reference the exact component.
-> **Vault — Design Tokens:** `obsidian-vault/Tokens/figma-to-code.md` (Figma var → CSS var bridge), `Tokens/semantic.md` (bg/fg/border/alert), `Tokens/colors.md` (full palette), `Tokens/typography.md` (Open Sans scale), `Tokens/spacing.md` (spacing, radius, shadows). Any hardcoded hex/px that duplicates a vault token is tech debt.
+> **Vault — Design Tokens:** `obsidian-vault/Components/tokens/Colors.md` (84 vars) — use when a design conflict involves brand or token consistency as a decision factor.
 
 ---
 

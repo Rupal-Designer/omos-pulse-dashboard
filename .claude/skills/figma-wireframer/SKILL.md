@@ -51,6 +51,9 @@ search_design_system(query: "modal", fileKey: "58jL2Gbe53rBhxOysvHM82")
 
 If a component exists in the library, import it via `importComponentByKeyAsync` instead of recreating it.
 
+**Vault component map with nodeIds:** `obsidian-vault/Figma/design-system-map.md` — all 41 Figma pages with nodeIds. Use these nodeIds directly in `get_screenshot` calls.
+**Component PNGs:** `obsidian-vault/Assets/Components/` (atoms/, molecules/, organisms/, tokens/) — visual reference for every component before placing in Figma.
+
 ### Step 3: Build Frame Hierarchy
 
 Using `use_figma`, create the frame structure matching the Screen Spec zones:
@@ -73,22 +76,26 @@ mainFrame.fills = [{ type: 'SOLID', color: { r: 0.929, g: 0.941, b: 0.961 } }]; 
 
 ### Step 4: Apply Osmos Brand Tokens
 
-**Read the `osmos-brand` skill** for the full token set. Key values:
+Use values sourced directly from the Figma `Colors` variable collection. Full reference: `obsidian-vault/Components/tokens/Colors.md`
 
 | Token | Value | Use |
 |-------|-------|-----|
-| Navy gradient | `#2C266D → #3E266D → #4849B6` | Hero/dark sections |
-| Content bg | `#F2F2FC` | Light backgrounds |
-| White | `#FFFFFF` | Cards, modals |
-| Border | `#E9E9E9` | Dividers |
-| Blue accent | `#636CFF` | CTAs, links, active states |
-| Mint | `#89F1D9` | Pop accents |
-| Ink | `#181818` | Primary text |
-| Ink muted | `#595959` | Secondary text |
-| Headings | Montserrat 600-700 | Display type |
-| Body | Lato 400 | Body text |
-| Card radius | 10px | All cards |
-| Table header bg | `#4849B6` | Table headers |
+| ScreenBG (White) | `#ffffff` | Cards, modals, content surfaces |
+| ScreenBG2 | `#edf0f5` | Page background |
+| Blue Primary | `#1970e1` | CTAs, links, active states |
+| Blue Bg | `#e8f1fc` | Selected row tint, tab bg |
+| GreyScale/Primary Text | `#404040` | Primary text |
+| GreyScale/Secondary Text | `#7b7b7b` | Labels, muted text |
+| Strokes/Stroke | `#dedede` | Borders, dividers |
+| GreyScale/Surface1 | `#fafafa` | Table headers, subtle fills |
+| BrandColours/Primary | `#636cff` | Brand accent (button glow, active link) |
+| BrandColours/Secondary | `#3e266d` | Dark surfaces, nav shell |
+| LeftNav/Main | `#212563` | Left sidebar background |
+| LeftNav/Second Panel | `#1b1e50` | Left sidebar sub-panel |
+| LeftNav/Selected | `#4249b1` | Selected nav item bg |
+| Card radius | `8px` (Medium) or `12px` (Large) | Cards=8px, Modals/Drawers=12px |
+| Shadow (Card) | `#4040401a` (10% opacity) | StatCard, funnel panel elevation |
+| Shadow (Button) | `#40404029` (16% opacity) | Button active states |
 
 ### Step 5: Build Each Zone
 

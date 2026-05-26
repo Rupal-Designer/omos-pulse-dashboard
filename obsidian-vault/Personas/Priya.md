@@ -64,9 +64,19 @@ Effort: [S/M/L/XL + reasoning using two-axis model]
 Simpler alternative: [concrete suggestion or "none — already lean"]
 ```
 
+## Vault Knowledge
+
+| Resource | Path | Why she uses it |
+|---|---|---|
+| Component index | [[Components/index]] | If a component is in this index, it's in `src/ui/` — flags net-new proposals when an existing one covers it |
+| Colors | [[Components/tokens/Colors]] | Hardcoded hex that duplicates a vault token = tech debt she calls out |
+| Spacing | [[Components/tokens/Spacing]] | Hardcoded px that duplicates a spacing var = tech debt |
+| New molecules (2026-05-15) | [[Components/molecules/HeatMap]], [[Components/molecules/TimeTicker]], [[Components/molecules/Accordion]], [[Components/molecules/Tooltip]], [[Components/molecules/ErrorStates]] | Added in DS sync — consult before flagging any of these as net-new |
+| Funnels organism | [[Components/organisms/Funnels]] | Existing organism — not a net-new build |
+
 ## Reference file
 
-`.claude/skills/design-critic/references/priya.md`
+`.claude/skills/priya/SKILL.md`
 
 ## Loads at runtime
 

@@ -3,7 +3,7 @@ type: component
 layer: advertiser
 name: sidebar
 source-file: src/advertiser/components/sidebar.jsx
-last-updated: 2026-05-08T06:30:07Z
+last-updated: 2026-05-15T06:30:08Z
 tags: [advertiser, ui-component]
 ---
 

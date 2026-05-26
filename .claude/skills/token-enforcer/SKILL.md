@@ -9,6 +9,20 @@ Scans JSX/TSX/CSS files for hardcoded design values and produces exact replaceme
 
 ## Token Inventory
 
+### Vault Reference — Authoritative Figma Token Documentation
+
+Before auditing, read these vault notes for ground-truth values sourced directly from Figma variable collections:
+
+| Token Type | Vault Note | Figma Collection |
+|-----------|-----------|-----------------|
+| Colors (84 vars, Light + Dark) | `obsidian-vault/Components/tokens/Colors.md` | `Colors` — 84 variables |
+| Spacing scale | `obsidian-vault/Components/tokens/Spacing.md` | `ONLY DS Spacing` + `Spacing's (Inbetween)` |
+| Corner radius | `obsidian-vault/Components/tokens/CornerRadius.md` | `Corner Radius` + `Drawer's Width` |
+| Shadows | `obsidian-vault/Components/tokens/Shadows.md` | `Shadows` — 5 semantic values |
+| Typography | `obsidian-vault/Components/tokens/Typography.md` | Figma node `23:8522` |
+
+These notes contain actual hex values from Figma variables. Use them to classify Tier 4 unknowns.
+
 ### Brand tokens (defined in `src/index.css` `:root`)
 
 | Token | Value | Use for |
@@ -18,11 +32,14 @@ Scans JSX/TSX/CSS files for hardcoded design values and produces exact replaceme
 | `var(--osmos-brand-green)` | `#1BA87A` | Positive KPIs, success states |
 | `var(--osmos-brand-green-muted)` | `rgba(27,168,122,0.10)` | Positive badge backgrounds |
 | `var(--osmos-brand-amber)` | `#F5A623` | Secondary chart line, warnings |
-| `var(--osmos-nav-bg)` | `#1e2266` | Left navigation background |
-| `var(--osmos-nav-panel-bg)` | `#212563` | Left nav sub-panel background |
+| `var(--osmos-nav-bg)` | `#212563` | Left navigation background (Figma: `LeftNav/Main`) |
+| `var(--osmos-nav-panel-bg)` | `#1b1e50` | Left nav sub-panel background (Figma: `LeftNav/Second Panel`) |
 | `var(--osmos-nav-accent)` | `#7B82F8` | Active nav item color, nav icons |
 | `var(--osmos-nav-border)` | `rgba(123,130,248,0.25)` | Nav dividers |
 | `var(--osmos-nav-active-bg)` | `rgba(123,130,248,0.20)` | Nav active item background |
+| `var(--osmos-nav-selected)` | `#4249b1` | Nav selected item bg (Figma: `LeftNav/Selected`) |
+| `var(--osmos-nav-hover)` | `#32378a` | Nav hover state (Figma: `LeftNav/Hover`) |
+| `var(--osmos-nav-separator)` | `#7b82f8` | Nav section separator (Figma: `LeftNav/Seperator`) |
 
 ### Semantic tokens (defined in `src/index.css` `:root` — same file as brand tokens)
 
@@ -49,6 +66,26 @@ These hardcoded values are intentional and should never be flagged:
 - Chart dot colors that match their line's brand token (they reference the token already)
 - `#fff` inside SVG `fill` or `stroke` attributes for icon rendering
 - Values already using `var(--osmos-*)` tokens
+
+## Figma Token Quick Reference
+
+Key mappings between Figma variable names and CSS tokens (from `obsidian-vault/Components/tokens/Colors.md`):
+
+| Figma Token | Light | Dark | CSS var |
+|-------------|-------|------|---------|
+| `Blue/PrimaryButton` | `#1970e1` | `#7aadf0` | `--osmos-brand-primary` (⚠️ code uses `#636CFF` — Figma disagrees) |
+| `GreyScale/Primary Text` | `#404040` | `#f2f2f2` | `--osmos-fg` |
+| `GreyScale/Secondary Text` | `#7b7b7b` | `#b3b3b3` | `--osmos-fg-muted` |
+| `GreyScale/White (SURFACE 3)` | `#ffffff` | `#1b1b1b` | `--osmos-bg` |
+| `BackgroundColors/ScreenBG2` | `#edf0f5` | `#1b1b1b` | `--osmos-bg-subtle` |
+| `GreyScale/Surface1` | `#fafafa` | `#2f2f2f` | `--osmos-bg-muted` |
+| `Strokes/Stroke` | `#dedede` | `#4d4d4d` | `--osmos-border` |
+| `Alerts/Error/Primary` | `#c62828` | `#e37878` | intentional semantic (keep) |
+| `Alerts/Success/Primary` | `#2e7d32` | `#3fab45` | intentional semantic (keep) |
+| `Shadows/Card` | `#4040401a` | — | `--osmos-shadows-card` |
+| `Shadows/Button` | `#40404029` | — | `--osmos-shadows-button` |
+
+Full tables: `obsidian-vault/Components/tokens/Colors.md` · `Spacing.md` · `CornerRadius.md` · `Shadows.md`
 
 ## Audit Process
 

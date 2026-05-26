@@ -1,12 +1,12 @@
 ---
 type: skills-index
-last-updated: 2026-05-05T00:00:00Z
+last-updated: 2026-05-14T00:00:00Z
 tags: [index, skills]
 ---
 
 # Skills Registry
 
-All 15 Claude Code skills in `.claude/skills/`. Invoke any skill by typing its name in Claude Code.
+All 17 Claude Code skills in `.claude/skills/`. Invoke any skill by typing its name in Claude Code.
 
 ## Design Pipeline
 
@@ -32,6 +32,7 @@ Skills that audit and fix the codebase. No external tools required.
 | [[Skills/lineicon-enforcer]] | Hand-rolled `<svg>` icons — replaces with named exports from `src/ui/atoms/Icon.jsx` | Yes |
 | [[Skills/component-reuse-enforcer]] | Local components duplicating `src/ui/` — extends library with Figma-style variants | Tier 1 yes; Tier 2 asks |
 | [[Skills/shadcn-to-osmos]] | Migrates `src/advertiser/` shadcn/Tailwind pages to Osmos `src/ui/` components | Partial |
+| [[Skills/ui-consistency-enforcer]] | **NEW** — Cross-page structural layout drift (spacing, wrappers, table structure) across a section | Yes |
 
 ## UX Research
 
@@ -52,13 +53,14 @@ The 7 personas now have full voice models with real Osmos memories. They activat
 
 | Persona | Primary skill | Cross-skill activations |
 |---|---|---|
-| [[Personas/Noor]] | ux-ideator | — |
+| [[Personas/Noor]] | ux-ideator | minimalist IA, progressive disclosure |
 | [[Personas/Dev]] | ux-ideator | — |
 | [[Personas/Raj]] | ux-ideator | Phase 5 fallback (revision directive) |
 | [[Personas/Priya]] | design-critic | ux-ideator Phase 6 (feasibility sanity) |
 | [[Personas/Arjun]] | design-critic | ux-ideator Phase 2 (research-grounded audit) |
 | [[Personas/Meera]] | design-critic | ux-ideator Phase 1 (business reframe) |
 | [[Personas/Zara]] | design-critic | ux-ideator Phase 5.5 (delight pass) |
+| [[Skills/anuj]] | standalone | **NEW** — power-user / ad-ops expert counterpoint (formerly "Dev" voice in ux-ideator) |
 
 See [[Personas/index]] for the full registry with relationship dynamics and Notion-grounded memory sources.
 

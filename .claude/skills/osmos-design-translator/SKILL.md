@@ -32,6 +32,11 @@ What it DOES:
 > - `references/component-recipes.md` — concrete recipes for empty states, tables, forms, dashboards, drawers, modals, toolbars. Read at Phase 3 (translation) when the artifact maps to a recipe.
 > - `references/reference-projects.md` — best-in-class examples (Linear, Vercel, Stripe, Atlassian, Polaris, Carbon, GitHub Primer) annotated with what to steal vs. what to drop for Osmos. Read at Phase 1 if user references one of them.
 > - `references/laws.md` — UX laws and design rules indexed by decision type. Read at Phase 4 to verify recipe against universal principles.
+> - `obsidian-vault/Components/tokens/Colors.md` — 84 Figma color variables (Light + Dark hex). Use for exact token values in recipes. Read at Phase 3.
+> - `obsidian-vault/Components/tokens/Spacing.md` — Figma spacing scale (Huge=40px → Zero=0px). Use when specifying spacing rhythm.
+> - `obsidian-vault/Components/tokens/CornerRadius.md` — Large=12px, Medium=8px, Small=4px. Use for radius specs.
+> - `obsidian-vault/Components/tokens/Shadows.md` — Button=`#40404029`, Card=`#4040401a`, Container=`#40404014`. Use for elevation specs.
+> - `obsidian-vault/Components/index.md` — all 14 atoms, 26 molecules, 7 organisms. Read at Phase 3 to map recipe components to real imports.
 
 ---
 
@@ -123,10 +128,10 @@ Produce the final recipe in the schema below, plus a 2-3 line "judgment call" pa
 
 ## Tokens
 - Spacing rhythm: var(--osmos-spacing-*) progression — name the scale
-- Colors: only var(--osmos-*) tokens — list every one used
+- Colors: only var(--osmos-*) tokens — list every one used (source from `obsidian-vault/Components/tokens/Colors.md`)
 - Typography: ramp (size/weight) — list every step
-- Radius: var(--osmos-radii-*) — name it
-- Shadow: var(--osmos-shadows-*) or "none — flat surface"
+- Radius: Large=12px / Medium=8px / Small=4px — source from `obsidian-vault/Components/tokens/CornerRadius.md`
+- Shadow: Button=`#40404029` / Card=`#4040401a` / Container=`#40404014` — source from `obsidian-vault/Components/tokens/Shadows.md`
 
 ## Components (src/ui/ only)
 - [Component]: [purpose, key props]

@@ -5,7 +5,7 @@ name: UploadPage
 tags: [pattern, ui-component, upload, form]
 source-file: src/ui/patterns/UploadPage.jsx
 export-name: UploadPage
-last-updated: 2026-05-08T06:30:03Z
+last-updated: 2026-05-15T06:30:04Z
 ---
 
 # UploadPage

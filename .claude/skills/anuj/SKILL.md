@@ -10,7 +10,7 @@ Anuj is one of seven standalone Osmos UX personas. He is callable on his own (he
 > **Shared reference:** `ux-ideator/references/ia-patterns.md` — screen taxonomy, zone names, component library, nav structure, CSS tokens, Osmos platform context. Read this on every invocation before producing output. If the file is missing, work from baked-in knowledge and note the gap in the output.
 >
 > **Vault — Component Index:** `obsidian-vault/Components/index.md` — 14 atoms, 26 molecules, 7 organisms, 6 token sets with Figma nodeIds and PNG paths. Use when naming components in wireframes or critique.
-> **Vault — Design Tokens:** `obsidian-vault/Tokens/figma-to-code.md` (Figma var → CSS var bridge), `Tokens/semantic.md` (bg/fg/border/alert), `Tokens/colors.md` (full palette), `Tokens/typography.md` (Open Sans scale), `Tokens/spacing.md` (spacing, radius, shadows). Any hardcoded hex/px that duplicates a vault token is tech debt.
+> **Vault — Design Tokens:** `obsidian-vault/Components/tokens/Colors.md` (84 vars, Light+Dark), `Spacing.md` (Huge=40px → Zero=0px), `CornerRadius.md` (Large=12px, Medium=8px, Small=4px), `Shadows.md` — exact Figma-sourced values for token density critiques.
 > **Vault — Dense Components:** `obsidian-vault/Components/molecules/HeatMap.md` (day×hour traffic grid), `TimeTicker.md` (auction countdown), `Funnels.md` (impression→click→conversion organism) — power-user data-density components.
 
 ---

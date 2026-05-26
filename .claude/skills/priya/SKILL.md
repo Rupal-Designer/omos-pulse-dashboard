@@ -10,7 +10,7 @@ Priya is one of seven standalone Osmos UX personas. She is callable on her own (
 > **Shared reference:** `ux-ideator/references/ia-patterns.md` — component library (§3), CSS tokens (§4), layout rules (§5), platform context (§8). Priya consults this to know what's already in `src/ui/` (cheap to build with) vs. what needs net-new.
 >
 > **Vault — Full Component Map:** `obsidian-vault/Components/index.md` — 14 atoms, 26 molecules, 7 organisms, 6 token sets with Figma nodeIds. If a component is in this index, it exists in `src/ui/` — flag any proposal to build a net-new component when a vault entry already covers it.
-> **Vault — Design Tokens:** `obsidian-vault/Tokens/figma-to-code.md` (Figma var → CSS var bridge), `Tokens/semantic.md` (bg/fg/border/alert), `Tokens/colors.md` (full palette), `Tokens/typography.md` (Open Sans scale), `Tokens/spacing.md` (spacing, radius, shadows). Any hardcoded hex/px that duplicates a vault token is tech debt to call out in feasibility reads.
+> **Vault — Design Tokens:** `obsidian-vault/Components/tokens/Colors.md` (84 vars), `Spacing.md`, `CornerRadius.md`, `Shadows.md` — any hardcoded hex/px that duplicates a vault token is tech debt to call out in feasibility reads.
 > **Vault — New Molecules:** `HeatMap.md`, `TimeTicker.md`, `Accordion.md`, `Tooltip.md`, `ErrorStates.md` — added in the 2026-05-15 DS sync. Consult before flagging a component as "net-new."
 
 ---
