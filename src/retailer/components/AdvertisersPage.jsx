@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Icon, PlusIcon, UploadIcon, CloseIcon } from '../../ui/atoms/Icon';
+import { Icon, PlusIcon, CloseIcon } from '../../ui/atoms/Icon';
 import { Checkbox } from '../../ui/atoms/Checkbox';
 import { Button } from '../../ui/atoms/Button';
+import { Toggle } from '../../ui/atoms/Toggle';
 import { Modal } from '../../ui/molecules/Modal';
-
-const FONT = "'Open Sans', sans-serif";
-
-// ─── Mock Data ────────────────────────────────────────────────────────────────
+import { Tabs } from '../../ui/molecules/Tabs';
+import { FormField } from '../../ui/molecules/FormField';
 
 const ADVERTISERS = [
   { id: 'CA_08001', storeId: 'B002',  name: 'Garnier Fresh',         persona: 'Mass.con', pSpendYtd: '-',  pSpendYoY: '-',  autoPopulate: true,  catalogRules: 0, created: '2 May 25, 5:11 PM' },
@@ -65,46 +64,35 @@ const RULE_OPERATOR_OPTIONS = [
   { label: 'in', value: 'in' },
 ];
 
-// ─── Persona badge colors ─────────────────────────────────────────────────────
-
 const PERSONA_STYLE = {
   'Luxe':     { bg: 'var(--osmos-brand-green-muted)',   color: 'var(--osmos-brand-green)' },
   'Mass.con': { bg: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)' },
-  'Econ':     { bg: 'var(--osmos-brand-amber-muted)',             color: 'var(--osmos-brand-amber)' },
+  'Econ':     { bg: 'var(--osmos-brand-amber-muted)',   color: 'var(--osmos-brand-amber)' },
 };
-
-// ─── Shared UI helpers ────────────────────────────────────────────────────────
 
 const INPUT_STYLE = {
   width: '100%', padding: '7px 10px', border: '1px solid var(--osmos-border)',
   borderRadius: 6, fontSize: 13, outline: 'none',
-  background: 'var(--osmos-bg)', color: 'var(--osmos-fg)', fontFamily: FONT,
+  background: 'var(--osmos-bg)', color: 'var(--osmos-fg)',
   boxSizing: 'border-box',
 };
 
 const SELECT_STYLE = {
   padding: '7px 10px', border: '1px solid var(--osmos-border)',
   borderRadius: 6, fontSize: 13, outline: 'none',
-  background: 'var(--osmos-bg)', color: 'var(--osmos-fg)', fontFamily: FONT,
+  background: 'var(--osmos-bg)', color: 'var(--osmos-fg)',
   cursor: 'pointer',
 };
 
-function FieldLabel({ children }) {
-  return (
-    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)', marginBottom: 4, fontFamily: FONT }}>
-      {children}
-    </div>
-  );
-}
-
-
-function Toggle({ checked, onChange }) {
-  return (
-    <div onClick={onChange} style={{ width: 32, height: 18, borderRadius: 9, background: checked ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)', cursor: 'pointer', position: 'relative', transition: 'background 0.2s', flexShrink: 0 }}>
-      <div style={{ position: 'absolute', top: 2, left: checked ? 16 : 2, width: 14, height: 14, borderRadius: '50%', background: '#fff', transition: 'left 0.2s' }} />
-    </div>
-  );
-}
+const TH = {
+  textAlign: 'left', padding: '10px 16px', fontSize: 12, fontWeight: 600,
+  color: 'var(--osmos-fg-muted)', background: 'var(--osmos-bg-subtle)',
+  borderBottom: '1px solid var(--osmos-border)', whiteSpace: 'nowrap',
+};
+const TD = {
+  padding: '10px 16px', fontSize: 13, color: 'var(--osmos-fg)',
+  borderBottom: '1px solid var(--osmos-border)', verticalAlign: 'middle',
+};
 
 function Overlay({ onClose }) {
   return <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.35)', zIndex: 800 }} />;
@@ -116,7 +104,7 @@ function ModalPanel({ children, width = 520 }) {
       position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
       width, maxWidth: '95vw', maxHeight: '90vh', overflowY: 'auto',
       background: 'var(--osmos-bg)', borderRadius: 10,
-      boxShadow: '0 20px 60px rgba(0,0,0,0.2)', zIndex: 801, fontFamily: FONT,
+      boxShadow: '0 20px 60px rgba(0,0,0,0.2)', zIndex: 801,
     }}>
       {children}
     </div>
@@ -127,7 +115,7 @@ function ModalHeader({ title, onClose, extra }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid var(--osmos-border)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>{title}</span>
+        <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--osmos-fg)' }}>{title}</span>
         {extra}
       </div>
       <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: 4 }}>
@@ -149,18 +137,15 @@ function ModalFooter({ children }) {
   );
 }
 
+const PAGE_TABS = [
+  { id: 'advertisers', label: 'Advertisers' },
+  { id: 'onboard-code', label: "Advertiser's Onboard Code" },
+];
 
-const TH = {
-  textAlign: 'left', padding: '10px 16px', fontSize: 12, fontWeight: 600,
-  color: 'var(--osmos-fg-muted)', background: 'var(--osmos-bg-subtle)',
-  borderBottom: '1px solid var(--osmos-border)', whiteSpace: 'nowrap', fontFamily: FONT,
-};
-const TD = {
-  padding: '10px 16px', fontSize: 13, color: 'var(--osmos-fg)',
-  borderBottom: '1px solid var(--osmos-border)', verticalAlign: 'middle', fontFamily: FONT,
-};
-
-// ─── Add Advertiser Modal ─────────────────────────────────────────────────────
+const HELP_TABS = [
+  { id: 'basic', label: 'Basic Format: Links with a directory' },
+  { id: 'root', label: 'Root Logic & Rule Creation' },
+];
 
 function AddAdvertiserModal({ open, onClose }) {
   const [storeId, setStoreId] = useState('');
@@ -171,21 +156,25 @@ function AddAdvertiserModal({ open, onClose }) {
   function handleAdd() { onClose(); setStoreId(''); setAdvName(''); setPersona(''); }
 
   return (
-    <Modal open={open} onClose={onClose} title="Add Advertiser" maxWidth={440}
+    <Modal open={open} onClose={onClose} title="Add Advertiser"
       footer={<><Button variant="outline" onClick={onClose}>Cancel</Button><Button variant="primary" onClick={handleAdd}>Add</Button></>}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-        <div><FieldLabel>Store(s) ID *</FieldLabel><input style={INPUT_STYLE} placeholder="e.g. B002" value={storeId} onChange={e => setStoreId(e.target.value)} /></div>
-        <div><FieldLabel>Advertiser Name *</FieldLabel><input style={INPUT_STYLE} placeholder="Garnier Fresh" value={advName} onChange={e => setAdvName(e.target.value)} /></div>
-        <div><FieldLabel>Persona *</FieldLabel><input style={INPUT_STYLE} placeholder="Luxe" value={persona} onChange={e => setPersona(e.target.value)} /></div>
+        <FormField label="Store(s) ID" required>
+          <input style={INPUT_STYLE} placeholder="e.g. B002" value={storeId} onChange={e => setStoreId(e.target.value)} />
+        </FormField>
+        <FormField label="Advertiser Name" required>
+          <input style={INPUT_STYLE} placeholder="Garnier Fresh" value={advName} onChange={e => setAdvName(e.target.value)} />
+        </FormField>
+        <FormField label="Persona" required>
+          <input style={INPUT_STYLE} placeholder="Luxe" value={persona} onChange={e => setPersona(e.target.value)} />
+        </FormField>
       </div>
     </Modal>
   );
 }
 
-// ─── Bulk Upload Modal ────────────────────────────────────────────────────────
-
 function BulkUploadModal({ open, onClose }) {
-  const [step, setStep] = useState(0);
+  const [step, setStep]       = useState(0);
   const [helpTab, setHelpTab] = useState('basic');
 
   if (!open) return null;
@@ -205,18 +194,17 @@ function BulkUploadModal({ open, onClose }) {
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginLeft: 12 }}>
               <Icon size={13} color="var(--osmos-brand-primary)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></Icon>
-              <span style={{ fontSize: 12, color: 'var(--osmos-brand-primary)', fontFamily: FONT }}>Sample_Template.xlsx</span>
-              <span style={{ fontSize: 12, color: 'var(--osmos-brand-primary)', fontWeight: 600, textDecoration: 'underline', cursor: 'pointer', fontFamily: FONT }}>Download</span>
+              <span style={{ fontSize: 12, color: 'var(--osmos-brand-primary)' }}>Sample_Template.xlsx</span>
+              <span style={{ fontSize: 12, color: 'var(--osmos-brand-primary)', fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}>Download</span>
             </div>
           )}
         />
         <ModalBody>
           {step === 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <p style={{ margin: 0, fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>
+              <p style={{ margin: 0, fontSize: 12, color: 'var(--osmos-fg-muted)' }}>
                 Bulk upload/edit advertiser data and link the corresponding root link creation rules / Root logics.
               </p>
-              {/* Drop zone */}
               <div
                 onClick={() => setStep(1)}
                 style={{ border: '2px dashed var(--osmos-border)', borderRadius: 8, padding: '40px 20px', textAlign: 'center', cursor: 'pointer', background: 'var(--osmos-bg-subtle)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}
@@ -226,38 +214,31 @@ function BulkUploadModal({ open, onClose }) {
                   <polyline points="17 8 12 3 7 8"/>
                   <line x1="12" y1="3" x2="12" y2="15"/>
                 </Icon>
-                <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>upload your .csv files here</span>
+                <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>upload your .csv files here</span>
               </div>
-              {/* Help tabs */}
               <div>
-                <div style={{ display: 'flex', borderBottom: '1px solid var(--osmos-border)', gap: 0 }}>
-                  {['basic', 'root'].map(t => (
-                    <button key={t} onClick={() => setHelpTab(t)} style={{ padding: '8px 14px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 12, fontWeight: helpTab === t ? 600 : 400, color: helpTab === t ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)', borderBottom: helpTab === t ? '2px solid var(--osmos-brand-primary)' : '2px solid transparent', marginBottom: -1, fontFamily: FONT }}>
-                      {t === 'basic' ? 'Basic Format: Links with a directory' : 'Root Logic & Rule Creation'}
-                    </button>
-                  ))}
-                </div>
+                <Tabs value={helpTab} onValueChange={setHelpTab} items={HELP_TABS} />
                 <div style={{ padding: '12px 0', display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {helpTab === 'basic' ? (
                     <>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>Sheet 1 : Advertisers</span>
-                      <div style={{ background: 'var(--osmos-bg-subtle)', borderRadius: 6, padding: '10px 12px', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT, lineHeight: 1.8 }}>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg)' }}>Sheet 1 : Advertisers</span>
+                      <div style={{ background: 'var(--osmos-bg-subtle)', borderRadius: 6, padding: '10px 12px', fontSize: 12, color: 'var(--osmos-fg-muted)', lineHeight: 1.8 }}>
                         advertiser_id<br/>store_id<br/>advertiser_name<br/>persona<br/>billing_advertiser_id (optional)<br/>billing_invoice_name (optional)
                       </div>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>Sheet 2 : Rules</span>
-                      <div style={{ background: 'var(--osmos-bg-subtle)', borderRadius: 6, padding: '10px 12px', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT, lineHeight: 1.8 }}>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg)' }}>Sheet 2 : Rules</span>
+                      <div style={{ background: 'var(--osmos-bg-subtle)', borderRadius: 6, padding: '10px 12px', fontSize: 12, color: 'var(--osmos-fg-muted)', lineHeight: 1.8 }}>
                         advertiser_id<br/>rule_name<br/>field_name<br/>operator<br/>value
                       </div>
                     </>
                   ) : (
                     <>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>Root Logic Configuration</span>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg)' }}>Root Logic Configuration</span>
                       <div style={{ background: 'var(--osmos-bg-subtle)', borderRadius: 6, padding: '10px 12px' }}>
-                        <p style={{ margin: 0, fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>
+                        <p style={{ margin: 0, fontSize: 12, color: 'var(--osmos-fg-muted)' }}>
                           Configure root-level rules and conditional branching. Use the template to set up multi-condition rules with AND/OR logic.
                         </p>
                       </div>
-                      <p style={{ margin: 0, fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>
+                      <p style={{ margin: 0, fontSize: 12, color: 'var(--osmos-fg-muted)' }}>
                         <strong>Note:</strong> For root-level architectures, use dedicated column markers in the spreadsheet. A root link is for a set of Rules. To use <strong>&gt;= 2</strong> conditions in the root rule bundle multiple fields.
                       </p>
                     </>
@@ -273,8 +254,8 @@ function BulkUploadModal({ open, onClose }) {
                   <polyline points="22 4 12 14.01 9 11.01"/>
                 </Icon>
               </div>
-              <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>Uploaded Successfully</span>
-              <p style={{ margin: 0, fontSize: 12, color: 'var(--osmos-fg-muted)', textAlign: 'center', fontFamily: FONT }}>
+              <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--osmos-fg)' }}>Uploaded Successfully</span>
+              <p style={{ margin: 0, fontSize: 12, color: 'var(--osmos-fg-muted)', textAlign: 'center' }}>
                 File has been processed and uploaded successfully. You can<br/>create the associated accounts in the table.
               </p>
               <Button variant="primary" onClick={handleClose}>Done</Button>
@@ -285,8 +266,6 @@ function BulkUploadModal({ open, onClose }) {
     </>
   );
 }
-
-// ─── Rule Modal (Add / Edit) ──────────────────────────────────────────────────
 
 function RuleModal({ open, onClose, editMode = false, initialConditions = null }) {
   const emptyCondition = { field: '', operator: '', value: '' };
@@ -320,17 +299,15 @@ function RuleModal({ open, onClose, editMode = false, initialConditions = null }
         />
         <ModalBody>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {/* Info alert */}
-            <div style={{ background: 'var(--osmos-brand-primary-muted)', border: '1px solid var(--osmos-brand-primary)', borderRadius: 6, padding: '10px 14px', fontSize: 12, color: 'var(--osmos-fg)', fontFamily: FONT }}>
+            <div style={{ background: 'var(--osmos-brand-primary-muted)', border: '1px solid var(--osmos-brand-primary)', borderRadius: 6, padding: '10px 14px', fontSize: 12, color: 'var(--osmos-fg)' }}>
               A rule is associated mapping of product through a set of conditions to an advertising tier. If a line with CIID is required for at-least one primary key within the CID slot in addition to criteria. This is useful for organizing &gt; 10 rule sets at the same tier level.{' '}
               <span style={{ color: 'var(--osmos-brand-primary)', cursor: 'pointer', fontWeight: 500 }}>Learn more</span>
             </div>
-            {/* Apply condition toggle */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', fontFamily: FONT }}>Apply Condition *</span>
-              <Toggle checked={applyCondition} onChange={() => setApplyCondition(v => !v)} />
+              <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>Apply Condition *</span>
+              <Toggle checked={applyCondition} onCheckedChange={setApplyCondition} />
               {applyCondition && (
-                <span style={{ marginLeft: 'auto', fontSize: 12, color: 'var(--osmos-brand-primary)', cursor: 'pointer', fontWeight: 500, fontFamily: FONT }}>
+                <span style={{ marginLeft: 'auto', fontSize: 12, color: 'var(--osmos-brand-primary)', cursor: 'pointer', fontWeight: 500 }}>
                   Advanced Suggestion
                 </span>
               )}
@@ -340,28 +317,26 @@ function RuleModal({ open, onClose, editMode = false, initialConditions = null }
                 {conditions.map((cond, idx) => (
                   <div key={idx} style={{ display: 'flex', alignItems: 'flex-end', gap: 8 }}>
                     {idx > 0 && (
-                      <span style={{ background: 'var(--osmos-bg-subtle)', border: '1px solid var(--osmos-border)', borderRadius: 20, padding: '2px 8px', fontSize: 11, fontWeight: 600, color: 'var(--osmos-fg-muted)', whiteSpace: 'nowrap', alignSelf: 'center', fontFamily: FONT }}>
+                      <span style={{ background: 'var(--osmos-bg-subtle)', border: '1px solid var(--osmos-border)', borderRadius: 20, padding: '2px 8px', fontSize: 11, fontWeight: 600, color: 'var(--osmos-fg-muted)', whiteSpace: 'nowrap', alignSelf: 'center' }}>
                         AND
                       </span>
                     )}
-                    <div style={{ flex: 1 }}>
-                      {idx === 0 && <FieldLabel>Field Name</FieldLabel>}
+                    <FormField label={idx === 0 ? 'Field Name' : undefined} style={{ flex: 1, marginBottom: 0 }}>
                       <select style={SELECT_STYLE} value={cond.field} onChange={e => updateCondition(idx, 'field', e.target.value)}>
                         <option value="">Brand Name</option>
                         {RULE_FIELD_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                       </select>
-                    </div>
+                    </FormField>
                     <div style={{ flex: '0 0 80px' }}>
-                      {idx === 0 && <FieldLabel>&nbsp;</FieldLabel>}
+                      {idx === 0 && <div style={{ height: 16, marginBottom: 4 }} />}
                       <select style={SELECT_STYLE} value={cond.operator} onChange={e => updateCondition(idx, 'operator', e.target.value)}>
                         <option value="">=</option>
                         {RULE_OPERATOR_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                       </select>
                     </div>
-                    <div style={{ flex: 1 }}>
-                      {idx === 0 && <FieldLabel>Value</FieldLabel>}
+                    <FormField label={idx === 0 ? 'Value' : undefined} style={{ flex: 1, marginBottom: 0 }}>
                       <input style={INPUT_STYLE} placeholder="Nike" value={cond.value} onChange={e => updateCondition(idx, 'value', e.target.value)} />
-                    </div>
+                    </FormField>
                     {conditions.length > 1 && (
                       <button onClick={() => removeCondition(idx)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '0 4px', marginBottom: 6 }}>
                         <CloseIcon size={15} color="var(--alert-error-primary)" />
@@ -369,7 +344,7 @@ function RuleModal({ open, onClose, editMode = false, initialConditions = null }
                     )}
                   </div>
                 ))}
-                <button onClick={addCondition} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--osmos-brand-primary)', fontWeight: 500, display: 'inline-flex', alignItems: 'center', gap: 4, padding: 0, fontFamily: FONT, alignSelf: 'flex-start' }}>
+                <button onClick={addCondition} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--osmos-brand-primary)', fontWeight: 500, display: 'inline-flex', alignItems: 'center', gap: 4, padding: 0, alignSelf: 'flex-start' }}>
                   <PlusIcon size={13} color="var(--osmos-brand-primary)" /> Add
                 </button>
               </div>
@@ -385,8 +360,6 @@ function RuleModal({ open, onClose, editMode = false, initialConditions = null }
   );
 }
 
-// ─── Change History Modal ─────────────────────────────────────────────────────
-
 function ChangeHistoryModal({ open, onClose }) {
   if (!open) return null;
   return (
@@ -398,25 +371,24 @@ function ChangeHistoryModal({ open, onClose }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {CHANGE_HISTORY.map((entry, ei) => (
               <div key={ei} style={{ display: 'flex', gap: 14 }}>
-                {/* Timeline indicator */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
                   <div style={{ width: 12, height: 12, borderRadius: '50%', background: entry.status === 'Activated' ? 'var(--osmos-brand-green)' : 'var(--alert-error-primary)', flexShrink: 0 }} />
                   {ei < CHANGE_HISTORY.length - 1 && <div style={{ width: 2, flex: 1, background: 'var(--osmos-border)', minHeight: 20 }} />}
                 </div>
                 <div style={{ flex: 1, paddingBottom: 8 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>{entry.date}</span>
+                    <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{entry.date}</span>
                     <span style={{
                       background: entry.status === 'Activated' ? 'var(--osmos-brand-green-muted)' : 'rgba(220,38,38,0.1)',
                       color: entry.status === 'Activated' ? 'var(--osmos-brand-green)' : 'var(--alert-error-primary)',
-                      borderRadius: 20, padding: '2px 8px', fontSize: 11, fontWeight: 600, fontFamily: FONT,
+                      borderRadius: 20, padding: '2px 8px', fontSize: 11, fontWeight: 600,
                     }}>
                       {entry.status}
                     </span>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {entry.changes.map((change, ci) => (
-                      <div key={ci} style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', paddingLeft: 10, borderLeft: '2px solid var(--osmos-border)', fontFamily: FONT }}>
+                      <div key={ci} style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', paddingLeft: 10, borderLeft: '2px solid var(--osmos-border)' }}>
                         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 4 }}>
                           <span style={{ background: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)', borderRadius: 4, padding: '1px 6px', fontSize: 11, fontWeight: 500 }}>{change.field}</span>
                           <span>from</span>
@@ -440,7 +412,7 @@ function ChangeHistoryModal({ open, onClose }) {
                     ))}
                   </div>
                   {ei < CHANGE_HISTORY.length - 1 && (
-                    <span style={{ display: 'inline-block', marginTop: 6, fontSize: 12, color: 'var(--osmos-brand-primary)', cursor: 'pointer', fontWeight: 500, fontFamily: FONT }}>See More</span>
+                    <span style={{ display: 'inline-block', marginTop: 6, fontSize: 12, color: 'var(--osmos-brand-primary)', cursor: 'pointer', fontWeight: 500 }}>See More</span>
                   )}
                 </div>
               </div>
@@ -455,18 +427,16 @@ function ChangeHistoryModal({ open, onClose }) {
   );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
-
 export default function AdvertisersPage() {
   const [showAddAdvertiser, setShowAddAdvertiser] = useState(false);
-  const [showBulkUpload, setShowBulkUpload] = useState(false);
-  const [showAddRule, setShowAddRule] = useState(false);
-  const [showEditRule, setShowEditRule] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
-  const [selected, setSelected] = useState([]);
-  const [search, setSearch] = useState('');
-  const [activeTab, setActiveTab] = useState('advertisers');
-  const [hovRow, setHovRow] = useState(null);
+  const [showBulkUpload, setShowBulkUpload]       = useState(false);
+  const [showAddRule, setShowAddRule]             = useState(false);
+  const [showEditRule, setShowEditRule]           = useState(false);
+  const [showHistory, setShowHistory]             = useState(false);
+  const [selected, setSelected]                   = useState([]);
+  const [search, setSearch]                       = useState('');
+  const [activeTab, setActiveTab]                 = useState('advertisers');
+  const [hovRow, setHovRow]                       = useState(null);
 
   const allSelected = selected.length === ADVERTISERS.length;
   function toggleAll() { setSelected(allSelected ? [] : ADVERTISERS.map(a => a.id)); }
@@ -478,17 +448,15 @@ export default function AdvertisersPage() {
   );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, background: 'var(--osmos-bg-subtle)', fontFamily: FONT }}>
-
-      {/* Page-level header */}
+    <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, background: 'var(--osmos-bg-subtle)' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 24px', background: 'var(--osmos-bg)', borderBottom: '1px solid var(--osmos-border)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{ width: 36, height: 36, background: 'var(--osmos-bg-subtle)', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
             <Icon size={16} color="var(--osmos-fg-muted)"><polyline points="15 18 9 12 15 6"/></Icon>
           </div>
           <div>
-            <div style={{ fontSize: 11, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>Online Ad Management › Space World</div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>Advertisers</div>
+            <div style={{ fontSize: 11, color: 'var(--osmos-fg-muted)' }}>Online Ad Management › Space World</div>
+            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)' }}>Advertisers</div>
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -498,31 +466,23 @@ export default function AdvertisersPage() {
           <button style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '6px 8px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
             <Icon size={14} color="var(--osmos-fg-muted)"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>
           </button>
-          <span style={{ background: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)', border: '1px solid var(--osmos-brand-primary)', borderRadius: 20, padding: '4px 12px', fontSize: 12, fontWeight: 600, fontFamily: FONT }}>
+          <span style={{ background: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)', border: '1px solid var(--osmos-brand-primary)', borderRadius: 20, padding: '4px 12px', fontSize: 12, fontWeight: 600 }}>
             Advertiser's Onboard Code
           </span>
         </div>
       </div>
 
       <div style={{ flex: 1, padding: 24, overflowY: 'auto' }}>
-
-        {/* Info banner */}
-        <div style={{ background: 'var(--osmos-brand-primary-muted)', border: '1px solid var(--osmos-brand-primary)', borderRadius: 6, padding: '10px 14px', marginBottom: 16, fontSize: 12, color: 'var(--osmos-fg)', fontFamily: FONT }}>
+        <div style={{ background: 'var(--osmos-brand-primary-muted)', border: '1px solid var(--osmos-brand-primary)', borderRadius: 6, padding: '10px 14px', marginBottom: 16, fontSize: 12, color: 'var(--osmos-fg)' }}>
           Edit Advertiser info and configure tracking codes. You can set the directly from the tab above, or edit the settings from the bulk action button below.
         </div>
 
-        {/* Tab bar */}
-        <div style={{ display: 'flex', borderBottom: '1px solid var(--osmos-border)', marginBottom: 16 }}>
-          {[{ key: 'advertisers', label: 'Advertisers' }, { key: 'onboard-code', label: "Advertiser's Onboard Code" }].map(t => (
-            <button key={t.key} onClick={() => setActiveTab(t.key)} style={{ padding: '10px 16px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, fontWeight: activeTab === t.key ? 600 : 400, color: activeTab === t.key ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)', borderBottom: activeTab === t.key ? '2px solid var(--osmos-brand-primary)' : '2px solid transparent', marginBottom: -1, fontFamily: FONT }}>
-              {t.label}
-            </button>
-          ))}
+        <div style={{ marginBottom: 16 }}>
+          <Tabs value={activeTab} onValueChange={setActiveTab} items={PAGE_TABS} />
         </div>
 
         {activeTab === 'advertisers' ? (
           <>
-            {/* Toolbar */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--osmos-bg)', padding: 14, borderRadius: 8, border: '1px solid var(--osmos-border)', marginBottom: 8 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <select style={SELECT_STYLE}>
@@ -532,7 +492,7 @@ export default function AdvertisersPage() {
                 </select>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, border: '1px solid var(--osmos-border)', borderRadius: 6, padding: '0 10px', height: 34, background: 'var(--osmos-bg)' }}>
                   <Icon size={13} color="var(--osmos-fg-muted)"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>
-                  <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search advertisers..." style={{ border: 'none', outline: 'none', fontSize: 13, color: 'var(--osmos-fg)', fontFamily: FONT, width: 200, background: 'transparent' }} />
+                  <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search advertisers..." style={{ border: 'none', outline: 'none', fontSize: 13, color: 'var(--osmos-fg)', width: 200, background: 'transparent' }} />
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -547,11 +507,10 @@ export default function AdvertisersPage() {
                 </Button>
               </div>
             </div>
-            <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', marginBottom: 12, paddingLeft: 2, fontFamily: FONT }}>
+            <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', marginBottom: 12, paddingLeft: 2 }}>
               Showing {filtered.length} of {ADVERTISERS.length} advertisers
             </div>
 
-            {/* Table */}
             <div style={{ background: 'var(--osmos-bg)', borderRadius: 8, border: '1px solid var(--osmos-border)', overflow: 'hidden' }}>
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 900 }}>
@@ -614,7 +573,7 @@ export default function AdvertisersPage() {
                   </tbody>
                 </table>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', borderTop: '1px solid var(--osmos-border)', background: 'var(--osmos-bg-subtle)', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', borderTop: '1px solid var(--osmos-border)', background: 'var(--osmos-bg-subtle)', fontSize: 12, color: 'var(--osmos-fg-muted)' }}>
                 <span>Showing {filtered.length} of {ADVERTISERS.length} advertisers</span>
                 <span>Last updated: {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
               </div>
@@ -622,14 +581,13 @@ export default function AdvertisersPage() {
           </>
         ) : (
           <div style={{ background: 'var(--osmos-bg)', padding: 24, borderRadius: 8, border: '1px solid var(--osmos-border)' }}>
-            <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>
+            <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>
               Onboard code configuration will appear here. Use this tab to manage tracking pixels and integration scripts for each advertiser.
             </p>
           </div>
         )}
       </div>
 
-      {/* Modals */}
       <AddAdvertiserModal open={showAddAdvertiser} onClose={() => setShowAddAdvertiser(false)} />
       <BulkUploadModal open={showBulkUpload} onClose={() => setShowBulkUpload(false)} />
       <RuleModal open={showAddRule} onClose={() => setShowAddRule(false)} editMode={false} />

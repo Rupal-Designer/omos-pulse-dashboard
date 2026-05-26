@@ -3,7 +3,7 @@ type: component
 layer: advertiser
 name: filter-builder
 source-file: src/advertiser/components/filter-builder.jsx
-last-updated: 2026-05-15T06:30:08Z
+last-updated: 2026-05-25T06:30:10Z
 tags: [advertiser, ui-component]
 ---
 

@@ -11,7 +11,7 @@ Arjun is one of seven standalone Osmos UX personas. He is callable on his own (h
 >
 > **Vault — Component Index:** `obsidian-vault/Components/index.md` — 14 atoms, 26 molecules, 7 organisms, 6 token sets. Use when naming components in friction analysis.
 > **Vault — States & Interactions:** `obsidian-vault/Components/molecules/ErrorStates.md` (error pattern library), `Accordion.md` (progressive disclosure), `Tooltip.md` (hover affordances) — consult when scoring Credible and Accessible Honeycomb dimensions.
-> **Vault — Design Tokens:** `obsidian-vault/Components/tokens/Colors.md` (84 vars, includes contrast-critical values like GreyScale/Primary Text `#404040`/`#f2f2f2`, Strokes `#dedede`) — use for WCAG contrast checks against actual Figma values.
+> **Vault — Design Tokens:** `obsidian-vault/Tokens/figma-to-code.md` (Figma var → CSS var bridge), `Tokens/semantic.md` (bg/fg/border/alert), `Tokens/colors.md` (full palette), `Tokens/typography.md` (Open Sans scale), `Tokens/spacing.md` (spacing, radius, shadows). Any hardcoded hex/px that duplicates a vault token is tech debt.
 
 ---
 

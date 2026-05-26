@@ -48,7 +48,12 @@ Run all seven greps in parallel. Collect every match into a flat candidate list:
 
 **Grep 1 — Local function definitions whose names exactly match a `src/ui/` export:**
 ```bash
-grep -rn --include="*.jsx" -E "^(export )?(default )?function (Badge|TypeBadge|Button|Toast|Checkbox|Tag|SearchBar|Toolbar|Drawer|Pagination|Modal|StatCard|KPIChip|InfoBanner|EmptyState|SectionCard|Stepper|RadioCard|UploadDropzone)\b" src/
+grep -rn --include="*.jsx" -E "^(export )?(default )?function (Badge|TypeBadge|Button|Toast|Checkbox|Tag|SearchBar|Toolbar|Drawer|Pagination|Modal|StatCard|KPIChip|InfoBanner|EmptyState|SectionCard|Stepper|RadioCard|UploadDropzone|Tabs|FormField|FormDrawer|SpinLoader|Toggle|Accordion|Popover|DropdownMenu)\b" src/
+```
+
+**Grep 1b — Local TabBar and ConfirmDialog (common local patterns now covered by src/ui/):**
+```bash
+grep -rn --include="*.jsx" -E "^(export )?(default )?function (TabBar|ConfirmDialog)\b" src/
 ```
 
 **Grep 2 — Badge-family name variants (near-duplicates by intent):**
@@ -119,6 +124,9 @@ For each candidate from Phase 1, read both the local implementation and the corr
 | `LeftNav.jsx` | 208 | Local `function Icon(` re-definition | `Icon` from `'../../ui'` | None |
 | 8 files with `function Ico(` | various | `Ico` micro-wrapper | Remove function; replace `<Ico d={...}>` with named icon import or `<Icon>` | Call-site update required |
 | `PersonaConfigPage.jsx`, `SellerAdvertiserOnboardingPage.jsx`, `BrandAdvertiserOnboardingPage.jsx` | various | `function PersonaBadge(` with hardcoded hex | `<TypeBadge type={p} colorMap={PERSONA_COLORS}>` — keep `PERSONA_COLORS` const local | `PersonaBadge p=` → `TypeBadge type=` |
+| Any file with `function TabBar(` | various | Local tab row using `Button` atoms | `<Tabs items={[{id, label}]} value={tab} onValueChange={setTab} />` from `src/ui/` | Items shape: `{id, label}` not `{value, label}` |
+| Any file with `function ConfirmDialog(` | various | Hand-rolled modal overlay | `<Modal open={confirm} onClose={...} title="..." footer={<>Cancel+Submit buttons</>}>body</Modal>` | footer uses `<Button variant="outline">` + `<Button variant="primary">` |
+| Any file with local `function SectionCard(` (container only) | various | Simple bordered card wrapper | DS `<SectionCard>` from `src/ui/` — add `style={{ overflow: 'hidden' }}` when card contains toolbar+table (avoids Card.Body double-padding) | No prop rename; check that Card.Body padding doesn't break inner layout |
 
 **Before/after example:**
 ```jsx
@@ -277,11 +285,13 @@ export function ComponentName({ variant = 'default', style, ...props }) {
 
 | Component | Appears in | Proposed location | Props needed |
 |---|---|---|---|
-| `Toggle` (32×18 pill switch, animated thumb) | `AdvertisersPage.jsx`, `AutomatedRulesPage.jsx`, `FinanceAdvertiserManagementPage.jsx` | `src/ui/atoms/Toggle.jsx`, export `{ Toggle }` | `checked: boolean`, `onChange: fn`, `disabled?: boolean`, `size?: 'sm' \| 'md'` |
-| `DataTable` / `TableCard` (table-in-card with search, download, columns controls) | `DataTable.jsx` (already a shared utility) | `src/ui/molecules/DataTable.jsx`, export `{ DataTable }` | `columns`, `data`, `onSearch`, `onDownload`, `onColumnsChange` |
 | `AttrIdChip` (monospace code pill for IDs/SKUs) | `ManageAttributesPage.jsx` | Consider as `Tag variant="code"` addition to existing `Tag` atom | `variant="code"` — monospace font, gray background |
 
-Present this table and await user response. If user approves `Toggle`: create `src/ui/atoms/Toggle.jsx`, add `export { Toggle }` to `src/ui/index.js`, replace local usages in all three files.
+> **Already shipped (no longer Tier 3):**
+> - `Toggle` — now at `src/ui/atoms/Toggle.jsx`, exported from `src/ui/`. Replace local usages with `import { Toggle } from '../../ui'`.
+> - `DataTable` — now at `src/shared/components/data-table/` (TanStack Table v8 wrapper). Import via `import { DataTable, useOsmosTable } from '../../shared/components/data-table'`.
+
+Present this table and await user response before creating any files.
 
 ---
 

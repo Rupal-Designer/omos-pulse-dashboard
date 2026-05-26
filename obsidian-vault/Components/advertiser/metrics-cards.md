@@ -3,7 +3,7 @@ type: component
 layer: advertiser
 name: metrics-cards
 source-file: src/advertiser/components/metrics-cards.jsx
-last-updated: 2026-05-15T06:30:12Z
+last-updated: 2026-05-25T06:30:14Z
 tags: [advertiser, ui-component]
 ---
 

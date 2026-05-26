@@ -9,7 +9,7 @@ tags: [molecule, ui-component, layout, interactive]
 source-file: src/ui/molecules/Drawer.jsx
 export-name: Drawer
 png: ../Assets/Components/molecules/Drawer.png
-last-updated: 2026-05-15
+last-updated: 2026-05-25T06:30:03Z
 ---
 
 # Drawer

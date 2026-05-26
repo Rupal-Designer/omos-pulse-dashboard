@@ -3,7 +3,7 @@ type: component
 layer: advertiser
 name: budget-adjust-drawer
 source-file: src/advertiser/components/budget-adjust-drawer.jsx
-last-updated: 2026-05-15T06:30:08Z
+last-updated: 2026-05-25T06:30:10Z
 tags: [advertiser, ui-component]
 ---
 

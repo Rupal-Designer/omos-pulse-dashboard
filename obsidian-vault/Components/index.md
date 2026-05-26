@@ -29,8 +29,8 @@ Design System cover: [[Assets/Components/design-system-cover.png]]
 | [[Components/atoms/TypeBadge]] | `5491:1574` | — | src/ui/atoms/Badge.jsx | Category badge with custom colorMap |
 | [[Components/atoms/Input]] | `2952:69107` | ✅ | src/ui/atoms/Input.jsx | Input + Select |
 | [[Components/atoms/Toast]] | `99:18351` | ✅ | src/ui/atoms/Toast.jsx | useToast hook |
-| [[Components/atoms/SpinLoader]] | `5664:34408` | ✅ | — | Bare + With BG variants |
-| [[Components/atoms/Toggle]] | `925:30922` | ✅ | — | Toggle & Switch |
+| [[Components/atoms/SpinLoader]] | `5664:34408` | ✅ | src/ui/atoms/SpinLoader.jsx | Bare + With BG variants |
+| [[Components/atoms/Toggle]] | `925:30922` | ✅ | src/ui/atoms/Toggle.jsx | Toggle & Switch |
 | [[Components/atoms/Icon]] | `1706:39354` | ✅ | src/ui/atoms/Icon.jsx | 21 named exports |
 | [[Components/atoms/Chips]] | `858:62926` | ✅ | — | Figma: Chips → Code: Badge; dismissible filters |
 | [[Components/atoms/LogoMark]] | — | — | src/ui/atoms/LogoMark.jsx | Brand mark |
@@ -49,10 +49,10 @@ Design System cover: [[Assets/Components/design-system-cover.png]]
 |-----------|-------------|-----|------------|-------|
 | [[Components/molecules/Search]] | `922:12552` | ✅ | src/ui/molecules/SearchBar.jsx | Always in Toolbar right slot |
 | [[Components/molecules/Toolbar]] | — | — | src/ui/molecules/Toolbar.jsx | Left + right slots |
-| [[Components/molecules/DropdownMenu]] | `1947:23250` | ✅ | — | Select + Context menu |
+| [[Components/molecules/DropdownMenu]] | `1947:23250` | ✅ | src/ui/molecules/DropdownMenu.jsx | Select + Context menu |
 | [[Components/molecules/Calendar]] | `1026:7846` | ✅ | — | Single + Range date picker |
-| [[Components/molecules/Tabs]] | `69:12409` | ✅ | — | Line / Pill / **Vertical** variants; vertical key `12e11bf1...` |
-| [[Components/molecules/Popover]] | `1:2394` | ✅ | — | Info popup + footer variant |
+| [[Components/molecules/Tabs]] | `69:12409` | ✅ | src/ui/molecules/Tabs.jsx | Line / Pill / **Vertical** variants; vertical key `12e11bf1...` |
+| [[Components/molecules/Popover]] | `1:2394` | ✅ | src/ui/molecules/Popover.jsx | Info popup + footer variant |
 | [[Components/molecules/UploadFile]] | `6493:52281` | ✅ | src/ui/molecules/UploadDropzone.jsx | Drag-drop zone |
 | [[Components/molecules/Drawer]] | `1506:3155` | ✅ | src/ui/molecules/Drawer.jsx | Right-side slide panel |
 | [[Components/molecules/Modal]] | — | — | src/ui/molecules/Modal.jsx | Centered dialog |
@@ -68,13 +68,15 @@ Design System cover: [[Assets/Components/design-system-cover.png]]
 | [[Components/molecules/ThemeDropdown]] | — | — | src/ui/molecules/ThemeDropdown.jsx | Light/dark toggle |
 | [[Components/molecules/GlobalSearch]] | — | — | src/ui/molecules/GlobalSearch.jsx | App-level search overlay |
 | [[Components/molecules/Pagination]] | — | — | src/ui/molecules/Pagination.jsx | Table page controls |
-| [[Components/molecules/Accordion]] | `5684:1685` | ✅ | — | Collapsible disclosure panels |
+| [[Components/molecules/Accordion]] | `5684:1685` | ✅ | src/ui/molecules/Accordion.jsx | Collapsible disclosure panels |
+| [[Components/molecules/FormField]] | — | — | src/ui/molecules/FormField.jsx | Label + hint + error wrapper for form inputs |
+| [[Components/molecules/FormDrawer]] | — | — | src/ui/molecules/FormDrawer.jsx | Drawer with header/body/footer + submit/cancel actions |
 | [[Components/molecules/HeatMap]] | `190:8678` | ✅ | — | Grid color-intensity chart |
 | [[Components/molecules/TimeTicker]] | `3704:26772` | ✅ | — | Countdown / elapsed timer |
 | [[Components/molecules/ErrorStates]] | `5629:27041` | ✅ | — | Full-page + inline error patterns |
 | [[Components/molecules/Tooltip]] | `2727:101995` | ✅ | — | Hover label for icon-only elements |
 
-**Molecule count: 26**
+**Molecule count: 28** (added FormField, FormDrawer)
 
 ---
 
@@ -120,8 +122,12 @@ Design System cover: [[Assets/Components/design-system-cover.png]]
 | Component | App Source | Notes |
 |-----------|------------|-------|
 | [[Components/patterns/UploadPage]] | src/ui/patterns/UploadPage.jsx | InfoBanner + UploadDropzone + howItWorks |
+| [[Components/patterns/DataListPage]] | src/ui/patterns/DataListPage.jsx | Toolbar + DataTable + Pagination + FormDrawer + EmptyState |
+| [[Components/patterns/AnalyticsDashPage]] | src/ui/patterns/AnalyticsDashPage.jsx | StatCard grid + chart grid + optional table slot |
+| [[Components/patterns/SettingsPage]] | src/ui/patterns/SettingsPage.jsx | SectionCard + Tabs + optional toolbar slot |
+| [[Components/patterns/OnboardingWizard]] | src/ui/patterns/OnboardingWizard.jsx | Stepper + content slot + nav buttons |
 
-**Pattern count: 1**
+**Pattern count: 5**
 
 ---
 

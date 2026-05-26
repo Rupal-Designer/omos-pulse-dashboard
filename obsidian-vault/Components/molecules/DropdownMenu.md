@@ -4,7 +4,7 @@ layer: molecule
 name: DropdownMenu
 source-file: src/ui/molecules/DropdownMenu.jsx
 figma-node: "1947:23250"
-last-updated: 2026-05-22T00:00:00Z
+last-updated: 2026-05-25T06:30:02Z
 tags: [molecule, ui-component]
 ---
 

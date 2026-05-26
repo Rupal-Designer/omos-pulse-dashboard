@@ -5,7 +5,7 @@ name: ThemeDropdown
 tags: [molecule, ui-component, interactive, navigation]
 source-file: src/ui/molecules/ThemeDropdown.jsx
 export-name: ThemeDropdown
-last-updated: 2026-05-15T06:30:02Z
+last-updated: 2026-05-25T06:30:02Z
 ---
 
 # ThemeDropdown

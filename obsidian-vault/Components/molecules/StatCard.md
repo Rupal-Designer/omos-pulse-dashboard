@@ -9,7 +9,7 @@ tags: [molecule, ui-component, data, display]
 source-file: src/ui/molecules/StatCard.jsx
 export-name: StatCard
 png: ../Assets/Components/molecules/StatCard.png
-last-updated: 2026-05-15
+last-updated: 2026-05-25T06:30:03Z
 ---
 
 # StatCard

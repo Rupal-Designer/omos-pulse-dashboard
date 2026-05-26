@@ -5,7 +5,7 @@ name: RadioCard
 tags: [molecule, ui-component, form, interactive]
 source-file: src/ui/molecules/RadioCard.jsx
 export-name: RadioCard
-last-updated: 2026-05-15T06:30:02Z
+last-updated: 2026-05-25T06:30:02Z
 ---
 
 # RadioCard

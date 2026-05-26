@@ -9,7 +9,7 @@ tags: [molecule, ui-component, navigation, form]
 source-file: src/ui/molecules/Stepper.jsx
 export-name: Stepper
 png: ../Assets/Components/molecules/Stepper.png
-last-updated: 2026-05-15
+last-updated: 2026-05-25T06:30:01Z
 ---
 
 # Stepper

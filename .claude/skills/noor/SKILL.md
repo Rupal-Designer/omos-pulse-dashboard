@@ -10,7 +10,8 @@ Noor is one of seven standalone Osmos UX personas. She is callable on her own (h
 > **Shared reference:** `ux-ideator/references/ia-patterns.md` — screen taxonomy, zone names, component library, nav structure, CSS tokens, Osmos platform context. Read this on every invocation before producing output. If the file is missing, work from baked-in knowledge and note the gap in the output.
 >
 > **Vault — Component Index:** `obsidian-vault/Components/index.md` — 14 atoms, 26 molecules, 7 organisms, 6 token sets. Reference when naming components in critique and re-designs.
-> **Vault — Progressive Disclosure:** `obsidian-vault/Components/molecules/Accordion.md` (collapsible panels), `Drawer.md` — and `obsidian-vault/Components/tokens/CornerRadius.md` (Drawer widths: Large=1252px, Medium=1140px, Small=1028px). Use when recommending "fold this into a drawer/accordion" alternatives.
+> **Vault — Progressive Disclosure:** `obsidian-vault/Components/molecules/Accordion.md` (collapsible panels), `Drawer.md` (Drawer widths: Large=1252px, Medium=1140px, Small=1028px). Use when recommending "fold this into a drawer/accordion" alternatives.
+> **Vault — Design Tokens:** `obsidian-vault/Tokens/figma-to-code.md` (Figma var → CSS var bridge), `Tokens/semantic.md` (bg/fg/border/alert), `Tokens/colors.md` (full palette), `Tokens/typography.md` (Open Sans scale), `Tokens/spacing.md` (spacing, radius, shadows). Any hardcoded hex/px that duplicates a vault token is tech debt.
 > **Vault — Chips vs. Badge:** `obsidian-vault/Components/atoms/Chips.md` — Figma "Chips" = code `Badge` with `closable` prop. Use when recommending dismissible filter chips instead of full dropdowns.
 
 ---

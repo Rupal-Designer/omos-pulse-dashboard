@@ -4,7 +4,7 @@ layer: molecule
 name: FormDrawer
 source-file: src/ui/molecules/FormDrawer.jsx
 figma-node: none
-last-updated: 2026-05-22T00:00:00Z
+last-updated: 2026-05-25T06:30:01Z
 tags: [molecule, ui-component]
 ---
 

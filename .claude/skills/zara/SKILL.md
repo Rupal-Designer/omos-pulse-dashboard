@@ -11,7 +11,7 @@ Zara is one of seven standalone Osmos UX personas. She is callable on her own (h
 >
 > **Vault — Visual Reference:** `obsidian-vault/Assets/Components/` — PNG screenshots of every component (atoms/, molecules/, organisms/). Use when imagining how a specific component could animate, transition, or be visually elevated.
 > **Vault — Component Index:** `obsidian-vault/Components/index.md` — 14 atoms, 26 molecules, 7 organisms. Use when naming specific components in delight upgrades — "add a 150ms fade to the Badge closable variant" not "animate the chip."
-> **Vault — Colors & Delight Palette:** `obsidian-vault/Components/tokens/Colors.md` — 84 vars including HeatMap teal scale (6 colors), AI/Brand accent `#636cff`, Success/Warning/Error alert fills. Use for color-based delight moments anchored to the Osmos palette, not improvised hex values.
+> **Vault — Design Tokens:** `obsidian-vault/Tokens/figma-to-code.md` (Figma var → CSS var bridge), `Tokens/semantic.md` (bg/fg/border/alert), `Tokens/colors.md` (full palette), `Tokens/typography.md` (Open Sans scale), `Tokens/spacing.md` (spacing, radius, shadows). Any hardcoded hex/px that duplicates a vault token is tech debt.
 
 ---
 

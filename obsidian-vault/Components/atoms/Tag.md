@@ -10,7 +10,7 @@ tags: [atom, ui-component, display, label, category, taxonomy]
 source-file: src/ui/atoms/Tag.jsx
 export-name: Tag
 png: ../Assets/Components/atoms/Tag.png
-last-updated: 2026-05-15T06:30:04Z
+last-updated: 2026-05-25T06:30:05Z
 ---
 
 # Tag

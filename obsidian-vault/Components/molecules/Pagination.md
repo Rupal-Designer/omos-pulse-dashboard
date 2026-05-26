@@ -5,7 +5,7 @@ name: Pagination
 tags: [molecule, ui-component, navigation, data]
 source-file: src/ui/molecules/Pagination.jsx
 export-name: Pagination
-last-updated: 2026-05-15T06:30:02Z
+last-updated: 2026-05-25T06:30:02Z
 ---
 
 # Pagination

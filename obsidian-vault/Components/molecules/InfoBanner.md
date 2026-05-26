@@ -9,7 +9,7 @@ tags: [molecule, ui-component, notification, display]
 source-file: src/ui/molecules/InfoBanner.jsx
 export-name: InfoBanner
 png: ../Assets/Components/molecules/InfoBanner.png
-last-updated: 2026-05-15
+last-updated: 2026-05-25T06:30:03Z
 ---
 
 # InfoBanner

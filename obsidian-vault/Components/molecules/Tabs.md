@@ -10,7 +10,8 @@ figma-library: "Design System OS"
 figma-path: "design_systems/Design System OS/components/Tabs"
 tags: [molecule, navigation, tabs, section, vertical-tabs]
 png: ../Assets/Components/molecules/Tabs.png
-last-updated: 2026-05-18
+last-updated: 2026-05-25T06:30:02Z
+source-file: src/ui/molecules/Tabs.jsx
 ---
 
 # Tabs

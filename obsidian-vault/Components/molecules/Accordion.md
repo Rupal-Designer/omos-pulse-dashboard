@@ -4,7 +4,7 @@ layer: molecule
 name: Accordion
 source-file: src/ui/molecules/Accordion.jsx
 figma-node: "5684:1685"
-last-updated: 2026-05-22T00:00:00Z
+last-updated: 2026-05-25T06:30:03Z
 tags: [molecule, ui-component]
 ---
 

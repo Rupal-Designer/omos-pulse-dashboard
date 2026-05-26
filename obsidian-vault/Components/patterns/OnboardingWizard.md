@@ -4,7 +4,7 @@ layer: pattern
 name: OnboardingWizard
 source-file: src/ui/patterns/OnboardingWizard.jsx
 figma-node: none
-last-updated: 2026-05-22T00:00:00Z
+last-updated: 2026-05-25T06:30:06Z
 tags: [pattern, ui-component]
 ---
 

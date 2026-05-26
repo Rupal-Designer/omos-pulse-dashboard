@@ -9,7 +9,7 @@ tags: [atom, ui-component, notification, interactive]
 source-file: src/ui/atoms/Toast.jsx
 export-name: Toast
 png: ../Assets/Components/atoms/Toast.png
-last-updated: 2026-05-15
+last-updated: 2026-05-25T06:30:04Z
 ---
 
 # Toast

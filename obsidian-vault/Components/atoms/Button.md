@@ -9,7 +9,7 @@ figma-library: "Design System OS"
 figma-path: "design_systems/Design System OS/components/Button"
 tags: [atom, interactive, action, cta]
 png: ../Assets/Components/atoms/Button.png
-last-updated: 2026-05-15T06:30:04Z
+last-updated: 2026-05-25T06:30:04Z
 source-file: src/ui/atoms/Button.jsx
 ---
 

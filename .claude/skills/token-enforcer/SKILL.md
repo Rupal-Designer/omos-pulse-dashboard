@@ -102,7 +102,43 @@ margin:\s*\d+px              # hardcoded margins
 
 Run: `grep -rn --include="*.jsx" --include="*.tsx" --include="*.css" -E "(#[0-9a-fA-F]{6}|rgba?\()" src/`
 
-### Step 1.5 — Component Duplication Audit
+### Step 1.5 — Token Const Block Detection
+
+Before Step 2, scan every target file for module-level token const blocks — a common anti-pattern where developers alias CSS vars to local constants and then reference the constant everywhere. These block token enforcement (grepping for hex shows nothing because the hex is one level removed).
+
+**Grep command:**
+```bash
+grep -rn --include="*.jsx" -E "^\s*const (FONT|BG|BG_SUBTLE|BORDER|TEXT|TEXT_MID|TEXT_SUB|ACCENT|ACCENT_MUT|GREEN|GREEN_MUT|AMBER|AMBER_MUT)\s*=" src/
+```
+
+**What it looks like (before):**
+```jsx
+// Top of file — token const block
+const FONT = "'Open Sans', sans-serif";
+const BG   = 'var(--osmos-bg)';
+const BG_SUBTLE = 'var(--osmos-bg-subtle)';
+const BORDER = 'var(--osmos-border)';
+const TEXT = 'var(--osmos-fg)';
+const TEXT_MID = 'var(--osmos-fg-muted)';
+const TEXT_SUB = 'var(--osmos-fg-subtle)';
+const ACCENT = 'var(--osmos-brand-primary)';
+// ... then used as: style={{ background: BG, color: TEXT, ... }}
+```
+
+**Fix (Tier C2):**
+1. Delete the entire const block at the top of the file.
+2. Use `replace_all` to substitute each const name with its literal value throughout the file:
+   - `FONT` → `"'Open Sans', sans-serif"`
+   - `BG` → `'var(--osmos-bg)'`
+   - `BG_SUBTLE` → `'var(--osmos-bg-subtle)'`
+   - etc.
+3. Run `pnpm build` to verify no references remain.
+
+**Classification: Tier C2 — Token Const Block.** These are not color violations (the underlying values ARE tokens), but they obscure the token usage and make auditing harder. Always clear them.
+
+---
+
+### Step 1.6 — Component Duplication Audit
 
 After the color grep, scan every target file for locally-defined functions that duplicate components already available in `src/ui/`. These are violations **even if they use CSS vars correctly** — the fix is to import from `src/ui/` instead.
 
@@ -165,7 +201,7 @@ For Tier 4 items, ask the user which token to use before replacing.
 ## Token Audit Report
 
 **Files scanned:** N
-**Violations found:** X (Tier 1: A, Tier 2: B, Tier 3: C intentional, Tier 4: D unknown, Tier C: E component duplications)
+**Violations found:** X (Tier 1: A, Tier 2: B, Tier 3: C intentional, Tier 4: D unknown, Tier C2: E token const blocks, Tier C: F component duplications)
 
 ### Tier 1 — Applied ✅
 [table of replacements made]
@@ -178,6 +214,12 @@ For Tier 4 items, ask the user which token to use before replacing.
 
 ### Tier 4 — Needs decision ❓
 [list of unknown values requiring user input]
+
+### Tier C2 — Token Const Blocks ⚠️
+
+| File | Lines | Const Names | Action |
+|------|-------|-------------|--------|
+| `AdvertiserManagementPage.jsx` | 1–13 | FONT, BG, BG_SUBTLE, BORDER, TEXT, TEXT_MID, TEXT_SUB, ACCENT, ACCENT_MUT, GREEN, GREEN_MUT, AMBER, AMBER_MUT | Delete block; inline all refs |
 
 ### Tier C — Component Duplications ⚠️
 

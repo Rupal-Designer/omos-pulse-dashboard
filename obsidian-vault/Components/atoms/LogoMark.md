@@ -3,7 +3,7 @@ type: component
 layer: atom
 name: LogoMark
 source-file: src/ui/atoms/LogoMark.jsx
-last-updated: 2026-05-15T06:30:04Z
+last-updated: 2026-05-25T06:30:05Z
 tags: [atom, ui-component]
 ---
 

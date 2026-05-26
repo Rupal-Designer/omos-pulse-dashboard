@@ -4,7 +4,7 @@ layer: atom
 name: Toggle
 source-file: src/ui/atoms/Toggle.jsx
 figma-node: "925:30922"
-last-updated: 2026-05-22T00:00:00Z
+last-updated: 2026-05-25T06:30:04Z
 tags: [atom, ui-component]
 ---
 

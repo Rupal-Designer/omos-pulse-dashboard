@@ -10,7 +10,7 @@ tags: [atom, ui-component, form, interactive]
 source-file: src/ui/atoms/Input.jsx
 export-name: Input
 png: ../Assets/Components/atoms/Input.png
-last-updated: 2026-05-15
+last-updated: 2026-05-25T06:30:04Z
 ---
 
 # Input

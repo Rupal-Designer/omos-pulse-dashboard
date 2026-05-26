@@ -10,7 +10,7 @@ tags: [atom, ui-component, form, interactive, multi-select]
 source-file: src/ui/atoms/Checkbox.jsx
 export-name: Checkbox
 png: ../Assets/Components/atoms/Checkbox.png
-last-updated: 2026-05-15T06:30:04Z
+last-updated: 2026-05-25T06:30:04Z
 ---
 
 # Checkbox

@@ -3,7 +3,7 @@
 **Source of truth:** `src/ui/index.js` barrel + component source files  
 **Import path (from `src/retailer/components/*.jsx`):** `import { X } from '../../ui'`  
 **Import path (from `src/advertiser/components/*.jsx`):** `import { X } from '../../ui'`  
-**Last verified:** 2026-05-02
+**Last verified:** 2026-05-19
 
 > This file documents the **actual** `src/ui/` library used in OMOS TEST.  
 > Do NOT confuse with `@rishikeshjoshi-morpheus/ui` (a different project's Chakra-based library).
@@ -459,10 +459,294 @@ import { UploadPage } from '../../ui';
 
 ---
 
+### SpinLoader
+
+```jsx
+import { SpinLoader } from '../../ui';
+
+<SpinLoader
+  size="md"       // 'xs' | 'sm' | 'md' | 'lg' | 'xl' (default 'md')
+  withBg={false}  // boolean — adds a subtle background panel behind the spinner
+/>
+
+// Full-page loading state:
+<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 200 }}>
+  <SpinLoader size="lg" />
+</div>
+```
+
+---
+
+### Toggle
+
+```jsx
+import { Toggle } from '../../ui';
+
+<Toggle
+  checked={bool}
+  onCheckedChange={fn}   // called with boolean (NOT event)
+  disabled={false}
+  label="Enable feature"  // optional — rendered beside the toggle
+  size="md"               // 'sm' | 'md' (default 'md')
+/>
+```
+
+---
+
+### Tabs
+
+```jsx
+import { Tabs } from '../../ui';
+
+// Horizontal (default)
+<Tabs
+  value={activeTab}
+  onValueChange={setActiveTab}   // called with string id
+  items={[
+    { id: 'overview',     label: 'Overview' },
+    { id: 'performance',  label: 'Performance' },
+    { id: 'history',      label: 'History' },
+  ]}
+  variant="line"          // 'line' | 'pill' (default 'line')
+/>
+
+// Vertical
+<Tabs
+  orientation="vertical"
+  value={tab}
+  onValueChange={setTab}
+  items={[...]}
+/>
+```
+
+**⚠️ Item shape:** Use `id` (not `value`) as the key. `onValueChange` receives the `id` string directly.
+
+---
+
+### FormField
+
+```jsx
+import { FormField } from '../../ui';
+
+<FormField
+  label="Campaign Name"
+  required={true}          // adds * to label
+  hint="Max 80 characters"
+  error="This field is required"   // turns child input border red
+>
+  <Input value={name} onChange={e => setName(e.target.value)} />
+</FormField>
+```
+
+**Use everywhere** a form field needs label + hint + validation error display. Never write raw `<label>` + custom error `<span>` combinations when this wrapper exists.
+
+---
+
+### FormDrawer
+
+```jsx
+import { FormDrawer } from '../../ui';
+
+<FormDrawer
+  open={drawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  title="Create Advertiser"
+  onSubmit={handleSave}
+  submitLabel="Save"       // default 'Save'
+  isLoading={saving}       // disables submit button, shows loading state
+  width={480}              // default 480
+>
+  <FormField label="Name" required>
+    <Input value={name} onChange={e => setName(e.target.value)} />
+  </FormField>
+  <FormField label="Email">
+    <Input value={email} onChange={e => setEmail(e.target.value)} />
+  </FormField>
+</FormDrawer>
+```
+
+**When to use vs `Drawer`:** Use `FormDrawer` for any drawer that submits a form. Use bare `Drawer` only for read-only drawers (detail views, logs, etc.).
+
+---
+
+### Accordion
+
+```jsx
+import { Accordion } from '../../ui';
+
+<Accordion
+  items={[
+    { id: 'basic',    label: 'Basic Settings',    content: <div>...</div> },
+    { id: 'advanced', label: 'Advanced Settings',  content: <div>...</div> },
+  ]}
+  multiple={false}      // boolean — allow multiple open at once (default false)
+  defaultOpen={['basic']}  // array of ids open on mount
+/>
+```
+
+---
+
+### Popover
+
+```jsx
+import { Popover } from '../../ui';
+
+<Popover
+  trigger={<Button variant="icon"><InfoIcon size={14} /></Button>}
+  content={<div style={{ fontSize: 12 }}>Help text here</div>}
+  placement="bottom"   // 'top' | 'bottom' | 'left' | 'right' (default 'bottom')
+  width={240}          // max-width of popover (default 240)
+/>
+```
+
+---
+
+### DropdownMenu
+
+```jsx
+import { DropdownMenu } from '../../ui';
+
+<DropdownMenu
+  trigger={<Button variant="icon"><MoreIcon size={16} /></Button>}
+  items={[
+    { label: 'Edit',   icon: <EditIcon size={14} />,  onClick: () => openEdit(row) },
+    { label: 'Delete', icon: <TrashIcon size={14} />, onClick: () => confirmDelete(row), disabled: false },
+  ]}
+  placement="bottom-end"   // CSS placement string (default 'bottom-end')
+/>
+```
+
+---
+
+## Patterns
+
+### UploadPage
+
+```jsx
+import { UploadPage } from '../../ui';
+
+<UploadPage
+  fileName="bulk-upload-template.xlsx"
+  fileDesc="Use this template to bulk-upload items"
+  downloadText="Download Template"
+  howItWorksBullets={[
+    'Download the template above',
+    'Fill in required fields (marked with *)',
+    'Upload the completed file below',
+  ]}
+  accept=".xlsx"
+  onFile={fn}    // called with File object when user selects or drops
+/>
+```
+
+---
+
+### DataListPage
+
+```jsx
+import { DataListPage } from '../../ui';
+
+<DataListPage
+  toolbar={{
+    left: [<SearchBar value={q} onChange={setQ} />],
+    right: [<Button variant="primary"><PlusIcon size={14} /> Create</Button>],
+  }}
+  columns={[
+    { id: 'name',   header: 'Name',   cell: row => row.name },
+    { id: 'status', header: 'Status', cell: row => <Badge status={row.status} /> },
+  ]}
+  data={rows}
+  isLoading={loading}
+  pagination={{ total: 248, page, perPage: 20, onChange: setPage }}
+  drawer={{
+    open: drawerOpen,
+    onClose: () => setDrawerOpen(false),
+    title: 'Create Item',
+    onSubmit: handleSave,
+    submitLabel: 'Save',
+    children: <FormField label="Name" required><Input /></FormField>,
+  }}
+  empty={<EmptyState message="No items yet" icon={<SearchIcon size={32} />} />}
+/>
+```
+
+Composes: `Toolbar` + `DataTable` (from `src/shared/components/data-table/`) + `Pagination` + `FormDrawer` + `EmptyState`.
+
+---
+
+### AnalyticsDashPage
+
+```jsx
+import { AnalyticsDashPage } from '../../ui';
+
+<AnalyticsDashPage
+  kpis={[
+    { label: 'Impressions', value: '1.2M',  trend: '+8%',    trendDir: 'up' },
+    { label: 'Clicks',      value: '34.5K', trend: '+12%',   trendDir: 'up' },
+    { label: 'CTR',         value: '2.88%', trend: '-0.3pp', trendDir: 'down' },
+    { label: 'ROAS',        value: '4.2x',  trend: '+0.6x',  trendDir: 'up' },
+  ]}
+  charts={[
+    { title: 'Revenue Trend',  component: <LineChart ... />, span: 2 },
+    { title: 'Category Split', component: <PieChart ... />,  span: 1 },
+  ]}
+  table={<SectionCard title="Top Advertisers">...</SectionCard>}
+/>
+```
+
+`span` controls grid column width: `1` = half-width, `2` = full-width.
+
+---
+
+### SettingsPage
+
+```jsx
+import { SettingsPage } from '../../ui';
+
+<SettingsPage
+  title="Attribution Settings"
+  icon={<CalendarIcon size={20} />}
+  tabs={[
+    { id: 'general',   label: 'General' },
+    { id: 'advanced',  label: 'Advanced' },
+  ]}
+  activeTab={tab}
+  onTabChange={setTab}
+>
+  {tab === 'general' && (
+    <SectionCard title="General">
+      <FormField label="Window"><Input /></FormField>
+    </SectionCard>
+  )}
+</SettingsPage>
+```
+
+---
+
+### OnboardingWizard
+
+```jsx
+import { OnboardingWizard } from '../../ui';
+
+<OnboardingWizard
+  steps={['Basic Info', 'Configuration', 'Review']}
+  current={step}           // 1-indexed
+  onNext={handleNext}
+  onBack={handleBack}
+  onComplete={handleComplete}
+>
+  {step === 1 && <Step1Content />}
+  {step === 2 && <Step2Content />}
+  {step === 3 && <ReviewContent />}
+</OnboardingWizard>
+```
+
+---
+
 ## Full Export List
 
 ```js
-// Atoms (7 exports + 20 named icons)
+// Atoms (9 exports + 21 named icons)
 export { Button }                    from './atoms/Button';
 export { Badge, TypeBadge }          from './atoms/Badge';
 export { Input, Select }             from './atoms/Input';
@@ -471,28 +755,42 @@ export { Icon,
          ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon,
          UploadIcon, DownloadIcon, FilterIcon, RefreshIcon,
          FileIcon, CheckIcon, SortIcon, CalendarIcon, EyeIcon,
-         ColumnsIcon, InfoIcon, MoreIcon }  from './atoms/Icon';
+         ColumnsIcon, InfoIcon, MoreIcon } from './atoms/Icon';
 export { Checkbox }                  from './atoms/Checkbox';
 export { Tag }                       from './atoms/Tag';
 export { Toast, useToast }           from './atoms/Toast';
+export { SpinLoader }                from './atoms/SpinLoader';
+export { Toggle }                    from './atoms/Toggle';
 
-// Molecules (16 exports)
+// Molecules (21 exports)
 export { Drawer }                    from './molecules/Drawer';
+export { Modal }                     from './molecules/Modal';
+export { Tabs }                      from './molecules/Tabs';
+export { FormField }                 from './molecules/FormField';
+export { FormDrawer }                from './molecules/FormDrawer';
 export { StatCard }                  from './molecules/StatCard';
 export { SearchBar }                 from './molecules/SearchBar';
 export { Toolbar }                   from './molecules/Toolbar';
 export { Pagination }                from './molecules/Pagination';
 export { InfoBanner }                from './molecules/InfoBanner';
-export { Modal }                     from './molecules/Modal';
 export { KPIChip }                   from './molecules/KPIChip';
 export { EmptyState }                from './molecules/EmptyState';
 export { UploadDropzone }            from './molecules/UploadDropzone';
 export { SectionCard }               from './molecules/SectionCard';
 export { Stepper }                   from './molecules/Stepper';
 export { RadioCard, RadioDot }       from './molecules/RadioCard';
+export { Accordion }                 from './molecules/Accordion';
+export { Popover }                   from './molecules/Popover';
+export { DropdownMenu }              from './molecules/DropdownMenu';
+export { NavShell }                  from './molecules/NavShell';
+export { GlobalSearch }              from './molecules/GlobalSearch';
 
-// Patterns (1 export)
+// Patterns (5 exports)
 export { UploadPage }                from './patterns/UploadPage';
+export { DataListPage }              from './patterns/DataListPage';
+export { AnalyticsDashPage }         from './patterns/AnalyticsDashPage';
+export { SettingsPage }              from './patterns/SettingsPage';
+export { OnboardingWizard }          from './patterns/OnboardingWizard';
 ```
 
 ---
@@ -550,20 +848,19 @@ const TD = { fontSize: 13, color: 'var(--osmos-fg)', padding: '10px 12px',
 </table>
 ```
 
-### Color constants (declare at top of every file)
+### Token usage — inline var() directly, never alias to consts
 
 ```jsx
-const WHITE      = 'var(--osmos-bg)';
-const BG_SUBTLE  = 'var(--osmos-bg-subtle)';
-const BG_MUTED   = 'var(--osmos-bg-muted)';
-const TEXT       = 'var(--osmos-fg)';
-const TEXT_MID   = 'var(--osmos-fg-muted)';
-const TEXT_LIGHT = 'var(--osmos-fg-subtle)';
-const BORDER     = 'var(--osmos-border)';
-const ACCENT     = 'var(--osmos-brand-primary)';
-const ACCENT_M   = 'var(--osmos-brand-primary-muted)';
-const GREEN      = 'var(--osmos-brand-green)';
-const GREEN_M    = 'var(--osmos-brand-green-muted)';
-const AMBER      = 'var(--osmos-brand-amber)';
-const FONT       = "'Open Sans', sans-serif";
+// ✅ CORRECT — inline CSS vars directly in style objects
+<div style={{ background: 'var(--osmos-bg)', color: 'var(--osmos-fg)', border: '1px solid var(--osmos-border)' }} />
+<span style={{ fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg-muted)' }} />
+
+// ❌ WRONG — token const block anti-pattern (Tier C2 violation)
+// Never create aliases like this; they obscure token usage and block auditing
+const BG    = 'var(--osmos-bg)';
+const TEXT  = 'var(--osmos-fg)';
+const FONT  = "'Open Sans', sans-serif";
+// then using: style={{ background: BG, color: TEXT }}
 ```
+
+The token-enforcer skill (Tier C2) will flag and remove these const blocks when found.

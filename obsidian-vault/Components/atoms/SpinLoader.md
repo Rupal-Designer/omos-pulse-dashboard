@@ -4,7 +4,7 @@ layer: atom
 name: SpinLoader
 source-file: src/ui/atoms/SpinLoader.jsx
 figma-node: "5664:34408"
-last-updated: 2026-05-22T00:00:00Z
+last-updated: 2026-05-25T06:30:05Z
 tags: [atom, ui-component]
 ---
 

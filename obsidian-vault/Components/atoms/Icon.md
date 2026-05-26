@@ -9,7 +9,7 @@ tags: [atom, ui-component, icon, display]
 source-file: src/ui/atoms/Icon.jsx
 export-name: Icon
 png: ../Assets/Components/atoms/Icons.png
-last-updated: 2026-05-15
+last-updated: 2026-05-25T06:30:05Z
 ---
 
 # Icon
