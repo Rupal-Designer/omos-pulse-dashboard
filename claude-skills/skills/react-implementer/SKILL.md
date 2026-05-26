@@ -28,9 +28,12 @@ Generates production-ready React code using **exclusively** the `src/ui/` compon
 ## Import Path
 
 ```jsx
-import { Button, Badge, TypeBadge, Toolbar, SearchBar, Drawer, Pagination,
+import { Button, Badge, TypeBadge, Toolbar, SearchBar, Drawer, Modal, Pagination,
          Input, Select, Checkbox, Tag, Toast, useToast,
-         StatCard, KPIChip, InfoBanner, UploadDropzone, UploadPage,
+         StatCard, KPIChip, InfoBanner, UploadDropzone, SpinLoader, Toggle,
+         Tabs, FormField, FormDrawer, Accordion, Popover, DropdownMenu,
+         EmptyState, SectionCard, Stepper, RadioCard,
+         UploadPage, DataListPage, AnalyticsDashPage, SettingsPage, OnboardingWizard,
          SearchIcon, FilterIcon, RefreshIcon, DownloadIcon, PlusIcon, TrashIcon,
          EditIcon, CloseIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon,
          UploadIcon, FileIcon, CheckIcon, SortIcon, CalendarIcon, EyeIcon,
@@ -251,6 +254,7 @@ Check this table **before** writing any UI element as raw HTML. If it exists in 
 | Text input with label | `Input` | `label`, `value`, `onChange`, `required`, `helperText` |
 | Dropdown selector | `Select` | `label`, `value`, `onChange`, `options`: [{value, label}] |
 | Checkbox | `Checkbox` | `checked`, `onChange`, `label` |
+| Dismissible filter chip | `Badge` (closable) | `variant="outline"`, `closable`, `onClose` — Figma calls these "Chips" |
 | Toast notification | `Toast` + `useToast` | `const { toast, showToast } = useToast()` |
 
 ### Molecules (import from `'../ui'`)
@@ -259,16 +263,38 @@ Check this table **before** writing any UI element as raw HTML. If it exists in 
 | Search input | `SearchBar` | `value`, `onChange`, `placeholder`, `width` |
 | Toolbar row | `Toolbar` | `left`, `right`, `noBorder` |
 | Right-side panel | `Drawer` | `open`, `onClose`, `title`, `footer`, `width` (default 480) |
+| Centered dialog overlay | `Modal` | `open`, `onClose`, `title`, `footer`, `children` |
+| Tab navigation bar | `Tabs` | `value`, `onValueChange`, `items: [{id, label, icon?}]`, `variant: 'line'\|'pill'`, `orientation: 'horizontal'\|'vertical'` |
+| Form field wrapper | `FormField` | `label`, `required`, `hint`, `error`, `children` |
+| Drawer with submit form | `FormDrawer` | `open`, `onClose`, `title`, `onSubmit`, `submitLabel`, `isLoading`, `width` |
 | Table pagination | `Pagination` | `total`, `page`, `perPage`, `onChange`, `entityLabel` |
 | File download info bar | `InfoBanner` | `fileName`, `fileDesc`, `downloadText`, `onDownload` |
 | Dashed upload dropzone | `UploadDropzone` | `onFile`, `accept`, `label`, `successMessage` |
 | KPI metric card | `StatCard` | `label`, `value`, `trend`, `trendDir` |
 | Compact metric chip | `KPIChip` | `label`, `value` |
+| Collapsible disclosure panels | `Accordion` | `items: [{id, label, content}]`, `multiple`, `defaultOpen` |
+| Floating info popup | `Popover` | `trigger` (ReactNode), `content`, `placement`, `width` |
+| Contextual action menu | `DropdownMenu` | `trigger`, `items: [{label, icon?, onClick, disabled?}]`, `placement` |
+| Hover label for icon button | `Tooltip` | `label`, `placement` — never put interactive content inside |
+| Countdown / elapsed timer | `TimeTicker` — see vault | `mode`: countdown\|elapsed\|static, `targetTime` |
+| Error / not-found state | `ErrorStates` — see vault | Full-page or inline error patterns |
+| Conversion funnel chart | `Funnels` — see vault | Multi-stage visualization (organisms/Funnels.md) |
+| Heat map chart | `HeatMap` — see vault | `data[][]`, `xLabels`, `yLabels` (molecules/HeatMap.md) |
+
+### Atoms (additional — import from `'../ui'`)
+| Need | Component | Key Props |
+|------|-----------|-----------|
+| Loading spinner | `SpinLoader` | `size`: xs\|sm\|md\|lg\|xl, `withBg` |
+| Toggle switch | `Toggle` | `checked`, `onCheckedChange`, `disabled`, `label`, `size` |
 
 ### Patterns (import from `'../ui'`)
 | Need | Component | Key Props |
 |------|-----------|-----------|
 | Full upload page | `UploadPage` | `fileName`, `fileDesc`, `downloadText`, `howItWorksBullets[]` |
+| List page with toolbar + table + drawer | `DataListPage` | `toolbar`, `columns`, `data`, `isLoading`, `pagination`, `drawer`, `empty` |
+| Analytics dashboard with KPIs + charts | `AnalyticsDashPage` | `kpis[]`, `charts[]`, `table` |
+| Settings page with tabs | `SettingsPage` | `title`, `icon`, `tabs[]`, `activeTab`, `onTabChange`, `children` |
+| Multi-step onboarding wizard | `OnboardingWizard` | `steps[]`, `current`, `onNext`, `onBack`, `onComplete`, `children` |
 
 ### Icons (import from `'../ui'`)
 | Need | Use |
@@ -276,14 +302,34 @@ Check this table **before** writing any UI element as raw HTML. If it exists in 
 | Common icons | `SearchIcon`, `FilterIcon`, `RefreshIcon`, `DownloadIcon`, `PlusIcon`, `TrashIcon`, `EditIcon`, `CloseIcon`, `ChevronDownIcon`, `ChevronLeftIcon`, `ChevronRightIcon`, `UploadIcon`, `FileIcon`, `CheckIcon`, `SortIcon`, `CalendarIcon`, `EyeIcon`, `ColumnsIcon`, `InfoIcon`, `MoreIcon` |
 | Custom SVG shape | `Icon` with SVG path children — `<Icon size={16} color="..."><path d="..." /></Icon>` |
 
-### Not in `src/ui/` — use raw HTML
+### Not in `src/ui/` — use raw HTML or dedicated utility
 | Need | How to implement |
 |------|-----------------|
-| Data grid | Raw `<table>` HTML with CSS var styles |
-| Centered dialog overlay | Hand-rolled `position: fixed` overlay div |
-| Tab navigation bar | Hand-rolled using `Button` atoms |
+| Data grid | `DataTable` from `src/shared/components/data-table/` (TanStack Table v8 wrapper) OR raw `<table>` HTML |
 | Activity log / timeline | Raw `<div>` list with CSS var styles |
-| Charts | `recharts` (already installed) |
+| Charts | `recharts` (already installed) — `LineChart`, `BarChart`, etc. |
+
+## Vault — Full Component Index
+
+Complete list of all 15 atoms, 26+ molecules, 7 organisms, 5 patterns with Figma nodeIds, PNGs, and prop APIs:
+`obsidian-vault/Components/index.md`
+
+**Figma → Code name mappings** (common gotchas):
+| Figma Name | Code Component |
+|------------|----------------|
+| Chips | `Badge` (variant="outline", closable) |
+| Info Box | `InfoBanner` |
+| Spin Loader | `SpinLoader` |
+| Toggle & Switch | `Toggle` / `Switch` |
+| Steps | `Stepper` |
+| Cards | `StatCard` |
+| Tags | `Tag` |
+
+**Token values sourced from Figma variables** (use these in inline styles):
+- Colors: `obsidian-vault/Components/tokens/Colors.md` — 84 vars, Light + Dark hex
+- Spacing: Huge=40px, XXXLarge=32px, XXLarge=24px, XLarge=20px, Large=16px, Medium=12px, Small=8px, VSmall=4px
+- Radius: Large=12px, Medium=8px, Small=4px
+- Shadows: Card=`#4040401a`, Button=`#40404029`, Container=`#40404014`
 
 ## CSS Variable Reference
 
@@ -303,11 +349,13 @@ Use these tokens in inline style objects — never hardcode hex values.
 ### Brand tokens
 | Variable | Value | Use for |
 |----------|-------|---------|
-| `var(--osmos-brand-primary)` | `#636CFF` | Primary buttons, active links |
-| `var(--osmos-brand-primary-muted)` | `rgba(99,108,255,0.12)` | Primary badge backgrounds |
+| `var(--osmos-brand-primary)` | `#636CFF` | Active tab underline, nav accent, brand identity — NOT CTA buttons |
+| `var(--osmos-brand-primary-muted)` | `rgba(99,108,255,0.12)` | Active tab/badge background |
 | `var(--osmos-brand-green)` | `#1BA87A` | Success states, positive KPIs |
 | `var(--osmos-brand-green-muted)` | `rgba(27,168,122,0.10)` | Success badge backgrounds |
 | `var(--osmos-brand-amber)` | `#F5A623` | Warnings, secondary chart line |
+
+> **⚠️ Brand primary split:** `--osmos-brand-primary` (`#636CFF` indigo) is for tabs and brand chrome. CTA buttons (Save, Submit, primary actions) use `<Button variant="primary">` which resolves to `#1970e1` (Figma `Blue/PrimaryButton`). Never use `#636CFF` on a CTA button.
 
 ## File Structure
 
@@ -339,13 +387,21 @@ These patterns are NOT in `src/ui/`. Implement as described:
 
 | Gap | Implementation |
 |-----|---------------|
-| Data grid / table | Raw `<table>` HTML with inline CSS var styles (see Rule 3 above) |
-| Centered modal overlay | Hand-rolled `position: fixed; top: 0; left: 0; width: 100%; height: 100%` overlay with a centered content box |
-| Tab navigation bar | Row of `Button` atoms — active tab gets `background: var(--osmos-brand-primary-muted)` |
+| Data grid / table | `DataTable` + `useOsmosTable` from `src/shared/components/data-table/` (TanStack Table v8). For simple read-only grids: raw `<table>` HTML with inline CSS var styles (see Rule 3 above) |
 | Activity log / timeline | Raw `<div>` list — each row has an icon, timestamp, and description |
 | Charts | `recharts` (already installed) — `LineChart`, `BarChart`, etc. |
-| Left nav / sidebar | Already exists in `src/components/LeftNav.jsx` — do not rebuild |
+| Left nav / sidebar | `NavShell` from `src/ui/molecules/NavShell.jsx` — pass `icon` as a **component reference** (e.g. `icon: LuRocket`), NOT a JSX element. Both react-icons function refs and raw SVG JSX elements are supported. |
 | Top bar / header | Already exists in `src/components/TopBar.jsx` — do not rebuild |
+
+## Worktree Setup Note
+
+When working in a git worktree (`.claude/worktrees/<name>/`), the worktree does **not** share `node_modules` with the main project. Before running the dev server run:
+
+```bash
+cd "/Users/rishikeshjoshi/OMOS TEST/.claude/worktrees/<name>" && pnpm install --frozen-lockfile
+```
+
+Without this, `vite: command not found` errors will occur.
 
 ## Icon Sourcing Priority
 

@@ -33,13 +33,13 @@ Every screen is composed of zones. Use these exact zone names in lo-fi wireframe
 | `breadcrumb` | Navigation path trail | Text nodes with `>` separators |
 | `topBar` | Page header with title + primary CTA | `Toolbar` left=title, right=CTA buttons |
 | `infoBanner` | Alert / notification banner | `InfoBanner` |
-| `tabs` | Tab navigation (only when one view at a time) | Hand-rolled `<div>` tab bar |
+| `tabs` | Tab navigation (only when one view at a time) | `Tabs` from `src/ui/` — `variant="line"` (default) or `"pill"` |
 | `toolbar` | Filters, search, secondary actions | `Toolbar` left=search/filters, right=actions |
-| `dataTable` | Primary data display | Raw `<table>` HTML with `Badge`, `Button`, `Checkbox` |
+| `dataTable` | Primary data display | `DataTable` + `useOsmosTable` from `src/shared/components/data-table/` |
 | `pagination` | Table pagination | `Pagination` |
 | `sidebar` | Side navigation or contextual filters | Custom side panel |
-| `modals` | Overlay dialogs (not drawers) | Raw `<div>` overlay with `Button` |
-| `drawers` | Right-side slide panels | `Drawer` |
+| `modals` | Overlay dialogs (not drawers) | `Modal` from `src/ui/` |
+| `drawers` | Right-side slide panels | `FormDrawer` (form content) or `Drawer` (custom content) |
 | `cards` | KPI or info cards | `StatCard`, `KPIChip` |
 | `charts` | Data visualizations | `recharts` (LineChart, BarChart, AreaChart) |
 
@@ -64,19 +64,37 @@ Import path: `import { ... } from '../ui'`
 ### Molecules
 | Component | Use for | Key props |
 |---|---|---|
+| `Tabs` | Tab navigation | `value`, `onValueChange`, `items:[{id,label}]`, `variant:'line'|'pill'` |
+| `FormField` | Label + hint + error wrapper | `label`, `required`, `hint`, `error`, `children` |
+| `FormDrawer` | Drawer with form header/body/footer | `open`, `onClose`, `title`, `onSubmit`, `submitLabel`, `isLoading`, `width` |
+| `Modal` | Centered overlay dialog | `open`, `onClose`, `title`, `footer`, `children` |
+| `Accordion` | Collapsible disclosure panels | `items:[{id,label,content}]`, `multiple`, `defaultOpen` |
+| `Popover` | Hover/click info popup | `trigger`, `content`, `placement` |
+| `DropdownMenu` | Select + context menu | `trigger`, `items:[{label,onClick}]`, `placement` |
 | `SearchBar` | Search input | `value`, `onChange`, `placeholder`, `width` |
 | `Toolbar` | Left+right action bar | `left`, `right`, `noBorder` |
-| `Drawer` | Right-side slide panel | `open`, `onClose`, `title`, `footer`, `width` |
+| `Drawer` | Right-side slide panel (custom content) | `open`, `onClose`, `title`, `footer`, `width` |
 | `Pagination` | Table pagination | `page`, `pageSize`, `total`, `onChange` |
 | `InfoBanner` | Alert/notification | `type`: info\|warning\|error\|success, `message` |
 | `StatCard` | KPI metric card | `label`, `value`, `delta`, `icon` |
 | `KPIChip` | Inline metric chip | `label`, `value`, `trend` |
 | `UploadDropzone` | File drag-drop | `onUpload`, `accept`, `maxSize` |
+| `SectionCard` | Bordered form group / content section | `title`, `children`. Add `style={{overflow:'hidden'}}` when wrapping toolbar+table |
+
+### Atoms
+| Component | Use for | Key props |
+|---|---|---|
+| `SpinLoader` | Loading spinner | `size:'xs'|'sm'|'md'|'lg'|'xl'`, `withBg` |
+| `Toggle` | On/off switch | `checked`, `onCheckedChange`, `disabled`, `label` |
 
 ### Patterns
-| Component | Use for |
-|---|---|
-| `UploadPage` | Full upload flow (dropzone + table + history) |
+| Component | Use for | When to reach for it |
+|---|---|---|
+| `DataListPage` | Toolbar + table + pagination + FormDrawer | Any page that is primarily a CRUD list (37 pages) |
+| `AnalyticsDashPage` | StatCard grid + chart grid + optional table | Analytics dashboards (9 pages) |
+| `SettingsPage` | SectionCard + Tabs + optional toolbar | Settings / config pages (12 pages) |
+| `OnboardingWizard` | Stepper + content slot + nav buttons | Multi-step onboarding flows (4–6 pages) |
+| `UploadPage` | InfoBanner + UploadDropzone + history table | Full upload flow (dropzone + table + history) |
 
 ### Icons (all accept `size` prop)
 ```
@@ -86,11 +104,17 @@ UploadIcon, FileIcon, CheckIcon, SortIcon, CalendarIcon, EyeIcon,
 ColumnsIcon, InfoIcon, MoreIcon, Icon
 ```
 
-### NOT in `src/ui/` (use raw HTML or recharts)
-- Tables → use raw `<table>`, `<thead>`, `<tbody>`, `<tr>`, `<td>`
-- Tab navigation → hand-roll with `<div>` and CSS var borders
-- Modal dialogs → raw `<div>` overlay
-- Charts → `recharts` (LineChart, BarChart, AreaChart, PieChart)
+### NOT in `src/ui/` — use these instead
+| Need | Use |
+|---|---|
+| Tables | `DataTable` + `useOsmosTable` from `src/shared/components/data-table/` |
+| Charts | `recharts` (LineChart, BarChart, AreaChart, PieChart) |
+| Left nav / sidebar | `NavShell` from `src/ui/` (already wraps everything) |
+
+> ⚠️ **Anti-pattern — never write these:**
+> - `const FONT = "'Open Sans'..."` / `const BG = 'var(--osmos-bg)'` token const blocks — delete and inline all refs
+> - Hand-rolled `<div>` tab bars — always use `<Tabs>` from `src/ui/`
+> - Raw `<div>` modal overlays — always use `<Modal>` from `src/ui/`
 
 ---
 
@@ -109,7 +133,8 @@ var(--osmos-fg-subtle)       /* disabled, placeholder */
 var(--osmos-border)          /* borders, dividers */
 
 /* Brand */
-var(--osmos-brand-primary)         /* #636CFF — CTAs, links, active states */
+var(--osmos-brand-primary)         /* #636CFF indigo — tabs active, links, brand chrome (NOT for CTA buttons) */
+                                   /* CTA buttons → use <Button variant="primary"> which resolves to #1970e1 blue */
 var(--osmos-brand-primary-muted)   /* light blue — hover, backgrounds */
 var(--osmos-brand-green)           /* #1BA87A — success, positive delta */
 var(--osmos-brand-green-muted)     /* light green — success backgrounds */

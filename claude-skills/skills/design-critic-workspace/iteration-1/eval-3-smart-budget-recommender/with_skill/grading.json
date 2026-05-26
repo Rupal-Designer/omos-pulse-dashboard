@@ -1,0 +1,37 @@
+{
+  "eval_id": 3,
+  "run_type": "with_skill",
+  "expectations": [
+    {
+      "text": "feasibility_flags_ml_complexity",
+      "passed": true,
+      "evidence": "Feasibility Analysis explicitly identifies three ML/data pipelines required: 'historical similarity matching', 'seasonal trend detection', and 'real-time inventory querying', and states this is 'a significant new infrastructure build, not a UI feature.'"
+    },
+    {
+      "text": "delight_identifies_wow_moment",
+      "passed": true,
+      "evidence": "Delight Analysis contains 'Wow moment present? Potentially yes, but not guaranteed by the current spec' and describes the specific conditions under which the wow moment would or would not materialize."
+    },
+    {
+      "text": "produces_rigor_matrix_table",
+      "passed": true,
+      "evidence": "File contains a full Rigor Matrix table with all four dimensions (Feasibility 2/5, UX 3/5, Business 4/5, Delight 3/5), composite score 12/20, key findings, recommendations, and priorities."
+    },
+    {
+      "text": "has_verdict_section",
+      "passed": true,
+      "evidence": "File contains '## Verdict' header with a detailed multi-paragraph verdict covering v1, v2, deferred, and kill decisions."
+    },
+    {
+      "text": "verdict_addresses_scope",
+      "passed": true,
+      "evidence": "Verdict explicitly scopes the build into phases: 'Ship now (v1)' with benchmark-only card, 'Build next (v2)' for ML layer, and 'Defer (v3)' for live inventory, and 'Kill' the full three-signal v1."
+    },
+    {
+      "text": "surfaces_agent_conflict",
+      "passed": true,
+      "evidence": "Conflicts section contains 'Feasibility says defer the tiered graph vs. Delight says the graph is the wow moment' as the first named conflict, and explicitly states 'they are mutually exclusive in v1 scope.'"
+    }
+  ],
+  "overall_pass_rate": 1.0
+}

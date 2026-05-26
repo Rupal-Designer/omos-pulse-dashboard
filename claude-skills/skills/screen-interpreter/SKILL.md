@@ -85,6 +85,12 @@ For each zone, identify the **intent** (what it does) and the **`src/ui/` compon
 | File download info bar | `InfoBanner` | `fileName`, `fileDesc`, `downloadText`, `onDownload` |
 | Dashed upload dropzone | `UploadDropzone` | `onFile`, `accept`, `label`, `successMessage` |
 | Full upload page | `UploadPage` | `fileName`, `fileDesc`, `downloadText`, `howItWorksBullets[]` |
+| Hover label for icon-only button | `Tooltip` | `label`, `placement` — never use on touch-only targets |
+| Dismissible filter chip | `Badge` (closable) | `variant="outline"`, `closable` — Figma name: "Chips" |
+| Collapsible disclosure section | `Accordion` | dot-notation sub-parts: `.Root`, `.Item`, `.ItemTrigger`, `.ItemContent` |
+| Countdown / live timer | `TimeTicker` | `mode`: countdown\|elapsed, `targetTime` — auction deadlines |
+| Grid color-intensity chart | `HeatMap` | `data[][]`, `xLabels`, `yLabels` — day×hour traffic patterns |
+| Conversion funnel visualization | `Funnels` | Multi-stage: impressions→clicks→conversions (organism) |
 | Any SVG icon | Named icon export or `Icon` with SVG children | `SearchIcon`, `PlusIcon`, `EditIcon`, … |
 | Data grid / table | `raw-table` (use raw `<table>` HTML — no Table molecule in `src/ui/`) | — |
 | Centered dialog overlay | `hand-rolled-overlay` (fixed-position div — no Modal molecule in `src/ui/`) | — |
@@ -153,6 +159,9 @@ Output the Screen Spec JSON and announce:
 > "Screen Spec ready. All `"component"` values in this spec reference **`src/ui/`** exports — the import path is `import { X } from '../ui'`. Pass this spec to:
 > - **`figma-batch-builder`** — use the `screenType` field to select the correct template, then fill in verbatim content. All imports come from `'../ui'`.
 > - **`react-implementer`** — implement every `"component"` field using its `src/ui/` import. `"raw-table"` → use raw `<table>` HTML. `"hand-rolled-overlay"` → fixed-position div. `"hand-rolled-tabs"` → row of `Button` atoms."
+
+> **Full component reference:** `obsidian-vault/Components/index.md` — all 14 atoms, 26 molecules, 7 organisms with Figma nodeIds and PNGs.
+> **Figma→Code name mappings:** Chips→`Badge` (closable), Info Box→`InfoBanner`, Steps→`Stepper`, Cards→`StatCard`, Toggle & Switch→`Toggle`.
 
 ## Important Rules
 

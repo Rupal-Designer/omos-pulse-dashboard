@@ -1,0 +1,37 @@
+{
+  "eval_id": 2,
+  "run_type": "with_skill",
+  "expectations": [
+    {
+      "text": "reads_actual_source_file",
+      "passed": true,
+      "evidence": "Critique references specific JSX elements including 'CreateRuleDrawer', 'handleCreate', 'CPM%/CPC% fields accept any string (maxLength:50)', 'RULE_COLORS', hardcoded hex values, and 'left:48%' indicator — all specific to ManageCPMRulesPage.jsx."
+    },
+    {
+      "text": "produces_rigor_matrix_table",
+      "passed": true,
+      "evidence": "File contains a markdown Rigor Matrix table with all four dimensions (Feasibility, UX, Business, Delight) with scores, key findings, recommendations, and priorities."
+    },
+    {
+      "text": "has_verdict_section",
+      "passed": true,
+      "evidence": "File contains '## Verdict' header with a direct, detailed verdict paragraph."
+    },
+    {
+      "text": "ux_cites_specific_friction",
+      "passed": true,
+      "evidence": "UX section names specific patterns: dual submit buttons ('Create User Activity Rule' body button with no onClick handler vs 'Create' footer button), 11-column table with no sticky first column, hardcoded hex badge colors breaking dark mode, and missing aria-label on icon-only toolbar buttons."
+    },
+    {
+      "text": "business_connects_to_yield",
+      "passed": true,
+      "evidence": "Business section explicitly states 'CPM and CPC Premium % fields literally set price floors for ad inventory' and 'directly reduce retailer yield', with 'yield' appearing multiple times in a revenue/impact context."
+    },
+    {
+      "text": "covers_all_four_lenses",
+      "passed": true,
+      "evidence": "File contains '## Feasibility Analysis', '## UX Analysis', '## Business Analysis', and '## Delight Analysis' as section headers inside collapsible details blocks."
+    }
+  ],
+  "overall_pass_rate": 1.0
+}

@@ -1,15 +1,38 @@
 ---
 name: ux-ideator
-description: "Full-pipeline UX ideation: PRD → Information Architecture map → Lo-fi wireframe concepts (Noor vs Dev deliberation) → design-critic Rigor Matrix → finished React UI. Use whenever someone says 'ideate this feature', 'design this from scratch', 'take this PRD to UI', 'give me wireframe options', 'run the design pipeline', 'design deliberation', 'IA map', 'lo-fi concepts', 'what should this screen look like', or shares a PRD/feature brief and wants design options before committing to implementation. Also trigger when someone asks Noor, Dev, or Raj by name, or wants competing design directions for the same requirement. Produces: PRD Digest, IA map, two lo-fi wireframe concepts, deliberation transcript, Rigor Matrix, and finished React screen."
+description: "Full-pipeline UX ideation: PRD → Information Architecture map → Lo-fi wireframe concepts (Noor vs Dev deliberation) → design-critic Rigor Matrix → Osmos-clipped visual recipe → Zara delight pass → finished React UI. Use whenever someone says 'ideate this feature', 'design this from scratch', 'take this PRD to UI', 'give me wireframe options', 'run the design pipeline', 'design deliberation', 'IA map', 'lo-fi concepts', 'what should this screen look like', or shares a PRD/feature brief and wants design options before committing to implementation. Also trigger when someone asks Noor, Dev, Raj, Priya, Arjun, Meera, or Zara by name, or wants competing design directions for the same requirement. Produces: PRD Digest with Meera business framing, IA map with Arjun UX audit, two lo-fi wireframe concepts, deliberation transcript, Rigor Matrix, Osmos visual recipe, delight pass, and finished React screen."
 ---
 
 # UX Ideator
 
-A six-phase pipeline that goes from raw requirement to shipped React UI — with deliberation, critique, and a knowledge graph that compounds across sessions.
+A seven-phase pipeline that goes from raw requirement to shipped React UI — with deliberation, critique, visual translation, delight injection, and a knowledge graph that compounds across sessions.
 
-The fundamental insight: most design problems are solved too quickly. A PM writes a feature spec, someone picks a layout, an engineer implements it, and the UX gets designed in the comments of a Jira ticket. This skill creates structured space for the hard thinking: **What is the right IA? What are the tradeoffs? What does the business actually need?** Only then does it build.
+The fundamental insight: most design problems are solved too quickly. A PM writes a feature spec, someone picks a layout, an engineer implements it, and the UX gets designed in the comments of a Jira ticket. This skill creates structured space for the hard thinking: **What is the right IA? What are the tradeoffs? What does the business actually need? How does this look on Osmos? Where do we add delight?** Only then does it build.
 
-> **Reference file:** `references/ia-patterns.md` — screen taxonomy, zone taxonomy, component library, nav structure, CSS tokens. Consult it whenever Noor or Dev are choosing components or naming screens.
+> **Reference files — ux-ideator personas** (read at the phases noted):
+> - `references/ia-patterns.md` — screen taxonomy, zones, component library, nav structure, CSS tokens. Read by all agents when choosing components or naming screens.
+> - `references/noor.md` — Noor's voice model: memories, voice samples, failure modes, relationship dynamics. Read by Noor before ANY output.
+> - `references/noor-knowledge.md` — Noor's IA heuristics, screen consolidation decisions, patterns, anti-patterns, research. Read by Noor at Phase 2 and Phase 3.
+> - `references/dev.md` — Dev's power user workflows, density benchmarks, non-negotiables, anti-patterns. Read by Dev at the start of Phase 2 (audit flags) and Phase 3.
+> - `references/raj.md` — Platform principles ranked by tie-breaking weight, known persona conflicts and resolutions, business context. Read by Raj ONLY when Stalemate Protocol activates.
+
+> **Reference files — design-critic personas (cross-skill, used in early + late phases too)**:
+> - `../design-critic/references/meera.md` — Meera's business framing voice + GTM + M%G + customer segmentation. Read at Phase 1 (business reframe pass) and Phase 5 (Rigor Matrix).
+> - `../design-critic/references/arjun.md` — Arjun's UX research voice + UX Honeycomb + research data. Read at Phase 2 (research-grounded IA audit) and Phase 5.
+> - `../design-critic/references/priya.md` — Priya's feasibility voice + 9-agent debugger context + estimation calibration. Read at Phase 6 (pre-implementation feasibility sanity) and Phase 5.
+> - `../design-critic/references/zara.md` — Zara's delight catalog + structural delight patterns + agentic thinking moments. Read at Phase 5.5 (delight pass) and Phase 5.
+
+> **Design reference data** — broad design intelligence loaded alongside persona knowledge:
+> - `Design_skill_reference/data/ux-guidelines.csv` — 99 UX heuristics. Loaded by Noor and Dev at Phase 2-3.
+> - `Design_skill_reference/data/charts.csv` — 25 chart type selection rules. Loaded by Dev at Phase 2-3.
+> - `Design_skill_reference/data/react-performance.csv` — 44 React performance patterns. Loaded by Priya at Phase 6.
+> - `Design_skill_reference/data/app-interface.csv` — 30 mobile/app rules. Loaded by Noor at Phase 2.
+> - `Design_skill_reference/data/products.csv` + `ui-reasoning.csv` — Loaded by Meera at Phase 1 for product-type / competitive context.
+> - `Design_skill_reference/data/styles.csv` + `colors.csv` — Loaded by Zara at Phase 5.5 for delight pattern + palette decisions.
+> - `Design_skill_reference/data/ux-guidelines.csv` + `charts.csv` + `products.csv` — Loaded by Raj ONLY during Stalemate Protocol.
+
+> **Sister skill — visual translation:**
+> - `osmos-design-translator` — invoked at Phase 3 (lo-fi component recipes) and Phase 6 (pre-implementation visual recipe). Translates broad design inspiration into Osmos-clipped output (tokens, `src/ui/` components, density rules). Has its own reference files: `osmos-constraints.md`, `decision-trees.md`, `anti-patterns.md`, `component-recipes.md`, `reference-projects.md`, `laws.md`.
 
 ---
 
@@ -127,18 +150,41 @@ Parse the input and produce this structured block:
 **Explicit out-of-scope:** [what the PRD says is not in scope]
 ```
 
-### Step 3: Write knowledge graph node
-Append `prd` node to `graphify-out/ux-ideator/[feature-slug]-prd.md`
+### Step 3: Meera business reframe (NEW — 3-5 sentence pass)
 
-**Transition announcement:** _"Phase 1 complete — [N] user stories, [N] task flows, [N] candidate screens. Proceeding to IA map."_
+After the PRD Digest is drafted, Meera reads `../design-critic/references/meera.md` and produces a short business reframe — strictly her voice, ≤5 sentences. Specifically:
+
+- Does the **Business goal** in the digest map to a moveable Osmos KPI (M%G, ad yield, advertiser activation, retailer GTM lever)? If not, propose a sharper one citing the PRD corpus.
+- Which **customer segment** is this for — enterprise retailers (Wakefern, GPA, PicknPay), marketplaces (FirstCry, Takealot, Mr. D), or torso retailers? The persona density target downstream depends on this.
+- What is the **competitive parity check** — does Criteo / Kevel / Topsort / Zitcha already do this? If yes, what's our differentiation angle? If no, why not (is there a structural reason)?
+- Optional: load `Design_skill_reference/data/products.csv` and `ui-reasoning.csv` for product-type / competitive context if the artifact type matches.
+
+This is NOT a deliberation. Meera does not argue with the digest — she reframes it for downstream phases. If she flags something irreconcilable with the PRD, she names it once and proceeds.
+
+### Step 4: Write knowledge graph node
+Append `prd` node (with Meera reframe appended) to `graphify-out/ux-ideator/[feature-slug]-prd.md`
+
+**Transition announcement:** _"Phase 1 complete — [N] user stories, [N] task flows, [N] candidate screens, Meera business reframe ✓. Proceeding to IA map."_
 
 ---
 
 ## Phase 2 — Information Architecture Map
 
-**Transition announcement before starting:** _"Phase 2: Noor is building the IA map..."_
+**Transition announcement before starting:** _"Phase 2: Noor is building the IA map. Dev is auditing for power-user gaps. Arjun is checking research signals."_
 
-Noor leads. Dev audits. Raj only speaks if stalemate criteria are met (2+ structural objections from Dev that Noor won't concede).
+**Before starting:** Noor reads `references/noor.md` + `references/noor-knowledge.md`. Dev reads `references/dev.md`. Arjun reads `../design-critic/references/arjun.md`.
+
+**Pre-phase pattern check — read before proposing any screen:**
+
+Read `obsidian-vault/Patterns/control-center-standard.md` if it exists. This registry documents established UI patterns across the portal:
+- Which screen types already exist and what their IA looks like
+- Which components (atoms, molecules) are available and proven in context
+- Which patterns are canonical (don't re-invent) vs. still open
+- Which T4 exceptions exist (domain-specific deviations that are intentional)
+
+Noor's IA decisions must account for what already exists. If a proposed screen type matches an existing pattern, reuse it — don't propose a parallel pattern that will create drift. If a proposed screen genuinely needs a new pattern, name it explicitly and add it to the registry at the end of Phase 2.
+
+Noor leads. Dev audits for power-user gaps (bulk actions, keyboard paths, dead-ends). **Arjun audits for research-grounded UX gaps** — specifically: does the IA serve the actual workflow patterns in research data (Sofie 343 feedback, 143 debug tickets, Campaign Not Spending SOP), or does it serve an idealized user that doesn't exist? Arjun produces a short "research-flagged risks" list under Dev's audit flags. Raj only speaks if stalemate criteria are met (2+ structural objections that Noor won't concede).
 
 ### IA Map Output Format
 
@@ -198,7 +244,19 @@ Check `references/ia-patterns.md §5` before proposing any new nav item. New scr
 
 **Transition announcement before starting:** _"Phase 3: Noor and Dev each proposing a lo-fi concept..."_
 
+**Before starting:** Noor re-consults `references/noor.md` §"IA Patterns That Work" before writing Concept A. Dev re-consults `references/dev.md` §"Ad Ops Workflows" and §"Density Benchmarks" before writing Concept B.
+
 **NO Figma at this phase.** Lo-fi is text/ASCII only. Figma is called in Phase 6. The goal here is layout intent and component decisions — not pixels.
+
+**Pattern registry check before wireframing:**
+
+Both Noor and Dev must check `obsidian-vault/Patterns/control-center-standard.md` before producing their concepts. Specifically:
+- Use the exact table header/row style values from Pattern 1 — don't re-derive them
+- Use the exact atoms/molecules listed in the inventory — don't propose custom components if a library component exists
+- Reference established drawer sizes (560px standard, 700px wide) rather than picking new widths
+- If either concept requires a pattern NOT in the registry, flag it explicitly as a "new pattern proposal" in their concept text
+
+This ensures Phase 3 outputs are directly implementable (the visual recipe in Phase 3.5 won't contradict established patterns) and that every new page shipped adds to — not diverges from — the portal's design language.
 
 Noor produces **Concept A**. Dev produces **Concept B**. Each is written entirely in that agent's voice. They do not appear in each other's sections.
 
@@ -243,7 +301,25 @@ Zone names here MUST match Screen Spec JSON keys exactly — this enables mechan
 [The one behavioral assumption this layout makes — the thing that must be true for this design to work]
 ```
 
-**Transition announcement:** _"Phase 3 complete — Concept A (Noor) and Concept B (Dev) ready. Proceeding to deliberation."_
+### Phase 3.5 — Component Recipe Pass via osmos-design-translator
+
+**Before deliberation, both concepts run their key surfaces through `osmos-design-translator`** to lock component recipes to Osmos tokens, density rules, and `src/ui/` constraints.
+
+**How:** for each concept's most important surface (the one the deliberation will hinge on), invoke `osmos-design-translator` inline with:
+- The text wireframe from Phase 3
+- Portal context (Pulse / Advertiser / OsmosX) from Meera's Phase 1 reframe
+- Persona density target from the IA map
+
+The translator runs its 5-phase flow (Inspiration capture → Constraint mapping → Translation → Anti-pattern check → Recipe output) and returns ONLY the structured recipe. Append the recipe to the concept under a "Component recipe" subsection.
+
+This means by the time deliberation starts, both concepts already have:
+- Concrete tokens (no hand-waving "use a card")
+- Specific anti-patterns avoided (named, not implicit)
+- A judgment call surfaced (named, not buried)
+
+That moves deliberation from "which layout is better" to "which judgment call is right" — a sharper conversation.
+
+**Transition announcement:** _"Phase 3 complete — Concept A (Noor) and Concept B (Dev) ready, both with osmos-design-translator recipes attached. Proceeding to deliberation."_
 
 ---
 
@@ -378,41 +454,168 @@ The design-critic logic runs in this session — not as a sub-agent call. Follow
 
 Write knowledge graph node: `rigor-matrix`
 
-**Transition announcement:** _"Phase 5 complete — Rigor Matrix: [X]/20. [Passed / Score gate triggered, revision applied.] Proceeding to final UI."_
+**Transition announcement:** _"Phase 5 complete — Rigor Matrix: [X]/20. [Passed / Score gate triggered, revision applied.] Proceeding to delight pass."_
+
+---
+
+## Phase 5.5 — Zara Delight Pass (NEW)
+
+**Transition announcement before starting:** _"Phase 5.5: Zara is identifying the one delight moment to add..."_
+
+**Before starting:** Zara reads `../design-critic/references/zara.md`. Optionally loads `Design_skill_reference/data/styles.csv` for animation/effect patterns.
+
+After the Rigor Matrix passes the score gate but before final UI implementation, Zara takes the Agreed Design + visual recipe and adds **exactly one delight moment** — not five, not zero. Her job is to identify the single highest-leverage place where structural or surface delight will compound (peak-end rule from `osmos-design-translator/references/laws.md`).
+
+### Zara's delight pass output format
+
+```markdown
+## Zara's Delight Pass
+
+**Surface:** [which screen / state]
+**Moment:** [where in the flow — empty state, success state, transition between steps, agentic thinking, etc.]
+**Type:** Structural | Surface
+- Structural = changes the recipe (e.g. agentic thinking animation, calendar multiplier viz, multi-modal debugger response)
+- Surface = polish layer (e.g. micro-animation on success, copy with personality, illustrated empty state)
+
+**Specific addition:** [one concrete thing to add — name the animation timing, the copy line, the visual treatment]
+**Why this one:** [the peak-end argument — why this moment matters more than others to add delight to]
+**Cost:** [low / medium / high — Priya will sanity-check at Phase 6]
+**Falls back to recipe:** [pointer back to osmos-design-translator/references/component-recipes.md if relevant]
+```
+
+**Constraints from `osmos-design-translator/references/osmos-constraints.md`:**
+- Pulse working surfaces (50+ visits/day) → favor MINIMAL or STRUCTURAL delight only — no decorative motion
+- Pulse occasional surfaces (settings, billing) → MODERATE delight acceptable
+- First-time / once-ever surfaces (onboarding, first campaign launch) → HIGH delight encouraged
+- OsmosX → MAXIMUM delight, hand off to brand skill if needed
+
+If Zara identifies that delight is wrong for this surface (high-frequency working surface where speed > delight), she explicitly says "no delight needed here — speed is the craft" and skips. That's a valid output.
+
+**Transition announcement:** _"Phase 5.5 complete — [delight added: brief description / no delight: speed is the craft for this surface]. Proceeding to final UI."_
 
 ---
 
 ## Phase 6 — Final UI Production
 
-**Transition announcement before starting:** _"Phase 6: Building the final UI..."_
+**Transition announcement before starting:** _"Phase 6: Building the final UI with Priya feasibility check + osmos-design-translator visual recipe..."_
 
-### Step 1: Translate to Screen Spec JSON
+### Step 0: Priya feasibility sanity check (NEW)
 
-Convert the Agreed Design text wireframes to Screen Spec JSON. Zone names in the text wireframes are identical to Screen Spec JSON keys — this translation is mechanical. Use the schema in `references/ia-patterns.md §7`.
+**Before any code is written**, Priya reads `../design-critic/references/priya.md` and produces a 4-line feasibility sanity. Specifically:
+- **Effort ceiling check**: does the Agreed Design + Zara's delight addition fit the original effort estimate? If it just doubled, name it.
+- **State-machine red flag**: any state machine that wasn't in the IA map (loading, error, retry, optimistic UI)? Name them so they're built, not skipped.
+- **Dependency check**: new `src/ui/` primitives needed? Hand off to `component-reuse-enforcer` if so.
+- **Cost lever**: is there a 20% effort version that delivers 80% — and should we ship that first? She loads `Design_skill_reference/data/react-performance.csv` for performance pattern checks.
 
-### Step 2: Figma (hi-fi pass)
+If Priya raises a P0 feasibility risk (something that could stop ship), pause and surface it to the user before continuing. If P1/P2, note it in the final summary but proceed.
 
-Invoke `figma-wireframer` with the Screen Spec JSON and this note: *"Hi-fi pass from ux-ideator. Apply full Osmos brand tokens. Search design system before creating any component."*
+### Step 1: osmos-design-translator visual recipe (NEW)
 
-If `--no-figma` flag is set, or Figma MCP is unavailable → skip to Step 3. Announce the skip.
+Invoke `osmos-design-translator` with:
+- Agreed Design text wireframes (from Phase 4)
+- Zara's delight pass (from Phase 5.5)
+- Priya's feasibility constraints (from Step 0)
 
-### Step 3: React implementation
+The translator produces a final, lockable visual recipe — concrete tokens, exact `src/ui/` imports, layout numbers, all states (default/hover/focus/disabled/loading/empty/error). This recipe is the input to Step 2 and Step 3 below.
 
-Invoke `react-implementer` with the Screen Spec JSON (and Figma component map if Step 2 ran).
+### Step 2: Translate to Screen Spec JSON
+
+Convert the Agreed Design + visual recipe to Screen Spec JSON. Zone names in the text wireframes are identical to Screen Spec JSON keys — this translation is mechanical. Use the schema in `references/ia-patterns.md §7`. The visual recipe's tokens, components, and states populate the Screen Spec.
+
+### Step 3: Figma (hi-fi pass)
+
+Invoke `figma-wireframer` with the Screen Spec JSON (now backed by the visual recipe) and this note: *"Hi-fi pass from ux-ideator. Apply full Osmos brand tokens. Search design system before creating any component. Token + component decisions are LOCKED from Step 1 visual recipe — do not deviate."*
+
+If `--no-figma` flag is set, or Figma MCP is unavailable → skip to Step 4. Announce the skip.
+
+### Step 4: React implementation
+
+Invoke `react-implementer` with the Screen Spec JSON + visual recipe (and Figma component map if Step 3 ran).
 
 Rules inherited from react-implementer:
 - Import ONLY from `src/ui/`
 - Inline CSS vars — no Chakra props
 - Raw `<table>` HTML for data tables
 - Never invent content — if a label is unverified, mark `[UNVERIFIED]` and ask
+- Token + component choices come from the visual recipe — react-implementer does not re-decide
 
-### Step 4: UX Audit
+### Step 4a: Verify import paths against the barrel file (MANDATORY)
+
+**Before declaring the component file done**, read `src/ui/index.js` and cross-check every `src/ui/` import in the new file.
+
+The atom filename does NOT always match the export name. Known mismatches in this codebase:
+
+| Export name | Actual file path |
+|---|---|
+| `TypeBadge`, `Badge` | `src/ui/atoms/Badge.jsx` |
+| `Select` | `src/ui/atoms/Input.jsx` (co-located with `Input`) |
+| Named icons | `src/ui/atoms/Icon.jsx` |
+
+**Rule:** if an import path can't be confirmed by reading `src/ui/index.js`, fix it before moving on. Never guess atom filenames.
+
+### Step 4b: App integration wiring (MANDATORY — a page that isn't wired isn't shipped)
+
+After the component file is written and imports are verified, wire the new page into the app.
+
+**Pre-wiring audit — run this BEFORE adding anything new:**
+
+Read `src/retailer/components/LeftNav.jsx` and `src/retailer/App.jsx` in full. Scan for:
+
+1. **Existing "Coming soon" stubs** — any `MerchantManagementPage`, `ComingSoonPage`, or component whose render output is a placeholder (text like "Coming soon", "Page coming soon", empty state with no real data). If one exists whose label or domain overlaps with the feature being shipped, that stub's nav item and switch case should be **updated to point to the new component**, not left as a dead route alongside the new one.
+
+2. **Near-duplicate nav labels** — if the new feature's label (e.g. "Advertiser Management") is semantically the same as an existing nav item (e.g. "Merchant Management"), they are the same surface. Update the existing item; don't create a parallel entry.
+
+3. **Orphaned cases** — switch cases in `App.jsx` that still render a stub component after the real page ships. Update them to render the new component.
+
+Only after confirming no existing stub needs updating should you add a net-new nav item and switch case.
+
+**1. `src/retailer/components/LeftNav.jsx` — add or update the nav item**
+
+Read the file first to identify:
+- Which top-level section it belongs in (`control-center`, `finance`, `analytics`, etc.) — use the PRD's nav placement from Phase 2 IA Map
+- Which group it belongs to within that section (or `isGroupHeader: true` if it's its own group)
+- Where in the group ordering it should sit (near conceptually related items)
+
+Add one entry to `NAV_SECTIONS[section].subnav` (or update an existing stub entry):
+```js
+{ id: '[page-id]', label: '[Nav Label]', group: '[Group Name]', isGroupHeader: true }
+// or, if it joins an existing group:
+{ id: '[page-id]', label: '[Nav Label]', group: '[Existing Group Name]' }
+```
+
+**2. `src/retailer/App.jsx` — add the import**
+
+Add one line to the import block, alphabetically near similar page imports:
+```js
+import [ComponentName] from './components/[ComponentName]';
+```
+
+**3. `src/retailer/App.jsx` — add the switch case**
+
+Add a case inside `renderPage()` following the exact pattern used by every other case in this file:
+```jsx
+case '[page-id]':
+  return (
+    <>
+      <TopBar section="[Section Label]" page="[Page Label]" onNavigate={setActivePage} />
+      <main style={{ flex: 1, overflowY: 'auto', background: 'var(--osmos-bg-subtle)' }}>
+        <[ComponentName] />
+      </main>
+    </>
+  );
+```
+
+The `section` and `page` values come from the IA Map nav placement (Phase 2).
+
+**After all three changes, run `pnpm build`.** If there are errors, fix them before proceeding. Do not move to Step 5 with a broken build.
+
+### Step 5: UX Audit
 
 Invoke `ux-auditor`. Run Figma Fidelity Check first (if Figma was produced), then UX Honeycomb scoring.
 
 If any dimension scores below B → route fix to the relevant agent and re-audit. Max 2 fix loops (same rule as `design-orchestrator`).
 
-### Step 5: Update knowledge graph
+### Step 6: Update knowledge graph
 
 Write `ui-output` node. Run `graphify update . 2>/dev/null || true`.
 
@@ -423,12 +626,15 @@ Write `ui-output` node. Run `graphify update . 2>/dev/null || true`.
 
 | Phase | Output | Status |
 |-------|--------|--------|
-| 1. PRD Ingestion | PRD Digest — [N] stories, [N] screens | ✅ |
-| 2. IA Map | [N] screens, [N] flows | ✅ |
-| 3. Lo-fi Concepts | Concept A (Noor) + Concept B (Dev) | ✅ |
+| 1. PRD Ingestion | PRD Digest — [N] stories, [N] screens, Meera reframe ✓ | ✅ |
+| 2. IA Map | [N] screens, [N] flows, Arjun research audit ✓ | ✅ |
+| 3. Lo-fi Concepts | Concept A (Noor) + Concept B (Dev), both with osmos-design-translator recipes | ✅ |
 | 4. Deliberation | [Base concept + key merges / Raj activated on X] | ✅ |
 | 5. design-critic | Rigor Matrix: [X]/20 | ✅ |
-| 6. Final UI | [ComponentName].jsx + [Figma URL or "no Figma"] | ✅ |
+| 5.5. Zara delight | [Delight added: brief / no delight: speed is the craft] | ✅ |
+| 6. Final UI | [ComponentName].jsx + [Figma URL or "no Figma"] + Priya feasibility ✓ | ✅ |
+| 6a. Import verification | All src/ui/ paths confirmed against barrel file | ✅ |
+| 6b. App wiring | LeftNav.jsx nav item + App.jsx import + App.jsx switch case + pnpm build ✓ | ✅ |
 
 **UX Audit:** Useful=[A-D] Usable=[A-D] Desirable=[A-D] Findable=[A-D] Accessible=[A-D] Credible=[A-D] Valuable=[A-D]
 **Knowledge graph:** graphify-out/ux-ideator/[feature-slug]-*.md

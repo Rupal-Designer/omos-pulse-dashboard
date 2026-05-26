@@ -1,0 +1,37 @@
+{
+  "eval_id": 3,
+  "run_type": "without_skill",
+  "expectations": [
+    {
+      "text": "feasibility_flags_ml_complexity",
+      "passed": true,
+      "evidence": "Feasibility section explicitly identifies three ML/data systems: 'Historical Campaign Similarity Engine', 'Seasonal Trend Model', and 'Retailer Inventory Level Integration', with detailed discussion of model training, cold-start problems, and data pipeline requirements."
+    },
+    {
+      "text": "delight_identifies_wow_moment",
+      "passed": true,
+      "evidence": "Product Delight section discusses 'The Aha Potential' and describes the specific moment when a professional thinks 'this tool knows my business', plus the 'Disappointment Risk' when delight collapses — explicitly evaluating whether a wow moment exists and under what conditions."
+    },
+    {
+      "text": "produces_rigor_matrix_table",
+      "passed": false,
+      "evidence": "File contains a 'Build vs. Cut Matrix' table and per-lens ratings in text (e.g., 'Feasibility Rating: Medium') but does not contain a markdown Rigor Matrix table with all four dimensions in a single unified table."
+    },
+    {
+      "text": "has_verdict_section",
+      "passed": true,
+      "evidence": "File contains '## Final Verdict' header with a direct verdict: 'Build it. Scope it to the four core components... Defer seasonal and inventory signals entirely.'"
+    },
+    {
+      "text": "verdict_addresses_scope",
+      "passed": true,
+      "evidence": "Verdict explicitly calls out what to cut: 'Defer seasonal and inventory signals entirely' and the Build vs. Cut Matrix marks 'Seasonal trend signals' as DEFER and 'Live inventory level integration' as CUT."
+    },
+    {
+      "text": "surfaces_agent_conflict",
+      "passed": false,
+      "evidence": "No synthesis section containing 'conflict', 'disagree', or 'tension' between agents exists; each lens is evaluated independently with no cross-lens conflict acknowledgment."
+    }
+  ],
+  "overall_pass_rate": 0.6667
+}

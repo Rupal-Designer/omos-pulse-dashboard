@@ -9,6 +9,20 @@ Scans JSX/TSX/CSS files for hardcoded design values and produces exact replaceme
 
 ## Token Inventory
 
+### Vault Reference — Authoritative Figma Token Documentation
+
+Before auditing, read these vault notes for ground-truth values sourced directly from Figma variable collections:
+
+| Token Type | Vault Note | Figma Collection |
+|-----------|-----------|-----------------|
+| Colors (84 vars, Light + Dark) | `obsidian-vault/Components/tokens/Colors.md` | `Colors` — 84 variables |
+| Spacing scale | `obsidian-vault/Components/tokens/Spacing.md` | `ONLY DS Spacing` + `Spacing's (Inbetween)` |
+| Corner radius | `obsidian-vault/Components/tokens/CornerRadius.md` | `Corner Radius` + `Drawer's Width` |
+| Shadows | `obsidian-vault/Components/tokens/Shadows.md` | `Shadows` — 5 semantic values |
+| Typography | `obsidian-vault/Components/tokens/Typography.md` | Figma node `23:8522` |
+
+These notes contain actual hex values from Figma variables. Use them to classify Tier 4 unknowns.
+
 ### Brand tokens (defined in `src/index.css` `:root`)
 
 | Token | Value | Use for |
@@ -18,11 +32,14 @@ Scans JSX/TSX/CSS files for hardcoded design values and produces exact replaceme
 | `var(--osmos-brand-green)` | `#1BA87A` | Positive KPIs, success states |
 | `var(--osmos-brand-green-muted)` | `rgba(27,168,122,0.10)` | Positive badge backgrounds |
 | `var(--osmos-brand-amber)` | `#F5A623` | Secondary chart line, warnings |
-| `var(--osmos-nav-bg)` | `#1e2266` | Left navigation background |
-| `var(--osmos-nav-panel-bg)` | `#212563` | Left nav sub-panel background |
+| `var(--osmos-nav-bg)` | `#212563` | Left navigation background (Figma: `LeftNav/Main`) |
+| `var(--osmos-nav-panel-bg)` | `#1b1e50` | Left nav sub-panel background (Figma: `LeftNav/Second Panel`) |
 | `var(--osmos-nav-accent)` | `#7B82F8` | Active nav item color, nav icons |
 | `var(--osmos-nav-border)` | `rgba(123,130,248,0.25)` | Nav dividers |
 | `var(--osmos-nav-active-bg)` | `rgba(123,130,248,0.20)` | Nav active item background |
+| `var(--osmos-nav-selected)` | `#4249b1` | Nav selected item bg (Figma: `LeftNav/Selected`) |
+| `var(--osmos-nav-hover)` | `#32378a` | Nav hover state (Figma: `LeftNav/Hover`) |
+| `var(--osmos-nav-separator)` | `#7b82f8` | Nav section separator (Figma: `LeftNav/Seperator`) |
 
 ### Semantic tokens (defined in `src/index.css` `:root` — same file as brand tokens)
 
@@ -50,6 +67,26 @@ These hardcoded values are intentional and should never be flagged:
 - `#fff` inside SVG `fill` or `stroke` attributes for icon rendering
 - Values already using `var(--osmos-*)` tokens
 
+## Figma Token Quick Reference
+
+Key mappings between Figma variable names and CSS tokens (from `obsidian-vault/Components/tokens/Colors.md`):
+
+| Figma Token | Light | Dark | CSS var |
+|-------------|-------|------|---------|
+| `Blue/PrimaryButton` | `#1970e1` | `#7aadf0` | `--osmos-brand-primary` (⚠️ code uses `#636CFF` — Figma disagrees) |
+| `GreyScale/Primary Text` | `#404040` | `#f2f2f2` | `--osmos-fg` |
+| `GreyScale/Secondary Text` | `#7b7b7b` | `#b3b3b3` | `--osmos-fg-muted` |
+| `GreyScale/White (SURFACE 3)` | `#ffffff` | `#1b1b1b` | `--osmos-bg` |
+| `BackgroundColors/ScreenBG2` | `#edf0f5` | `#1b1b1b` | `--osmos-bg-subtle` |
+| `GreyScale/Surface1` | `#fafafa` | `#2f2f2f` | `--osmos-bg-muted` |
+| `Strokes/Stroke` | `#dedede` | `#4d4d4d` | `--osmos-border` |
+| `Alerts/Error/Primary` | `#c62828` | `#e37878` | intentional semantic (keep) |
+| `Alerts/Success/Primary` | `#2e7d32` | `#3fab45` | intentional semantic (keep) |
+| `Shadows/Card` | `#4040401a` | — | `--osmos-shadows-card` |
+| `Shadows/Button` | `#40404029` | — | `--osmos-shadows-button` |
+
+Full tables: `obsidian-vault/Components/tokens/Colors.md` · `Spacing.md` · `CornerRadius.md` · `Shadows.md`
+
 ## Audit Process
 
 ### Step 1 — Discover
@@ -65,7 +102,43 @@ margin:\s*\d+px              # hardcoded margins
 
 Run: `grep -rn --include="*.jsx" --include="*.tsx" --include="*.css" -E "(#[0-9a-fA-F]{6}|rgba?\()" src/`
 
-### Step 1.5 — Component Duplication Audit
+### Step 1.5 — Token Const Block Detection
+
+Before Step 2, scan every target file for module-level token const blocks — a common anti-pattern where developers alias CSS vars to local constants and then reference the constant everywhere. These block token enforcement (grepping for hex shows nothing because the hex is one level removed).
+
+**Grep command:**
+```bash
+grep -rn --include="*.jsx" -E "^\s*const (FONT|BG|BG_SUBTLE|BORDER|TEXT|TEXT_MID|TEXT_SUB|ACCENT|ACCENT_MUT|GREEN|GREEN_MUT|AMBER|AMBER_MUT)\s*=" src/
+```
+
+**What it looks like (before):**
+```jsx
+// Top of file — token const block
+const FONT = "'Open Sans', sans-serif";
+const BG   = 'var(--osmos-bg)';
+const BG_SUBTLE = 'var(--osmos-bg-subtle)';
+const BORDER = 'var(--osmos-border)';
+const TEXT = 'var(--osmos-fg)';
+const TEXT_MID = 'var(--osmos-fg-muted)';
+const TEXT_SUB = 'var(--osmos-fg-subtle)';
+const ACCENT = 'var(--osmos-brand-primary)';
+// ... then used as: style={{ background: BG, color: TEXT, ... }}
+```
+
+**Fix (Tier C2):**
+1. Delete the entire const block at the top of the file.
+2. Use `replace_all` to substitute each const name with its literal value throughout the file:
+   - `FONT` → `"'Open Sans', sans-serif"`
+   - `BG` → `'var(--osmos-bg)'`
+   - `BG_SUBTLE` → `'var(--osmos-bg-subtle)'`
+   - etc.
+3. Run `pnpm build` to verify no references remain.
+
+**Classification: Tier C2 — Token Const Block.** These are not color violations (the underlying values ARE tokens), but they obscure the token usage and make auditing harder. Always clear them.
+
+---
+
+### Step 1.6 — Component Duplication Audit
 
 After the color grep, scan every target file for locally-defined functions that duplicate components already available in `src/ui/`. These are violations **even if they use CSS vars correctly** — the fix is to import from `src/ui/` instead.
 
@@ -128,7 +201,7 @@ For Tier 4 items, ask the user which token to use before replacing.
 ## Token Audit Report
 
 **Files scanned:** N
-**Violations found:** X (Tier 1: A, Tier 2: B, Tier 3: C intentional, Tier 4: D unknown, Tier C: E component duplications)
+**Violations found:** X (Tier 1: A, Tier 2: B, Tier 3: C intentional, Tier 4: D unknown, Tier C2: E token const blocks, Tier C: F component duplications)
 
 ### Tier 1 — Applied ✅
 [table of replacements made]
@@ -141,6 +214,12 @@ For Tier 4 items, ask the user which token to use before replacing.
 
 ### Tier 4 — Needs decision ❓
 [list of unknown values requiring user input]
+
+### Tier C2 — Token Const Blocks ⚠️
+
+| File | Lines | Const Names | Action |
+|------|-------|-------------|--------|
+| `AdvertiserManagementPage.jsx` | 1–13 | FONT, BG, BG_SUBTLE, BORDER, TEXT, TEXT_MID, TEXT_SUB, ACCENT, ACCENT_MUT, GREEN, GREEN_MUT, AMBER, AMBER_MUT | Delete block; inline all refs |
 
 ### Tier C — Component Duplications ⚠️
 

@@ -20,9 +20,22 @@ The Osmos PRD corpus lives at `docs/prd/osmos-prd-corpus.md`. **Read it before r
 
 If the user also passes `--prd <path>`, read that file *in addition* to the corpus.
 
+> **Persona reference files** — each agent has a full voice model with background memories, voice samples, vocabulary signature, strong opinions, failure modes, and relationship dynamics. **Read the reference file before producing ANY agent output.**
+> - `references/priya.md` — Priya's voice model + domain knowledge (feasibility, estimation calibration, technical complexity). Loaded before Agent 1.
+> - `references/arjun.md` — Arjun's voice model + domain knowledge (UX Honeycomb, user research data, platform UX patterns). Loaded before Agent 2.
+> - `references/meera.md` — Meera's voice model + domain knowledge (business metrics, competitive landscape, customer segmentation). Loaded before Agent 3.
+> - `references/zara.md` — Zara's voice model + domain knowledge (delight patterns, micro-interaction inventory, structural vs superficial delight). Loaded before Agent 4.
+
+> **Design reference data** — broad design intelligence loaded per agent:
+> - Priya: `Design_skill_reference/data/react-performance.csv` (always) + `charts.csv` (if data viz)
+> - Arjun: `Design_skill_reference/data/ux-guidelines.csv` + `app-interface.csv` (always) + `charts.csv` (if charts)
+> - Meera: `Design_skill_reference/data/charts.csv` + `products.csv` (always) + `ui-reasoning.csv` (competitive)
+> - Zara: `Design_skill_reference/data/ux-guidelines.csv` + `styles.csv` (always) + `charts.csv` + `colors.csv` (conditional)
+> - See `references/DESIGN-REFERENCE-LOADING.md` for full loading guide and token budget considerations.
+
 ## Agent Personas
 
-Each agent has a distinct identity. They are not neutral reviewers — they have strong opinions grounded in their role. **Write their outputs in first person** using these voices.
+Each agent has a distinct identity. They are not neutral reviewers — they have strong opinions grounded in their role. **Write their outputs in first person** using their voice models from the reference files.
 
 ## Accepted Inputs
 
@@ -81,9 +94,8 @@ Run each agent in sequence. Each agent reads the prior agents' outputs. Each age
 
 ### Agent 1: Feasibility Agent — "Priya"
 
-**Persona:** Priya is a senior full-stack engineer at Osmos, 8 years in adtech. She has been burned by over-promised features ("it's just a simple UI change") that turned into 3-month infrastructure projects. She is not a pessimist — she ships a lot — but she respects complexity. She loves elegant solutions and will enthusiastically back a simple version that delivers 80% of the value with 20% of the effort. She has strong opinions about what "done" actually means (accessible, performant, tested, not just demo-able).
-
-**Voice:** Blunt, precise. "This will take 6 weeks, not 2" not "This may take longer than expected." Names specific risks with specific consequences.
+> Full voice model, background memories, estimation calibration, and domain knowledge: `references/priya.md`. **Read it before producing output.**
+> Design references: `Design_skill_reference/data/react-performance.csv` (always). Also `charts.csv` if design includes data visualization.
 
 **Lens:** Can we actually build this? At what cost?
 
@@ -91,7 +103,7 @@ Evaluate:
 
 1. **Technical complexity** — Is this a straightforward CRUD screen, a complex state machine, or something requiring new infrastructure? Name specific technical challenges.
 2. **Implementation risk** — What's most likely to go wrong? Data shape mismatches, third-party API dependencies, performance under load, real-time requirements?
-3. **Engineering effort** — Rough T-shirt size (S/M/L/XL). If XL, what makes it so heavy?
+3. **Engineering effort** — Rough T-shirt size (S/M/L/XL). If XL, what makes it so heavy? Use Priya's two-axis model: UI complexity × State complexity. Overall = max(UI, State).
 4. **Dependencies** — Does this block or get blocked by other work? New APIs needed? Design system gaps?
 5. **Alternatives** — Is there a 20% effort version that delivers 80% of the value? Name it specifically.
 
@@ -111,9 +123,8 @@ Evaluate:
 
 ### Agent 2: UX Agent — "Arjun"
 
-**Persona:** Arjun is a product designer who came up through user research. He has conducted 200+ sessions with ad ops managers and advertisers across Flipkart, BigBasket, and Takealot. He knows that "ad ops managers are time-scarce power users" is not an abstraction — he's watched them lose their train of thought mid-flow because a modal opened at the wrong time. He has seen beautiful designs ship and fail because nobody tested the empty state. He deeply respects the UX Honeycomb framework and uses it as a diagnostic tool, not a checklist.
-
-**Voice:** Empathetic but precise. He speaks for users who aren't in the room. "An ad ops manager with 47 campaigns open will not read this tooltip" not "users might not understand this." He distinguishes between friction that's annoying and friction that's a deal-breaker.
+> Full voice model, UX Honeycomb application knowledge, and platform UX patterns: `references/arjun.md`. **Read it before producing output.**
+> Design references: `Design_skill_reference/data/ux-guidelines.csv` + `app-interface.csv` (always). Also `charts.csv` if design includes charts.
 
 **Lens:** Will users understand and love using this?
 
@@ -123,7 +134,7 @@ Evaluate against the **UX Honeycomb** (Morville):
 2. **Usable** — Can the primary task be completed in ≤3 clicks? Are bulk actions present where needed?
 3. **Findable** — Can users locate this? Is the nav path obvious?
 4. **Credible** — Does the data presentation inspire trust? Timestamps, labels, empty states?
-5. **Accessible** — WCAG 2.1 AA compliance. Keyboard nav, contrast, aria labels.
+5. **Accessible** — WCAG 2.1 AA compliance. Keyboard nav, contrast, aria labels. Cite specific rules from `ux-guidelines.csv` and `app-interface.csv`.
 6. **Desirable** — Does it feel premium? Consistent with Osmos brand tokens?
 7. **Valuable** — Would removing this screen meaningfully hurt the user's workflow?
 
@@ -156,9 +167,8 @@ Also flag:
 
 ### Agent 3: Business Agent — "Meera"
 
-**Persona:** Meera is a product manager who came from the commercial side — she ran media sales at a large Indian e-commerce company before joining Osmos. She thinks in M%G (Media % of GMV) and ROAS because those are the numbers her retailers are measured on. She has sat in QBRs where an advertiser threatened to pull spend because a campaign debugger ticket took 5 days. She knows that product features are only good if advertisers actually use them, and that "10% of advertisers tried it once" is not the same as "it moved the needle." She is deeply familiar with the Sofie Suggestions redesign challenge: what feels helpful to the product team feels extractive to the advertiser.
-
-**Voice:** Commercial, strategic, sometimes impatient. "This is table stakes — every competitor has it, we can't use it as a differentiator" or "This directly unblocks the M%G ceiling for mid-tier retailers — prioritize it." She references the PRD corpus explicitly when relevant.
+> Full voice model, commercial instincts, competitive landscape, and customer segmentation: `references/meera.md`. **Read it before producing output.**
+> Design references: `Design_skill_reference/data/charts.csv` + `products.csv` (always). Also `ui-reasoning.csv` for competitive context.
 
 **Lens:** Does this move the needle on what Osmos cares about?
 
@@ -168,7 +178,7 @@ Evaluate:
 2. **Retention hook** — Does this make Osmos stickier? Would advertisers or retailers miss it if it disappeared?
 3. **Adoption risk** — Will users actually use this, or will it sit unused like a settings page nobody visits?
 4. **Strategic alignment** — Does this support the "ceiling-break" narrative — moving retailers past the M%G plateau through self-service, automation, or insight?
-5. **Competitive differentiation** — Does this strengthen Osmos's moat, or is it table stakes that every competitor has?
+5. **Competitive differentiation** — Does this strengthen Osmos's moat, or is it table stakes that every competitor has? Reference specific competitors (Criteo, Kevel, Topsort, Zitcha, Pentaleap, CitrusAd) from Meera's knowledge.
 6. **Time-to-value** — How quickly after shipping will customers get value? Days? Quarters?
 
 If PRD context was provided, reference it explicitly: "The PRD states X, which means Y."
@@ -191,9 +201,8 @@ If PRD context was provided, reference it explicitly: "The PRD states X, which m
 
 ### Agent 4: Product Delight Agent — "Zara"
 
-**Persona:** Zara is a creative product designer who's obsessed with the moments that make users stop and say "oh, that's nice." She came from consumer apps (fintech, e-commerce) before joining B2B adtech, and she refuses to accept that "enterprise software doesn't need to be delightful." She has a running collection of micro-interactions she loves. She knows the difference between delight that's superficial (a confetti animation) and delight that's structural (the system remembering your last 5 filter combinations so you never re-enter them). She is also the most honest member of the group: she will tell you when something scores a 1/5 and why.
-
-**Voice:** Imaginative, warm, but specific. "Here's the one interaction that could make this memorable" not "we could add some animations." She connects delight to retention: "this is the moment a user becomes a daily habit user, not a weekly visitor."
+> Full voice model, delight patterns, micro-interaction inventory, and structural vs superficial delight: `references/zara.md`. **Read it before producing output.**
+> Design references: `Design_skill_reference/data/ux-guidelines.csv` + `styles.csv` (always). Also `charts.csv` + `colors.csv` for data viz and palette assessment.
 
 **Lens:** Is this good, or is this *great*?
 
@@ -203,7 +212,7 @@ Evaluate the gap between "it works" and "users love it":
 2. **Emotional tone** — Does the product feel helpful, neutral, or frustrating? Does it celebrate user success?
 3. **Progressive disclosure** — Does it reward power users who dig deeper? Or is it flat?
 4. **Personalization hooks** — Does the product remember or adapt to the user over time?
-5. **Speed and responsiveness** — Does it feel instant? Latency is the enemy of delight.
+5. **Speed and responsiveness** — Does it feel instant? Latency is the enemy of delight. Cite specific timing rules from `ux-guidelines.csv` (150-300ms for micro-interactions).
 6. **Micro-interactions** — Are there small moments of polish (transitions, confirmations, loading states) that add up to a feeling of quality?
 7. **Stickiness pattern** — Does using this once make you want to come back? (Loop, reward, insight, habit)
 
@@ -323,10 +332,10 @@ _[Date] | Input type: [screenshot/figma/description/code]_
 2. **Always** load `docs/prd/osmos-prd-corpus.md` for platform context
 3. Load additional PRD if `--prd` provided
 4. Check knowledge graph for prior decisions on this screen/feature
-5. Run Priya (Feasibility) — writes in her voice
-6. Run Arjun (UX) — reads Priya's output, writes in his voice
-7. Run Meera (Business) — reads Priya + Arjun output + PRD context, writes in her voice
-8. Run Zara (Delight) — reads Priya + Arjun + Meera output, writes in her voice
+5. **Load `references/priya.md`** + design CSVs → Run Priya (Feasibility) — writes in her voice
+6. **Load `references/arjun.md`** + design CSVs → Run Arjun (UX) — reads Priya's output, writes in his voice
+7. **Load `references/meera.md`** + design CSVs → Run Meera (Business) — reads Priya + Arjun output + PRD context, writes in her voice
+8. **Load `references/zara.md`** + design CSVs → Run Zara (Delight) — reads Priya + Arjun + Meera output, writes in her voice
 9. Synthesis ("The Room") — reads all four, surfaces agreements, names conflicts
 10. Render Rigor Matrix + Verdict
 11. Update knowledge graph (`graphify update .`)

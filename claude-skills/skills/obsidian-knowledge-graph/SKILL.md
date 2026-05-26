@@ -14,10 +14,23 @@ Synthesizes existing knowledge sources into a live, interlinked Obsidian vault a
 - `src/retailer/components/*.jsx` — retailer page component sources (imports, screen types)
 - `src/advertiser/components/*.jsx` — advertiser page component sources
 - `graphify-out/GRAPH_REPORT.md` — community/hub context
+- `obsidian-vault/Figma/design-system-map.md` — all 41 Figma DS pages with nodeIds and PNG status
+- `obsidian-vault/Assets/Components/` — 42 component PNGs (atoms, molecules, organisms, tokens)
 
 **Output:** `obsidian-vault/` — Obsidian-compatible Markdown with YAML frontmatter and `[[wikilinks]]`.
 
 ---
+
+## Phase 0.5 — Figma Design System Sync Check (optional)
+
+Before rebuilding components from source, check whether Figma Design System assets are current:
+
+1. Read `obsidian-vault/Figma/design-system-map.md` — check PNG status column for "Remaining without PNGs"
+2. Read `obsidian-vault/index.md` — check `PNGs downloaded` count in Quick Stats
+3. If PNGs are stale or missing: use `get_screenshot` + `curl` to download missing PNGs before writing component notes
+4. For Figma variable tokens: use `use_figma` with `figma.variables.getLocalVariableCollections()` to pull current token values — write to `Components/tokens/` notes
+
+This phase is **optional** for a code-only sync (no Figma MCP) but **required** for a full design-system sync.
 
 ## Phase 0 — Pre-flight
 
@@ -145,9 +158,11 @@ Write notes in this order (parent directories before children):
 2. `obsidian-vault/_meta/last-sync.md` — ISO timestamp
 3. `obsidian-vault/_meta/sync-log.md` — create if missing, append if exists
 4. `obsidian-vault/Components/index.md` — component table
-5. `obsidian-vault/Components/atoms/{Name}.md` — one per atom
-6. `obsidian-vault/Components/molecules/{Name}.md` — one per molecule
-7. `obsidian-vault/Pages/index.md` — full wired-pages registry table
+5. `obsidian-vault/Components/atoms/{Name}.md` — one per atom (14 total)
+6. `obsidian-vault/Components/molecules/{Name}.md` — one per molecule (26 total)
+7. `obsidian-vault/Components/organisms/{Name}.md` — one per organism (NavShell, TopBar, DataCharts, AdCreatives, Offsite, PackageAdmin, Funnels)
+8. `obsidian-vault/Components/tokens/{Name}.md` — one per token tier (Colors, Typography, GridLayout, Spacing, CornerRadius, Shadows)
+9. `obsidian-vault/Pages/index.md` — full wired-pages registry table
 8. `obsidian-vault/Pages/{ComponentName}.md` — one per page
 9. `obsidian-vault/Navigation/structure.md` — nav tree
 10. `obsidian-vault/Figma/index.md` — frame list
