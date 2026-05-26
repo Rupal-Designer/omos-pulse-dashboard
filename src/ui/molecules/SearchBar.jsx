@@ -1,8 +1,6 @@
 import React from 'react';
 import { SearchIcon } from '../atoms/Icon';
 
-const FONT = "'Open Sans', sans-serif";
-
 /**
  * SearchBar — magnifier icon + controlled text input.
  * value, onChange, placeholder, width (default 200)
@@ -29,7 +27,7 @@ export function SearchBar({ value, onChange, placeholder = 'Search...', width = 
         style={{
           border: 'none',
           outline: 'none',
-          fontFamily: FONT,
+          fontFamily: "'Open Sans', sans-serif",
           fontSize: 12,
           color: 'var(--osmos-fg)',
           background: 'transparent',

@@ -1,11 +1,5 @@
 import { CheckIcon } from '../atoms/Icon';
 
-const FONT      = "'Open Sans', sans-serif";
-const ACCENT    = 'var(--osmos-brand-primary)';
-const GREEN     = 'var(--osmos-brand-green)';
-const BG_SUBTLE = 'var(--osmos-bg-subtle)';
-const TEXT_MID  = 'var(--osmos-fg-muted)';
-
 /**
  * Stepper — horizontal numbered step indicator.
  *
@@ -14,14 +8,14 @@ const TEXT_MID  = 'var(--osmos-fg-muted)';
  */
 export function Stepper({ steps, current }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 32, fontFamily: FONT }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 32, fontFamily: "'Open Sans', sans-serif" }}>
       {steps.map((step, i) => {
         const num       = i + 1;
         const active    = num === current;
         const completed = num < current;
-        const dotBg     = active ? ACCENT : completed ? GREEN : BG_SUBTLE;
-        const dotColor  = (active || completed) ? '#fff' : TEXT_MID;
-        const labelColor = active ? ACCENT : completed ? GREEN : TEXT_MID;
+        const dotBg     = active ? 'var(--osmos-brand-primary)' : completed ? 'var(--osmos-brand-green)' : 'var(--osmos-bg-subtle)';
+        const dotColor  = (active || completed) ? '#fff' : 'var(--osmos-fg-muted)';
+        const labelColor = active ? 'var(--osmos-brand-primary)' : completed ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-muted)';
 
         return (
           <div key={step.label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

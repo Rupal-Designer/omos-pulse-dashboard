@@ -1,24 +1,9 @@
 import { useState } from 'react';
 import { Icon, CloseIcon, ChevronRightIcon } from '../../ui';
 
-// ── Design tokens ─────────────────────────────────────────────────────────────
-const FONT      = "'Open Sans', sans-serif";
-const BG        = 'var(--osmos-bg)';
-const BG_SUBTLE = 'var(--osmos-bg-subtle)';
-const BORDER    = 'var(--osmos-border)';
-const TEXT      = 'var(--osmos-fg)';
-const TEXT_MID  = 'var(--osmos-fg-muted)';
-const GREEN     = 'var(--osmos-brand-green)';
-const GREEN_M   = 'var(--osmos-brand-green-muted)';
-const AMBER     = 'var(--osmos-brand-amber)';
-const ERROR     = '#EF4444';     // intentional — critical alert color
-const VI        = 'var(--osmos-brand-violet)';     // violet-primary — AI brand
-const VI_BG     = 'var(--osmos-brand-violet-muted)';
-const VI_HOVER  = 'var(--osmos-brand-violet-hover)';
-const VI_ICONS  = '#8b5cf6';
 
 // ── Hand-rolled icons ─────────────────────────────────────────────────────────
-const SparklesIcon = ({ size = 16, color = VI_ICONS }) => (
+const SparklesIcon = ({ size = 16, color = '#8b5cf6' }) => (
   <Icon size={size} color={color}>
     <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3z" />
     <path d="M5 3v4" /><path d="M19 17v4" />
@@ -46,28 +31,28 @@ const ListIcon = ({ size = 16, color = '#fff' }) => (
   </Icon>
 );
 
-const AlertTriangleIcon = ({ size = 18, color = ERROR }) => (
+const AlertTriangleIcon = ({ size = 18, color = '#EF4444' }) => (
   <Icon size={size} color={color}>
     <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
     <path d="M12 9v4" /><path d="M12 17h.01" />
   </Icon>
 );
 
-const TrendingUpIcon = ({ size = 16, color = VI_ICONS }) => (
+const TrendingUpIcon = ({ size = 16, color = '#8b5cf6' }) => (
   <Icon size={size} color={color}>
     <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
     <polyline points="16 7 22 7 22 13" />
   </Icon>
 );
 
-const DollarIcon = ({ size = 16, color = VI_ICONS }) => (
+const DollarIcon = ({ size = 16, color = '#8b5cf6' }) => (
   <Icon size={size} color={color}>
     <line x1="12" x2="12" y1="2" y2="22" />
     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
   </Icon>
 );
 
-const TargetIcon = ({ size = 16, color = VI_ICONS }) => (
+const TargetIcon = ({ size = 16, color = '#8b5cf6' }) => (
   <Icon size={size} color={color}>
     <circle cx="12" cy="12" r="10" />
     <circle cx="12" cy="12" r="6" />
@@ -75,7 +60,7 @@ const TargetIcon = ({ size = 16, color = VI_ICONS }) => (
   </Icon>
 );
 
-const UsersIcon = ({ size = 16, color = VI_ICONS }) => (
+const UsersIcon = ({ size = 16, color = '#8b5cf6' }) => (
   <Icon size={size} color={color}>
     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
     <circle cx="9" cy="7" r="4" />
@@ -84,7 +69,7 @@ const UsersIcon = ({ size = 16, color = VI_ICONS }) => (
   </Icon>
 );
 
-const ZapIcon = ({ size = 16, color = VI_ICONS }) => (
+const ZapIcon = ({ size = 16, color = '#8b5cf6' }) => (
   <Icon size={size} color={color}>
     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
   </Icon>
@@ -141,7 +126,7 @@ const CATEGORY_ICONS = {
 const TYPE_STYLE = {
   critical: { bg: 'rgba(239,68,68,0.08)',  border: 'rgba(239,68,68,0.3)' },
   warning:  { bg: 'var(--osmos-brand-amber-muted)', border: 'rgba(245,166,35,0.3)' },
-  info:     { bg: BG_SUBTLE,               border: BORDER },
+  info:     { bg: 'var(--osmos-bg-subtle)', border: 'var(--osmos-border)' },
 };
 
 // ── AISuggestionsPanel ────────────────────────────────────────────────────────
@@ -175,12 +160,12 @@ export function AISuggestionsPanel({ open, onClose }) {
         height: '100%', width: 420,
         boxShadow: '0 10px 40px rgba(0,0,0,0.2)', zIndex: 50,
         display: 'flex', flexDirection: 'column',
-        backgroundColor: BG, fontFamily: FONT,
+        backgroundColor: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif",
       }}>
         {/* ── Gradient header ── */}
         <div style={{
           padding: 16, color: '#fff',
-          background: `linear-gradient(135deg, ${VI} 0%, ${VI_ICONS} 50%, #5b21b6 100%)`,
+          background: `linear-gradient(135deg, var(--osmos-brand-violet) 0%, #8b5cf6 50%, #5b21b6 100%)`,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -236,7 +221,7 @@ export function AISuggestionsPanel({ open, onClose }) {
         {/* ── Category filters ── */}
         <div style={{
           padding: 12, display: 'flex', gap: 8, flexWrap: 'wrap',
-          borderBottom: `1px solid ${BORDER}`,
+          borderBottom: `1px solid var(--osmos-border)`,
         }}>
           {/* All */}
           <CategoryChip
@@ -278,22 +263,22 @@ export function AISuggestionsPanel({ open, onClose }) {
                   <div style={{ flex: 1 }}>
                     {/* Title row */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                      <span style={{ color: VI_ICONS }}>
+                      <span style={{ color: '#8b5cf6' }}>
                         {CATEGORY_ICONS[s.category] || <SparklesIcon size={16} />}
                       </span>
-                      <h4 style={{ margin: 0, fontWeight: 600, fontSize: 13, color: TEXT }}>{s.title}</h4>
+                      <h4 style={{ margin: 0, fontWeight: 600, fontSize: 13, color: 'var(--osmos-fg)' }}>{s.title}</h4>
                     </div>
-                    <p style={{ margin: '0 0 8px', fontSize: 13, color: TEXT_MID }}>
+                    <p style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--osmos-fg-muted)' }}>
                       in {s.affectedCount} campaigns
                     </p>
-                    <p style={{ margin: '0 0 8px', fontSize: 12, color: TEXT_MID }}>
+                    <p style={{ margin: '0 0 8px', fontSize: 12, color: 'var(--osmos-fg-muted)' }}>
                       {s.description}
                     </p>
                     {/* Impact chip */}
                     <span style={{
                       display: 'inline-block', padding: '4px 8px', fontSize: 11,
                       borderRadius: 4, fontWeight: 500,
-                      backgroundColor: GREEN_M, color: GREEN,
+                      backgroundColor: 'var(--osmos-brand-green-muted)', color: 'var(--osmos-brand-green)',
                     }}>
                       {s.impact}
                     </span>
@@ -301,9 +286,9 @@ export function AISuggestionsPanel({ open, onClose }) {
 
                   {/* Right — alert icon + chevron */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    {s.type === 'critical' && <AlertTriangleIcon size={18} color={ERROR} />}
-                    {s.type === 'warning'  && <AlertTriangleIcon size={18} color={AMBER} />}
-                    <ChevronRightIcon size={18} color={TEXT_MID} />
+                    {s.type === 'critical' && <AlertTriangleIcon size={18} color="#EF4444" />}
+                    {s.type === 'warning'  && <AlertTriangleIcon size={18} color="var(--osmos-brand-amber)" />}
+                    <ChevronRightIcon size={18} color="var(--osmos-fg-muted)" />
                   </div>
                 </div>
               </div>
@@ -312,18 +297,18 @@ export function AISuggestionsPanel({ open, onClose }) {
         </div>
 
         {/* ── Footer CTA ── */}
-        <div style={{ padding: 16, borderTop: `1px solid ${BORDER}`, backgroundColor: BG_SUBTLE }}>
+        <div style={{ padding: 16, borderTop: `1px solid var(--osmos-border)`, backgroundColor: 'var(--osmos-bg-subtle)' }}>
           <button
             style={{
               width: '100%', padding: '10px 0',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               border: 'none', borderRadius: 8,
-              backgroundColor: VI, color: '#fff',
-              fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: FONT,
+              backgroundColor: 'var(--osmos-brand-violet)', color: '#fff',
+              fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
               transition: 'all 0.15s',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = VI_HOVER)}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = VI)}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--osmos-brand-violet-hover)')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--osmos-brand-violet)')}
           >
             <SparklesIcon size={16} color="#fff" />
             Apply All Recommendations
@@ -342,12 +327,12 @@ function CategoryChip({ label, active, onClick }) {
       style={{
         padding: '6px 12px', borderRadius: 999, border: 'none',
         fontSize: 12, fontWeight: 500, textTransform: 'capitalize',
-        cursor: 'pointer', transition: 'all 0.15s', fontFamily: FONT,
-        backgroundColor: active ? VI : VI_BG,
-        color: active ? '#fff' : VI,
+        cursor: 'pointer', transition: 'all 0.15s', fontFamily: "'Open Sans', sans-serif",
+        backgroundColor: active ? 'var(--osmos-brand-violet)' : 'var(--osmos-brand-violet-muted)',
+        color: active ? '#fff' : 'var(--osmos-brand-violet)',
       }}
-      onMouseEnter={(e) => { if (active) e.currentTarget.style.backgroundColor = VI_HOVER; }}
-      onMouseLeave={(e) => { if (active) e.currentTarget.style.backgroundColor = VI; }}
+      onMouseEnter={(e) => { if (active) e.currentTarget.style.backgroundColor = 'var(--osmos-brand-violet-hover)'; }}
+      onMouseLeave={(e) => { if (active) e.currentTarget.style.backgroundColor = 'var(--osmos-brand-violet)'; }}
     >
       {label}
     </button>

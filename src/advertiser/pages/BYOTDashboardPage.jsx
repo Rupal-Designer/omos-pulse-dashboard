@@ -11,19 +11,6 @@ import {
 } from 'recharts';
 
 // ── Tokens ────────────────────────────────────────────────────────────────────
-const FONT     = "'Open Sans', sans-serif";
-const TEXT     = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_SUB = 'var(--osmos-fg-subtle)';
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-const GREEN    = 'var(--osmos-brand-green)';
-const AMBER    = 'var(--osmos-brand-amber)';
-const WHITE    = '#fff';
-
 // ── Chart data ────────────────────────────────────────────────────────────────
 const chartData = [
   { day: 'Apr 24', clicks: 2100, orders: 310, revenue: 15200 },
@@ -173,13 +160,13 @@ function WizardStep({ step, wizardData, setWizardData }) {
           padding: '10px 14px', borderRadius: 8,
           background: 'rgba(245,166,35,0.1)', border: '1px solid rgba(245,166,35,0.3)',
         }}>
-          <AlertIcon color={AMBER} size={16} />
-          <span style={{ fontSize: 13, color: AMBER }}>
+          <AlertIcon color={'var(--osmos-brand-amber)'} size={16} />
+          <span style={{ fontSize: 13, color: 'var(--osmos-brand-amber)' }}>
             This wallet has ₹0 balance. New tracker links cannot be generated until topped up.
           </span>
         </div>
       )}
-      <p style={{ fontSize: 12, color: TEXT_SUB }}>
+      <p style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>
         Wallet balance is deducted hourly for clicks. A 24-hour grace period applies when balance reaches zero.
       </p>
     </div>
@@ -204,8 +191,8 @@ function WizardStep({ step, wizardData, setWizardData }) {
         </Button>
       </div>
       {urlValid === 'valid' && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: GREEN, fontSize: 13 }}>
-          <CheckIcon size={14} color={GREEN} /> URL is valid and resolves correctly.
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--osmos-brand-green)', fontSize: 13 }}>
+          <CheckIcon size={14} color={'var(--osmos-brand-green)'} /> URL is valid and resolves correctly.
         </div>
       )}
       {urlValid === 'invalid' && (
@@ -213,7 +200,7 @@ function WizardStep({ step, wizardData, setWizardData }) {
           <AlertIcon size={14} color="#EF4444" /> URL is invalid or does not match an allowed retailer domain.
         </div>
       )}
-      <p style={{ fontSize: 12, color: TEXT_SUB }}>
+      <p style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>
         Only HTTPS URLs from allowed retailer domains are accepted. Redirects are 302 (no caching).
       </p>
     </div>
@@ -234,7 +221,7 @@ function WizardStep({ step, wizardData, setWizardData }) {
         onChange={e => setWizardData(d => ({ ...d, trackerCount: e.target.value }))}
         placeholder="1"
       />
-      <p style={{ fontSize: 12, color: TEXT_SUB }}>
+      <p style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>
         Each campaign supports up to 100 active tracker links. Your brand's total limit is 1,000 active trackers.
       </p>
     </div>
@@ -243,10 +230,10 @@ function WizardStep({ step, wizardData, setWizardData }) {
   if (step === 4) return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div style={{
-        background: BG_SUB, borderRadius: 10, padding: '16px 20px',
-        border: `1px solid ${BORDER}`,
+        background: 'var(--osmos-bg-subtle)', borderRadius: 10, padding: '16px 20px',
+        border: `1px solid var(--osmos-border)`,
       }}>
-        <h4 style={{ margin: '0 0 12px', fontSize: 13, fontWeight: 600, color: TEXT }}>Campaign Summary</h4>
+        <h4 style={{ margin: '0 0 12px', fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)' }}>Campaign Summary</h4>
         {[
           ['Campaign Name', wizardData.name || '—'],
           ['Flight Dates', wizardData.flightStart && wizardData.flightEnd ? `${wizardData.flightStart} → ${wizardData.flightEnd}` : '—'],
@@ -255,31 +242,31 @@ function WizardStep({ step, wizardData, setWizardData }) {
           ['Tracker Name', wizardData.trackerName || '—'],
           ['Tracker Count', wizardData.trackerCount || '1'],
         ].map(([k, v]) => (
-          <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: `1px solid ${BORDER}`, fontSize: 13 }}>
-            <span style={{ color: TEXT_MID }}>{k}</span>
-            <span style={{ color: TEXT, fontWeight: 500, maxWidth: 260, textAlign: 'right', wordBreak: 'break-all' }}>{v}</span>
+          <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: `1px solid var(--osmos-border)`, fontSize: 13 }}>
+            <span style={{ color: 'var(--osmos-fg-muted)' }}>{k}</span>
+            <span style={{ color: 'var(--osmos-fg)', fontWeight: 500, maxWidth: 260, textAlign: 'right', wordBreak: 'break-all' }}>{v}</span>
           </div>
         ))}
       </div>
 
       {generatedLink && (
-        <div style={{ background: ACCENT_M, borderRadius: 8, padding: '14px 16px' }}>
-          <p style={{ fontSize: 12, color: ACCENT, fontWeight: 600, marginBottom: 8 }}>Your Tracker Link</p>
+        <div style={{ background: 'var(--osmos-brand-primary-muted)', borderRadius: 8, padding: '14px 16px' }}>
+          <p style={{ fontSize: 12, color: 'var(--osmos-brand-primary)', fontWeight: 600, marginBottom: 8 }}>Your Tracker Link</p>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <code style={{ flex: 1, fontSize: 12, color: TEXT, wordBreak: 'break-all', fontFamily: 'monospace' }}>
+            <code style={{ flex: 1, fontSize: 12, color: 'var(--osmos-fg)', wordBreak: 'break-all', fontFamily: 'monospace' }}>
               {generatedLink}
             </code>
             <button
               onClick={() => handleCopyLink(generatedLink)}
               style={{
-                border: `1px solid ${ACCENT}`, borderRadius: 6, padding: '6px 12px',
-                background: copied ? ACCENT : 'transparent',
-                color: copied ? WHITE : ACCENT, fontSize: 12, cursor: 'pointer',
+                border: `1px solid var(--osmos-brand-primary)`, borderRadius: 6, padding: '6px 12px',
+                background: copied ? 'var(--osmos-brand-primary)' : 'transparent',
+                color: copied ? '#ffffff' : 'var(--osmos-brand-primary)', fontSize: 12, cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: 4,
                 transition: 'all 0.2s', whiteSpace: 'nowrap',
               }}
             >
-              {copied ? <><CheckIcon size={12} color={WHITE} /> Copied!</> : <><CopyIcon color={ACCENT} /> Copy</>}
+              {copied ? <><CheckIcon size={12} color={'#ffffff'} /> Copied!</> : <><CopyIcon color={'var(--osmos-brand-primary)'} /> Copy</>}
             </button>
           </div>
         </div>
@@ -345,20 +332,20 @@ export default function BYOTDashboardPage({ onViewCampaign }) {
   const totalRev    = CAMPAIGNS.reduce((s, c) => s + c.revenue, 0);
 
   return (
-    <div style={{ fontFamily: FONT, background: BG_SUB, minHeight: '100vh', padding: 24 }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif", background: 'var(--osmos-bg-subtle)', minHeight: '100vh', padding: 24 }}>
       <Toast {...toast} />
 
       {/* Top bar */}
       <Toolbar
         noBorder
-        left={<span style={{ fontSize: 18, fontWeight: 700, color: TEXT }}>BYOT Campaigns</span>}
+        left={<span style={{ fontSize: 18, fontWeight: 700, color: 'var(--osmos-fg)' }}>BYOT Campaigns</span>}
         right={
           <div style={{ display: 'flex', gap: 8 }}>
             <Button variant="outline" onClick={handleExport}>
               <DownloadIcon size={14} /> Export
             </Button>
             <Button variant="primary" onClick={() => setWizardOpen(true)}>
-              <PlusIcon size={13} color={WHITE} /> Create Campaign
+              <PlusIcon size={13} color={'#ffffff'} /> Create Campaign
             </Button>
           </div>
         }
@@ -375,26 +362,26 @@ export default function BYOTDashboardPage({ onViewCampaign }) {
 
       {/* Chart */}
       <div style={{
-        background: BG, border: `1px solid ${BORDER}`, borderRadius: 10,
+        background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 10,
         padding: '20px 24px', marginBottom: 20,
       }}>
-        <p style={{ fontSize: 13, fontWeight: 600, color: TEXT, marginBottom: 16 }}>7-Day Trend</p>
+        <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 16 }}>7-Day Trend</p>
         <ResponsiveContainer width="100%" height={180}>
           <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke={BORDER} />
-            <XAxis dataKey="day" tick={{ fontSize: 11, fill: TEXT_MID }} />
-            <YAxis tick={{ fontSize: 11, fill: TEXT_MID }} />
-            <Tooltip contentStyle={{ fontFamily: FONT, fontSize: 12 }} />
+            <CartesianGrid strokeDasharray="3 3" stroke={'var(--osmos-border)'} />
+            <XAxis dataKey="day" tick={{ fontSize: 11, fill: 'var(--osmos-fg-muted)' }} />
+            <YAxis tick={{ fontSize: 11, fill: 'var(--osmos-fg-muted)' }} />
+            <Tooltip contentStyle={{ fontFamily: "'Open Sans', sans-serif", fontSize: 12 }} />
             <Legend wrapperStyle={{ fontSize: 12 }} />
-            <Line type="monotone" dataKey="clicks"  stroke={ACCENT} strokeWidth={2} dot={false} name="Clicks" />
-            <Line type="monotone" dataKey="orders"  stroke={GREEN}  strokeWidth={2} dot={false} name="Orders" />
-            <Line type="monotone" dataKey="revenue" stroke={AMBER}  strokeWidth={2} dot={false} name="Revenue (₹)" />
+            <Line type="monotone" dataKey="clicks"  stroke={'var(--osmos-brand-primary)'} strokeWidth={2} dot={false} name="Clicks" />
+            <Line type="monotone" dataKey="orders"  stroke={'var(--osmos-brand-green)'}  strokeWidth={2} dot={false} name="Orders" />
+            <Line type="monotone" dataKey="revenue" stroke={'var(--osmos-brand-amber)'}  strokeWidth={2} dot={false} name="Revenue (₹)" />
           </LineChart>
         </ResponsiveContainer>
       </div>
 
       {/* Toolbar */}
-      <div style={{ background: BG, border: `1px solid ${BORDER}`, borderRadius: 10 }}>
+      <div style={{ background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 10 }}>
         <Toolbar
           left={
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -414,7 +401,7 @@ export default function BYOTDashboardPage({ onViewCampaign }) {
           right={
             selected.length > 0 ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 12, color: TEXT_MID }}>{selected.length} selected</span>
+                <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{selected.length} selected</span>
                 <Button variant="outline" onClick={handleBulkPause}>Pause Selected</Button>
                 <Button variant="outline" onClick={handleBulkArchive}>Archive Selected</Button>
                 <Button variant="icon" onClick={() => setSelected([])}><CloseIcon size={14} /></Button>
@@ -425,13 +412,13 @@ export default function BYOTDashboardPage({ onViewCampaign }) {
 
         {/* Table */}
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: FONT }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: "'Open Sans', sans-serif" }}>
             <thead>
-              <tr style={{ background: BG_SUB, borderBottom: `1px solid ${BORDER}` }}>
+              <tr style={{ background: 'var(--osmos-bg-subtle)', borderBottom: `1px solid var(--osmos-border)` }}>
                 {['', 'Campaign Name', 'Trackers', 'Clicks', 'ATCs', 'Orders', 'Revenue', 'Wallet', 'Status', 'Actions'].map(col => (
                   <th key={col} style={{
                     padding: '10px 14px', textAlign: 'left', fontSize: 12,
-                    fontWeight: 600, color: TEXT_MID, whiteSpace: 'nowrap',
+                    fontWeight: 600, color: 'var(--osmos-fg-muted)', whiteSpace: 'nowrap',
                   }}>
                     {col === '' ? (
                       <input type="checkbox" checked={allSelected} onChange={toggleAll}
@@ -444,7 +431,7 @@ export default function BYOTDashboardPage({ onViewCampaign }) {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={10} style={{ textAlign: 'center', padding: '48px 0', color: TEXT_SUB, fontSize: 13 }}>
+                  <td colSpan={10} style={{ textAlign: 'center', padding: '48px 0', color: 'var(--osmos-fg-subtle)', fontSize: 13 }}>
                     No campaigns found. Create your first BYOT campaign to get started.
                   </td>
                 </tr>
@@ -462,7 +449,7 @@ export default function BYOTDashboardPage({ onViewCampaign }) {
           </table>
         </div>
 
-        <div style={{ padding: '12px 16px', borderTop: `1px solid ${BORDER}` }}>
+        <div style={{ padding: '12px 16px', borderTop: `1px solid var(--osmos-border)` }}>
           <Pagination total={filtered.length} page={page} perPage={20} onChange={setPage} entityLabel="campaigns" />
         </div>
       </div>
@@ -483,7 +470,7 @@ export default function BYOTDashboardPage({ onViewCampaign }) {
                 {wizardStep === 0 ? 'Cancel' : '← Back'}
               </Button>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 12, color: TEXT_MID }}>Step {wizardStep + 1} of {STEP_LABELS.length}</span>
+                <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>Step {wizardStep + 1} of {STEP_LABELS.length}</span>
                 <Button variant="primary" onClick={handleWizardNext}>
                   {wizardStep === STEP_LABELS.length - 1 ? 'Generate Tracker Link' : 'Next →'}
                 </Button>
@@ -497,11 +484,11 @@ export default function BYOTDashboardPage({ onViewCampaign }) {
               <div key={label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
                 <div style={{
                   width: '100%', height: 3, borderRadius: 2,
-                  background: i <= wizardStep ? ACCENT : BORDER,
+                  background: i <= wizardStep ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)',
                   transition: 'background 0.2s',
                 }} />
                 <span style={{
-                  fontSize: 10, color: i === wizardStep ? ACCENT : TEXT_MID,
+                  fontSize: 10, color: i === wizardStep ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)',
                   fontWeight: i === wizardStep ? 600 : 400, textAlign: 'center',
                 }}>
                   {label}
@@ -527,8 +514,8 @@ function CampaignRow({ campaign: c, selected, onToggle, onView, onPause }) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
-        background: hover ? BG_SUB : BG,
-        borderBottom: `1px solid ${BORDER}`,
+        background: hover ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
+        borderBottom: `1px solid var(--osmos-border)`,
         cursor: 'pointer',
       }}
     >
@@ -541,20 +528,20 @@ function CampaignRow({ campaign: c, selected, onToggle, onView, onPause }) {
           onClick={onView}
           style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
         >
-          <span style={{ fontSize: 13, fontWeight: 500, color: ACCENT }}>{c.name}</span>
+          <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-brand-primary)' }}>{c.name}</span>
         </button>
         <br />
-        <span style={{ fontSize: 11, color: TEXT_SUB }}>
+        <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)' }}>
           {c.flightStart} → {c.flightEnd}
         </span>
       </td>
-      <td style={{ padding: '10px 14px', fontSize: 13, color: TEXT }}>{c.trackers}</td>
-      <td style={{ padding: '10px 14px', fontSize: 13, color: TEXT }}>{c.clicks.toLocaleString()}</td>
-      <td style={{ padding: '10px 14px', fontSize: 13, color: TEXT }}>{c.atcs.toLocaleString()}</td>
-      <td style={{ padding: '10px 14px', fontSize: 13, color: TEXT }}>{c.orders.toLocaleString()}</td>
-      <td style={{ padding: '10px 14px', fontSize: 13, color: TEXT }}>₹{c.revenue.toLocaleString()}</td>
+      <td style={{ padding: '10px 14px', fontSize: 13, color: 'var(--osmos-fg)' }}>{c.trackers}</td>
+      <td style={{ padding: '10px 14px', fontSize: 13, color: 'var(--osmos-fg)' }}>{c.clicks.toLocaleString()}</td>
+      <td style={{ padding: '10px 14px', fontSize: 13, color: 'var(--osmos-fg)' }}>{c.atcs.toLocaleString()}</td>
+      <td style={{ padding: '10px 14px', fontSize: 13, color: 'var(--osmos-fg)' }}>{c.orders.toLocaleString()}</td>
+      <td style={{ padding: '10px 14px', fontSize: 13, color: 'var(--osmos-fg)' }}>₹{c.revenue.toLocaleString()}</td>
       <td style={{ padding: '10px 14px' }}>
-        <span style={{ fontSize: 12, color: c.balance === 0 ? '#EF4444' : TEXT_MID }}>
+        <span style={{ fontSize: 12, color: c.balance === 0 ? '#EF4444' : 'var(--osmos-fg-muted)' }}>
           {c.wallet}
           {c.balance === 0 && <span style={{ marginLeft: 4, color: '#EF4444' }}>⚠</span>}
         </span>
@@ -566,7 +553,7 @@ function CampaignRow({ campaign: c, selected, onToggle, onView, onPause }) {
         <div style={{ display: 'flex', gap: 4 }}>
           <Button variant="outline" onClick={onView} style={{ padding: '4px 10px', fontSize: 12 }}>View</Button>
           <Button variant="icon" onClick={onPause} title="Pause campaign">
-            <Icon size={14} color={TEXT_MID}>
+            <Icon size={14} color={'var(--osmos-fg-muted)'}>
               <rect x="6" y="4" width="4" height="16" />
               <rect x="14" y="4" width="4" height="16" />
             </Icon>

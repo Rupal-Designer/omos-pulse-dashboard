@@ -1,27 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Icon } from '../../ui';
 
-// ── Design tokens ─────────────────────────────────────────────────────────────
-const FONT       = "'Open Sans', sans-serif";
-const NAV_BG     = 'var(--osmos-nav-bg)';        // #1e2266 dark navy
-const NAV_ACCENT = 'var(--osmos-nav-accent)';     // #7B82F8 violet
-const NAV_BORDER = 'var(--osmos-nav-border)';     // rgba(123,130,248,0.25)
-const NAV_ACTIVE = 'var(--osmos-nav-active-bg)';  // rgba(123,130,248,0.20)
-const BG         = 'var(--osmos-bg)';
-const BG_SUBTLE  = 'var(--osmos-bg-subtle)';
-const BG_MUTED   = 'var(--osmos-bg-muted)';
-const BORDER     = 'var(--osmos-border)';
-const TEXT       = 'var(--osmos-fg)';
-const TEXT_MID   = 'var(--osmos-fg-muted)';
-const TEXT_SUB   = 'var(--osmos-fg-subtle)';
-const AI_COLOR   = '#8b5cf6';   // violet — intentional brand colour
-const AI_BG      = 'rgba(139,92,246,0.10)';
-const GREEN      = 'var(--osmos-brand-green)';
-const GREEN_BG   = 'var(--osmos-brand-green-muted)';
-const AMBER      = 'var(--osmos-brand-amber)';
-
 // ── Icons ─────────────────────────────────────────────────────────────────────
-const SparklesIcon = ({ size = 16, color = AI_COLOR }) => (
+const SparklesIcon = ({ size = 16, color = '#8b5cf6' }) => (
   <Icon size={size} color={color}>
     <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3z" />
     <path d="M5 3v4" /><path d="M19 17v4" />
@@ -296,9 +277,9 @@ const MOCK_CAMPAIGNS = [
 
 // ── Severity colours ──────────────────────────────────────────────────────────
 const SEVERITY_STYLE = {
-  high:   { dot: '#EF4444', bg: '#FEF2F2', text: '#991B1B' },
-  medium: { dot: AMBER,     bg: '#FFFBEB', text: '#92400E' },
-  low:    { dot: TEXT_MID,  bg: BG_SUBTLE, text: TEXT_MID  },
+  high:   { dot: '#EF4444',                        bg: '#FEF2F2',                  text: '#991B1B' },
+  medium: { dot: 'var(--osmos-brand-amber)',        bg: '#FFFBEB',                  text: '#92400E' },
+  low:    { dot: 'var(--osmos-fg-muted)',           bg: 'var(--osmos-bg-subtle)',   text: 'var(--osmos-fg-muted)' },
 };
 
 // ── Rendered message content ──────────────────────────────────────────────────
@@ -308,29 +289,29 @@ function RenderContent({ blocks, onCTAClick }) {
       {blocks.map((block, i) => {
         if (block.type === 'heading') {
           return (
-            <div key={i} style={{ fontSize: 13, fontWeight: 700, color: TEXT }}>
+            <div key={i} style={{ fontSize: 13, fontWeight: 700, color: 'var(--osmos-fg)' }}>
               {block.text}
             </div>
           );
         }
         if (block.type === 'paragraph') {
           return (
-            <div key={i} style={{ fontSize: 13, color: TEXT, lineHeight: 1.6 }}>
+            <div key={i} style={{ fontSize: 13, color: 'var(--osmos-fg)', lineHeight: 1.6 }}>
               {block.text}
             </div>
           );
         }
         if (block.type === 'table') {
           return (
-            <div key={i} style={{ overflowX: 'auto', borderRadius: 6, border: `1px solid ${BORDER}` }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12, fontFamily: FONT }}>
+            <div key={i} style={{ overflowX: 'auto', borderRadius: 6, border: `1px solid var(--osmos-border)` }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12, fontFamily: "'Open Sans', sans-serif" }}>
                 <thead>
-                  <tr style={{ background: BG_MUTED }}>
+                  <tr style={{ background: 'var(--osmos-bg-muted)' }}>
                     {block.columns.map(col => (
                       <th key={col} style={{
                         padding: '7px 10px', textAlign: 'left',
-                        fontWeight: 600, color: TEXT_MID,
-                        borderBottom: `1px solid ${BORDER}`,
+                        fontWeight: 600, color: 'var(--osmos-fg-muted)',
+                        borderBottom: `1px solid var(--osmos-border)`,
                         whiteSpace: 'nowrap',
                       }}>{col}</th>
                     ))}
@@ -338,9 +319,9 @@ function RenderContent({ blocks, onCTAClick }) {
                 </thead>
                 <tbody>
                   {block.rows.map((row, ri) => (
-                    <tr key={ri} style={{ borderBottom: ri < block.rows.length - 1 ? `1px solid ${BORDER}` : 'none' }}>
+                    <tr key={ri} style={{ borderBottom: ri < block.rows.length - 1 ? `1px solid var(--osmos-border)` : 'none' }}>
                       {row.map((cell, ci) => (
-                        <td key={ci} style={{ padding: '7px 10px', color: TEXT, whiteSpace: 'nowrap' }}>
+                        <td key={ci} style={{ padding: '7px 10px', color: 'var(--osmos-fg)', whiteSpace: 'nowrap' }}>
                           {cell}
                         </td>
                       ))}
@@ -360,11 +341,11 @@ function RenderContent({ blocks, onCTAClick }) {
               {block.items.map((m, mi) => (
                 <div key={mi} style={{
                   padding: '8px 10px', borderRadius: 6,
-                  border: `1px solid ${BORDER}`, background: BG,
+                  border: `1px solid var(--osmos-border)`, background: 'var(--osmos-bg)',
                 }}>
-                  <div style={{ fontSize: 11, color: TEXT_SUB, marginBottom: 2 }}>{m.label}</div>
+                  <div style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', marginBottom: 2 }}>{m.label}</div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: TEXT }}>{m.value}</span>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--osmos-fg)' }}>{m.value}</span>
                     <span style={{
                       fontSize: 11, fontWeight: 600,
                       color: m.positive ? 'var(--osmos-brand-green)' : '#EF4444',
@@ -383,7 +364,7 @@ function RenderContent({ blocks, onCTAClick }) {
                 return (
                   <div key={ii} style={{
                     padding: '8px 10px', borderRadius: 6,
-                    background: s.bg, border: `1px solid ${BORDER}`,
+                    background: s.bg, border: `1px solid var(--osmos-border)`,
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
                       <span style={{
@@ -394,7 +375,7 @@ function RenderContent({ blocks, onCTAClick }) {
                         {issue.title}
                       </span>
                     </div>
-                    <div style={{ fontSize: 12, color: TEXT_MID, lineHeight: 1.5, paddingLeft: 12 }}>
+                    <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', lineHeight: 1.5, paddingLeft: 12 }}>
                       {issue.detail}
                     </div>
                   </div>
@@ -410,8 +391,8 @@ function RenderContent({ blocks, onCTAClick }) {
                 onClick={() => onCTAClick?.(block)}
                 style={{
                   padding: '7px 14px', borderRadius: 6, border: 'none',
-                  background: AI_COLOR, color: '#fff',
-                  fontSize: 12, fontWeight: 600, fontFamily: FONT,
+                  background: '#8b5cf6', color: '#fff',
+                  fontSize: 12, fontWeight: 600, fontFamily: "'Open Sans', sans-serif",
                   cursor: 'pointer',
                 }}>
                 {block.text}
@@ -431,7 +412,7 @@ function TypingDots() {
     <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '6px 2px' }}>
       {[0, 1, 2].map(i => (
         <span key={i} style={{
-          width: 6, height: 6, borderRadius: '50%', background: AI_COLOR,
+          width: 6, height: 6, borderRadius: '50%', background: '#8b5cf6',
           animation: `sofie-dot-bounce 1.2s ease-in-out ${i * 0.2}s infinite`,
         }} />
       ))}
@@ -452,17 +433,17 @@ function AgentSteps({ steps, label }) {
       <div style={{
         display: 'inline-flex', alignItems: 'center', gap: 5,
         padding: '3px 8px', borderRadius: 10,
-        background: AI_BG, marginBottom: 8,
+        background: 'rgba(139,92,246,0.10)', marginBottom: 8,
       }}>
-        <SparklesIcon size={12} color={AI_COLOR} />
-        <span style={{ fontSize: 11, fontWeight: 600, color: AI_COLOR }}>{label}</span>
+        <SparklesIcon size={12} color="#8b5cf6" />
+        <span style={{ fontSize: 11, fontWeight: 600, color: '#8b5cf6' }}>{label}</span>
       </div>
       {steps.map((step, i) => (
         <div key={i} style={{
           display: 'flex', alignItems: 'center', gap: 6,
-          fontSize: 11, color: TEXT_SUB, padding: '2px 0',
+          fontSize: 11, color: 'var(--osmos-fg-subtle)', padding: '2px 0',
         }}>
-          <span style={{ width: 4, height: 4, borderRadius: '50%', background: TEXT_SUB, flexShrink: 0 }} />
+          <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'var(--osmos-fg-subtle)', flexShrink: 0 }} />
           {step}
         </div>
       ))}
@@ -484,8 +465,8 @@ function MessageBubble({ message, onCopy, onUpvote, onDownvote, onCTAClick }) {
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
         <div style={{
           maxWidth: '80%', padding: '9px 12px', borderRadius: '10px 10px 2px 10px',
-          background: AI_COLOR, color: '#fff',
-          fontSize: 13, lineHeight: 1.5, fontFamily: FONT,
+          background: '#8b5cf6', color: '#fff',
+          fontSize: 13, lineHeight: 1.5, fontFamily: "'Open Sans', sans-serif",
         }}>
           {message.text}
         </div>
@@ -500,18 +481,18 @@ function MessageBubble({ message, onCopy, onUpvote, onDownvote, onCTAClick }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
         <div style={{
           width: 22, height: 22, borderRadius: '50%',
-          background: AI_BG, border: `1px solid ${AI_COLOR}`,
+          background: 'rgba(139,92,246,0.10)', border: `1px solid #8b5cf6`,
           display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
         }}>
-          <SparklesIcon size={12} color={AI_COLOR} />
+          <SparklesIcon size={12} color="#8b5cf6" />
         </div>
-        <span style={{ fontSize: 11, fontWeight: 600, color: AI_COLOR }}>Sofie</span>
+        <span style={{ fontSize: 11, fontWeight: 600, color: '#8b5cf6' }}>Sofie</span>
       </div>
 
       {/* Response card */}
       <div style={{
         padding: '10px 12px', borderRadius: '2px 10px 10px 10px',
-        background: BG, border: `1px solid ${BORDER}`,
+        background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`,
         marginLeft: 28,
       }}>
         {message.typing ? (
@@ -525,10 +506,10 @@ function MessageBubble({ message, onCopy, onUpvote, onDownvote, onCTAClick }) {
 
             {/* Citations */}
             {message.response?.citations?.length > 0 && (
-              <div style={{ marginTop: 10, paddingTop: 8, borderTop: `1px solid ${BORDER}` }}>
-                <div style={{ fontSize: 11, color: TEXT_SUB, marginBottom: 3, fontWeight: 600 }}>Sources</div>
+              <div style={{ marginTop: 10, paddingTop: 8, borderTop: `1px solid var(--osmos-border)` }}>
+                <div style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', marginBottom: 3, fontWeight: 600 }}>Sources</div>
                 {message.response.citations.map((c, i) => (
-                  <div key={i} style={{ fontSize: 11, color: AI_COLOR, cursor: 'pointer' }}>
+                  <div key={i} style={{ fontSize: 11, color: '#8b5cf6', cursor: 'pointer' }}>
                     · {c}
                   </div>
                 ))}
@@ -551,13 +532,13 @@ function MessageBubble({ message, onCopy, onUpvote, onDownvote, onCTAClick }) {
             style={{
               border: 'none', background: 'transparent', cursor: 'pointer',
               padding: '3px 6px', borderRadius: 4,
-              color: copiedPulse ? GREEN : TEXT_SUB,
+              color: copiedPulse ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-subtle)',
               display: 'flex', alignItems: 'center', gap: 3,
-              fontSize: 11, fontFamily: FONT,
+              fontSize: 11, fontFamily: "'Open Sans', sans-serif",
               transition: 'color 0.15s',
             }}
           >
-            <CopyIcon size={12} color={copiedPulse ? GREEN : TEXT_SUB} />
+            <CopyIcon size={12} color={copiedPulse ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-subtle)'} />
             {copiedPulse ? 'Copied' : 'Copy'}
           </button>
 
@@ -568,12 +549,12 @@ function MessageBubble({ message, onCopy, onUpvote, onDownvote, onCTAClick }) {
             style={{
               border: 'none', background: 'transparent', cursor: 'pointer',
               padding: '3px 6px', borderRadius: 4,
-              color: feedbackGiven === 'up' ? GREEN : TEXT_SUB,
+              color: feedbackGiven === 'up' ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-subtle)',
               display: 'flex', alignItems: 'center',
               transition: 'color 0.15s',
             }}
           >
-            <ThumbUpIcon size={12} color={feedbackGiven === 'up' ? GREEN : TEXT_SUB} />
+            <ThumbUpIcon size={12} color={feedbackGiven === 'up' ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-subtle)'} />
           </button>
 
           {/* Downvote */}
@@ -583,12 +564,12 @@ function MessageBubble({ message, onCopy, onUpvote, onDownvote, onCTAClick }) {
             style={{
               border: 'none', background: 'transparent', cursor: 'pointer',
               padding: '3px 6px', borderRadius: 4,
-              color: feedbackGiven === 'down' ? '#EF4444' : TEXT_SUB,
+              color: feedbackGiven === 'down' ? '#EF4444' : 'var(--osmos-fg-subtle)',
               display: 'flex', alignItems: 'center',
               transition: 'color 0.15s',
             }}
           >
-            <ThumbDownIcon size={12} color={feedbackGiven === 'down' ? '#EF4444' : TEXT_SUB} />
+            <ThumbDownIcon size={12} color={feedbackGiven === 'down' ? '#EF4444' : 'var(--osmos-fg-subtle)'} />
           </button>
         </div>
       )}
@@ -597,9 +578,9 @@ function MessageBubble({ message, onCopy, onUpvote, onDownvote, onCTAClick }) {
       {showDownvoteFeedback && (
         <div style={{
           marginLeft: 28, marginTop: 6, padding: '8px 10px',
-          borderRadius: 6, border: `1px solid ${BORDER}`, background: BG_SUBTLE,
+          borderRadius: 6, border: `1px solid var(--osmos-border)`, background: 'var(--osmos-bg-subtle)',
         }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: TEXT, marginBottom: 6 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 6 }}>
             What went wrong?
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 8 }}>
@@ -609,10 +590,10 @@ function MessageBubble({ message, onCopy, onUpvote, onDownvote, onCTAClick }) {
                 onClick={() => setDownvoteReason(reason)}
                 style={{
                   padding: '3px 8px', borderRadius: 10, fontSize: 11, cursor: 'pointer',
-                  fontFamily: FONT,
-                  border: `1px solid ${downvoteReason === reason ? AI_COLOR : BORDER}`,
-                  background: downvoteReason === reason ? AI_BG : BG,
-                  color: downvoteReason === reason ? AI_COLOR : TEXT_MID,
+                  fontFamily: "'Open Sans', sans-serif",
+                  border: `1px solid ${downvoteReason === reason ? '#8b5cf6' : 'var(--osmos-border)'}`,
+                  background: downvoteReason === reason ? 'rgba(139,92,246,0.10)' : 'var(--osmos-bg)',
+                  color: downvoteReason === reason ? '#8b5cf6' : 'var(--osmos-fg-muted)',
                 }}
               >{reason}</button>
             ))}
@@ -622,16 +603,16 @@ function MessageBubble({ message, onCopy, onUpvote, onDownvote, onCTAClick }) {
               onClick={() => { onDownvote(message, downvoteReason); setShowDownvoteFeedback(false); }}
               style={{
                 padding: '4px 10px', borderRadius: 5, border: 'none',
-                background: AI_COLOR, color: '#fff',
-                fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: FONT,
+                background: '#8b5cf6', color: '#fff',
+                fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
               }}
             >Submit</button>
             <button
               onClick={() => setShowDownvoteFeedback(false)}
               style={{
                 padding: '4px 10px', borderRadius: 5,
-                border: `1px solid ${BORDER}`, background: 'transparent',
-                fontSize: 11, cursor: 'pointer', fontFamily: FONT, color: TEXT_MID,
+                border: `1px solid var(--osmos-border)`, background: 'transparent',
+                fontSize: 11, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg-muted)',
               }}
             >Cancel</button>
           </div>
@@ -652,11 +633,11 @@ function ContextPopover({ onSelect, onClose }) {
     <div style={{
       position: 'absolute', bottom: '100%', left: 0, zIndex: 100,
       width: 280, marginBottom: 6,
-      background: BG, border: `1px solid ${BORDER}`,
+      background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`,
       borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
       overflow: 'hidden',
     }}>
-      <div style={{ padding: '8px 10px', borderBottom: `1px solid ${BORDER}` }}>
+      <div style={{ padding: '8px 10px', borderBottom: `1px solid var(--osmos-border)` }}>
         <input
           autoFocus
           value={search}
@@ -664,16 +645,16 @@ function ContextPopover({ onSelect, onClose }) {
           placeholder="Search campaigns…"
           style={{
             width: '100%', border: 'none', outline: 'none', background: 'transparent',
-            fontSize: 12, fontFamily: FONT, color: TEXT,
+            fontSize: 12, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)',
           }}
         />
       </div>
       <div style={{ maxHeight: 200, overflowY: 'auto' }}>
-        <div style={{ padding: '5px 10px 3px', fontSize: 10, fontWeight: 700, color: TEXT_SUB, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        <div style={{ padding: '5px 10px 3px', fontSize: 10, fontWeight: 700, color: 'var(--osmos-fg-subtle)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           Campaigns
         </div>
         {filtered.length === 0 && (
-          <div style={{ padding: '8px 10px', fontSize: 12, color: TEXT_SUB }}>No results</div>
+          <div style={{ padding: '8px 10px', fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>No results</div>
         )}
         {filtered.map(c => (
           <button
@@ -682,16 +663,16 @@ function ContextPopover({ onSelect, onClose }) {
             style={{
               width: '100%', textAlign: 'left', padding: '6px 10px',
               border: 'none', background: 'transparent', cursor: 'pointer',
-              fontFamily: FONT, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              fontFamily: "'Open Sans', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             }}
-            onMouseEnter={e => e.currentTarget.style.background = BG_SUBTLE}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--osmos-bg-subtle)'}
             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
           >
-            <span style={{ fontSize: 12, color: TEXT }}>{c.name}</span>
+            <span style={{ fontSize: 12, color: 'var(--osmos-fg)' }}>{c.name}</span>
             <span style={{
               fontSize: 10, padding: '1px 5px', borderRadius: 8,
-              background: c.status === 'Active' ? GREEN_BG : BG_MUTED,
-              color: c.status === 'Active' ? GREEN : TEXT_MID,
+              background: c.status === 'Active' ? 'var(--osmos-brand-green-muted)' : 'var(--osmos-bg-muted)',
+              color: c.status === 'Active' ? 'var(--osmos-brand-green)' : 'var(--osmos-fg-muted)',
             }}>{c.status}</span>
           </button>
         ))}
@@ -706,7 +687,7 @@ function ThreadDropdown({ threads, currentId, onSelect, onNew, onClose }) {
     <div style={{
       position: 'absolute', top: '100%', left: 0, zIndex: 100,
       width: 240, marginTop: 4,
-      background: BG, border: `1px solid ${BORDER}`,
+      background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`,
       borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
       overflow: 'hidden',
     }}>
@@ -714,15 +695,15 @@ function ThreadDropdown({ threads, currentId, onSelect, onNew, onClose }) {
         onClick={() => { onNew(); onClose(); }}
         style={{
           width: '100%', textAlign: 'left', padding: '8px 12px',
-          border: 'none', borderBottom: `1px solid ${BORDER}`,
-          background: 'transparent', cursor: 'pointer', fontFamily: FONT,
+          border: 'none', borderBottom: `1px solid var(--osmos-border)`,
+          background: 'transparent', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
           display: 'flex', alignItems: 'center', gap: 6,
         }}
-        onMouseEnter={e => e.currentTarget.style.background = BG_SUBTLE}
+        onMouseEnter={e => e.currentTarget.style.background = 'var(--osmos-bg-subtle)'}
         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
       >
-        <PlusIcon size={13} color={AI_COLOR} />
-        <span style={{ fontSize: 12, fontWeight: 600, color: AI_COLOR }}>New conversation</span>
+        <PlusIcon size={13} color="#8b5cf6" />
+        <span style={{ fontSize: 12, fontWeight: 600, color: '#8b5cf6' }}>New conversation</span>
       </button>
       {threads.map(t => (
         <button
@@ -730,16 +711,16 @@ function ThreadDropdown({ threads, currentId, onSelect, onNew, onClose }) {
           onClick={() => { onSelect(t.id); onClose(); }}
           style={{
             width: '100%', textAlign: 'left', padding: '7px 12px',
-            border: 'none', background: currentId === t.id ? AI_BG : 'transparent',
-            cursor: 'pointer', fontFamily: FONT,
+            border: 'none', background: currentId === t.id ? 'rgba(139,92,246,0.10)' : 'transparent',
+            cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
           }}
-          onMouseEnter={e => e.currentTarget.style.background = currentId === t.id ? AI_BG : BG_SUBTLE}
-          onMouseLeave={e => e.currentTarget.style.background = currentId === t.id ? AI_BG : 'transparent'}
+          onMouseEnter={e => e.currentTarget.style.background = currentId === t.id ? 'rgba(139,92,246,0.10)' : 'var(--osmos-bg-subtle)'}
+          onMouseLeave={e => e.currentTarget.style.background = currentId === t.id ? 'rgba(139,92,246,0.10)' : 'transparent'}
         >
-          <div style={{ fontSize: 12, color: TEXT, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <div style={{ fontSize: 12, color: 'var(--osmos-fg)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {t.name}
           </div>
-          <div style={{ fontSize: 10, color: TEXT_SUB, marginTop: 1 }}>{t.updatedAt}</div>
+          <div style={{ fontSize: 10, color: 'var(--osmos-fg-subtle)', marginTop: 1 }}>{t.updatedAt}</div>
         </button>
       ))}
     </div>
@@ -916,18 +897,18 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
         position: 'fixed', top: 0, right: 0, bottom: 0,
         width: panelWidth, zIndex: 810,
         display: 'flex', flexDirection: 'column',
-        background: BG,
+        background: 'var(--osmos-bg)',
         boxShadow: '-4px 0 24px rgba(0,0,0,0.16)',
         transform: panelMounted ? 'translateX(0)' : `translateX(${panelWidth}px)`,
         transition: 'transform 0.28s cubic-bezier(0.32, 0.72, 0, 1), width 0.22s ease',
-        fontFamily: FONT,
+        fontFamily: "'Open Sans', sans-serif",
       }}>
 
         {/* ── Panel header (dark navy) ──────────────────────────────────── */}
         <div style={{
-          background: NAV_BG, padding: '12px 16px',
+          background: 'var(--osmos-nav-bg)', padding: '12px 16px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          borderBottom: `1px solid ${NAV_BORDER}`,
+          borderBottom: `1px solid var(--osmos-nav-border)`,
           flexShrink: 0,
         }}>
           {/* Left — Sofie branding + thread picker */}
@@ -984,7 +965,7 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
               onClick={() => setExpanded(v => !v)}
               title={expanded ? 'Collapse panel' : 'Expand panel'}
               style={{
-                width: 28, height: 28, border: `1px solid ${NAV_BORDER}`, borderRadius: 6,
+                width: 28, height: 28, border: `1px solid var(--osmos-nav-border)`, borderRadius: 6,
                 background: 'transparent', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 color: 'rgba(255,255,255,0.6)',
@@ -996,7 +977,7 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
               onClick={handleNewConversation}
               title="New conversation"
               style={{
-                width: 28, height: 28, border: `1px solid ${NAV_BORDER}`, borderRadius: 6,
+                width: 28, height: 28, border: `1px solid var(--osmos-nav-border)`, borderRadius: 6,
                 background: 'transparent', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
@@ -1007,7 +988,7 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
               onClick={onClose}
               title="Close"
               style={{
-                width: 28, height: 28, border: `1px solid ${NAV_BORDER}`, borderRadius: 6,
+                width: 28, height: 28, border: `1px solid var(--osmos-nav-border)`, borderRadius: 6,
                 background: 'transparent', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
@@ -1020,19 +1001,19 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
         {/* ── Active context banner (multi-entity) ─────────────────────── */}
         {contextEntities.length > 0 && (
           <div style={{
-            padding: '6px 14px', background: AI_BG,
-            borderBottom: `1px solid ${NAV_BORDER}`,
+            padding: '6px 14px', background: 'rgba(139,92,246,0.10)',
+            borderBottom: `1px solid var(--osmos-nav-border)`,
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             flexShrink: 0, gap: 8, flexWrap: 'wrap',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-              <AtIcon size={12} color={AI_COLOR} />
-              <span style={{ fontSize: 11, color: AI_COLOR, fontWeight: 600 }}>Context:</span>
+              <AtIcon size={12} color="#8b5cf6" />
+              <span style={{ fontSize: 11, color: '#8b5cf6', fontWeight: 600 }}>Context:</span>
               {contextEntities.map(e => (
                 <span key={e.id} style={{
                   display: 'inline-flex', alignItems: 'center', gap: 4,
                   padding: '2px 8px', borderRadius: 12,
-                  background: 'rgba(123,130,248,0.15)', color: AI_COLOR, fontSize: 11,
+                  background: 'rgba(123,130,248,0.15)', color: '#8b5cf6', fontSize: 11,
                 }}>
                   {e.name}
                   <button
@@ -1041,14 +1022,14 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
                       setContextEntities(updated);
                       if (updated.length === 0) { setMessages([]); setCurrentThreadName('New conversation'); }
                     }}
-                    style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: AI_COLOR, padding: 0, fontSize: 12, lineHeight: 1 }}
+                    style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#8b5cf6', padding: 0, fontSize: 12, lineHeight: 1 }}
                   >×</button>
                 </span>
               ))}
             </div>
             <button
               onClick={() => { setContextEntities([]); setMessages([]); setCurrentThreadName('New conversation'); }}
-              style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: AI_COLOR, fontSize: 11, fontFamily: FONT }}
+              style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#8b5cf6', fontSize: 11, fontFamily: "'Open Sans', sans-serif" }}
             >
               Clear all
             </button>
@@ -1068,15 +1049,15 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
                 <div style={{
                   width: 48, height: 48, borderRadius: '50%',
                   background: 'linear-gradient(135deg, rgba(123,130,248,0.15) 0%, rgba(167,139,250,0.15) 100%)',
-                  border: `1px solid ${AI_COLOR}`,
+                  border: `1px solid #8b5cf6`,
                   display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 10,
                 }}>
-                  <SparklesIcon size={22} color={AI_COLOR} />
+                  <SparklesIcon size={22} color="#8b5cf6" />
                 </div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: TEXT, marginBottom: 4 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--osmos-fg)', marginBottom: 4 }}>
                   Hi, I'm Sofie
                 </div>
-                <div style={{ fontSize: 12, color: TEXT_MID, lineHeight: 1.6, maxWidth: 300 }}>
+                <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', lineHeight: 1.6, maxWidth: 300 }}>
                   Your AI copilot for ad performance. Ask me anything about your campaigns.
                 </div>
               </div>
@@ -1087,8 +1068,8 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
                   onClick={() => sendMessage(detectedIssue.promptText)}
                   style={{
                     width: '100%', textAlign: 'left', padding: '10px 12px',
-                    marginBottom: 8, borderRadius: 8, cursor: 'pointer', fontFamily: FONT,
-                    border: `1px solid ${AMBER}`,
+                    marginBottom: 8, borderRadius: 8, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
+                    border: `1px solid var(--osmos-brand-amber)`,
                     background: 'rgba(245,166,35,0.07)',
                     display: 'flex', alignItems: 'flex-start', gap: 8,
                   }}
@@ -1096,7 +1077,7 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
                   onMouseLeave={e => { e.currentTarget.style.background = 'rgba(245,166,35,0.07)'; }}
                 >
                   <span style={{ fontSize: 14, flexShrink: 0 }}>⚡</span>
-                  <span style={{ fontSize: 12, color: TEXT, lineHeight: 1.5 }}>
+                  <span style={{ fontSize: 12, color: 'var(--osmos-fg)', lineHeight: 1.5 }}>
                     {detectedIssue.text}
                   </span>
                 </button>
@@ -1105,7 +1086,7 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
               {/* Suggested prompts (max 3 — Arjun research-validated cap) */}
               {prompts.length > 0 && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 12 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: TEXT_SUB, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 2 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--osmos-fg-subtle)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 2 }}>
                     Try asking
                   </div>
                   {prompts.map((p, i) => (
@@ -1114,12 +1095,12 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
                       onClick={() => sendMessage(p)}
                       style={{
                         textAlign: 'left', padding: '9px 12px', borderRadius: 8,
-                        border: `1px solid ${BORDER}`, background: BG,
-                        fontSize: 12, color: TEXT, cursor: 'pointer', fontFamily: FONT,
+                        border: `1px solid var(--osmos-border)`, background: 'var(--osmos-bg)',
+                        fontSize: 12, color: 'var(--osmos-fg)', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
                         lineHeight: 1.5, transition: 'all 0.12s',
                       }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = AI_COLOR; e.currentTarget.style.background = AI_BG; }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.background = BG; }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = '#8b5cf6'; e.currentTarget.style.background = 'rgba(139,92,246,0.10)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--osmos-border)'; e.currentTarget.style.background = 'var(--osmos-bg)'; }}
                     >
                       {p}
                     </button>
@@ -1156,11 +1137,11 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
         {billingGate && (
           <div style={{
             padding: '8px 14px', flexShrink: 0,
-            borderTop: `1px solid ${BORDER}`,
+            borderTop: `1px solid var(--osmos-border)`,
             background: billingGate === 'amber' ? 'rgba(245,166,35,0.08)' : 'rgba(239,68,68,0.08)',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
           }}>
-            <span style={{ fontSize: 12, color: billingGate === 'amber' ? AMBER : '#EF4444', lineHeight: 1.4, flex: 1 }}>
+            <span style={{ fontSize: 12, color: billingGate === 'amber' ? 'var(--osmos-brand-amber)' : '#EF4444', lineHeight: 1.4, flex: 1 }}>
               {billingGate === 'amber' && 'Free usage limit reached · Resets in 6h · Further usage will be billable'}
               {billingGate === 'red-soft' && 'Your Sofie wallet and daily free limit is exhausted'}
               {billingGate === 'red-hard' && 'Usage limit reached · Resets in 6h · Contact your administrator'}
@@ -1169,12 +1150,12 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
             {billingGate === 'amber' && (
               <button
                 onClick={() => setBillingGate(null)}
-                style={{ padding: '4px 10px', borderRadius: 5, border: `1px solid ${AMBER}`, background: 'transparent', color: AMBER, fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: FONT, flexShrink: 0 }}
+                style={{ padding: '4px 10px', borderRadius: 5, border: `1px solid var(--osmos-brand-amber)`, background: 'transparent', color: 'var(--osmos-brand-amber)', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif", flexShrink: 0 }}
               >Continue</button>
             )}
             {billingGate === 'red-soft' && (
               <button
-                style={{ padding: '4px 10px', borderRadius: 5, border: 'none', background: '#EF4444', color: '#fff', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: FONT, flexShrink: 0 }}
+                style={{ padding: '4px 10px', borderRadius: 5, border: 'none', background: '#EF4444', color: '#fff', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif", flexShrink: 0 }}
               >Recharge</button>
             )}
           </div>
@@ -1182,18 +1163,18 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
 
         {/* ── Input area ────────────────────────────────────────────────── */}
         <div style={{
-          padding: '10px 12px 14px', borderTop: `1px solid ${BORDER}`,
-          background: BG, flexShrink: 0,
+          padding: '10px 12px 14px', borderTop: `1px solid var(--osmos-border)`,
+          background: 'var(--osmos-bg)', flexShrink: 0,
         }}>
           {/* Input row */}
           <div style={{
             display: 'flex', alignItems: 'flex-end', gap: 6,
             padding: '8px 10px', borderRadius: 10,
-            border: `1px solid ${BORDER}`, background: BG_SUBTLE,
+            border: `1px solid var(--osmos-border)`, background: 'var(--osmos-bg-subtle)',
             position: 'relative',
           }}
-          onFocus={e => e.currentTarget.style.borderColor = AI_COLOR}
-          onBlur={e => e.currentTarget.style.borderColor = BORDER}
+          onFocus={e => e.currentTarget.style.borderColor = '#8b5cf6'}
+          onBlur={e => e.currentTarget.style.borderColor = 'var(--osmos-border)'}
           >
             {/* Context picker popover */}
             {showContextPicker && (
@@ -1211,13 +1192,13 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
               title="Add context"
               style={{
                 width: 24, height: 24, borderRadius: 5, flexShrink: 0,
-                border: `1px solid ${BORDER}`, background: 'transparent',
+                border: `1px solid var(--osmos-border)`, background: 'transparent',
                 cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: showContextPicker ? AI_COLOR : TEXT_SUB,
+                color: showContextPicker ? '#8b5cf6' : 'var(--osmos-fg-subtle)',
                 marginBottom: 1,
               }}
             >
-              <PlusIcon size={13} color={showContextPicker ? AI_COLOR : TEXT_SUB} />
+              <PlusIcon size={13} color={showContextPicker ? '#8b5cf6' : 'var(--osmos-fg-subtle)'} />
             </button>
 
             {/* Textarea */}
@@ -1231,8 +1212,8 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
               disabled={isTyping}
               style={{
                 flex: 1, border: 'none', outline: 'none', resize: 'none',
-                background: 'transparent', fontSize: 13, fontFamily: FONT,
-                color: TEXT, lineHeight: 1.5,
+                background: 'transparent', fontSize: 13, fontFamily: "'Open Sans', sans-serif",
+                color: 'var(--osmos-fg)', lineHeight: 1.5,
                 maxHeight: 100, overflowY: 'auto',
                 opacity: isTyping ? 0.5 : 1,
               }}
@@ -1248,13 +1229,13 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
               disabled={!inputValue.trim() || isTyping}
               style={{
                 width: 28, height: 28, borderRadius: 6, border: 'none',
-                background: inputValue.trim() && !isTyping ? AI_COLOR : BG_MUTED,
+                background: inputValue.trim() && !isTyping ? '#8b5cf6' : 'var(--osmos-bg-muted)',
                 cursor: inputValue.trim() && !isTyping ? 'pointer' : 'default',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 flexShrink: 0, marginBottom: 1, transition: 'background 0.15s',
               }}
             >
-              <SendIcon size={14} color={inputValue.trim() && !isTyping ? '#fff' : TEXT_SUB} />
+              <SendIcon size={14} color={inputValue.trim() && !isTyping ? '#fff' : 'var(--osmos-fg-subtle)'} />
             </button>
           </div>
 
@@ -1262,12 +1243,12 @@ export function SofieChatPanel({ open, onClose, activeAdType = 'Product Ads', de
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 6 }}>
             <span style={{
               fontSize: 10,
-              color: promptsUsed > 5 ? AMBER : TEXT_SUB,
+              color: promptsUsed > 5 ? 'var(--osmos-brand-amber)' : 'var(--osmos-fg-subtle)',
               transition: 'color 0.2s',
             }}>
               {promptsUsed} of 8 free prompts used today
             </span>
-            <span style={{ fontSize: 10, color: TEXT_SUB }}>
+            <span style={{ fontSize: 10, color: 'var(--osmos-fg-subtle)' }}>
               Sofie may make mistakes
             </span>
           </div>

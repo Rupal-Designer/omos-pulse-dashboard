@@ -1,19 +1,6 @@
 import { useState } from 'react';
 import { Button, CloseIcon, CheckIcon, EyeIcon } from '../../../ui';
 
-// ── Design tokens ─────────────────────────────────────────────────────────────
-const FONT      = "'Open Sans', sans-serif";
-const BG        = 'var(--osmos-bg)';
-const BG_SUBTLE = 'var(--osmos-bg-subtle)';
-const BORDER    = 'var(--osmos-border)';
-const TEXT      = 'var(--osmos-fg)';
-const TEXT_MID  = 'var(--osmos-fg-muted)';
-const TEXT_SUB  = 'var(--osmos-fg-subtle)';
-const ACCENT    = 'var(--osmos-brand-primary)';
-const ACCENT_M  = 'var(--osmos-brand-primary-muted)';
-const GREEN     = 'var(--osmos-brand-green)';
-const AMBER     = 'var(--osmos-brand-amber)';
-
 // ── Mock data ─────────────────────────────────────────────────────────────────
 const adSlots = [
   { id: 'slot-1', name: 'Header Banner',           position: 'Top of page',    dimensions: '728x90',    avgCTR: '2.4%', avgCPM: '$4.50', dailyImpressions: '125K', viewability: '92%' },
@@ -54,16 +41,16 @@ export function InventoryDetailsDrawer({ open, onClose, page }) {
       <div style={{
         position: 'fixed', right: 0, top: 0, zIndex: 70,
         height: '100%', width: '70%',
-        backgroundColor: BG_SUBTLE,
+        backgroundColor: 'var(--osmos-bg-subtle)',
         boxShadow: '0 10px 40px rgba(0,0,0,0.2)',
         display: 'flex', flexDirection: 'column',
-        fontFamily: FONT,
+        fontFamily: "'Open Sans', sans-serif",
       }}>
         {/* ── Header ── */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', backgroundColor: BG, borderBottom: `1px solid ${BORDER}` }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', backgroundColor: 'var(--osmos-bg)', borderBottom: `1px solid var(--osmos-border)` }}>
           <div>
-            <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: TEXT }}>{page.name} - Ad Slots</h2>
-            <p style={{ margin: '2px 0 0', fontSize: 13, color: TEXT_MID }}>Select specific ad placement locations</p>
+            <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)' }}>{page.name} - Ad Slots</h2>
+            <p style={{ margin: '2px 0 0', fontSize: 13, color: 'var(--osmos-fg-muted)' }}>Select specific ad placement locations</p>
           </div>
           <button
             onClick={onClose}
@@ -71,18 +58,18 @@ export function InventoryDetailsDrawer({ open, onClose, page }) {
             onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
             onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
           >
-            <CloseIcon size={20} color={TEXT_MID} />
+            <CloseIcon size={20} color={'var(--osmos-fg-muted)'} />
           </button>
         </div>
 
         {/* ── Page Summary ── */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 32, padding: '16px 24px', backgroundColor: BG, borderBottom: `1px solid ${BORDER}` }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 32, padding: '16px 24px', backgroundColor: 'var(--osmos-bg)', borderBottom: `1px solid var(--osmos-border)` }}>
           <SummaryItem label="Est. Daily Impressions" value={page.estDailyImp} />
           <SummaryItem label="Total Slots"            value={page.totalInventories} />
           <SummaryItem label="Targeting Options"      value={page.targetingOptions} />
           <div style={{ display: 'flex', gap: 8 }}>
             {page.tags.map((tag, i) => (
-              <span key={i} style={{ fontSize: 11, padding: '4px 8px', backgroundColor: ACCENT_M, color: ACCENT, borderRadius: 6, fontWeight: 500 }}>
+              <span key={i} style={{ fontSize: 11, padding: '4px 8px', backgroundColor: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)', borderRadius: 6, fontWeight: 500 }}>
                 {tag}
               </span>
             ))}
@@ -91,14 +78,14 @@ export function InventoryDetailsDrawer({ open, onClose, page }) {
 
         {/* ── Content ── */}
         <div style={{ flex: 1, overflowY: 'auto', padding: 24 }}>
-          <div style={{ backgroundColor: BG, borderRadius: 12, border: `1px solid ${BORDER}`, boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+          <div style={{ backgroundColor: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid var(--osmos-border)`, boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
 
             {/* Table header row */}
-            <div style={{ padding: '12px 20px', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ padding: '12px 20px', borderBottom: `1px solid var(--osmos-border)`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <SelectBox checked={allSelected} onClick={selectAll} size={20} />
-                <span style={{ fontWeight: 600, fontSize: 14, color: TEXT }}>Available Ad Slots</span>
-                <span style={{ fontSize: 11, padding: '2px 8px', backgroundColor: BG_SUBTLE, color: TEXT_MID, borderRadius: 999 }}>
+                <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--osmos-fg)' }}>Available Ad Slots</span>
+                <span style={{ fontSize: 11, padding: '2px 8px', backgroundColor: 'var(--osmos-bg-subtle)', color: 'var(--osmos-fg-muted)', borderRadius: 999 }}>
                   {selectedSlots.length} selected
                 </span>
               </div>
@@ -113,20 +100,20 @@ export function InventoryDetailsDrawer({ open, onClose, page }) {
               {adSlots.map((slot) => {
                 const sel   = selectedSlots.includes(slot.id);
                 const vPct  = Number.parseInt(slot.viewability);
-                const vColor = vPct >= 90 ? GREEN : vPct >= 80 ? AMBER : 'var(--alert-error-primary)';
+                const vColor = vPct >= 90 ? 'var(--osmos-brand-green)' : vPct >= 80 ? 'var(--osmos-brand-amber)' : 'var(--alert-error-primary)';
                 return (
                   <div
                     key={slot.id}
                     onClick={() => toggleSlot(slot.id)}
                     style={{
-                      border: `1px solid ${sel ? ACCENT : BORDER}`,
+                      border: `1px solid ${sel ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)'}`,
                       borderRadius: 12, padding: 16, cursor: 'pointer',
-                      backgroundColor: sel ? ACCENT_M : BG,
+                      backgroundColor: sel ? 'var(--osmos-brand-primary-muted)' : 'var(--osmos-bg)',
                       boxShadow: sel ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
                       transition: 'all 0.15s',
                     }}
-                    onMouseEnter={(e) => { if (!sel) { e.currentTarget.style.borderColor = TEXT_MID; e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.08)'; } }}
-                    onMouseLeave={(e) => { if (!sel) { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.boxShadow = 'none'; } }}
+                    onMouseEnter={(e) => { if (!sel) { e.currentTarget.style.borderColor = 'var(--osmos-fg-muted)'; e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.08)'; } }}
+                    onMouseLeave={(e) => { if (!sel) { e.currentTarget.style.borderColor = 'var(--osmos-border)'; e.currentTarget.style.boxShadow = 'none'; } }}
                   >
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                       <SelectBox
@@ -138,17 +125,17 @@ export function InventoryDetailsDrawer({ open, onClose, page }) {
                       <div style={{ flex: 1 }}>
                         {/* Name + dimensions pill */}
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                          <h4 style={{ margin: 0, fontWeight: 600, fontSize: 13, color: TEXT }}>{slot.name}</h4>
-                          <span style={{ fontSize: 11, padding: '3px 8px', backgroundColor: BG_SUBTLE, color: TEXT_MID, borderRadius: 4 }}>
+                          <h4 style={{ margin: 0, fontWeight: 600, fontSize: 13, color: 'var(--osmos-fg)' }}>{slot.name}</h4>
+                          <span style={{ fontSize: 11, padding: '3px 8px', backgroundColor: 'var(--osmos-bg-subtle)', color: 'var(--osmos-fg-muted)', borderRadius: 4 }}>
                             {slot.dimensions}
                           </span>
                         </div>
-                        <p style={{ margin: '0 0 10px', fontSize: 12, color: TEXT_MID }}>{slot.position}</p>
+                        <p style={{ margin: '0 0 10px', fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{slot.position}</p>
                         {/* Metrics 2×2 grid */}
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px 12px' }}>
-                          <MetricRow label="Avg CTR"    value={slot.avgCTR}           valueColor={GREEN} />
-                          <MetricRow label="Avg CPM"    value={slot.avgCPM}           valueColor={TEXT} />
-                          <MetricRow label="Daily Imp"  value={slot.dailyImpressions} valueColor={TEXT} />
+                          <MetricRow label="Avg CTR"    value={slot.avgCTR}           valueColor={'var(--osmos-brand-green)'} />
+                          <MetricRow label="Avg CPM"    value={slot.avgCPM}           valueColor={'var(--osmos-fg)'} />
+                          <MetricRow label="Daily Imp"  value={slot.dailyImpressions} valueColor={'var(--osmos-fg)'} />
                           <MetricRow label="Viewability" value={slot.viewability}     valueColor={vColor} />
                         </div>
                       </div>
@@ -161,13 +148,13 @@ export function InventoryDetailsDrawer({ open, onClose, page }) {
         </div>
 
         {/* ── Footer ── */}
-        <div style={{ padding: '16px 24px', backgroundColor: BG, borderTop: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ fontSize: 13, color: TEXT_MID }}>
-            <span style={{ fontWeight: 600, color: TEXT }}>{selectedSlots.length}</span> slots selected
+        <div style={{ padding: '16px 24px', backgroundColor: 'var(--osmos-bg)', borderTop: `1px solid var(--osmos-border)`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>
+            <span style={{ fontWeight: 600, color: 'var(--osmos-fg)' }}>{selectedSlots.length}</span> slots selected
             {selectedSlots.length > 0 && (
               <span style={{ marginLeft: 8 }}>
                 • Est. combined impressions:{' '}
-                <span style={{ fontWeight: 600, color: TEXT }}>485K/day</span>
+                <span style={{ fontWeight: 600, color: 'var(--osmos-fg)' }}>485K/day</span>
               </span>
             )}
           </div>
@@ -185,8 +172,8 @@ export function InventoryDetailsDrawer({ open, onClose, page }) {
 function SummaryItem({ label, value }) {
   return (
     <div>
-      <span style={{ fontSize: 11, color: TEXT_SUB, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</span>
-      <p style={{ margin: '2px 0 0', fontSize: 16, fontWeight: 600, color: TEXT }}>{value}</p>
+      <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</span>
+      <p style={{ margin: '2px 0 0', fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)' }}>{value}</p>
     </div>
   );
 }
@@ -195,7 +182,7 @@ function SummaryItem({ label, value }) {
 function MetricRow({ label, value, valueColor }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
-      <span style={{ color: TEXT_SUB }}>{label}</span>
+      <span style={{ color: 'var(--osmos-fg-subtle)' }}>{label}</span>
       <span style={{ fontWeight: 500, color: valueColor }}>{value}</span>
     </div>
   );
@@ -208,8 +195,8 @@ function SelectBox({ checked, onClick, size = 20, style }) {
       onClick={onClick}
       style={{
         width: size, height: size, borderRadius: 4,
-        border: `2px solid ${checked ? ACCENT : BORDER}`,
-        backgroundColor: checked ? ACCENT : 'transparent',
+        border: `2px solid ${checked ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)'}`,
+        backgroundColor: checked ? 'var(--osmos-brand-primary)' : 'transparent',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         cursor: 'pointer', flexShrink: 0, padding: 0,
         transition: 'all 0.15s', ...style,

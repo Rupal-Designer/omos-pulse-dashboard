@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
-import { Icon, SearchIcon, FilterIcon, ColumnsIcon, DownloadIcon, ChevronDownIcon } from '../../ui/atoms/Icon';
-
-const FONT = "'Open Sans', sans-serif";
+import { Icon, SearchIcon, FilterIcon, ColumnsIcon, DownloadIcon, ChevronDownIcon } from '../../ui';
 
 // ─── Constants & Mock Data ────────────────────────────────────────────────────
 
@@ -56,7 +54,7 @@ function KpiChip({ label, value, tone }) {
       display: 'flex', alignItems: 'center', gap: 8,
       background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)',
       borderRadius: 8, padding: '8px 12px', flex: 1, minWidth: 150,
-      fontFamily: FONT,
+      fontFamily: "'Open Sans', sans-serif",
     }}>
       <span style={{ background: bg, color, borderRadius: 99, padding: '2px 8px', fontSize: 12, fontWeight: 700 }}>
         {value}
@@ -94,7 +92,7 @@ function DropdownPill({ label }) {
       display: 'inline-flex', alignItems: 'center', gap: 4,
       background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)',
       borderRadius: 6, padding: '4px 10px', fontSize: 12, fontWeight: 500,
-      color: 'var(--osmos-fg-muted)', cursor: 'pointer', fontFamily: FONT,
+      color: 'var(--osmos-fg-muted)', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
     }}>
       {label}
       <ChevronDownIcon size={12} />
@@ -110,7 +108,7 @@ function SearchInput({ placeholder, minW = '220px' }) {
       padding: '4px 10px', background: 'var(--osmos-bg)', minWidth: minW, height: 28,
     }}>
       <SearchIcon size={13} color="var(--osmos-fg-muted)" />
-      <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', fontFamily: FONT }}>{placeholder}</span>
+      <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>{placeholder}</span>
     </div>
   );
 }
@@ -120,13 +118,13 @@ function PageToolbar() {
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       padding: '12px 16px', background: 'var(--osmos-bg)',
-      borderBottom: '1px solid var(--osmos-border)', fontFamily: FONT,
+      borderBottom: '1px solid var(--osmos-border)', fontFamily: "'Open Sans', sans-serif",
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <Icon size={18} color="var(--osmos-brand-primary)">
           <path d="M13 2 3 14h9l-1 8 10-12h-9z"/>
         </Icon>
-        <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>
+        <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>
           Live Insights
         </span>
       </div>
@@ -153,7 +151,7 @@ function Panel({ title, icon, toolbar, children, footerNote }) {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {icon && <span style={{ display: 'flex', alignItems: 'center', color: 'var(--osmos-brand-primary)' }}>{icon}</span>}
-          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>{title}</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>{title}</span>
           <span style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             width: 14, height: 14, borderRadius: '50%',
@@ -165,7 +163,7 @@ function Panel({ title, icon, toolbar, children, footerNote }) {
       </div>
       {children}
       {footerNote && (
-        <div style={{ padding: '8px 20px 12px', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>
+        <div style={{ padding: '8px 20px 12px', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
           {footerNote}
         </div>
       )}
@@ -176,11 +174,11 @@ function Panel({ title, icon, toolbar, children, footerNote }) {
 const TH_STYLE = {
   textAlign: 'left', padding: '8px 16px', fontSize: 12, fontWeight: 600,
   color: 'var(--osmos-fg-muted)', background: 'var(--osmos-bg-subtle)',
-  borderBottom: '1px solid var(--osmos-border)', whiteSpace: 'nowrap', fontFamily: FONT,
+  borderBottom: '1px solid var(--osmos-border)', whiteSpace: 'nowrap', fontFamily: "'Open Sans', sans-serif",
 };
 const TD_STYLE = {
   padding: '9px 16px', fontSize: 13, color: 'var(--osmos-fg)',
-  borderBottom: '1px solid var(--osmos-border)', fontFamily: FONT,
+  borderBottom: '1px solid var(--osmos-border)', fontFamily: "'Open Sans', sans-serif",
 };
 
 function DataTable({ columns, rows, emptyRows = false }) {
@@ -228,7 +226,7 @@ function TrendTooltip({ active, payload, label }) {
     <div style={{
       background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)',
       borderRadius: 6, boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
-      padding: '10px 12px', minWidth: 160, fontFamily: FONT,
+      padding: '10px 12px', minWidth: 160, fontFamily: "'Open Sans', sans-serif",
     }}>
       <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--osmos-fg)', marginBottom: 8 }}>{label}</div>
       {payload.map((p) => (
@@ -298,15 +296,15 @@ export default function LiveAnalyticsPage() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginRight: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <div style={{ width: 12, height: 2, background: 'var(--osmos-brand-amber)' }} />
-          <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>Yesterday</span>
+          <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>Yesterday</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <div style={{ width: 12, height: 2, background: 'var(--osmos-brand-green)' }} />
-          <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>Tomorrow</span>
+          <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>Tomorrow</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <div style={{ width: 12, height: 2, background: 'var(--osmos-brand-primary)' }} />
-          <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>Same day (last week)</span>
+          <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>Same day (last week)</span>
         </div>
       </div>
       <DropdownPill label="Current Epoch" />
@@ -315,7 +313,7 @@ export default function LiveAnalyticsPage() {
   );
 
   return (
-    <div style={{ fontFamily: FONT }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif" }}>
       <PageToolbar />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 16 }}>
 

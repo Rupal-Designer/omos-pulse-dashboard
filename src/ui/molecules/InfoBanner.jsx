@@ -1,8 +1,6 @@
 import React from 'react';
 import { FileIcon } from '../atoms/Icon';
 
-const FONT = "'Open Sans', sans-serif";
-
 /**
  * InfoBanner — file download banner shown at the top of upload pages.
  * fileName: string  e.g. "merchant_account_manager_mapping.xlsx"
@@ -27,7 +25,7 @@ export function InfoBanner({
       padding: '14px 18px',
       marginBottom: 28,
       gap: 16,
-      fontFamily: FONT,
+      fontFamily: "'Open Sans', sans-serif",
     }}>
       {/* Left: icon + text */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1 }}>

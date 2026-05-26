@@ -3,25 +3,11 @@ import { Icon, EyeIcon, StatCard } from '../../ui';
 import { Sidebar } from '../components/sidebar';
 import { Header }  from '../components/header';
 
-// ── Design tokens ────────────────────────────────────────────────────────────
-const FONT     = "'Open Sans', sans-serif";
-const BG       = 'var(--osmos-bg)';
-const BG_SUBTLE = 'var(--osmos-bg-subtle)';
-const BG_MUTED = 'var(--osmos-bg-muted)';
-const BORDER   = 'var(--osmos-border)';
-const TEXT     = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const GREEN    = 'var(--osmos-brand-green)';
-const GREEN_M  = 'var(--osmos-brand-green-muted)';
-const AMBER    = 'var(--osmos-brand-amber)';
-const AMBER_M  = 'var(--osmos-brand-amber-muted)';
-
 // chart/icon brand colors — intentional hex assignments, not osmos semantic tokens
 const C_RED    = '#d32f2f';
-const C_BLUE   = '#636CFF';  // ACCENT hex equivalent
+const C_BLUE   = '#636CFF';  // 'var(--osmos-brand-primary)' hex equivalent
 const C_ORANGE = '#ef6c00';
-const C_GREEN  = '#1BA87A';  // GREEN hex equivalent
+const C_GREEN  = '#1BA87A';  // 'var(--osmos-brand-green)' hex equivalent
 const C_VIOLET = 'var(--osmos-brand-violet)';
 
 // ── Hand-rolled icons ─────────────────────────────────────────────────────────
@@ -70,12 +56,12 @@ export default function HomePage() {
   const [activeAdType, setActiveAdType] = useState('Product Ads');
 
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', backgroundColor: BG_SUBTLE, fontFamily: FONT }}>
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', backgroundColor: 'var(--osmos-bg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>
       <Sidebar onAdTypeChange={setActiveAdType} activeAdType={activeAdType} />
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         {/* Sticky topbar */}
-        <div style={{ position: 'sticky', top: 0, zIndex: 30, backgroundColor: BG }}>
+        <div style={{ position: 'sticky', top: 0, zIndex: 30, backgroundColor: 'var(--osmos-bg)' }}>
           <Header activeAdType={activeAdType} />
         </div>
 
@@ -84,12 +70,12 @@ export default function HomePage() {
           {/* ── Welcome header ── */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
-              <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700, color: TEXT }}>Dashboard Overview</h1>
-              <p style={{ margin: '4px 0 0', fontSize: 13, color: TEXT_MID }}>Unified view of all advertising campaigns performance</p>
+              <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700, color: 'var(--osmos-fg)' }}>Dashboard Overview</h1>
+              <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--osmos-fg-muted)' }}>Unified view of all advertising campaigns performance</p>
             </div>
             <a
               href="/"
-              style={{ padding: '8px 16px', borderRadius: 8, border: `1px solid ${ACCENT}`, backgroundColor: ACCENT, color: '#fff', fontSize: 13, fontWeight: 500, textDecoration: 'none', fontFamily: FONT }}
+              style={{ padding: '8px 16px', borderRadius: 8, border: `1px solid var(--osmos-brand-primary)`, backgroundColor: 'var(--osmos-brand-primary)', color: '#fff', fontSize: 13, fontWeight: 500, textDecoration: 'none', fontFamily: "'Open Sans', sans-serif" }}
             >
               View Detailed Reports
             </a>
@@ -132,10 +118,10 @@ export default function HomePage() {
           </div>
 
           {/* ── Top Performing Campaigns ── */}
-          <div style={{ borderRadius: 8, border: `1px solid ${BORDER}`, padding: 24, backgroundColor: BG }}>
+          <div style={{ borderRadius: 8, border: `1px solid var(--osmos-border)`, padding: 24, backgroundColor: 'var(--osmos-bg)' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-              <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: TEXT }}>Top Performing Campaigns</h2>
-              <a href="/" style={{ fontSize: 13, color: ACCENT, textDecoration: 'none', fontFamily: FONT }}>View All →</a>
+              <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)' }}>Top Performing Campaigns</h2>
+              <a href="/" style={{ fontSize: 13, color: 'var(--osmos-brand-primary)', textDecoration: 'none', fontFamily: "'Open Sans', sans-serif" }}>View All →</a>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <CampaignRow name="Meta - Spring Collection Launch" adType="Offsite Ads"  spend="$2.5M"  roas="4.2x" status="active" />
@@ -148,8 +134,8 @@ export default function HomePage() {
           {/* ── Budget + Platform — 2-column grid ── */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
             {/* Budget Utilization */}
-            <div style={{ borderRadius: 8, border: `1px solid ${BORDER}`, padding: 24, backgroundColor: BG }}>
-              <h3 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 600, color: TEXT }}>Budget Utilization</h3>
+            <div style={{ borderRadius: 8, border: `1px solid var(--osmos-border)`, padding: 24, backgroundColor: 'var(--osmos-bg)' }}>
+              <h3 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)' }}>Budget Utilization</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <BudgetBar label="Product Ads"      used={85} color={C_BLUE}   />
                 <BudgetBar label="Display Ads"      used={72} color={C_VIOLET} />
@@ -159,8 +145,8 @@ export default function HomePage() {
             </div>
 
             {/* Performance by Platform */}
-            <div style={{ borderRadius: 8, border: `1px solid ${BORDER}`, padding: 24, backgroundColor: BG }}>
-              <h3 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 600, color: TEXT }}>Performance by Platform</h3>
+            <div style={{ borderRadius: 8, border: `1px solid var(--osmos-border)`, padding: 24, backgroundColor: 'var(--osmos-bg)' }}>
+              <h3 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)' }}>Performance by Platform</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <PlatformRow platform="Meta"     spend="$15.2M" impressions="42.3M" ctr="18.5%" />
                 <PlatformRow platform="Google"   spend="$18.8M" impressions="38.9M" ctr="16.2%" />
@@ -188,22 +174,22 @@ function AdTypePerformanceCard({ adType, icon, metrics, trend, color }) {
   }).join(' ');
 
   return (
-    <div style={{ borderRadius: 8, border: `1px solid ${BORDER}`, padding: 20, backgroundColor: BG, fontFamily: FONT }}>
+    <div style={{ borderRadius: 8, border: `1px solid var(--osmos-border)`, padding: 20, backgroundColor: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif" }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: color + '20' }}>
             {icon}
           </div>
-          <h3 style={{ margin: 0, fontWeight: 600, color: TEXT }}>{adType}</h3>
+          <h3 style={{ margin: 0, fontWeight: 600, color: 'var(--osmos-fg)' }}>{adType}</h3>
         </div>
-        <a href={`/?adType=${adType}`} style={{ fontSize: 12, color: ACCENT, textDecoration: 'none', fontFamily: FONT }}>View Details →</a>
+        <a href={`/?adType=${adType}`} style={{ fontSize: 12, color: 'var(--osmos-brand-primary)', textDecoration: 'none', fontFamily: "'Open Sans', sans-serif" }}>View Details →</a>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginBottom: 16 }}>
         {[['Spend', metrics.spend], ['Impressions', metrics.impressions], ['Clicks', metrics.clicks], ['CTR', metrics.ctr]].map(([lbl, val]) => (
           <div key={lbl}>
-            <p style={{ margin: '0 0 2px', fontSize: 12, color: TEXT_MID }}>{lbl}</p>
-            <p style={{ margin: 0, fontSize: 18, fontWeight: 700, color: TEXT }}>{val}</p>
+            <p style={{ margin: '0 0 2px', fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{lbl}</p>
+            <p style={{ margin: 0, fontSize: 18, fontWeight: 700, color: 'var(--osmos-fg)' }}>{val}</p>
           </div>
         ))}
       </div>
@@ -220,24 +206,24 @@ function AdTypePerformanceCard({ adType, icon, metrics, trend, color }) {
 function CampaignRow({ name, adType, spend, roas, status }) {
   const isActive = status === 'active';
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 12, borderRadius: 8, border: `1px solid ${BORDER}`, backgroundColor: BG_SUBTLE, fontFamily: FONT }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 12, borderRadius: 8, border: `1px solid var(--osmos-border)`, backgroundColor: 'var(--osmos-bg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>
       <div style={{ flex: 1 }}>
-        <p style={{ margin: 0, fontWeight: 500, color: TEXT }}>{name}</p>
-        <p style={{ margin: '2px 0 0', fontSize: 12, color: TEXT_MID }}>{adType}</p>
+        <p style={{ margin: 0, fontWeight: 500, color: 'var(--osmos-fg)' }}>{name}</p>
+        <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{adType}</p>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 24, fontSize: 13 }}>
         <div>
-          <p style={{ margin: '0 0 2px', fontSize: 12, color: TEXT_MID }}>Spend</p>
-          <p style={{ margin: 0, fontWeight: 600, color: TEXT }}>{spend}</p>
+          <p style={{ margin: '0 0 2px', fontSize: 12, color: 'var(--osmos-fg-muted)' }}>Spend</p>
+          <p style={{ margin: 0, fontWeight: 600, color: 'var(--osmos-fg)' }}>{spend}</p>
         </div>
         <div>
-          <p style={{ margin: '0 0 2px', fontSize: 12, color: TEXT_MID }}>ROAS</p>
-          <p style={{ margin: 0, fontWeight: 600, color: GREEN }}>{roas}</p>
+          <p style={{ margin: '0 0 2px', fontSize: 12, color: 'var(--osmos-fg-muted)' }}>ROAS</p>
+          <p style={{ margin: 0, fontWeight: 600, color: 'var(--osmos-brand-green)' }}>{roas}</p>
         </div>
         <div style={{
           padding: '4px 8px', borderRadius: 4, fontSize: 12, fontWeight: 500,
-          backgroundColor: isActive ? GREEN_M : AMBER_M,
-          color: isActive ? GREEN : AMBER,
+          backgroundColor: isActive ? 'var(--osmos-brand-green-muted)' : 'var(--osmos-brand-amber-muted)',
+          color: isActive ? 'var(--osmos-brand-green)' : 'var(--osmos-brand-amber)',
         }}>
           {status}
         </div>
@@ -250,12 +236,12 @@ function CampaignRow({ name, adType, spend, roas, status }) {
 function BudgetBar({ label, used, color }) {
   const pct = used;
   return (
-    <div style={{ fontFamily: FONT }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif" }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-        <span style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>{label}</span>
-        <span style={{ fontSize: 12, color: TEXT_MID }}>{pct}%</span>
+        <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>{label}</span>
+        <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{pct}%</span>
       </div>
-      <div style={{ height: 8, borderRadius: 999, overflow: 'hidden', backgroundColor: BG_MUTED }}>
+      <div style={{ height: 8, borderRadius: 999, overflow: 'hidden', backgroundColor: 'var(--osmos-bg-muted)' }}>
         <div style={{ width: `${pct}%`, height: '100%', borderRadius: 999, backgroundColor: color, transition: 'width 0.5s' }} />
       </div>
     </div>
@@ -265,20 +251,20 @@ function BudgetBar({ label, used, color }) {
 // ── PlatformRow ───────────────────────────────────────────────────────────────
 function PlatformRow({ platform, spend, impressions, ctr }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 12, borderRadius: 8, backgroundColor: BG_SUBTLE, fontFamily: FONT }}>
-      <span style={{ fontWeight: 500, color: TEXT }}>{platform}</span>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 12, borderRadius: 8, backgroundColor: 'var(--osmos-bg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>
+      <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>{platform}</span>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 12 }}>
         <div>
-          <span style={{ color: TEXT_MID }}>Spend: </span>
-          <span style={{ fontWeight: 600, color: TEXT }}>{spend}</span>
+          <span style={{ color: 'var(--osmos-fg-muted)' }}>Spend: </span>
+          <span style={{ fontWeight: 600, color: 'var(--osmos-fg)' }}>{spend}</span>
         </div>
         <div>
-          <span style={{ color: TEXT_MID }}>Impressions: </span>
-          <span style={{ fontWeight: 600, color: TEXT }}>{impressions}</span>
+          <span style={{ color: 'var(--osmos-fg-muted)' }}>Impressions: </span>
+          <span style={{ fontWeight: 600, color: 'var(--osmos-fg)' }}>{impressions}</span>
         </div>
         <div>
-          <span style={{ color: TEXT_MID }}>CTR: </span>
-          <span style={{ fontWeight: 600, color: GREEN }}>{ctr}</span>
+          <span style={{ color: 'var(--osmos-fg-muted)' }}>CTR: </span>
+          <span style={{ fontWeight: 600, color: 'var(--osmos-brand-green)' }}>{ctr}</span>
         </div>
       </div>
     </div>

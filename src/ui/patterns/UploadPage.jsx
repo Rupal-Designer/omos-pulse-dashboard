@@ -3,8 +3,6 @@ import { InfoBanner } from '../molecules/InfoBanner';
 import { UploadDropzone } from '../molecules/UploadDropzone';
 import { FileIcon } from '../atoms/Icon';
 
-const FONT = "'Open Sans', sans-serif";
-
 /**
  * UploadPage pattern — InfoBanner + UploadDropzone + "How it works?" card.
  * Replaces the full AccountManagerMappingPage / AttributionOverridesPage / WalletTopUpPage pattern.
@@ -25,7 +23,7 @@ export function UploadPage({
   onFile,
 }) {
   return (
-    <div style={{ fontFamily: FONT, padding: 32, maxWidth: 900 }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif", padding: 32, maxWidth: 900 }}>
       <InfoBanner
         fileName={fileName}
         fileDesc={fileDesc}

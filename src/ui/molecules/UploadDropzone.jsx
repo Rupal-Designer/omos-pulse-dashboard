@@ -2,8 +2,6 @@ import React, { useRef, useState } from 'react';
 import { UploadIcon } from '../atoms/Icon';
 import { Toast, useToast } from '../atoms/Toast';
 
-const FONT = "'Open Sans', sans-serif";
-
 /**
  * UploadDropzone — dashed dropzone with drag-drop + click-to-upload.
  * onFile: (file: File) => void  — called when a file is selected (optional)
@@ -28,7 +26,7 @@ export function UploadDropzone({
   }
 
   return (
-    <div style={{ fontFamily: FONT }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif" }}>
       <Toast {...toast} />
 
       {/* Section label */}

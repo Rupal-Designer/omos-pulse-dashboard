@@ -2,8 +2,6 @@ import React from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '../atoms/Icon';
 import { Button } from '../atoms/Button';
 
-const FONT = "'Open Sans', sans-serif";
-
 /**
  * Pagination — "Showing X–Y of Z" label + Prev / Next buttons.
  * total: number of total items
@@ -25,7 +23,7 @@ export function Pagination({ total, page, perPage = 20, onChange, entityLabel = 
       padding: '10px 16px',
       borderTop: '1px solid var(--osmos-border)',
     }}>
-      <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', fontFamily: FONT }}>
+      <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>
         {total === 0
           ? `No ${entityLabel}`
           : `Showing ${from}–${to} of ${total} ${entityLabel}`}
@@ -40,7 +38,7 @@ export function Pagination({ total, page, perPage = 20, onChange, entityLabel = 
         >
           <ChevronLeftIcon size={13} />
         </Button>
-        <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT, minWidth: 60, textAlign: 'center' }}>
+        <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif", minWidth: 60, textAlign: 'center' }}>
           {page} / {totalPages}
         </span>
         <Button

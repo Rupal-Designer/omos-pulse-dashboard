@@ -10,16 +10,6 @@ function WarnBanner({ message }) {
   );
 }
 
-const FONT     = "'Open Sans', sans-serif";
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const TEXT_HI  = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_LO  = 'var(--osmos-fg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const AMBER    = 'var(--osmos-brand-amber)';
-
 // Per-channel creative spec definitions
 const CHANNEL_SPECS = {
   Meta: [
@@ -52,22 +42,22 @@ const CHANNEL_SPECS = {
 function SpecTable({ specs }) {
   return (
     <div style={{ overflowX: 'auto', marginBottom: 20 }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: FONT }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: "'Open Sans', sans-serif" }}>
         <thead>
-          <tr style={{ borderBottom: `1px solid ${BORDER}` }}>
+          <tr style={{ borderBottom: `1px solid var(--osmos-border)` }}>
             {['Format', 'Dimensions', 'File Types', 'Max Size', 'Length'].map(h => (
-              <th key={h} style={{ padding: '8px 12px', fontSize: 11, fontWeight: 600, color: TEXT_MID, textAlign: 'left', whiteSpace: 'nowrap' }}>{h}</th>
+              <th key={h} style={{ padding: '8px 12px', fontSize: 11, fontWeight: 600, color: 'var(--osmos-fg-muted)', textAlign: 'left', whiteSpace: 'nowrap' }}>{h}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {specs.map((row, i) => (
-            <tr key={i} style={{ borderBottom: `1px solid ${BORDER}` }}>
-              <td style={{ padding: '8px 12px', fontSize: 12, fontWeight: 600, color: TEXT_HI }}>{row.format}</td>
-              <td style={{ padding: '8px 12px', fontSize: 12, color: TEXT_MID }}>{row.dimensions}</td>
-              <td style={{ padding: '8px 12px', fontSize: 12, color: TEXT_MID }}>{row.types}</td>
-              <td style={{ padding: '8px 12px', fontSize: 12, color: TEXT_MID }}>{row.maxSize}</td>
-              <td style={{ padding: '8px 12px', fontSize: 12, color: TEXT_MID }}>{row.length}</td>
+            <tr key={i} style={{ borderBottom: `1px solid var(--osmos-border)` }}>
+              <td style={{ padding: '8px 12px', fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg)' }}>{row.format}</td>
+              <td style={{ padding: '8px 12px', fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{row.dimensions}</td>
+              <td style={{ padding: '8px 12px', fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{row.types}</td>
+              <td style={{ padding: '8px 12px', fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{row.maxSize}</td>
+              <td style={{ padding: '8px 12px', fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{row.length}</td>
             </tr>
           ))}
         </tbody>
@@ -80,15 +70,15 @@ function UploadArea({ channelId, format, creatives, onUpload }) {
   const uploaded = creatives.filter(c => c.channel === channelId && c.format === format.format);
   return (
     <div style={{ marginBottom: 16 }}>
-      <p style={{ fontSize: 12, fontWeight: 600, color: TEXT_MID, margin: '0 0 8px', fontFamily: FONT }}>
-        {format.format} <span style={{ fontWeight: 400, color: TEXT_LO }}>({format.dimensions} · {format.types})</span>
+      <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)', margin: '0 0 8px', fontFamily: "'Open Sans', sans-serif" }}>
+        {format.format} <span style={{ fontWeight: 400, color: 'var(--osmos-fg-subtle)' }}>({format.dimensions} · {format.types})</span>
       </p>
       {uploaded.length > 0 ? (
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 8 }}>
           {uploaded.map((c, i) => (
             <div key={i} style={{
-              padding: '6px 12px', borderRadius: 8, background: `${ACCENT}0D`,
-              border: `1px solid ${ACCENT}33`, fontSize: 12, color: ACCENT, fontFamily: FONT,
+              padding: '6px 12px', borderRadius: 8, background: `var(--osmos-brand-primary)0D`,
+              border: `1px solid var(--osmos-brand-primary)33`, fontSize: 12, color: 'var(--osmos-brand-primary)', fontFamily: "'Open Sans', sans-serif",
               display: 'flex', alignItems: 'center', gap: 6,
             }}>
               ✓ {c.name}
@@ -126,17 +116,17 @@ export default function CreativeUploadStep({ campaignData, onChange }) {
   const hasMissing = uploadedCount < requiredCount;
 
   return (
-    <div style={{ fontFamily: FONT, maxWidth: 720 }}>
-      <h2 style={{ fontSize: 18, fontWeight: 700, color: TEXT_HI, margin: '0 0 4px' }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif", maxWidth: 720 }}>
+      <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--osmos-fg)', margin: '0 0 4px' }}>
         Creative / Ads Upload
       </h2>
-      <p style={{ fontSize: 13, color: TEXT_MID, margin: '0 0 20px' }}>
+      <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', margin: '0 0 20px' }}>
         Upload your ad creatives per channel. Specs are shown inline.
       </p>
 
       {/* Channel tabs */}
       {channels.length > 1 && (
-        <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${BORDER}`, marginBottom: 24 }}>
+        <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid var(--osmos-border)`, marginBottom: 24 }}>
           {channels.map(ch => {
             const cnt = creatives.filter(c => c.channel === ch).length;
             const isActive = activeTab === ch;
@@ -145,16 +135,16 @@ export default function CreativeUploadStep({ campaignData, onChange }) {
                 key={ch}
                 onClick={() => setActiveTab(ch)}
                 style={{
-                  padding: '10px 18px', border: 'none', cursor: 'pointer', fontFamily: FONT,
+                  padding: '10px 18px', border: 'none', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
                   background: 'transparent', fontSize: 13, fontWeight: isActive ? 600 : 400,
-                  color: isActive ? ACCENT : TEXT_MID,
-                  borderBottom: `2px solid ${isActive ? ACCENT : 'transparent'}`,
+                  color: isActive ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)',
+                  borderBottom: `2px solid ${isActive ? 'var(--osmos-brand-primary)' : 'transparent'}`,
                   marginBottom: '-1px', display: 'flex', alignItems: 'center', gap: 6,
                 }}
               >
                 {ch}
                 {cnt > 0 && (
-                  <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 10, background: `${ACCENT}18`, color: ACCENT, fontWeight: 700 }}>
+                  <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 10, background: `var(--osmos-brand-primary)18`, color: 'var(--osmos-brand-primary)', fontWeight: 700 }}>
                     {cnt}
                   </span>
                 )}
@@ -165,8 +155,8 @@ export default function CreativeUploadStep({ campaignData, onChange }) {
       )}
 
       {/* Spec table */}
-      <div style={{ background: BG, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '16px 20px', marginBottom: 20 }}>
-        <p style={{ fontSize: 12, fontWeight: 600, color: TEXT_LO, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 12px' }}>
+      <div style={{ background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 10, padding: '16px 20px', marginBottom: 20 }}>
+        <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 12px' }}>
           {activeTab} Creative Specifications
         </p>
         <SpecTable specs={specs} />
@@ -180,7 +170,7 @@ export default function CreativeUploadStep({ campaignData, onChange }) {
       )}
 
       {/* Upload areas */}
-      <div style={{ background: BG, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '20px' }}>
+      <div style={{ background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 10, padding: '20px' }}>
         {specs.map(format => (
           <UploadArea
             key={format.format}

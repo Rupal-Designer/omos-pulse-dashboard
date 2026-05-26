@@ -1,18 +1,6 @@
 import { useState } from 'react';
 import { Select, SearchIcon, CheckIcon, Icon } from '../../../../ui';
 
-const FONT     = "'Open Sans', sans-serif";
-const TEXT     = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_SUB = 'var(--osmos-fg-subtle)';
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-const AMBER    = 'var(--osmos-brand-amber)';
-const VIOLET   = '#7349a1'; // brand-secondary — no osmos token yet
-
 // ── Icons ─────────────────────────────────────────────────────────────────────
 const SparklesIcon = (props) => (
   <Icon {...props}>
@@ -75,20 +63,20 @@ function ModeCard({ isSelected, onClick, IconComp, title, description }) {
       onMouseLeave={() => setHov(false)}
       style={{
         padding: 24, borderRadius: 12, textAlign: 'left',
-        border: `2px solid ${isSelected ? ACCENT : hov ? TEXT_MID : BORDER}`,
-        background: isSelected ? ACCENT_M : hov ? BG_SUB : BG,
-        cursor: 'pointer', transition: 'all 0.15s', fontFamily: FONT,
+        border: `2px solid ${isSelected ? 'var(--osmos-brand-primary)' : hov ? 'var(--osmos-fg-muted)' : 'var(--osmos-border)'}`,
+        background: isSelected ? 'var(--osmos-brand-primary-muted)' : hov ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
+        cursor: 'pointer', transition: 'all 0.15s', fontFamily: "'Open Sans', sans-serif",
       }}
     >
       <div style={{
         width: 48, height: 48, borderRadius: 8, marginBottom: 16,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: isSelected ? ACCENT : BG_SUB,
+        background: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg-subtle)',
       }}>
-        <IconComp size={24} color={isSelected ? '#fff' : TEXT_MID} />
+        <IconComp size={24} color={isSelected ? '#fff' : 'var(--osmos-fg-muted)'} />
       </div>
-      <h4 style={{ fontWeight: 600, marginBottom: 4, color: isSelected ? ACCENT : TEXT }}>{title}</h4>
-      <p style={{ fontSize: 13, color: TEXT_MID }}>{description}</p>
+      <h4 style={{ fontWeight: 600, marginBottom: 4, color: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg)' }}>{title}</h4>
+      <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{description}</p>
     </button>
   );
 }
@@ -102,8 +90,8 @@ function ProductRow({ product, isSelected, onClick }) {
       onMouseLeave={() => setHov(false)}
       style={{
         padding: 12, borderRadius: 8, cursor: 'pointer',
-        border: `1px solid ${isSelected ? ACCENT : hov ? TEXT_MID : BORDER}`,
-        background: isSelected ? ACCENT_M : hov ? BG_SUB : BG,
+        border: `1px solid ${isSelected ? 'var(--osmos-brand-primary)' : hov ? 'var(--osmos-fg-muted)' : 'var(--osmos-border)'}`,
+        background: isSelected ? 'var(--osmos-brand-primary-muted)' : hov ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
         transition: 'all 0.15s',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}
@@ -111,18 +99,18 @@ function ProductRow({ product, isSelected, onClick }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{
           width: 20, height: 20, borderRadius: 3, flexShrink: 0,
-          border: `2px solid ${isSelected ? ACCENT : BORDER}`,
-          background: isSelected ? ACCENT : 'transparent',
+          border: `2px solid ${isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)'}`,
+          background: isSelected ? 'var(--osmos-brand-primary)' : 'transparent',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           {isSelected && <CheckIcon size={12} color="#fff" />}
         </div>
         <div>
-          <p style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>{product.name}</p>
-          <p style={{ fontSize: 12, color: TEXT_MID }}>{product.sku} · {product.category}</p>
+          <p style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>{product.name}</p>
+          <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{product.sku} · {product.category}</p>
         </div>
       </div>
-      <span style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>${product.price}</span>
+      <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>${product.price}</span>
     </div>
   );
 }
@@ -133,7 +121,7 @@ function Toggle({ value, onChange }) {
       onClick={() => onChange(!value)}
       style={{
         position: 'relative', width: 44, height: 24, borderRadius: 999,
-        background: value ? VIOLET : TEXT_SUB,
+        background: value ? '#7349a1' : 'var(--osmos-fg-subtle)',
         border: 'none', cursor: 'pointer', transition: 'background 0.15s', flexShrink: 0,
       }}
     >
@@ -185,18 +173,18 @@ export function ProductSelectionStep({ data, updateData }) {
   const bidInputStyle = {
     width: '100%', boxSizing: 'border-box',
     padding: '8px 12px 8px 32px',
-    border: `1px solid ${BORDER}`, borderRadius: 8,
-    fontSize: 13, color: TEXT, background: BG,
-    fontFamily: FONT, outline: 'none',
+    border: `1px solid ${'var(--osmos-border)'}`, borderRadius: 8,
+    fontSize: 13, color: 'var(--osmos-fg)', background: 'var(--osmos-bg)',
+    fontFamily: "'Open Sans', sans-serif", outline: 'none',
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: FONT }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: "'Open Sans', sans-serif" }}>
       <div>
-        <h2 style={{ fontSize: 24, fontWeight: 600, color: TEXT, marginBottom: 8 }}>
+        <h2 style={{ fontSize: 24, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8 }}>
           Product Selection
         </h2>
-        <p style={{ color: TEXT_MID }}>
+        <p style={{ color: 'var(--osmos-fg-muted)' }}>
           Choose which products to advertise in this ad group.
         </p>
       </div>
@@ -217,32 +205,32 @@ export function ProductSelectionStep({ data, updateData }) {
 
       {/* Smart Selection Filters */}
       {mode === 'smart' && (
-        <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
-          <h4 style={{ fontWeight: 500, color: TEXT, marginBottom: 16 }}>Filter Products</h4>
+        <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
+          <h4 style={{ fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 16 }}>Filter Products</h4>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
             <Select label="Category"    value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} options={categoryOptions} />
             <Select label="Brand"       value={brandFilter}    onChange={(e) => setBrandFilter(e.target.value)}    options={brandOptions} />
             <Select label="Price Range" value={priceFilter}    onChange={(e) => setPriceFilter(e.target.value)}    options={priceOptions} />
           </div>
-          <div style={{ marginTop: 16, padding: 12, background: BG_SUB, borderRadius: 8 }}>
-            <span style={{ fontSize: 13, color: TEXT_MID }}>Matching products: </span>
-            <span style={{ fontSize: 13, fontWeight: 600, color: TEXT }}>156 products</span>
+          <div style={{ marginTop: 16, padding: 12, background: 'var(--osmos-bg-subtle)', borderRadius: 8 }}>
+            <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>Matching products: </span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)' }}>156 products</span>
           </div>
         </div>
       )}
 
       {/* Manual Selection */}
       {mode === 'manual' && (
-        <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
+        <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
           {/* Search */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8, background: BG }}>
-            <SearchIcon size={16} color={TEXT_SUB} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, padding: '8px 12px', border: `1px solid ${'var(--osmos-border)'}`, borderRadius: 8, background: 'var(--osmos-bg)' }}>
+            <SearchIcon size={16} color={'var(--osmos-fg-subtle)'} />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search products by name or SKU..."
-              style={{ flex: 1, border: 'none', outline: 'none', fontSize: 13, color: TEXT, background: 'transparent', fontFamily: FONT }}
+              style={{ flex: 1, border: 'none', outline: 'none', fontSize: 13, color: 'var(--osmos-fg)', background: 'transparent', fontFamily: "'Open Sans', sans-serif" }}
             />
           </div>
 
@@ -261,15 +249,15 @@ export function ProductSelectionStep({ data, updateData }) {
           {selectedProducts.length > 0 && (
             <div style={{
               marginTop: 16, padding: 12,
-              background: ACCENT_M, borderRadius: 8,
+              background: 'var(--osmos-brand-primary-muted)', borderRadius: 8,
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             }}>
-              <span style={{ fontSize: 13, color: ACCENT }}>{selectedProducts.length} product(s) selected</span>
+              <span style={{ fontSize: 13, color: 'var(--osmos-brand-primary)' }}>{selectedProducts.length} product(s) selected</span>
               <button
                 onClick={() => setSelectedProducts([])}
                 onMouseEnter={() => setClearHovered(true)}
                 onMouseLeave={() => setClearHovered(false)}
-                style={{ fontSize: 13, color: ACCENT, background: 'none', border: 'none', cursor: 'pointer', textDecoration: clearHovered ? 'underline' : 'none', fontFamily: FONT }}
+                style={{ fontSize: 13, color: 'var(--osmos-brand-primary)', background: 'none', border: 'none', cursor: 'pointer', textDecoration: clearHovered ? 'underline' : 'none', fontFamily: "'Open Sans', sans-serif" }}
               >
                 Clear all
               </button>
@@ -279,27 +267,27 @@ export function ProductSelectionStep({ data, updateData }) {
       )}
 
       {/* Category Bidding */}
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <TrendingUpIcon size={20} color={VIOLET} />
+            <TrendingUpIcon size={20} color={'#7349a1'} />
             <div>
-              <h4 style={{ fontWeight: 500, color: TEXT }}>Category Bidding</h4>
-              <p style={{ fontSize: 12, color: TEXT_MID }}>Set custom bids for specific product categories</p>
+              <h4 style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>Category Bidding</h4>
+              <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>Set custom bids for specific product categories</p>
             </div>
           </div>
           <Toggle value={showCategoryBids} onChange={setShowCategoryBids} />
         </div>
         {showCategoryBids && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 16, borderTop: `1px solid ${BORDER}` }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 16, borderTop: `1px solid ${'var(--osmos-border)'}` }}>
             {categories.map((category) => (
               <div key={category} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                 <div style={{ flex: 1 }}>
-                  <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>{category}</label>
+                  <label style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>{category}</label>
                 </div>
                 <div style={{ width: 160, position: 'relative' }}>
                   <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-                    <DollarSignIcon size={14} color={TEXT_MID} />
+                    <DollarSignIcon size={14} color={'var(--osmos-fg-muted)'} />
                   </span>
                   <input
                     type="number"
@@ -316,20 +304,20 @@ export function ProductSelectionStep({ data, updateData }) {
       </div>
 
       {/* Keyword Bidding */}
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <DollarSignIcon size={20} color={VIOLET} />
+            <DollarSignIcon size={20} color={'#7349a1'} />
             <div>
-              <h4 style={{ fontWeight: 500, color: TEXT }}>Keyword Bidding</h4>
-              <p style={{ fontSize: 12, color: TEXT_MID }}>Set custom bids for specific keywords</p>
+              <h4 style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>Keyword Bidding</h4>
+              <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>Set custom bids for specific keywords</p>
             </div>
           </div>
           <Toggle value={showKeywordBids} onChange={setShowKeywordBids} />
         </div>
         {showKeywordBids && (
-          <div style={{ paddingTop: 16, borderTop: `1px solid ${BORDER}` }}>
-            <p style={{ fontSize: 13, color: TEXT_MID, marginBottom: 16 }}>
+          <div style={{ paddingTop: 16, borderTop: `1px solid ${'var(--osmos-border)'}` }}>
+            <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', marginBottom: 16 }}>
               Customize bids for keywords selected in the Targeting step. Higher bids increase visibility for those keywords.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -337,11 +325,11 @@ export function ProductSelectionStep({ data, updateData }) {
                 data.targeting.keywords.map((keyword) => (
                   <div key={keyword} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                     <div style={{ flex: 1 }}>
-                      <label style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>{keyword}</label>
+                      <label style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>{keyword}</label>
                     </div>
                     <div style={{ width: 160, position: 'relative' }}>
                       <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-                        <DollarSignIcon size={14} color={TEXT_MID} />
+                        <DollarSignIcon size={14} color={'var(--osmos-fg-muted)'} />
                       </span>
                       <input
                         type="number"
@@ -356,9 +344,9 @@ export function ProductSelectionStep({ data, updateData }) {
               ) : (
                 <div style={{
                   padding: 16, background: 'var(--osmos-brand-amber-muted)',
-                  borderRadius: 8, border: `1px solid ${AMBER}`,
+                  borderRadius: 8, border: `1px solid ${'var(--osmos-brand-amber)'}`,
                 }}>
-                  <p style={{ fontSize: 13, color: AMBER }}>
+                  <p style={{ fontSize: 13, color: 'var(--osmos-brand-amber)' }}>
                     No keywords selected yet. Add keywords in the Targeting step to enable keyword bidding.
                   </p>
                 </div>

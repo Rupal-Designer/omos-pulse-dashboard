@@ -8,21 +8,8 @@ import {
 import { AISuggestionsPanel } from './ai-suggestions-panel';
 import { SofieChatPanel } from './sofie-chat-panel';
 
-// ── Design tokens ────────────────────────────────────────────────────────────
-const FONT       = "'Open Sans', sans-serif";
-const BG         = 'var(--osmos-bg)';
-const BG_SUBTLE  = 'var(--osmos-bg-subtle)';
-const BORDER     = 'var(--osmos-border)';
-const TEXT       = 'var(--osmos-fg)';
-const TEXT_MID   = 'var(--osmos-fg-muted)';
-const ACCENT     = 'var(--osmos-brand-primary)';
-const AI_COLOR   = '#8b5cf6';   // violet — no osmos token yet
-const AI_BG      = 'var(--osmos-brand-violet-muted)';
-const ERROR      = 'var(--alert-error-primary)';   // intentional — wallet/error states
-const WARN_BG    = 'var(--osmos-brand-amber-muted)';
-
 // ── Hand-rolled icons (Lucide paths) ─────────────────────────────────────────
-const SparklesIcon = ({ size = 16, color = AI_COLOR }) => (
+const SparklesIcon = ({ size = 16, color = '#8b5cf6' }) => (
   <Icon size={size} color={color}>
     <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3z" />
     <path d="M5 3v4" /><path d="M19 17v4" />
@@ -30,7 +17,7 @@ const SparklesIcon = ({ size = 16, color = AI_COLOR }) => (
   </Icon>
 );
 
-const UsersNavIcon = ({ size = 14, color = TEXT_MID }) => (
+const UsersNavIcon = ({ size = 14, color = 'var(--osmos-fg-muted)' }) => (
   <Icon size={size} color={color}>
     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
     <circle cx="9" cy="7" r="4" />
@@ -39,7 +26,7 @@ const UsersNavIcon = ({ size = 14, color = TEXT_MID }) => (
   </Icon>
 );
 
-const BellIcon = ({ size = 14, color = TEXT_MID }) => (
+const BellIcon = ({ size = 14, color = 'var(--osmos-fg-muted)' }) => (
   <Icon size={size} color={color}>
     <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
     <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
@@ -57,10 +44,10 @@ function IconButton({ icon, onClick }) {
       style={{
         width: 32, height: 32,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        border: `1px solid ${BORDER}`, borderRadius: 8,
-        background: hover ? BG_SUBTLE : 'transparent',
-        color: TEXT_MID, cursor: 'pointer',
-        transition: 'all 0.15s', fontFamily: FONT,
+        border: `1px solid var(--osmos-border)`, borderRadius: 8,
+        background: hover ? 'var(--osmos-bg-subtle)' : 'transparent',
+        color: 'var(--osmos-fg-muted)', cursor: 'pointer',
+        transition: 'all 0.15s', fontFamily: "'Open Sans', sans-serif",
       }}
     >
       {icon}
@@ -77,13 +64,13 @@ export function Header({ activeAdType = 'Product Ads' }) {
     <>
       {/* ── Top bar ─────────────────────────────────────────────────────── */}
       <div style={{
-        borderBottom: `1px solid ${BORDER}`,
+        borderBottom: `1px solid var(--osmos-border)`,
         padding: '12px 16px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
         position: 'sticky', top: 0, zIndex: 30,
-        backgroundColor: BG,
-        fontFamily: FONT,
+        backgroundColor: 'var(--osmos-bg)',
+        fontFamily: "'Open Sans', sans-serif",
       }}>
         {/* Left — advertiser picker + breadcrumb */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -91,12 +78,12 @@ export function Header({ activeAdType = 'Product Ads' }) {
           <div style={{
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '8px 12px',
-            border: `1px solid ${BORDER}`, borderRadius: 8,
+            border: `1px solid var(--osmos-border)`, borderRadius: 8,
           }}>
-            <span style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>
+            <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>
               Whitakers (Whitakers)
             </span>
-            <ChevronDownIcon size={16} color={TEXT_MID} />
+            <ChevronDownIcon size={16} color="var(--osmos-fg-muted)" />
           </div>
 
           {/* Breadcrumb */}
@@ -104,7 +91,7 @@ export function Header({ activeAdType = 'Product Ads' }) {
             <a
               href="/home"
               style={{
-                fontSize: 12, color: TEXT_MID, lineHeight: 1.5,
+                fontSize: 12, color: 'var(--osmos-fg-muted)', lineHeight: 1.5,
                 textDecoration: 'none', letterSpacing: '0.02em',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
@@ -112,8 +99,8 @@ export function Header({ activeAdType = 'Product Ads' }) {
             >
               Home
             </a>
-            <ChevronRightIcon size={12} color={BORDER} />
-            <span style={{ fontSize: 12, fontWeight: 500, color: TEXT, letterSpacing: '0.02em', lineHeight: 1.5 }}>
+            <ChevronRightIcon size={12} color="var(--osmos-border)" />
+            <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--osmos-fg)', letterSpacing: '0.02em', lineHeight: 1.5 }}>
               {activeAdType}
             </span>
           </nav>
@@ -127,8 +114,8 @@ export function Header({ activeAdType = 'Product Ads' }) {
           {/* Theme switcher — shared molecule */}
           <ThemeDropdown />
 
-          <IconButton icon={<UsersNavIcon size={14} color={TEXT_MID} />} />
-          <IconButton icon={<BellIcon size={14} color={TEXT_MID} />} />
+          <IconButton icon={<UsersNavIcon size={14} color="var(--osmos-fg-muted)" />} />
+          <IconButton icon={<BellIcon size={14} color="var(--osmos-fg-muted)" />} />
 
           {/* Ask Sofie — persistent chat CTA */}
           <button
@@ -136,13 +123,13 @@ export function Header({ activeAdType = 'Product Ads' }) {
             style={{
               display: 'flex', alignItems: 'center', gap: 6,
               padding: '5px 10px', borderRadius: 8, cursor: 'pointer',
-              border: `1px solid ${AI_COLOR}`,
-              background: AI_BG, color: AI_COLOR,
-              fontSize: 12, fontWeight: 600, fontFamily: FONT,
+              border: `1px solid #8b5cf6`,
+              background: 'var(--osmos-brand-violet-muted)', color: '#8b5cf6',
+              fontSize: 12, fontWeight: 600, fontFamily: "'Open Sans', sans-serif",
               transition: 'all 0.15s',
             }}
           >
-            <SparklesIcon size={14} color={AI_COLOR} />
+            <SparklesIcon size={14} color="#8b5cf6" />
             Ask Sofie
           </button>
 
@@ -153,19 +140,19 @@ export function Header({ activeAdType = 'Product Ads' }) {
               position: 'relative',
               width: 32, height: 32,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              border: `1px solid ${AI_COLOR}`,
+              border: `1px solid #8b5cf6`,
               borderRadius: 8,
-              background: AI_BG, color: AI_COLOR,
+              background: 'var(--osmos-brand-violet-muted)', color: '#8b5cf6',
               cursor: 'pointer', transition: 'all 0.15s',
             }}
           >
-            <SparklesIcon size={16} color={AI_COLOR} />
+            <SparklesIcon size={16} color="#8b5cf6" />
             {/* notification dot */}
             <span style={{
               position: 'absolute', top: -4, right: -4,
               width: 10, height: 10, borderRadius: '50%',
-              backgroundColor: ERROR,
-              border: `2px solid ${BG}`,
+              backgroundColor: 'var(--alert-error-primary)',
+              border: `2px solid var(--osmos-bg)`,
             }} />
           </button>
 
@@ -173,30 +160,30 @@ export function Header({ activeAdType = 'Product Ads' }) {
           <div style={{
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '6px 12px',
-            border: `1px solid ${BORDER}`, borderRadius: 8,
+            border: `1px solid var(--osmos-border)`, borderRadius: 8,
           }}>
             <div style={{
               width: 24, height: 24, borderRadius: 4,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              backgroundColor: WARN_BG, fontSize: 14,
+              backgroundColor: 'var(--osmos-brand-amber-muted)', fontSize: 14,
             }}>
               💰
             </div>
-            <span style={{ fontSize: 13, fontWeight: 600, color: ERROR }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--alert-error-primary)' }}>
               ₹ 19,56,95,967.02
             </span>
           </div>
 
-          <IconButton icon={<RefreshIcon size={14} color={TEXT_MID} />} />
+          <IconButton icon={<RefreshIcon size={14} color="var(--osmos-fg-muted)" />} />
 
           {/* Date range */}
           <div style={{
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '8px 12px', marginLeft: 8,
-            border: `1px solid ${BORDER}`, borderRadius: 8,
+            border: `1px solid var(--osmos-border)`, borderRadius: 8,
           }}>
-            <CalendarIcon size={14} color={ERROR} />
-            <span style={{ fontSize: 13, color: TEXT }}>02 Dec 25 - 08 Dec 25</span>
+            <CalendarIcon size={14} color="var(--alert-error-primary)" />
+            <span style={{ fontSize: 13, color: 'var(--osmos-fg)' }}>02 Dec 25 - 08 Dec 25</span>
           </div>
         </div>
       </div>

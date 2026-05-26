@@ -2,17 +2,6 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "../../../ui";
 
-// ─── Design tokens ───────────────────────────────────────────────────────────
-const FONT    = "'Open Sans', sans-serif";
-const TEXT    = "var(--osmos-fg)";
-const TEXT_MID = "var(--osmos-fg-muted)";
-const TEXT_SUB = "var(--osmos-fg-subtle)";
-const BORDER  = "var(--osmos-border)";
-const BG      = "var(--osmos-bg)";
-const BG_SUB  = "var(--osmos-bg-subtle)";
-const ACCENT  = "var(--osmos-brand-primary)";
-const ACCENT_M = "var(--osmos-brand-primary-muted)";
-
 // ─── Hand-rolled icon components ─────────────────────────────────────────────
 const CloseIcon = ({ size = 20, color = "currentColor" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -110,11 +99,11 @@ function ModeCard({ active, onClick, label, description }) {
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        fontFamily: FONT,
+        fontFamily: "'Open Sans', sans-serif",
         padding: 16,
         borderRadius: 8,
-        border: active ? `2px solid ${ACCENT}` : hov ? "2px solid var(--osmos-border-muted, #dedede)" : `2px solid ${BORDER}`,
-        background: active ? ACCENT_M : BG,
+        border: active ? `2px solid var(--osmos-brand-primary)` : hov ? "2px solid var(--osmos-border-muted, #dedede)" : `2px solid var(--osmos-border)`,
+        background: active ? 'var(--osmos-brand-primary-muted)' : 'var(--osmos-bg)',
         textAlign: "left",
         cursor: "pointer",
         transition: "all 0.15s",
@@ -122,10 +111,10 @@ function ModeCard({ active, onClick, label, description }) {
       }}
     >
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-        <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: TEXT }}>{label}</span>
-        {active && <CheckIcon size={16} color={ACCENT} />}
+        <span style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>{label}</span>
+        {active && <CheckIcon size={16} color={'var(--osmos-brand-primary)'} />}
       </div>
-      <p style={{ fontFamily: FONT, fontSize: 12, color: TEXT_MID, margin: 0 }}>{description}</p>
+      <p style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 12, color: 'var(--osmos-fg-muted)', margin: 0 }}>{description}</p>
     </button>
   );
 }
@@ -139,15 +128,15 @@ function SelectableRow({ active, onClick, children }) {
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        fontFamily: FONT,
+        fontFamily: "'Open Sans', sans-serif",
         width: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         padding: "12px",
         borderRadius: 8,
-        border: active ? `1px solid ${ACCENT}` : hov ? "1px solid var(--osmos-border-muted, #dedede)" : `1px solid ${BORDER}`,
-        background: active ? ACCENT_M : BG,
+        border: active ? `1px solid var(--osmos-brand-primary)` : hov ? "1px solid var(--osmos-border-muted, #dedede)" : `1px solid var(--osmos-border)`,
+        background: active ? 'var(--osmos-brand-primary-muted)' : 'var(--osmos-bg)',
         cursor: "pointer",
         transition: "all 0.15s",
         outline: "none",
@@ -155,7 +144,7 @@ function SelectableRow({ active, onClick, children }) {
       }}
     >
       {children}
-      {active && <CheckIcon size={16} color={ACCENT} />}
+      {active && <CheckIcon size={16} color={'var(--osmos-brand-primary)'} />}
     </button>
   );
 }
@@ -268,22 +257,22 @@ export function ProductAdSettingsDrawer({ open, onClose, type, data, updateData 
 
   // ── Shared label style ──
   const labelStyle = {
-    fontFamily: FONT,
+    fontFamily: "'Open Sans', sans-serif",
     fontSize: 13,
     fontWeight: 500,
-    color: TEXT,
+    color: 'var(--osmos-fg)',
     display: "block",
   };
 
   // ── Shared input style ──
   const inputStyle = {
-    fontFamily: FONT,
+    fontFamily: "'Open Sans', sans-serif",
     width: "100%",
     padding: "8px 12px",
     fontSize: 13,
-    color: TEXT,
-    background: BG,
-    border: `1px solid ${BORDER}`,
+    color: 'var(--osmos-fg)',
+    background: 'var(--osmos-bg)',
+    border: `1px solid var(--osmos-border)`,
     borderRadius: 8,
     outline: "none",
     boxSizing: "border-box",
@@ -303,11 +292,11 @@ export function ProductAdSettingsDrawer({ open, onClose, type, data, updateData 
         width: 500,
         maxWidth: "100%",
         height: "100%",
-        background: BG,
+        background: 'var(--osmos-bg)',
         boxShadow: "0 8px 40px rgba(0,0,0,0.18)",
         display: "flex",
         flexDirection: "column",
-        fontFamily: FONT,
+        fontFamily: "'Open Sans', sans-serif",
       }}>
         {/* ── Header ── */}
         <div style={{
@@ -315,11 +304,11 @@ export function ProductAdSettingsDrawer({ open, onClose, type, data, updateData 
           alignItems: "center",
           justifyContent: "space-between",
           padding: "16px 24px",
-          borderBottom: `1px solid ${BORDER}`,
+          borderBottom: `1px solid var(--osmos-border)`,
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             {getIcon()}
-            <h2 style={{ fontFamily: FONT, fontSize: 16, fontWeight: 600, color: TEXT, margin: 0 }}>
+            <h2 style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)', margin: 0 }}>
               {getTitle()}
             </h2>
           </div>
@@ -335,14 +324,14 @@ export function ProductAdSettingsDrawer({ open, onClose, type, data, updateData 
               justifyContent: "center",
               borderRadius: 8,
               border: "none",
-              background: closeHov ? BG_SUB : "transparent",
-              color: TEXT_MID,
+              background: closeHov ? 'var(--osmos-bg-subtle)' : "transparent",
+              color: 'var(--osmos-fg-muted)',
               cursor: "pointer",
               transition: "all 0.15s",
               padding: 0,
             }}
           >
-            <CloseIcon size={20} color={TEXT_MID} />
+            <CloseIcon size={20} color={'var(--osmos-fg-muted)'} />
           </button>
         </div>
 
@@ -384,7 +373,7 @@ export function ProductAdSettingsDrawer({ open, onClose, type, data, updateData 
                       alignItems: "center",
                       pointerEvents: "none",
                     }}>
-                      <SearchIcon size={16} color={TEXT_SUB} />
+                      <SearchIcon size={16} color={'var(--osmos-fg-subtle)'} />
                     </span>
                     <input
                       placeholder="Search products or categories..."
@@ -405,8 +394,8 @@ export function ProductAdSettingsDrawer({ open, onClose, type, data, updateData 
                           onClick={() => toggleCategory(cat.id)}
                         >
                           <div>
-                            <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: TEXT, margin: 0 }}>{cat.name}</p>
-                            <p style={{ fontFamily: FONT, fontSize: 12, color: TEXT_SUB, margin: 0 }}>{cat.productCount.toLocaleString()} products</p>
+                            <p style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', margin: 0 }}>{cat.name}</p>
+                            <p style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 12, color: 'var(--osmos-fg-subtle)', margin: 0 }}>{cat.productCount.toLocaleString()} products</p>
                           </div>
                         </SelectableRow>
                       ))}
@@ -424,8 +413,8 @@ export function ProductAdSettingsDrawer({ open, onClose, type, data, updateData 
                           onClick={() => toggleProduct(product.id)}
                         >
                           <div>
-                            <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: TEXT, margin: 0 }}>{product.name}</p>
-                            <p style={{ fontFamily: FONT, fontSize: 12, color: TEXT_SUB, margin: 0 }}>{product.category} · ${product.price}</p>
+                            <p style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', margin: 0 }}>{product.name}</p>
+                            <p style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 12, color: 'var(--osmos-fg-subtle)', margin: 0 }}>{product.category} · ${product.price}</p>
                           </div>
                         </SelectableRow>
                       ))}
@@ -470,13 +459,13 @@ export function ProductAdSettingsDrawer({ open, onClose, type, data, updateData 
                           alignItems: "center",
                           justifyContent: "space-between",
                           padding: 12,
-                          background: BG_SUB,
+                          background: 'var(--osmos-bg-subtle)',
                           borderRadius: 8,
                         }}
                       >
                         <div>
-                          <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: TEXT, margin: 0 }}>{cat.name}</p>
-                          <p style={{ fontFamily: FONT, fontSize: 12, color: TEXT_SUB, margin: 0 }}>Suggested: $0.50 - $1.20</p>
+                          <p style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', margin: 0 }}>{cat.name}</p>
+                          <p style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 12, color: 'var(--osmos-fg-subtle)', margin: 0 }}>Suggested: $0.50 - $1.20</p>
                         </div>
                         <div style={{ position: "relative", width: 96 }}>
                           <span style={{
@@ -484,9 +473,9 @@ export function ProductAdSettingsDrawer({ open, onClose, type, data, updateData 
                             left: 10,
                             top: "50%",
                             transform: "translateY(-50%)",
-                            fontFamily: FONT,
+                            fontFamily: "'Open Sans', sans-serif",
                             fontSize: 13,
-                            color: TEXT_MID,
+                            color: 'var(--osmos-fg-muted)',
                             pointerEvents: "none",
                           }}>$</span>
                           <input
@@ -560,7 +549,7 @@ export function ProductAdSettingsDrawer({ open, onClose, type, data, updateData 
                       <PlusIcon size={16} color="#fff" />
                     </Button>
                   </div>
-                  <p style={{ fontFamily: FONT, fontSize: 12, color: TEXT_SUB, margin: 0 }}>
+                  <p style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 12, color: 'var(--osmos-fg-subtle)', margin: 0 }}>
                     Phrase match type. Max 50 keywords.
                   </p>
 
@@ -614,8 +603,8 @@ export function ProductAdSettingsDrawer({ open, onClose, type, data, updateData 
                         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                           <span style={{ fontSize: 24 }}>{network.logo}</span>
                           <div style={{ textAlign: "left" }}>
-                            <p style={{ fontFamily: FONT, fontSize: 13, fontWeight: 500, color: TEXT, margin: 0 }}>{network.name}</p>
-                            <p style={{ fontFamily: FONT, fontSize: 12, color: TEXT_SUB, margin: 0 }}>Reach: {network.reach} users</p>
+                            <p style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', margin: 0 }}>{network.name}</p>
+                            <p style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 12, color: 'var(--osmos-fg-subtle)', margin: 0 }}>Reach: {network.reach} users</p>
                           </div>
                         </div>
                       </SelectableRow>
@@ -634,7 +623,7 @@ export function ProductAdSettingsDrawer({ open, onClose, type, data, updateData 
           justifyContent: "flex-end",
           gap: 12,
           padding: "16px 24px",
-          borderTop: `1px solid ${BORDER}`,
+          borderTop: `1px solid var(--osmos-border)`,
         }}>
           <Button variant="outline" onClick={onClose}>
             Cancel
@@ -658,12 +647,12 @@ function KeywordChip({ label, onRemove }) {
       alignItems: "center",
       gap: 4,
       padding: "6px 12px",
-      background: BG_SUB,
-      color: TEXT,
+      background: 'var(--osmos-bg-subtle)',
+      color: 'var(--osmos-fg)',
       fontSize: 13,
-      fontFamily: FONT,
+      fontFamily: "'Open Sans', sans-serif",
       borderRadius: 999,
-      border: `1px solid ${BORDER}`,
+      border: `1px solid var(--osmos-border)`,
     }}>
       {label}
       <button
@@ -677,11 +666,11 @@ function KeywordChip({ label, onRemove }) {
           border: "none",
           padding: 0,
           cursor: "pointer",
-          color: hov ? "#d83c3b" : TEXT_MID,
+          color: hov ? "#d83c3b" : 'var(--osmos-fg-muted)',
           transition: "color 0.15s",
         }}
       >
-        <CloseIcon size={14} color={hov ? "#d83c3b" : TEXT_MID} />
+        <CloseIcon size={14} color={hov ? "#d83c3b" : 'var(--osmos-fg-muted)'} />
       </button>
     </span>
   );
