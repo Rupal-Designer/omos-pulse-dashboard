@@ -14,19 +14,6 @@ import { Button } from "../../../ui";
 import { Input, Select } from "../../../ui";
 import { Checkbox } from "../../../ui";
 
-// ─── Design tokens ───────────────────────────────────────────────────────────
-const FONT    = "'Open Sans', sans-serif";
-const TEXT    = 'var(--osmos-fg)';
-const TEXT_MID= 'var(--osmos-fg-muted)';
-const TEXT_SUB= 'var(--osmos-fg-subtle)';
-const BORDER  = 'var(--osmos-border)';
-const BG      = 'var(--osmos-bg)';
-const BG_SUB  = 'var(--osmos-bg-subtle)';
-const ACCENT  = 'var(--osmos-brand-primary)';
-const ACCENT_M= 'var(--osmos-brand-primary-muted)';
-const GREEN   = 'var(--osmos-brand-green)';
-const AMBER   = 'var(--osmos-brand-amber)';
-
 // ─── Hand-rolled icons ────────────────────────────────────────────────────────
 const DollarSignIcon = (props) => (
   <Icon {...props}>
@@ -323,12 +310,12 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
         style={{
           padding: 20,
           borderRadius: 12,
-          border: isSelected ? `2px solid ${ACCENT}` : `2px solid ${hov ? '#d1d5db' : BORDER}`,
-          background: isSelected ? ACCENT_M : BG,
+          border: isSelected ? `2px solid var(--osmos-brand-primary)` : `2px solid ${hov ? '#d1d5db' : 'var(--osmos-border)'}`,
+          background: isSelected ? 'var(--osmos-brand-primary-muted)' : 'var(--osmos-bg)',
           textAlign: 'left',
           cursor: 'pointer',
           transition: 'all 0.15s',
-          fontFamily: FONT,
+          fontFamily: "'Open Sans', sans-serif",
           flex: 1,
           minWidth: 0,
         }}
@@ -337,8 +324,8 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
           <div style={{
             width: 40, height: 40, borderRadius: 8,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: isSelected ? ACCENT : BG_SUB,
-            color: isSelected ? '#fff' : TEXT_MID,
+            background: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg-subtle)',
+            color: isSelected ? '#fff' : 'var(--osmos-fg-muted)',
             flexShrink: 0,
           }}>
             <CardIcon size={20} />
@@ -346,15 +333,15 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
           {badge && (
             <span style={{
               padding: '2px 8px', fontSize: 11, fontWeight: 600, borderRadius: 4,
-              background: isSelected ? ACCENT : BORDER,
-              color: isSelected ? '#fff' : TEXT_MID,
+              background: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)',
+              color: isSelected ? '#fff' : 'var(--osmos-fg-muted)',
             }}>
               {badge}
             </span>
           )}
         </div>
-        <div style={{ fontWeight: 600, color: TEXT, marginBottom: 4, fontSize: 14 }}>{title}</div>
-        <div style={{ fontSize: 13, color: TEXT_MID, lineHeight: 1.5 }}>{description}</div>
+        <div style={{ fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 4, fontSize: 14 }}>{title}</div>
+        <div style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', lineHeight: 1.5 }}>{description}</div>
       </button>
     );
   }
@@ -366,18 +353,18 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-              <h2 style={{ fontSize: 22, fontWeight: 600, color: TEXT, marginBottom: 8, fontFamily: FONT }}>
+              <h2 style={{ fontSize: 22, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>
                 Ad Group Basics
               </h2>
-              <p style={{ fontSize: 14, color: TEXT_MID, fontFamily: FONT }}>
+              <p style={{ fontSize: 14, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
                 Name your ad group and select the campaign type.
               </p>
             </div>
 
-            <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24, display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid var(--osmos-border)`, padding: 24, display: 'flex', flexDirection: 'column', gap: 24 }}>
               {/* Ad Group Name */}
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: TEXT, marginBottom: 8, fontFamily: FONT }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>
                   Ad Group Name <span style={{ color: '#ef4444' }}>*</span>
                 </label>
                 <Input
@@ -385,14 +372,14 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
                   onChange={(e) => updateAdGroupData({ name: e.target.value })}
                   placeholder="e.g., Electronics - High Intent, Summer Sale Products"
                 />
-                <p style={{ fontSize: 12, color: TEXT_SUB, marginTop: 6, fontFamily: FONT }}>
+                <p style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', marginTop: 6, fontFamily: "'Open Sans', sans-serif" }}>
                   Use a name that describes the products or targeting strategy
                 </p>
               </div>
 
               {/* Campaign Type */}
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: TEXT, marginBottom: 12, fontFamily: FONT }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 12, fontFamily: "'Open Sans', sans-serif" }}>
                   Campaign Type <span style={{ color: '#ef4444' }}>*</span>
                 </label>
                 <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
@@ -427,7 +414,7 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
             title: 'Cost Per Click (CPC)',
             desc: 'Pay only when someone clicks on your ad. Best for driving traffic and conversions.',
             badge: null,
-            pill: { label: 'Recommended for Product Ads', color: GREEN, bg: 'rgba(22,163,74,0.08)', check: true },
+            pill: { label: 'Recommended for Product Ads', color: 'var(--osmos-brand-green)', bg: 'rgba(22,163,74,0.08)', check: true },
           },
           {
             model: 'cpm',
@@ -435,14 +422,14 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
             title: 'Cost Per Mille (CPM)',
             desc: 'Pay for every 1,000 impressions. Best for brand awareness and reach campaigns.',
             badge: null,
-            pill: { label: 'Best for Brand Awareness', color: TEXT_MID, bg: BG_SUB, check: false },
+            pill: { label: 'Best for Brand Awareness', color: 'var(--osmos-fg-muted)', bg: 'var(--osmos-bg-subtle)', check: false },
           },
         ];
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-              <h2 style={{ fontSize: 22, fontWeight: 600, color: TEXT, marginBottom: 8, fontFamily: FONT }}>Pricing Model</h2>
-              <p style={{ fontSize: 14, color: TEXT_MID, fontFamily: FONT }}>Choose how you want to pay for your ads.</p>
+              <h2 style={{ fontSize: 22, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>Pricing Model</h2>
+              <p style={{ fontSize: 14, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>Choose how you want to pay for your ads.</p>
             </div>
 
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
@@ -464,11 +451,11 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
             </div>
 
             {adGroupData.pricingModel && (
-              <div style={{ background: BG_SUB, borderRadius: 12, padding: 16, border: `1px solid ${BORDER}` }}>
-                <h4 style={{ fontWeight: 500, color: TEXT, marginBottom: 8, fontFamily: FONT, fontSize: 14 }}>
+              <div style={{ background: 'var(--osmos-bg-subtle)', borderRadius: 12, padding: 16, border: `1px solid var(--osmos-border)` }}>
+                <h4 style={{ fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 8, fontFamily: "'Open Sans', sans-serif", fontSize: 14 }}>
                   {adGroupData.pricingModel === 'cpc' ? 'CPC Pricing Details' : 'CPM Pricing Details'}
                 </h4>
-                <p style={{ fontSize: 13, color: TEXT_MID, fontFamily: FONT, lineHeight: 1.5 }}>
+                <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif", lineHeight: 1.5 }}>
                   {adGroupData.pricingModel === 'cpc'
                     ? "You'll set a maximum bid per click in the bidding step. Average CPC for product ads ranges from $0.50 to $2.00 depending on category competition."
                     : "You'll set a maximum bid per 1,000 impressions in the bidding step. Average CPM ranges from $5.00 to $15.00 depending on targeting and placement."}
@@ -483,13 +470,13 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-              <h2 style={{ fontSize: 22, fontWeight: 600, color: TEXT, marginBottom: 8, fontFamily: FONT }}>Product Selection</h2>
-              <p style={{ fontSize: 14, color: TEXT_MID, fontFamily: FONT }}>Choose which products to include in this ad group.</p>
+              <h2 style={{ fontSize: 22, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>Product Selection</h2>
+              <p style={{ fontSize: 14, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>Choose which products to include in this ad group.</p>
             </div>
 
             {/* Selection Method */}
-            <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: TEXT, marginBottom: 8, fontFamily: FONT }}>
+            <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid var(--osmos-border)`, padding: 24 }}>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>
                 Selection Method
               </label>
               <Select
@@ -506,12 +493,12 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
 
             {/* Filter-based Selection */}
             {adGroupData.productSelectionMethod === 'filter' && (
-              <div style={{ background: BG_SUB, borderRadius: 12, padding: 24, border: `1px solid ${BORDER}` }}>
+              <div style={{ background: 'var(--osmos-bg-subtle)', borderRadius: 12, padding: 24, border: `1px solid var(--osmos-border)` }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                  <p style={{ fontSize: 13, color: TEXT_MID, fontFamily: FONT }}>
+                  <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
                     Products will be automatically added to campaign matching filter condition.
                   </p>
-                  <a href="#" style={{ fontSize: 13, color: ACCENT, fontFamily: FONT }}>
+                  <a href="#" style={{ fontSize: 13, color: 'var(--osmos-brand-primary)', fontFamily: "'Open Sans', sans-serif" }}>
                     Guide to select a product by filters
                   </a>
                 </div>
@@ -537,11 +524,11 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
                     display: 'flex',
                     alignItems: 'center',
                     gap: 8,
-                    color: addFilterHover ? ACCENT : TEXT_MID,
+                    color: addFilterHover ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)',
                     background: 'none',
                     border: 'none',
                     cursor: 'pointer',
-                    fontFamily: FONT,
+                    fontFamily: "'Open Sans', sans-serif",
                     fontSize: 13,
                     transition: 'color 0.15s',
                     padding: 0,
@@ -549,7 +536,7 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
                 >
                   <div style={{
                     width: 24, height: 24, borderRadius: 999,
-                    border: `1px solid ${BORDER}`,
+                    border: `1px solid var(--osmos-border)`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
                     <PlusIcon size={14} />
@@ -561,10 +548,10 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
 
             {/* Include individual products */}
             {adGroupData.productSelectionMethod === 'include' && (
-              <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
+              <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid var(--osmos-border)`, padding: 24 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
                   <div style={{ position: 'relative', flex: 1 }}>
-                    <div style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: TEXT_SUB, display: 'flex' }}>
+                    <div style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--osmos-fg-subtle)', display: 'flex' }}>
                       <SearchIcon size={16} />
                     </div>
                     <input
@@ -574,13 +561,13 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
                       style={{
                         width: '100%', boxSizing: 'border-box',
                         padding: '8px 10px 8px 32px',
-                        border: `1px solid ${BORDER}`, borderRadius: 6,
-                        fontSize: 13, fontFamily: FONT, color: TEXT,
-                        background: BG, outline: 'none',
+                        border: `1px solid var(--osmos-border)`, borderRadius: 6,
+                        fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)',
+                        background: 'var(--osmos-bg)', outline: 'none',
                       }}
                     />
                   </div>
-                  <span style={{ fontSize: 13, color: TEXT_MID, whiteSpace: 'nowrap', fontFamily: FONT }}>
+                  <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', whiteSpace: 'nowrap', fontFamily: "'Open Sans', sans-serif" }}>
                     {adGroupData.includedProducts?.length || 0} selected
                   </span>
                 </div>
@@ -598,8 +585,8 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
                         product={product}
                         isSelected={adGroupData.includedProducts?.includes(product.id)}
                         onToggle={() => toggleIncludedProduct(product.id)}
-                        selectionColor={ACCENT}
-                        selectionBg={ACCENT_M}
+                        selectionColor={'var(--osmos-brand-primary)'}
+                        selectionBg={'var(--osmos-brand-primary-muted)'}
                       />
                     ))}
                 </div>
@@ -608,22 +595,22 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
 
             {/* Exclude individual products */}
             {adGroupData.productSelectionMethod === 'exclude' && (
-              <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
+              <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid var(--osmos-border)`, padding: 24 }}>
                 <div style={{
                   background: 'rgba(245,158,11,0.08)',
-                  border: `1px solid ${AMBER}`,
+                  border: `1px solid var(--osmos-brand-amber)`,
                   borderRadius: 8,
                   padding: 12,
                   marginBottom: 16,
                 }}>
-                  <p style={{ fontSize: 13, color: '#92400e', fontFamily: FONT }}>
+                  <p style={{ fontSize: 13, color: '#92400e', fontFamily: "'Open Sans', sans-serif" }}>
                     <strong>Note:</strong> All products will be included except those you select below.
                   </p>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
                   <div style={{ position: 'relative', flex: 1 }}>
-                    <div style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: TEXT_SUB, display: 'flex' }}>
+                    <div style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--osmos-fg-subtle)', display: 'flex' }}>
                       <SearchIcon size={16} />
                     </div>
                     <input
@@ -633,13 +620,13 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
                       style={{
                         width: '100%', boxSizing: 'border-box',
                         padding: '8px 10px 8px 32px',
-                        border: `1px solid ${BORDER}`, borderRadius: 6,
-                        fontSize: 13, fontFamily: FONT, color: TEXT,
-                        background: BG, outline: 'none',
+                        border: `1px solid var(--osmos-border)`, borderRadius: 6,
+                        fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)',
+                        background: 'var(--osmos-bg)', outline: 'none',
                       }}
                     />
                   </div>
-                  <span style={{ fontSize: 13, color: TEXT_MID, whiteSpace: 'nowrap', fontFamily: FONT }}>
+                  <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', whiteSpace: 'nowrap', fontFamily: "'Open Sans', sans-serif" }}>
                     {adGroupData.excludedProducts?.length || 0} excluded
                   </span>
                 </div>
@@ -688,8 +675,8 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-              <h2 style={{ fontSize: 22, fontWeight: 600, color: TEXT, marginBottom: 8, fontFamily: FONT }}>Bid Settings</h2>
-              <p style={{ fontSize: 14, color: TEXT_MID, fontFamily: FONT }}>
+              <h2 style={{ fontSize: 22, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>Bid Settings</h2>
+              <p style={{ fontSize: 14, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
                 Configure how you want to bid on ad placements
                 {adGroupData.pricingModel === 'cpc' ? ' (Cost Per Click)' : ' (Cost Per Mille)'}.
               </p>
@@ -710,8 +697,8 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
             </div>
 
             {adGroupData.bidSettings?.mode === 'manual' && (
-              <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
-                <h3 style={{ fontWeight: 500, color: TEXT, marginBottom: 16, fontFamily: FONT, fontSize: 14 }}>
+              <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid var(--osmos-border)`, padding: 24 }}>
+                <h3 style={{ fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 16, fontFamily: "'Open Sans', sans-serif", fontSize: 14 }}>
                   Category Bids ({adGroupData.pricingModel === 'cpc' ? 'per click' : 'per 1,000 impressions'})
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -720,23 +707,23 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
                     return (
                       <div key={category.id} style={{
                         display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16,
-                        padding: 12, borderRadius: 8, border: `1px solid ${BORDER}`,
+                        padding: 12, borderRadius: 8, border: `1px solid var(--osmos-border)`,
                       }}>
                         <div>
-                          <p style={{ fontWeight: 500, color: TEXT, fontSize: 13, fontFamily: FONT, marginBottom: 2 }}>{category.name}</p>
-                          <p style={{ fontSize: 12, color: TEXT_MID, fontFamily: FONT }}>{category.productCount} products</p>
+                          <p style={{ fontWeight: 500, color: 'var(--osmos-fg)', fontSize: 13, fontFamily: "'Open Sans', sans-serif", marginBottom: 2 }}>{category.name}</p>
+                          <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>{category.productCount} products</p>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span style={{ color: TEXT_MID, fontFamily: FONT }}>$</span>
+                          <span style={{ color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>$</span>
                           <input
                             type="number"
                             value={bid}
                             onChange={(e) => updateCategoryBid(category.id, e.target.value)}
                             placeholder={adGroupData.pricingModel === 'cpc' ? '0.50' : '5.00'}
                             style={{
-                              width: 80, padding: '7px 8px', border: `1px solid ${BORDER}`,
-                              borderRadius: 6, fontSize: 13, fontFamily: FONT, color: TEXT,
-                              background: BG, outline: 'none', textAlign: 'right',
+                              width: 80, padding: '7px 8px', border: `1px solid var(--osmos-border)`,
+                              borderRadius: 6, fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)',
+                              background: 'var(--osmos-bg)', outline: 'none', textAlign: 'right',
                             }}
                           />
                         </div>
@@ -772,8 +759,8 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-              <h2 style={{ fontSize: 22, fontWeight: 600, color: TEXT, marginBottom: 8, fontFamily: FONT }}>Keyword Targeting</h2>
-              <p style={{ fontSize: 14, color: TEXT_MID, fontFamily: FONT }}>Define which keywords should trigger your ads.</p>
+              <h2 style={{ fontSize: 22, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>Keyword Targeting</h2>
+              <p style={{ fontSize: 14, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>Define which keywords should trigger your ads.</p>
             </div>
 
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
@@ -791,9 +778,9 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
             </div>
 
             {adGroupData.keywordSettings?.mode === 'manual' && (
-              <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
+              <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid var(--osmos-border)`, padding: 24 }}>
                 <div style={{ marginBottom: 16 }}>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: TEXT, marginBottom: 8, fontFamily: FONT }}>
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>
                     Enter Keywords
                   </label>
                   <div style={{ display: 'flex', gap: 8 }}>
@@ -803,15 +790,15 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
                       placeholder="Enter keywords separated by commas or new lines..."
                       style={{
                         flex: 1, minHeight: 80, padding: '8px 12px',
-                        border: `1px solid ${BORDER}`, borderRadius: 8,
-                        fontSize: 13, fontFamily: FONT, color: TEXT,
-                        background: BG, outline: 'none', resize: 'none',
+                        border: `1px solid var(--osmos-border)`, borderRadius: 8,
+                        fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)',
+                        background: 'var(--osmos-bg)', outline: 'none', resize: 'none',
                         lineHeight: 1.5,
                       }}
                     />
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 }}>
-                    <p style={{ fontSize: 12, color: TEXT_SUB, fontFamily: FONT }}>Max 50 keywords allowed</p>
+                    <p style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>Max 50 keywords allowed</p>
                     <Button
                       variant="primary"
                       size="sm"
@@ -826,7 +813,7 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
 
                 {(adGroupData.keywordSettings?.keywords?.length || 0) > 0 && (
                   <div>
-                    <p style={{ fontSize: 13, fontWeight: 500, color: TEXT, marginBottom: 8, fontFamily: FONT }}>
+                    <p style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>
                       Added Keywords ({adGroupData.keywordSettings?.keywords?.length})
                     </p>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -864,8 +851,8 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-              <h2 style={{ fontSize: 22, fontWeight: 600, color: TEXT, marginBottom: 8, fontFamily: FONT }}>Network Targeting</h2>
-              <p style={{ fontSize: 14, color: TEXT_MID, fontFamily: FONT }}>Choose which retail networks to advertise on.</p>
+              <h2 style={{ fontSize: 22, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>Network Targeting</h2>
+              <p style={{ fontSize: 14, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>Choose which retail networks to advertise on.</p>
             </div>
 
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
@@ -883,10 +870,10 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
             </div>
 
             {adGroupData.networkSettings?.mode === 'manual' && (
-              <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
+              <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid var(--osmos-border)`, padding: 24 }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                  <h3 style={{ fontWeight: 500, color: TEXT, fontFamily: FONT, fontSize: 14 }}>Select Networks</h3>
-                  <span style={{ fontSize: 13, color: TEXT_MID, fontFamily: FONT }}>
+                  <h3 style={{ fontWeight: 500, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif", fontSize: 14 }}>Select Networks</h3>
+                  <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
                     {adGroupData.networkSettings?.networks?.length || 0} selected
                   </span>
                 </div>
@@ -929,18 +916,18 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
         position: 'fixed', top: 0, bottom: 0, right: 0,
         width: 'calc(100% - 280px)', maxWidth: 1400,
         zIndex: 111,
-        background: BG_SUB,
+        background: 'var(--osmos-bg-subtle)',
         display: 'flex', flexDirection: 'column',
         boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
-        fontFamily: FONT,
+        fontFamily: "'Open Sans', sans-serif",
       }}>
 
         {/* Header */}
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '16px 24px',
-          borderBottom: `1px solid ${BORDER}`,
-          background: BG,
+          borderBottom: `1px solid var(--osmos-border)`,
+          background: 'var(--osmos-bg)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <button
@@ -949,18 +936,18 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
               onMouseLeave={() => setHoverBack(false)}
               style={{
                 padding: 8, borderRadius: 8, border: 'none',
-                background: hoverBack ? BG_SUB : 'transparent',
+                background: hoverBack ? 'var(--osmos-bg-subtle)' : 'transparent',
                 cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'background 0.15s',
               }}
             >
-              <ChevronLeftIcon size={20} style={{ color: TEXT_MID }} />
+              <ChevronLeftIcon size={20} style={{ color: 'var(--osmos-fg-muted)' }} />
             </button>
             <div>
-              <h2 style={{ fontSize: 16, fontWeight: 600, color: TEXT, fontFamily: FONT, margin: 0 }}>
+              <h2 style={{ fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif", margin: 0 }}>
                 Create Product Ad Group
               </h2>
-              <p style={{ fontSize: 13, color: TEXT_MID, fontFamily: FONT, marginTop: 2 }}>
+              <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif", marginTop: 2 }}>
                 Step {currentStep} of {productAdGroupSteps.length} &bull; Return to Campaign
               </p>
             </div>
@@ -971,19 +958,19 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
             onMouseLeave={() => setHoverClose(false)}
             style={{
               padding: 8, borderRadius: 8, border: 'none',
-              background: hoverClose ? BG_SUB : 'transparent',
+              background: hoverClose ? 'var(--osmos-bg-subtle)' : 'transparent',
               cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
               transition: 'background 0.15s',
             }}
           >
-            <CloseIcon size={20} style={{ color: TEXT_MID }} />
+            <CloseIcon size={20} style={{ color: 'var(--osmos-fg-muted)' }} />
           </button>
         </div>
 
         {/* Body */}
         <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
           {/* Steps Sidebar */}
-          <div style={{ width: 256, background: BG, borderRight: `1px solid ${BORDER}`, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ width: 256, background: 'var(--osmos-bg)', borderRight: `1px solid var(--osmos-border)`, display: 'flex', flexDirection: 'column' }}>
             <div style={{ flex: 1, padding: 16, display: 'flex', flexDirection: 'column', gap: 4, overflowY: 'auto' }}>
               {productAdGroupSteps.map((step) => {
                 const isCompleted = step.id < currentStep;
@@ -1003,8 +990,8 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
             </div>
 
             {/* Ad Group Summary */}
-            <div style={{ borderTop: `1px solid ${BORDER}`, padding: 16, background: BG_SUB }}>
-              <h4 style={{ fontSize: 11, fontWeight: 600, color: TEXT_SUB, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12, fontFamily: FONT }}>
+            <div style={{ borderTop: `1px solid var(--osmos-border)`, padding: 16, background: 'var(--osmos-bg-subtle)' }}>
+              <h4 style={{ fontSize: 11, fontWeight: 600, color: 'var(--osmos-fg-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12, fontFamily: "'Open Sans', sans-serif" }}>
                 Ad Group Summary
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -1015,10 +1002,10 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
                   { label: 'Products', value: adGroupData.productSelectionMethod || '-' },
                   { label: 'Bidding',  value: adGroupData.bidSettings?.mode || 'Auto' },
                 ].map(({ label, value }) => (
-                  <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, fontFamily: FONT }}>
-                    <span style={{ color: TEXT_MID }}>{label}</span>
+                  <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, fontFamily: "'Open Sans', sans-serif" }}>
+                    <span style={{ color: 'var(--osmos-fg-muted)' }}>{label}</span>
                     <span style={{
-                      fontWeight: 500, color: TEXT,
+                      fontWeight: 500, color: 'var(--osmos-fg)',
                       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                       maxWidth: 120, textTransform: 'capitalize',
                     }}>{value}</span>
@@ -1036,8 +1023,8 @@ export function ProductAdGroupWizard({ open, onClose, onSave, editingAdGroup }) 
 
         {/* Footer */}
         <div style={{
-          borderTop: `1px solid ${BORDER}`,
-          background: BG,
+          borderTop: `1px solid var(--osmos-border)`,
+          background: 'var(--osmos-bg)',
           padding: '16px 24px',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12 }}>
@@ -1073,30 +1060,30 @@ function ModeCard({ isSelected, onClick, icon: MIcon, badge, title, description 
       onMouseLeave={() => setHov(false)}
       style={{
         padding: 20, borderRadius: 12, textAlign: 'left', cursor: 'pointer',
-        border: isSelected ? `2px solid ${ACCENT}` : `2px solid ${hov ? '#d1d5db' : BORDER}`,
-        background: isSelected ? ACCENT_M : BG,
-        transition: 'all 0.15s', fontFamily: FONT, flex: 1, minWidth: 0,
+        border: isSelected ? `2px solid var(--osmos-brand-primary)` : `2px solid ${hov ? '#d1d5db' : 'var(--osmos-border)'}`,
+        background: isSelected ? 'var(--osmos-brand-primary-muted)' : 'var(--osmos-bg)',
+        transition: 'all 0.15s', fontFamily: "'Open Sans', sans-serif", flex: 1, minWidth: 0,
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
         <div style={{
           width: 40, height: 40, borderRadius: 8, flexShrink: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: isSelected ? ACCENT : BG_SUB,
-          color: isSelected ? '#fff' : TEXT_MID,
+          background: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg-subtle)',
+          color: isSelected ? '#fff' : 'var(--osmos-fg-muted)',
         }}>
           <MIcon size={20} />
         </div>
         {badge && (
           <span style={{
             padding: '2px 8px', fontSize: 11, fontWeight: 600, borderRadius: 4,
-            background: isSelected ? ACCENT : BORDER,
-            color: isSelected ? '#fff' : TEXT_MID,
+            background: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)',
+            color: isSelected ? '#fff' : 'var(--osmos-fg-muted)',
           }}>{badge}</span>
         )}
       </div>
-      <div style={{ fontWeight: 600, color: TEXT, marginBottom: 4, fontSize: 14 }}>{title}</div>
-      <div style={{ fontSize: 13, color: TEXT_MID, lineHeight: 1.5 }}>{description}</div>
+      <div style={{ fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 4, fontSize: 14 }}>{title}</div>
+      <div style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', lineHeight: 1.5 }}>{description}</div>
     </button>
   );
 }
@@ -1110,23 +1097,23 @@ function PricingCard({ isSelected, onClick, icon: PIcon, title, description, pil
       onMouseLeave={() => setHov(false)}
       style={{
         padding: 24, borderRadius: 12, textAlign: 'left', cursor: 'pointer',
-        border: isSelected ? `2px solid ${ACCENT}` : `2px solid ${hov ? '#d1d5db' : BORDER}`,
-        background: isSelected ? ACCENT_M : BG,
-        transition: 'all 0.15s', fontFamily: FONT, flex: 1, minWidth: 0,
+        border: isSelected ? `2px solid var(--osmos-brand-primary)` : `2px solid ${hov ? '#d1d5db' : 'var(--osmos-border)'}`,
+        background: isSelected ? 'var(--osmos-brand-primary-muted)' : 'var(--osmos-bg)',
+        transition: 'all 0.15s', fontFamily: "'Open Sans', sans-serif", flex: 1, minWidth: 0,
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
         <div style={{
           width: 48, height: 48, borderRadius: 12, flexShrink: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: isSelected ? ACCENT : BG_SUB,
-          color: isSelected ? '#fff' : TEXT_MID,
+          background: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg-subtle)',
+          color: isSelected ? '#fff' : 'var(--osmos-fg-muted)',
         }}>
           <PIcon size={24} />
         </div>
       </div>
-      <div style={{ fontWeight: 600, color: TEXT, marginBottom: 8, fontSize: 16 }}>{title}</div>
-      <div style={{ fontSize: 13, color: TEXT_MID, marginBottom: 16, lineHeight: 1.5 }}>{description}</div>
+      <div style={{ fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8, fontSize: 16 }}>{title}</div>
+      <div style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', marginBottom: 16, lineHeight: 1.5 }}>{description}</div>
       <div style={{
         display: 'inline-flex', alignItems: 'center', gap: 6,
         fontSize: 12, color: pill.color,
@@ -1176,7 +1163,7 @@ function FilterRow({ filter, onUpdate, onRemove, canRemove }) {
           onMouseLeave={() => setTrashHov(false)}
           style={{
             padding: 8, border: 'none', background: 'none', cursor: 'pointer',
-            color: trashHov ? '#ef4444' : TEXT_SUB,
+            color: trashHov ? '#ef4444' : 'var(--osmos-fg-subtle)',
             transition: 'color 0.15s', display: 'flex', alignItems: 'center',
           }}
         >
@@ -1196,27 +1183,27 @@ function ProductRow({ product, isSelected, onToggle, selectionColor, selectionBg
       style={{
         display: 'flex', alignItems: 'center', gap: 16, padding: 12,
         borderRadius: 8, cursor: 'pointer', transition: 'all 0.15s',
-        border: isSelected ? `1px solid ${selectionColor}` : `1px solid ${hov ? '#d1d5db' : BORDER}`,
-        background: isSelected ? selectionBg : BG,
-        fontFamily: FONT,
+        border: isSelected ? `1px solid ${selectionColor}` : `1px solid ${hov ? '#d1d5db' : 'var(--osmos-border)'}`,
+        background: isSelected ? selectionBg : 'var(--osmos-bg)',
+        fontFamily: "'Open Sans', sans-serif",
       }}
     >
       <Checkbox checked={isSelected} onChange={onToggle} />
       <div style={{
-        width: 40, height: 40, background: BG_SUB, borderRadius: 8,
+        width: 40, height: 40, background: 'var(--osmos-bg-subtle)', borderRadius: 8,
         display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
       }}>
-        <PackageIcon size={16} style={{ color: TEXT_SUB }} />
+        <PackageIcon size={16} style={{ color: 'var(--osmos-fg-subtle)' }} />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontWeight: 500, color: TEXT, fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', margin: 0 }}>
+        <p style={{ fontWeight: 500, color: 'var(--osmos-fg)', fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', margin: 0 }}>
           {product.name}
         </p>
-        <p style={{ fontSize: 12, color: TEXT_MID, margin: 0, marginTop: 2 }}>
+        <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', margin: 0, marginTop: 2 }}>
           {product.sku} &bull; {product.category} &bull; {product.brand}
         </p>
       </div>
-      <span style={{ fontSize: 13, fontWeight: 500, color: TEXT, flexShrink: 0 }}>${product.price}</span>
+      <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', flexShrink: 0 }}>${product.price}</span>
     </label>
   );
 }
@@ -1230,16 +1217,16 @@ function NetworkRow({ network, isSelected, onToggle }) {
       style={{
         display: 'flex', alignItems: 'center', gap: 12, padding: 16,
         borderRadius: 8, cursor: 'pointer', transition: 'all 0.15s',
-        border: isSelected ? `1px solid ${ACCENT}` : `1px solid ${hov ? '#d1d5db' : BORDER}`,
-        background: isSelected ? ACCENT_M : BG,
-        fontFamily: FONT,
+        border: isSelected ? `1px solid var(--osmos-brand-primary)` : `1px solid ${hov ? '#d1d5db' : 'var(--osmos-border)'}`,
+        background: isSelected ? 'var(--osmos-brand-primary-muted)' : 'var(--osmos-bg)',
+        fontFamily: "'Open Sans', sans-serif",
       }}
     >
       <Checkbox checked={isSelected} onChange={onToggle} />
       <img src={network.logo || '/placeholder.svg'} alt={network.name} style={{ width: 32, height: 32, borderRadius: 8, objectFit: 'cover' }} />
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontWeight: 500, color: TEXT, fontSize: 13, margin: 0 }}>{network.name}</p>
-        <p style={{ fontSize: 12, color: TEXT_MID, margin: 0, marginTop: 2 }}>{network.reach}</p>
+        <p style={{ fontWeight: 500, color: 'var(--osmos-fg)', fontSize: 13, margin: 0 }}>{network.name}</p>
+        <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', margin: 0, marginTop: 2 }}>{network.reach}</p>
       </div>
     </label>
   );
@@ -1256,19 +1243,19 @@ function StepItem({ step, isCompleted, isCurrent, isDisabled, onClick }) {
       style={{
         width: '100%', display: 'flex', alignItems: 'center', gap: 12,
         padding: '12px 12px', borderRadius: 8, textAlign: 'left',
-        border: isCurrent ? `1px solid ${ACCENT}` : '1px solid transparent',
-        background: isCurrent ? ACCENT_M : hov && !isDisabled ? BG_SUB : 'transparent',
+        border: isCurrent ? `1px solid var(--osmos-brand-primary)` : '1px solid transparent',
+        background: isCurrent ? 'var(--osmos-brand-primary-muted)' : hov && !isDisabled ? 'var(--osmos-bg-subtle)' : 'transparent',
         cursor: isDisabled ? 'not-allowed' : 'pointer',
         opacity: isDisabled ? 0.5 : 1,
-        transition: 'all 0.15s', fontFamily: FONT,
+        transition: 'all 0.15s', fontFamily: "'Open Sans', sans-serif",
       }}
     >
       <div style={{
         width: 32, height: 32, borderRadius: 999, flexShrink: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 13, fontWeight: 500,
-        background: isCompleted ? GREEN : isCurrent ? ACCENT : BG_SUB,
-        color: (isCompleted || isCurrent) ? '#fff' : TEXT_MID,
+        background: isCompleted ? 'var(--osmos-brand-green)' : isCurrent ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg-subtle)',
+        color: (isCompleted || isCurrent) ? '#fff' : 'var(--osmos-fg-muted)',
         transition: 'all 0.15s',
       }}>
         {isCompleted ? <CheckIcon size={16} /> : step.id}
@@ -1276,12 +1263,12 @@ function StepItem({ step, isCompleted, isCurrent, isDisabled, onClick }) {
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
           fontSize: 13, fontWeight: 500,
-          color: isCurrent ? ACCENT : isCompleted ? TEXT : TEXT_SUB,
+          color: isCurrent ? 'var(--osmos-brand-primary)' : isCompleted ? 'var(--osmos-fg)' : 'var(--osmos-fg-subtle)',
           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
         }}>
           {step.label}
         </div>
-        <div style={{ fontSize: 12, color: TEXT_SUB, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        <div style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {step.description}
         </div>
       </div>
@@ -1294,8 +1281,8 @@ function KeywordTag({ keyword, onRemove }) {
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 6,
-      padding: '6px 12px', background: BG_SUB, borderRadius: 999,
-      fontSize: 13, fontFamily: FONT, color: TEXT,
+      padding: '6px 12px', background: 'var(--osmos-bg-subtle)', borderRadius: 999,
+      fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)',
     }}>
       {keyword}
       <button
@@ -1305,7 +1292,7 @@ function KeywordTag({ keyword, onRemove }) {
         style={{
           background: 'none', border: 'none', cursor: 'pointer',
           display: 'flex', alignItems: 'center', padding: 0,
-          color: hov ? '#ef4444' : TEXT_SUB,
+          color: hov ? '#ef4444' : 'var(--osmos-fg-subtle)',
           transition: 'color 0.15s',
         }}
       >

@@ -8,19 +8,9 @@ import { CampaignWizard }         from './campaign-wizard/campaign-wizard';
 import { InstoreCampaignWizard }  from './campaign-wizard/instore-campaign-wizard';
 import { DataTable, ColHeader, useOsmosTable } from '../../shared/components/data-table';
 
-// ── Design tokens ────────────────────────────────────────────────────────────
-const FONT     = "'Open Sans', sans-serif";
-const BG       = 'var(--osmos-bg)';
-const BG_SUBTLE = 'var(--osmos-bg-subtle)';
-const BORDER   = 'var(--osmos-border)';
-const TEXT     = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_SUB = 'var(--osmos-fg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
 
 // ── Hand-rolled icons ─────────────────────────────────────────────────────────
-const BarChartIcon = ({ size = 14, color = TEXT_MID }) => (
+const BarChartIcon = ({ size = 14, color = 'var(--osmos-fg-muted)' }) => (
   <Icon size={size} color={color}>
     <line x1="18" x2="18" y1="20" y2="10" />
     <line x1="12" x2="12" y1="20" y2="4" />
@@ -28,7 +18,7 @@ const BarChartIcon = ({ size = 14, color = TEXT_MID }) => (
   </Icon>
 );
 
-const MoreVerticalIcon = ({ size = 14, color = TEXT_MID }) => (
+const MoreVerticalIcon = ({ size = 14, color = 'var(--osmos-fg-muted)' }) => (
   <Icon size={size} color={color}>
     <circle cx="12" cy="5"  r="1" />
     <circle cx="12" cy="12" r="1" />
@@ -36,7 +26,7 @@ const MoreVerticalIcon = ({ size = 14, color = TEXT_MID }) => (
   </Icon>
 );
 
-const SparklesIcon = ({ size = 14, color = ACCENT }) => (
+const SparklesIcon = ({ size = 14, color = 'var(--osmos-brand-primary)' }) => (
   <Icon size={size} color={color}>
     <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3z" />
     <path d="M5 3v4" /><path d="M19 17v4" />
@@ -48,11 +38,11 @@ const SparklesIcon = ({ size = 14, color = ACCENT }) => (
 const MENU_ITEM_STYLE = {
   display: 'block', width: '100%', padding: '9px 16px', textAlign: 'left',
   border: 'none', background: 'transparent', cursor: 'pointer',
-  fontSize: 13, color: TEXT, fontFamily: FONT,
+  fontSize: 13, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif",
 };
 const SELECT_STYLE = {
-  flex: 1, padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8,
-  fontSize: 13, outline: 'none', color: TEXT, background: BG, fontFamily: FONT, cursor: 'pointer',
+  flex: 1, padding: '8px 12px', border: '1px solid var(--osmos-border)', borderRadius: 8,
+  fontSize: 13, outline: 'none', color: 'var(--osmos-fg)', background: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif", cursor: 'pointer',
 };
 
 // ── Mock data ────────────────────────────────────────────────────────────────
@@ -196,7 +186,7 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
     {
       id: 'name', accessorKey: 'name',
       header: 'Name',
-      cell: info => <span style={{ color: ACCENT, cursor: 'pointer' }}>{info.getValue()}</span>,
+      cell: info => <span style={{ color: 'var(--osmos-brand-primary)', cursor: 'pointer' }}>{info.getValue()}</span>,
     },
     {
       id: 'bidding', accessorKey: 'bidding', enableSorting: false,
@@ -206,7 +196,7 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
     {
       id: 'budget', accessorKey: 'budget', enableSorting: false,
       header: () => <ColHeader label="Daily Budget" info />,
-      cell: info => <span style={{ fontWeight: 500, color: ACCENT }}>{info.getValue()}</span>,
+      cell: info => <span style={{ fontWeight: 500, color: 'var(--osmos-brand-primary)' }}>{info.getValue()}</span>,
     },
     { id: 'spend',  accessorKey: 'spend',  enableSorting: false, header: 'Ad Spend' },
     {
@@ -219,12 +209,12 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
         return (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end' }}>
             {campaign.showContinue ? (
-              <button style={{ padding: '4px 12px', fontSize: 12, border: `1px solid ${BORDER}`, borderRadius: 4, backgroundColor: BG, color: TEXT_MID, cursor: 'pointer', fontFamily: FONT }}>
+              <button style={{ padding: '4px 12px', fontSize: 12, border: `1px solid var(--osmos-border)`, borderRadius: 4, backgroundColor: 'var(--osmos-bg)', color: 'var(--osmos-fg-muted)', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}>
                 Continue
               </button>
             ) : (
               <button style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}>
-                <BarChartIcon size={14} color={TEXT_MID} />
+                <BarChartIcon size={14} color="var(--osmos-fg-muted)" />
               </button>
             )}
             <button
@@ -232,19 +222,19 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
               onClick={() => onDebugCampaign && onDebugCampaign({ ...campaign, adType: activeAdType })}
               style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: 4 }}
             >
-              <SparklesIcon size={14} color={ACCENT} />
+              <SparklesIcon size={14} color="var(--osmos-brand-primary)" />
             </button>
             <div ref={isOpen ? menuRef : null} style={{ position: 'relative' }}>
               <button
                 onClick={() => setOpenMenuRow(isOpen ? null : rowId)}
                 style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}
               >
-                <MoreVerticalIcon size={14} color={TEXT_MID} />
+                <MoreVerticalIcon size={14} color="var(--osmos-fg-muted)" />
               </button>
               {isOpen && (
                 <div style={{
                   position: 'absolute', right: 0, top: 28, zIndex: 200,
-                  background: BG, border: `1px solid ${BORDER}`, borderRadius: 8,
+                  background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 8,
                   boxShadow: '0 4px 16px rgba(0,0,0,0.12)', minWidth: 172, overflow: 'hidden',
                 }}>
                   {['Edit', 'Duplicate', campaign.status === 'ACTIVE' ? 'Pause' : 'Resume', 'Archive'].map((action) => (
@@ -252,12 +242,12 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
                       {action}
                     </button>
                   ))}
-                  <div style={{ borderTop: `1px solid ${BORDER}`, margin: '4px 0' }} />
+                  <div style={{ borderTop: `1px solid var(--osmos-border)`, margin: '4px 0' }} />
                   <button
                     onClick={() => { setOpenMenuRow(null); onDebugCampaign && onDebugCampaign({ ...campaign, adType: activeAdType }); }}
-                    style={{ ...MENU_ITEM_STYLE, color: ACCENT, display: 'flex', alignItems: 'center', gap: 8 }}
+                    style={{ ...MENU_ITEM_STYLE, color: 'var(--osmos-brand-primary)', display: 'flex', alignItems: 'center', gap: 8 }}
                   >
-                    <SparklesIcon size={13} color={ACCENT} />
+                    <SparklesIcon size={13} color="var(--osmos-brand-primary)" />
                     Debug with AI
                   </button>
                 </div>
@@ -278,7 +268,7 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
     {
       id: 'name', accessorKey: 'name',
       header: 'Ad Group Name',
-      cell: info => <span style={{ color: ACCENT, cursor: 'pointer' }}>{info.getValue()}</span>,
+      cell: info => <span style={{ color: 'var(--osmos-brand-primary)', cursor: 'pointer' }}>{info.getValue()}</span>,
     },
     { id: 'campaign', accessorKey: 'campaign', enableSorting: false, header: 'Campaign' },
     {
@@ -289,7 +279,7 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
     {
       id: 'budget', accessorKey: 'budget', enableSorting: false,
       header: () => <ColHeader label="Daily Budget" info />,
-      cell: info => <span style={{ fontWeight: 500, color: ACCENT }}>{info.getValue()}</span>,
+      cell: info => <span style={{ fontWeight: 500, color: 'var(--osmos-brand-primary)' }}>{info.getValue()}</span>,
     },
     { id: 'spend',  accessorKey: 'spend',  enableSorting: false, header: 'Ad Spend' },
     {
@@ -298,10 +288,10 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
       cell: () => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end' }}>
           <button style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}>
-            <BarChartIcon size={14} color={TEXT_MID} />
+            <BarChartIcon size={14} color="var(--osmos-fg-muted)" />
           </button>
           <button style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}>
-            <MoreVerticalIcon size={14} color={TEXT_MID} />
+            <MoreVerticalIcon size={14} color="var(--osmos-fg-muted)" />
           </button>
         </div>
       ),
@@ -393,42 +383,42 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
 
   return (
     <>
-      <div style={{ borderRadius: 8, border: `1px solid ${BORDER}`, backgroundColor: BG, fontFamily: FONT }}>
+      <div style={{ borderRadius: 8, border: `1px solid var(--osmos-border)`, backgroundColor: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif" }}>
 
         {/* ── Header bar ── */}
-        <div style={{ padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${BORDER}` }}>
+        <div style={{ padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid var(--osmos-border)` }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: ACCENT_M }}>
-              <BarChartIcon size={16} color={ACCENT} />
+            <div style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--osmos-brand-primary-muted)' }}>
+              <BarChartIcon size={16} color="var(--osmos-brand-primary)" />
             </div>
-            <span style={{ fontWeight: 500, color: TEXT }}>
+            <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>
               {view === 'campaigns' ? 'CAMPAIGN' : 'AD GROUP'}
             </span>
-            <InfoIcon size={14} color={TEXT_SUB} />
+            <InfoIcon size={14} color="var(--osmos-fg-subtle)" />
             {activeAdType !== 'Product Ads' && (
-              <span style={{ marginLeft: 8, padding: '2px 8px', fontSize: 12, borderRadius: 999, backgroundColor: ACCENT_M, color: ACCENT }}>
+              <span style={{ marginLeft: 8, padding: '2px 8px', fontSize: 12, borderRadius: 999, backgroundColor: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)' }}>
                 {activeAdType}
               </span>
             )}
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <IconBtn><RefreshIcon size={14} color={TEXT_MID} /></IconBtn>
-            <IconBtn><DownloadIcon size={14} color={TEXT_MID} /></IconBtn>
-            <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${BORDER}`, borderRadius: 8 }}>
+            <IconBtn><RefreshIcon size={14} color="var(--osmos-fg-muted)" /></IconBtn>
+            <IconBtn><DownloadIcon size={14} color="var(--osmos-fg-muted)" /></IconBtn>
+            <div style={{ display: 'flex', alignItems: 'center', border: `1px solid var(--osmos-border)`, borderRadius: 8 }}>
               <button style={{ padding: '6px 12px', border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                <BarChartIcon size={14} color={TEXT_MID} />
+                <BarChartIcon size={14} color="var(--osmos-fg-muted)" />
               </button>
-              <ChevronDownIcon size={14} color={TEXT_MID} style={{ marginRight: 8 }} />
+              <ChevronDownIcon size={14} color="var(--osmos-fg-muted)" style={{ marginRight: 8 }} />
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px', border: `1px solid ${BORDER}`, borderRadius: 8 }}>
-              <SearchIcon size={14} color={TEXT_SUB} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px', border: `1px solid var(--osmos-border)`, borderRadius: 8 }}>
+              <SearchIcon size={14} color="var(--osmos-fg-subtle)" />
               <input
                 type="text"
                 value={globalFilter}
                 onChange={e => setGlobalFilter(e.target.value)}
                 placeholder={view === 'campaigns' ? 'Search Campaign' : 'Search Ad Group'}
-                style={{ border: 'none', outline: 'none', width: 128, fontSize: 13, color: TEXT, background: 'transparent', fontFamily: FONT }}
+                style={{ border: 'none', outline: 'none', width: 128, fontSize: 13, color: 'var(--osmos-fg)', background: 'transparent', fontFamily: "'Open Sans', sans-serif" }}
               />
             </div>
             <Button variant="primary" onClick={view === 'campaigns' ? handleCreateCampaign : handleCreateAdGroup}>
@@ -439,17 +429,17 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
         </div>
 
         {/* ── View tabs ── */}
-        <div style={{ padding: '12px 16px', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: 4, borderRadius: 8, backgroundColor: BG_SUBTLE, width: 'fit-content' }}>
+        <div style={{ padding: '12px 16px', borderBottom: `1px solid var(--osmos-border)`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: 4, borderRadius: 8, backgroundColor: 'var(--osmos-bg-subtle)', width: 'fit-content' }}>
             {[['campaigns', `Campaigns (${campaigns.length})`], ['adGroups', `Ad Groups (${adGroups.length})`]].map(([v, label]) => (
               <button
                 key={v}
                 onClick={() => handleViewChange(v)}
                 style={{
                   padding: '8px 16px', borderRadius: 6, border: 'none', cursor: 'pointer',
-                  fontSize: 13, fontWeight: 500, fontFamily: FONT, transition: 'all 0.15s',
-                  backgroundColor: view === v ? BG : 'transparent',
-                  color: view === v ? TEXT : TEXT_MID,
+                  fontSize: 13, fontWeight: 500, fontFamily: "'Open Sans', sans-serif", transition: 'all 0.15s',
+                  backgroundColor: view === v ? 'var(--osmos-bg)' : 'transparent',
+                  color: view === v ? 'var(--osmos-fg)' : 'var(--osmos-fg-muted)',
                   boxShadow: view === v ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
                 }}
               >
@@ -457,13 +447,13 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
               </button>
             ))}
           </div>
-          <span style={{ fontSize: 12, color: TEXT_MID }}>
+          <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>
             {view === 'campaigns' ? 'Manage campaigns across all ad types' : 'Manage ad groups within campaigns'}
           </span>
         </div>
 
         {/* ── Filter builder ── */}
-        <div style={{ padding: '12px 16px', borderBottom: `1px solid ${BORDER}` }}>
+        <div style={{ padding: '12px 16px', borderBottom: `1px solid var(--osmos-border)` }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {filterBuilderRows.map((row) => (
               <div key={row.id} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -472,33 +462,33 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
                   style={{
                     display: 'flex', alignItems: 'center', gap: 8,
                     padding: '8px 16px', borderRadius: 999, cursor: 'pointer',
-                    border: expandedFilter === row.id ? `2px solid ${ACCENT}` : `1px solid ${BORDER}`,
-                    backgroundColor: BG, fontFamily: FONT, fontSize: 13,
-                    color: expandedFilter === row.id ? ACCENT : TEXT_MID, transition: 'all 0.15s',
+                    border: expandedFilter === row.id ? `2px solid var(--osmos-brand-primary)` : `1px solid var(--osmos-border)`,
+                    backgroundColor: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif", fontSize: 13,
+                    color: expandedFilter === row.id ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)', transition: 'all 0.15s',
                   }}
                 >
-                  <PlusIcon size={14} color={expandedFilter === row.id ? ACCENT : TEXT_MID} />
+                  <PlusIcon size={14} color={expandedFilter === row.id ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)'} />
                   Add a Filter
                 </button>
 
                 {expandedFilter === row.id && (
-                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, padding: 12, borderRadius: 8, border: `1px solid ${BORDER}`, backgroundColor: BG_SUBTLE }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, padding: 12, borderRadius: 8, border: `1px solid var(--osmos-border)`, backgroundColor: 'var(--osmos-bg-subtle)' }}>
                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
-                      <label style={{ fontSize: 11, color: TEXT_MID }}>Field</label>
+                      <label style={{ fontSize: 11, color: 'var(--osmos-fg-muted)' }}>Field</label>
                       <select value={row.field} onChange={(e) => handleFieldChange(row.id, e.target.value)} style={SELECT_STYLE}>
                         <option value="">Select Field</option>
                         {filterFields.map((f) => <option key={f.value} value={f.value}>{f.label}</option>)}
                       </select>
                     </div>
                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
-                      <label style={{ fontSize: 11, color: TEXT_MID }}>Operator</label>
+                      <label style={{ fontSize: 11, color: 'var(--osmos-fg-muted)' }}>Operator</label>
                       <select value={row.operator} onChange={(e) => handleOperatorChange(row.id, e.target.value)} style={SELECT_STYLE}>
                         <option value="">Select Operator</option>
                         {filterOperators.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                       </select>
                     </div>
                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
-                      <label style={{ fontSize: 11, color: TEXT_MID }}>Value</label>
+                      <label style={{ fontSize: 11, color: 'var(--osmos-fg-muted)' }}>Value</label>
                       <input
                         type="text" value={row.value}
                         onChange={(e) => handleValueChange(row.id, e.target.value)}
@@ -509,7 +499,7 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
                     </div>
                     <button
                       onClick={() => handleApplyFilter(row.id)}
-                      style={{ padding: '8px 16px', borderRadius: 8, border: 'none', backgroundColor: ACCENT, color: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: FONT }}
+                      style={{ padding: '8px 16px', borderRadius: 8, border: 'none', backgroundColor: 'var(--osmos-brand-primary)', color: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}
                     >
                       Apply
                     </button>
@@ -517,7 +507,7 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
                       onClick={() => handleRemoveFilterRow(row.id)}
                       style={{ width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: 4 }}
                     >
-                      <CloseIcon size={14} color={TEXT_MID} />
+                      <CloseIcon size={14} color="var(--osmos-fg-muted)" />
                     </button>
                   </div>
                 )}
@@ -529,18 +519,18 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
               <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
                 <button
                   onClick={handleAddFilterRow}
-                  style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '6px 12px', borderRadius: 999, border: `1px solid ${BORDER}`, backgroundColor: BG, cursor: 'pointer', fontSize: 13, color: TEXT_MID, fontFamily: FONT }}
+                  style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '6px 12px', borderRadius: 999, border: `1px solid var(--osmos-border)`, backgroundColor: 'var(--osmos-bg)', cursor: 'pointer', fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}
                 >
-                  <PlusIcon size={14} color={TEXT_MID} />
+                  <PlusIcon size={14} color="var(--osmos-fg-muted)" />
                 </button>
                 {appliedFilters.map((filter) => (
                   <button
                     key={filter.id}
                     onClick={() => handleRemoveAppliedFilter(filter.id)}
-                    style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px', borderRadius: 999, border: `1px solid ${BORDER}`, backgroundColor: BG_SUBTLE, color: TEXT, fontSize: 13, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.15s' }}
+                    style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px', borderRadius: 999, border: `1px solid var(--osmos-border)`, backgroundColor: 'var(--osmos-bg-subtle)', color: 'var(--osmos-fg)', fontSize: 13, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif", transition: 'all 0.15s' }}
                   >
                     <span>{filter.label}</span>
-                    <CloseIcon size={12} color={TEXT_MID} />
+                    <CloseIcon size={12} color="var(--osmos-fg-muted)" />
                   </button>
                 ))}
               </div>
@@ -550,11 +540,11 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
             {filterBuilderRows.length === 0 && appliedFilters.length === 0 && (
               <button
                 onClick={handleAddFilterRow}
-                style={{ display: 'flex', alignItems: 'center', gap: 4, border: 'none', background: 'transparent', fontSize: 13, color: TEXT_MID, cursor: 'pointer', fontFamily: FONT, transition: 'opacity 0.15s' }}
+                style={{ display: 'flex', alignItems: 'center', gap: 4, border: 'none', background: 'transparent', fontSize: 13, color: 'var(--osmos-fg-muted)', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif", transition: 'opacity 0.15s' }}
                 onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
                 onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
               >
-                <PlusIcon size={14} color={TEXT_MID} />
+                <PlusIcon size={14} color="var(--osmos-fg-muted)" />
                 Add a Filter
               </button>
             )}
@@ -565,9 +555,9 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
         <DataTable table={table} footer={footer} />
 
         {/* ── Footer bar ── */}
-        <div style={{ padding: '8px 16px', display: 'flex', justifyContent: 'space-between', fontSize: 12, color: TEXT_MID, borderTop: `1px solid ${BORDER}` }}>
+        <div style={{ padding: '8px 16px', display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--osmos-fg-muted)', borderTop: `1px solid var(--osmos-border)` }}>
           <span>Comparison mode not applicable</span>
-          <span>One Filter Applicable: <span style={{ color: TEXT, fontWeight: 500 }}>Date</span></span>
+          <span>One Filter Applicable: <span style={{ color: 'var(--osmos-fg)', fontWeight: 500 }}>Date</span></span>
         </div>
       </div>
 
@@ -575,19 +565,19 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
       {campaignSelectModalOpen && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)' }} onClick={() => setCampaignSelectModalOpen(false)} />
-          <div style={{ position: 'relative', backgroundColor: BG, borderRadius: 12, boxShadow: '0 20px 40px rgba(0,0,0,0.2)', width: '100%', maxWidth: 512, margin: '0 16px', overflow: 'hidden', fontFamily: FONT }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 20, borderBottom: `1px solid ${BORDER}` }}>
+          <div style={{ position: 'relative', backgroundColor: 'var(--osmos-bg)', borderRadius: 12, boxShadow: '0 20px 40px rgba(0,0,0,0.2)', width: '100%', maxWidth: 512, margin: '0 16px', overflow: 'hidden', fontFamily: "'Open Sans', sans-serif" }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 20, borderBottom: `1px solid var(--osmos-border)` }}>
               <div>
-                <h2 style={{ margin: 0, fontSize: 18, fontWeight: 600, color: TEXT }}>Select Campaign</h2>
-                <p style={{ margin: '4px 0 0', fontSize: 13, color: TEXT_MID }}>Choose which campaign to add the ad group to</p>
+                <h2 style={{ margin: 0, fontSize: 18, fontWeight: 600, color: 'var(--osmos-fg)' }}>Select Campaign</h2>
+                <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--osmos-fg-muted)' }}>Choose which campaign to add the ad group to</p>
               </div>
               <button
                 onClick={() => setCampaignSelectModalOpen(false)}
                 style={{ width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', transition: 'all 0.15s' }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = BG_SUBTLE)}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--osmos-bg-subtle)')}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
               >
-                <CloseIcon size={18} color={TEXT_MID} />
+                <CloseIcon size={18} color="var(--osmos-fg-muted)" />
               </button>
             </div>
 
@@ -601,22 +591,22 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
                     style={{
                       width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                       padding: 16, borderRadius: 8, textAlign: 'left', cursor: 'pointer',
-                      border: selected ? `2px solid ${ACCENT}` : `2px solid ${BORDER}`,
-                      backgroundColor: selected ? ACCENT_M : BG,
-                      transition: 'all 0.15s', fontFamily: FONT,
+                      border: selected ? `2px solid var(--osmos-brand-primary)` : `2px solid var(--osmos-border)`,
+                      backgroundColor: selected ? 'var(--osmos-brand-primary-muted)' : 'var(--osmos-bg)',
+                      transition: 'all 0.15s', fontFamily: "'Open Sans', sans-serif",
                     }}
-                    onMouseEnter={(e) => { if (!selected) { e.currentTarget.style.borderColor = TEXT_MID; e.currentTarget.style.backgroundColor = BG_SUBTLE; }}}
-                    onMouseLeave={(e) => { if (!selected) { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.backgroundColor = BG; }}}
+                    onMouseEnter={(e) => { if (!selected) { e.currentTarget.style.borderColor = 'var(--osmos-fg-muted)'; e.currentTarget.style.backgroundColor = 'var(--osmos-bg-subtle)'; }}}
+                    onMouseLeave={(e) => { if (!selected) { e.currentTarget.style.borderColor = 'var(--osmos-border)'; e.currentTarget.style.backgroundColor = 'var(--osmos-bg)'; }}}
                   >
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                      <span style={{ fontWeight: 500, fontSize: 14, color: TEXT }}>{campaign.name}</span>
+                      <span style={{ fontWeight: 500, fontSize: 14, color: 'var(--osmos-fg)' }}>{campaign.name}</span>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <Badge status={campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1).toLowerCase()} />
-                        <span style={{ fontSize: 12, color: TEXT_MID }}>Budget: {campaign.budget}</span>
+                        <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>Budget: {campaign.budget}</span>
                       </div>
                     </div>
                     {selected && (
-                      <div style={{ width: 24, height: 24, borderRadius: 999, backgroundColor: ACCENT, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <div style={{ width: 24, height: 24, borderRadius: 999, backgroundColor: 'var(--osmos-brand-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                         <CheckIcon size={14} color="#fff" />
                       </div>
                     )}
@@ -625,7 +615,7 @@ export function CampaignTable({ activeAdType = 'Product Ads', onDebugCampaign })
               })}
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12, padding: 20, borderTop: `1px solid ${BORDER}`, backgroundColor: BG_SUBTLE }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12, padding: 20, borderTop: `1px solid var(--osmos-border)`, backgroundColor: 'var(--osmos-bg-subtle)' }}>
               <Button variant="outline" onClick={() => setCampaignSelectModalOpen(false)}>Cancel</Button>
               <Button variant="primary" onClick={handleCampaignSelectConfirm} disabled={!selectedCampaignForAdGroup}>
                 Continue
@@ -671,8 +661,8 @@ function IconBtn({ children, onClick }) {
       onMouseLeave={() => setHover(false)}
       style={{
         width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        border: `1px solid ${BORDER}`, borderRadius: 8, cursor: 'pointer',
-        background: hover ? BG_SUBTLE : 'transparent', transition: 'all 0.15s',
+        border: `1px solid var(--osmos-border)`, borderRadius: 8, cursor: 'pointer',
+        background: hover ? 'var(--osmos-bg-subtle)' : 'transparent', transition: 'all 0.15s',
       }}
     >
       {children}

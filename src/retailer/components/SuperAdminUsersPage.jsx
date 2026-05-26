@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import { Icon, SearchIcon, TrashIcon, CloseIcon, PlusIcon } from '../../ui/atoms/Icon';
-import { Button } from '../../ui/atoms/Button';
-import { Input, Select } from '../../ui/atoms/Input';
-import { Toast, useToast } from '../../ui/atoms/Toast';
-
-const FONT = "'Open Sans', sans-serif";
+import { Icon, SearchIcon, TrashIcon, CloseIcon, PlusIcon, Button, Input, Select, Toast, useToast } from '../../ui';
 
 const INITIAL_DATA = [
   { id: 1, name: 'Alice Johnson',  email: 'alice.johnson@onlinesales.ai',  access: 'Super Administrator' },
@@ -45,7 +40,7 @@ export default function SuperAdminUsersPage() {
   }
 
   return (
-    <div style={{ padding: '20px 24px', fontFamily: FONT }}>
+    <div style={{ padding: '20px 24px', fontFamily: "'Open Sans', sans-serif" }}>
       <Toast visible={toast.visible} message={toast.message} type={toast.type} />
 
       {/* Info banner */}
@@ -70,10 +65,10 @@ export default function SuperAdminUsersPage() {
           </Icon>
         </div>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--osmos-fg)', marginBottom: 4, fontFamily: FONT }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--osmos-fg)', marginBottom: 4, fontFamily: "'Open Sans', sans-serif" }}>
             Super Admin User
           </div>
-          <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', lineHeight: 1.6, fontFamily: FONT }}>
+          <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', lineHeight: 1.6, fontFamily: "'Open Sans', sans-serif" }}>
             A super admin user can add another super admin user, modify access for admin and ops users,
             modify clients, and perform bulk actions. They can also access the Admin Dashboard.
           </div>
@@ -95,7 +90,7 @@ export default function SuperAdminUsersPage() {
             style={{
               background: 'none', border: 'none',
               fontSize: 12, color: 'var(--osmos-brand-primary)',
-              cursor: 'pointer', fontFamily: FONT,
+              cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
               display: 'flex', alignItems: 'center', gap: 5, padding: 0,
             }}
           >
@@ -122,7 +117,7 @@ export default function SuperAdminUsersPage() {
                 placeholder="Search Name"
                 style={{
                   border: 'none', outline: 'none', fontSize: 12,
-                  color: 'var(--osmos-fg)', fontFamily: FONT,
+                  color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif",
                   width: 160, background: 'transparent',
                 }}
               />
@@ -137,7 +132,7 @@ export default function SuperAdminUsersPage() {
 
         {/* Table */}
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, fontFamily: FONT }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, fontFamily: "'Open Sans', sans-serif" }}>
             <thead>
               <tr style={{ background: 'var(--osmos-bg-subtle)', borderBottom: '1px solid var(--osmos-border)' }}>
                 <th
@@ -217,7 +212,7 @@ export default function SuperAdminUsersPage() {
               borderBottom: '1px solid var(--osmos-border)',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             }}>
-              <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--osmos-fg)', fontFamily: FONT }}>Add New User</span>
+              <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>Add New User</span>
               <button
                 onClick={() => setShowModal(false)}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', padding: 4 }}

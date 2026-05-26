@@ -6,15 +6,6 @@ import {
   Toast, useToast,
 } from '../../ui';
 
-/* ── Design tokens ──────────────────────────────────────────────── */
-const FONT     = "'Open Sans', sans-serif";
-const WHITE    = 'var(--osmos-bg)';
-const BORDER   = 'var(--osmos-border)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const TEXT_HI  = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_LO  = 'var(--osmos-fg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
 
 /* ── Persona colors ─────────────────────────────────────────────── */
 const PERSONA_COLORS = {
@@ -83,10 +74,10 @@ const emptyRule      = () => ({ id: `r_${Date.now()}`, conditions: [emptyConditi
 const TD = {
   padding: '10px 14px',
   fontSize: 13,
-  color: TEXT_HI,
-  borderBottom: `1px solid ${BORDER}`,
+  color: 'var(--osmos-fg)',
+  borderBottom: '1px solid var(--osmos-border)',
   whiteSpace: 'nowrap',
-  fontFamily: FONT,
+  fontFamily: "'Open Sans', sans-serif",
   verticalAlign: 'middle',
 };
 
@@ -96,9 +87,9 @@ function InfoStrip({ children }) {
     <div style={{
       display: 'flex', alignItems: 'flex-start', gap: 10,
       background: 'var(--osmos-brand-primary-muted)', border: `1px solid var(--osmos-brand-primary-muted)`,
-      borderRadius: 8, padding: '10px 14px', marginBottom: 16, fontSize: 13, color: TEXT_MID,
+      borderRadius: 8, padding: '10px 14px', marginBottom: 16, fontSize: 13, color: 'var(--osmos-fg-muted)',
     }}>
-      <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={ACCENT}
+      <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={'var(--osmos-brand-primary)'}
         strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
         <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
         <line x1="12" y1="16" x2="12.01" y2="16"/>
@@ -117,19 +108,19 @@ function RuleNotes() {
   ];
   return (
     <div style={{ marginBottom: 16 }}>
-      <div style={{ fontSize: 12, fontWeight: 700, color: TEXT_MID, marginBottom: 8 }}>Notes :</div>
+      <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--osmos-fg-muted)', marginBottom: 8 }}>Notes :</div>
       {notes.map((note, i) => (
         <div key={i} style={{
           display: 'flex', gap: 8, alignItems: 'flex-start',
-          marginBottom: 6, fontSize: 12, color: TEXT_MID,
+          marginBottom: 6, fontSize: 12, color: 'var(--osmos-fg-muted)',
         }}>
-          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={ACCENT}
+          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={'var(--osmos-brand-primary)'}
             strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
             <circle cx="12" cy="12" r="10"/>
             <line x1="12" y1="8" x2="12" y2="12"/>
             <line x1="12" y1="16" x2="12.01" y2="16"/>
           </svg>
-          <span>{note} <span style={{ color: ACCENT, cursor: 'pointer', textDecoration: 'underline' }}>Learn more</span></span>
+          <span>{note} <span style={{ color: 'var(--osmos-brand-primary)', cursor: 'pointer', textDecoration: 'underline' }}>Learn more</span></span>
         </div>
       ))}
     </div>
@@ -168,7 +159,7 @@ function RuleBuilder({ rules, onChange }) {
 
   return (
     <div>
-      <div style={{ fontSize: 12, fontWeight: 600, color: TEXT_MID, marginBottom: 10 }}>
+      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)', marginBottom: 10 }}>
         Apply Condition <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
       </div>
 
@@ -176,29 +167,29 @@ function RuleBuilder({ rules, onChange }) {
         <div key={rule.id}>
           {ruleIdx > 0 && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '8px 0' }}>
-              <div style={{ flex: 1, height: 1, background: BORDER }} />
+              <div style={{ flex: 1, height: 1, background: 'var(--osmos-border)' }} />
               <span style={{
                 padding: '2px 10px', borderRadius: 12, fontSize: 11, fontWeight: 700,
-                background: 'var(--osmos-brand-primary-muted)', color: ACCENT, letterSpacing: 0.5,
+                background: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)', letterSpacing: 0.5,
               }}>OR</span>
-              <div style={{ flex: 1, height: 1, background: BORDER }} />
+              <div style={{ flex: 1, height: 1, background: 'var(--osmos-border)' }} />
             </div>
           )}
 
           <div style={{
-            border: `1px solid ${BORDER}`, borderRadius: 8, padding: 12,
-            background: BG_SUB, marginBottom: 4,
+            border: '1px solid var(--osmos-border)', borderRadius: 8, padding: 12,
+            background: 'var(--osmos-bg-subtle)', marginBottom: 4,
           }}>
             {rule.conditions.map((cond, condIdx) => (
               <div key={condIdx}>
                 {condIdx > 0 && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, margin: '6px 0' }}>
-                    <div style={{ flex: 1, height: 1, background: BORDER }} />
+                    <div style={{ flex: 1, height: 1, background: 'var(--osmos-border)' }} />
                     <span style={{
                       padding: '1px 8px', borderRadius: 10, fontSize: 10, fontWeight: 700,
                       background: 'rgba(27,168,122,0.10)', color: 'var(--osmos-brand-green)',
                     }}>AND</span>
-                    <div style={{ flex: 1, height: 1, background: BORDER }} />
+                    <div style={{ flex: 1, height: 1, background: 'var(--osmos-border)' }} />
                   </div>
                 )}
                 <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
@@ -222,7 +213,7 @@ function RuleBuilder({ rules, onChange }) {
                     <Button variant="icon" onClick={() => removeCondition(ruleIdx, condIdx)}
                       style={{ marginBottom: 4 }}>
                       <svg width={14} height={14} viewBox="0 0 24 24" fill="none"
-                        stroke={TEXT_MID} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                        stroke={'var(--osmos-fg-muted)'} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="3 6 5 6 21 6"/>
                         <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
                         <path d="M10 11v6M14 11v6"/>
@@ -235,11 +226,11 @@ function RuleBuilder({ rules, onChange }) {
             <button
               onClick={() => addCondition(ruleIdx)}
               style={{
-                marginTop: 8, border: 'none', background: 'none', color: ACCENT,
-                fontSize: 12, fontWeight: 600, cursor: 'pointer', padding: 0, fontFamily: FONT,
+                marginTop: 8, border: 'none', background: 'none', color: 'var(--osmos-brand-primary)',
+                fontSize: 12, fontWeight: 600, cursor: 'pointer', padding: 0, fontFamily: "'Open Sans', sans-serif",
                 display: 'flex', alignItems: 'center', gap: 4,
               }}>
-              <PlusIcon size={12} color={ACCENT} /> Add condition
+              <PlusIcon size={12} color={'var(--osmos-brand-primary)'} /> Add condition
             </button>
           </div>
         </div>
@@ -248,12 +239,12 @@ function RuleBuilder({ rules, onChange }) {
       <button
         onClick={addRule}
         style={{
-          marginTop: 10, border: `1px dashed ${BORDER}`, borderRadius: 7, background: 'none',
-          color: TEXT_MID, fontSize: 12, fontWeight: 600, cursor: 'pointer', width: '100%',
-          padding: '8px 0', fontFamily: FONT, display: 'flex', alignItems: 'center',
+          marginTop: 10, border: `1px dashed ${'var(--osmos-border)'}`, borderRadius: 7, background: 'none',
+          color: 'var(--osmos-fg-muted)', fontSize: 12, fontWeight: 600, cursor: 'pointer', width: '100%',
+          padding: '8px 0', fontFamily: "'Open Sans', sans-serif", display: 'flex', alignItems: 'center',
           justifyContent: 'center', gap: 4,
         }}>
-        <PlusIcon size={12} color={TEXT_MID} /> Add rule (OR)
+        <PlusIcon size={12} color={'var(--osmos-fg-muted)'} /> Add rule (OR)
       </button>
     </div>
   );
@@ -271,30 +262,30 @@ function CatalogRulesSubTable({ advertiserId, advertiserName, rules, onAdd, onEd
 
   return (
     <tr>
-      <td colSpan={9} style={{ padding: 0, background: BG_SUB }}>
-        <div style={{ padding: '12px 20px 16px 40px', borderBottom: `1px solid ${BORDER}` }}>
+      <td colSpan={9} style={{ padding: 0, background: 'var(--osmos-bg-subtle)' }}>
+        <div style={{ padding: '12px 20px 16px 40px', borderBottom: '1px solid var(--osmos-border)' }}>
           {/* Catalog Rules header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-            <span style={{ fontSize: 12, fontWeight: 700, color: TEXT_MID, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--osmos-fg-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Catalog Rules
             </span>
             <Button variant="outline" onClick={() => onAdd(advertiserId, advertiserName)}>
-              <PlusIcon size={12} color={ACCENT} /> Add
+              <PlusIcon size={12} color={'var(--osmos-brand-primary)'} /> Add
             </Button>
           </div>
 
           {rules.length === 0 ? (
-            <div style={{ fontSize: 12, color: TEXT_LO, fontStyle: 'italic', padding: '6px 0' }}>
+            <div style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', fontStyle: 'italic', padding: '6px 0' }}>
               No catalog rules configured. Click "Add" to create a rule.
             </div>
           ) : (
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
               <thead>
-                <tr style={{ background: WHITE }}>
+                <tr style={{ background: 'var(--osmos-bg)' }}>
                   {['#', 'Conditions', 'Action'].map(col => (
                     <th key={col} style={{
                       padding: '6px 12px', textAlign: 'left', fontSize: 11, fontWeight: 600,
-                      color: TEXT_MID, borderBottom: `1px solid ${BORDER}`,
+                      color: 'var(--osmos-fg-muted)', borderBottom: '1px solid var(--osmos-border)',
                       textTransform: 'uppercase', letterSpacing: '0.04em',
                     }}>{col}</th>
                   ))}
@@ -302,8 +293,8 @@ function CatalogRulesSubTable({ advertiserId, advertiserName, rules, onAdd, onEd
               </thead>
               <tbody>
                 {rules.map((rule, idx) => (
-                  <tr key={rule.id} style={{ background: WHITE }}>
-                    <td style={{ ...TD, fontSize: 12, color: TEXT_LO, width: 40 }}>{idx + 1}</td>
+                  <tr key={rule.id} style={{ background: 'var(--osmos-bg)' }}>
+                    <td style={{ ...TD, fontSize: 12, color: 'var(--osmos-fg-subtle)', width: 40 }}>{idx + 1}</td>
                     <td style={{ ...TD, fontSize: 12, whiteSpace: 'normal' }}>
                       {conditionSummary(rule.conditions)}
                     </td>
@@ -444,29 +435,29 @@ export default function AdvertiserOnboardingCatalogPage() {
   ];
 
   return (
-    <div style={{ fontFamily: FONT, background: BG_SUB, minHeight: '100vh', padding: '20px 24px' }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif", background: 'var(--osmos-bg-subtle)', minHeight: '100vh', padding: '20px 24px' }}>
       <Toast {...toast} />
 
       {/* ── Info strip ────────────────────────────────────────────── */}
       <InfoStrip>
         Onboard Advertisers and configure catalog rules. You can do this directly from the UI or upload a file to manage them in bulk.{' '}
-        <span style={{ color: ACCENT, cursor: 'pointer', textDecoration: 'underline' }}>Learn more</span>
+        <span style={{ color: 'var(--osmos-brand-primary)', cursor: 'pointer', textDecoration: 'underline' }}>Learn more</span>
       </InfoStrip>
 
       {/* ── Card ──────────────────────────────────────────────────── */}
-      <div style={{ background: WHITE, border: `1px solid ${BORDER}`, borderRadius: 10, overflow: 'hidden' }}>
+      <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 10, overflow: 'hidden' }}>
 
         {/* ── Tabs row ──────────────────────────────────────────── */}
-        <div style={{ display: 'flex', alignItems: 'center', borderBottom: `1px solid ${BORDER}`, padding: '0 16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid var(--osmos-border)', padding: '0 16px' }}>
           {tabs.map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               style={{
-                border: 'none', borderBottom: activeTab === tab ? `2px solid ${ACCENT}` : '2px solid transparent',
+                border: 'none', borderBottom: activeTab === tab ? `2px solid ${'var(--osmos-brand-primary)'}` : '2px solid transparent',
                 background: 'none', padding: '12px 16px',
-                fontFamily: FONT, fontSize: 13, fontWeight: activeTab === tab ? 700 : 500,
-                color: activeTab === tab ? ACCENT : TEXT_MID,
+                fontFamily: "'Open Sans', sans-serif", fontSize: 13, fontWeight: activeTab === tab ? 700 : 500,
+                color: activeTab === tab ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)',
                 cursor: 'pointer', transition: 'all 0.15s', marginBottom: -1,
               }}>
               {tab}
@@ -480,13 +471,13 @@ export default function AdvertiserOnboardingCatalogPage() {
             <Toolbar
               left={
                 <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: TEXT_HI }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)' }}>
                     {advertisers.length} Advertiser's Onboarded
                   </span>
                   <button
                     onClick={() => showToast('Refreshed')}
                     style={{ border: 'none', background: 'none', cursor: 'pointer', padding: 4, display: 'flex' }}>
-                    <RefreshIcon size={14} color={TEXT_MID} />
+                    <RefreshIcon size={14} color={'var(--osmos-fg-muted)'} />
                   </button>
                 </span>
               }
@@ -500,8 +491,8 @@ export default function AdvertiserOnboardingCatalogPage() {
                   />
                   <button
                     onClick={() => showToast('Download triggered')}
-                    style={{ border: `1px solid ${BORDER}`, borderRadius: 7, background: WHITE, padding: '6px 9px', cursor: 'pointer', display: 'flex' }}>
-                    <DownloadIcon size={14} color={TEXT_MID} />
+                    style={{ border: '1px solid var(--osmos-border)', borderRadius: 7, background: 'var(--osmos-bg)', padding: '6px 9px', cursor: 'pointer', display: 'flex' }}>
+                    <DownloadIcon size={14} color={'var(--osmos-fg-muted)'} />
                   </button>
                   <Button variant="outline" onClick={() => setUploadOpen(true)}>
                     <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -523,7 +514,7 @@ export default function AdvertiserOnboardingCatalogPage() {
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
                 <thead>
-                  <tr style={{ background: BG_SUB }}>
+                  <tr style={{ background: 'var(--osmos-bg-subtle)' }}>
                     <th style={TH}></th>
                     {['Advertiser ID', 'Merchant ID', 'Advertiser Name', 'Persona',
                       'Product Synced Via Feed', 'Product Synced Via Rule',
@@ -538,20 +529,20 @@ export default function AdvertiserOnboardingCatalogPage() {
                     return (
                       <React.Fragment key={adv.id}>
                         <tr
-                          style={{ background: i % 2 === 0 ? WHITE : BG_SUB }}
+                          style={{ background: i % 2 === 0 ? 'var(--osmos-bg)' : 'var(--osmos-bg-subtle)' }}
                           onMouseEnter={e => e.currentTarget.style.background = 'var(--osmos-brand-primary-muted)'}
-                          onMouseLeave={e => e.currentTarget.style.background = i % 2 === 0 ? WHITE : BG_SUB}
+                          onMouseLeave={e => e.currentTarget.style.background = i % 2 === 0 ? 'var(--osmos-bg)' : 'var(--osmos-bg-subtle)'}
                         >
                           {/* Expand chevron */}
                           <td style={{ ...TD, width: 40, textAlign: 'center', cursor: 'pointer' }}
                             onClick={() => toggleRow(adv.id)}>
                             <svg width={14} height={14} viewBox="0 0 24 24" fill="none"
-                              stroke={TEXT_MID} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"
+                              stroke={'var(--osmos-fg-muted)'} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"
                               style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.15s' }}>
                               <polyline points="9 18 15 12 9 6"/>
                             </svg>
                           </td>
-                          <td style={TD}><code style={{ fontSize: 12, background: BG_SUB, borderRadius: 4, padding: '2px 6px' }}>{adv.id}</code></td>
+                          <td style={TD}><code style={{ fontSize: 12, background: 'var(--osmos-bg-subtle)', borderRadius: 4, padding: '2px 6px' }}>{adv.id}</code></td>
                           <td style={TD}>{adv.merchantId}</td>
                           <td style={TD}>{adv.name}</td>
                           <td style={TD}>
@@ -559,8 +550,8 @@ export default function AdvertiserOnboardingCatalogPage() {
                           </td>
                           <td style={{ ...TD, textAlign: 'center' }}>{adv.syncedFeed}</td>
                           <td style={{ ...TD, textAlign: 'center' }}>{adv.syncedRule ?? '—'}</td>
-                          <td style={{ ...TD, fontSize: 12, color: TEXT_MID }}>{adv.onboardedOn}</td>
-                          <td style={{ ...TD, fontSize: 12, color: TEXT_MID, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          <td style={{ ...TD, fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{adv.onboardedOn}</td>
+                          <td style={{ ...TD, fontSize: 12, color: 'var(--osmos-fg-muted)', maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis' }}>
                             {adv.onboardedBy}
                           </td>
                         </tr>
@@ -580,7 +571,7 @@ export default function AdvertiserOnboardingCatalogPage() {
                   {filtered.length === 0 && (
                     <tr>
                       <td colSpan={9}>
-                        <div style={{ padding: '40px 0', textAlign: 'center', color: TEXT_LO, fontSize: 13 }}>
+                        <div style={{ padding: '40px 0', textAlign: 'center', color: 'var(--osmos-fg-subtle)', fontSize: 13 }}>
                           No advertisers found
                         </div>
                       </td>
@@ -592,22 +583,22 @@ export default function AdvertiserOnboardingCatalogPage() {
 
             {/* ── Footer ────────────────────────────────────────── */}
             <div style={{
-              padding: '10px 16px', borderTop: `1px solid ${BORDER}`,
-              fontSize: 12, color: TEXT_LO, display: 'flex', justifyContent: 'flex-end',
+              padding: '10px 16px', borderTop: '1px solid var(--osmos-border)',
+              fontSize: 12, color: 'var(--osmos-fg-subtle)', display: 'flex', justifyContent: 'flex-end',
             }}>
               Showing {filtered.length} of {advertisers.length} records
             </div>
           </>
         ) : (
           /* ── Map Catalog tab placeholder ──────────────────────── */
-          <div style={{ padding: '60px 0', textAlign: 'center', color: TEXT_LO }}>
+          <div style={{ padding: '60px 0', textAlign: 'center', color: 'var(--osmos-fg-subtle)' }}>
             <svg width={40} height={40} viewBox="0 0 24 24" fill="none"
-              stroke={BORDER} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
+              stroke={'var(--osmos-border)'} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
               style={{ marginBottom: 12 }}>
               <rect x="3" y="3" width="18" height="18" rx="2"/>
               <path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>
             </svg>
-            <p style={{ fontSize: 14, fontWeight: 600, color: TEXT_MID, marginBottom: 4 }}>Map Catalog</p>
+            <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg-muted)', marginBottom: 4 }}>Map Catalog</p>
             <p style={{ fontSize: 12 }}>Feed standardization view coming soon</p>
           </div>
         )}
@@ -676,7 +667,7 @@ export default function AdvertiserOnboardingCatalogPage() {
         />
 
         {/* Upload dropzone */}
-        <div style={{ margin: '16px 0 8px', fontSize: 12, fontWeight: 600, color: TEXT_MID }}>
+        <div style={{ margin: '16px 0 8px', fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)' }}>
           Upload Your File
         </div>
         <UploadDropzone
@@ -689,30 +680,30 @@ export default function AdvertiserOnboardingCatalogPage() {
         {/* How it works */}
         <div style={{
           marginTop: 20, padding: '14px 16px',
-          background: BG_SUB, border: `1px solid ${BORDER}`, borderRadius: 8,
+          background: 'var(--osmos-bg-subtle)', border: '1px solid var(--osmos-border)', borderRadius: 8,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-            <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={ACCENT}
+            <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={'var(--osmos-brand-primary)'}
               strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
               <polyline points="14 2 14 8 20 8"/>
             </svg>
-            <span style={{ fontSize: 12, fontWeight: 700, color: TEXT_HI }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--osmos-fg)' }}>
               Excel Format (.xlsx with 2 sheets):
             </span>
           </div>
 
           <div style={{ marginBottom: 10 }}>
-            <div style={{ fontSize: 12, fontWeight: 600, color: TEXT_HI, marginBottom: 4 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 4 }}>
               Sheet 1: Advertisers (required)
             </div>
             {['merchant_id (required)', 'advertiser_name (required)', 'persona (gold, silver, or platinum)'].map(item => (
-              <div key={item} style={{ fontSize: 12, color: TEXT_MID, paddingLeft: 12, lineHeight: 1.8 }}>• {item}</div>
+              <div key={item} style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', paddingLeft: 12, lineHeight: 1.8 }}>• {item}</div>
             ))}
           </div>
 
           <div>
-            <div style={{ fontSize: 12, fontWeight: 600, color: TEXT_HI, marginBottom: 4 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 4 }}>
               Sheet 2: Rules (optional)
             </div>
             {[
@@ -724,7 +715,7 @@ export default function AdvertiserOnboardingCatalogPage() {
               'category_l1, category_l2, category_l3 (semicolon separated, optional)',
               'custom_label_0 through custom_label_4 (semicolon separated, optional)',
             ].map(item => (
-              <div key={item} style={{ fontSize: 12, color: TEXT_MID, paddingLeft: 12, lineHeight: 1.8 }}>• {item}</div>
+              <div key={item} style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', paddingLeft: 12, lineHeight: 1.8 }}>• {item}</div>
             ))}
           </div>
         </div>
@@ -748,9 +739,9 @@ export default function AdvertiserOnboardingCatalogPage() {
         }
       >
         {/* Breadcrumb */}
-        <div style={{ fontSize: 11, color: TEXT_LO, marginBottom: 14 }}>
+        <div style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', marginBottom: 14 }}>
           Advertiser Management &rsaquo;{' '}
-          <span style={{ color: TEXT_MID }}>{ruleTargetAdvName}</span>
+          <span style={{ color: 'var(--osmos-fg-muted)' }}>{ruleTargetAdvName}</span>
         </div>
 
         <RuleNotes />

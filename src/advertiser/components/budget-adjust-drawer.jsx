@@ -1,22 +1,9 @@
 import { useState } from 'react';
 import { Drawer, Button, Input, Badge, Icon, Toast, useToast } from '../../ui';
 
-// ── Design tokens ─────────────────────────────────────────────────────────────
-const FONT    = "'Open Sans', sans-serif";
-const TEXT    = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_SUB = 'var(--osmos-fg-subtle)';
-const BORDER  = 'var(--osmos-border)';
-const BG_SUB  = 'var(--osmos-bg-subtle)';
-const BG      = 'var(--osmos-bg)';
-const ACCENT  = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-const GREEN   = 'var(--osmos-brand-green)';
-const GREEN_M = 'var(--osmos-brand-green-muted)';
-const AMBER   = 'var(--osmos-brand-amber)';
 
 // ── Inline icons ──────────────────────────────────────────────────────────────
-const SparkleIcon = ({ size = 14, color = ACCENT }) => (
+const SparkleIcon = ({ size = 14, color = 'var(--osmos-brand-primary)' }) => (
   <Icon size={size} color={color}>
     <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3z" />
     <path d="M5 3v4" /><path d="M19 17v4" />
@@ -24,7 +11,7 @@ const SparkleIcon = ({ size = 14, color = ACCENT }) => (
   </Icon>
 );
 
-const TrendUpIcon = ({ size = 13, color = GREEN }) => (
+const TrendUpIcon = ({ size = 13, color = 'var(--osmos-brand-green)' }) => (
   <Icon size={size} color={color}>
     <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
     <polyline points="17 6 23 6 23 12" />
@@ -127,30 +114,30 @@ export function BudgetAdjustDrawer({
         footer={footer}
         width={440}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, fontFamily: FONT }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, fontFamily: "'Open Sans', sans-serif" }}>
 
           {/* ── AI Recommendation banner ──────────────────────────────── */}
           <div style={{
-            background: ACCENT_M,
-            border: `1px solid ${ACCENT}`,
+            background: 'var(--osmos-brand-primary-muted)',
+            border: `1px solid var(--osmos-brand-primary)`,
             borderRadius: 10, padding: '14px 16px',
             display: 'flex', flexDirection: 'column', gap: 8,
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: ACCENT }}>
-                <SparkleIcon size={13} color={ACCENT} /> AI Recommendation
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: 'var(--osmos-brand-primary)' }}>
+                <SparkleIcon size={13} color="var(--osmos-brand-primary)" /> AI Recommendation
               </span>
               <Badge status="warning" style={{ fontSize: 10 }}>Beta</Badge>
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-              <span style={{ fontSize: 22, fontWeight: 700, color: ACCENT }}>
+              <span style={{ fontSize: 22, fontWeight: 700, color: 'var(--osmos-brand-primary)' }}>
                 ₹{aiSuggestedBudget.toLocaleString('en-IN')}
               </span>
-              <span style={{ fontSize: 13, color: TEXT_MID }}>/ day</span>
+              <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>/ day</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <TrendUpIcon />
-              <span style={{ fontSize: 12, color: GREEN, fontWeight: 600 }}>
+              <span style={{ fontSize: 12, color: 'var(--osmos-brand-green)', fontWeight: 600 }}>
                 {projectedRevUplift} projected revenue uplift ({projectedUpliftPct})
               </span>
             </div>
@@ -158,10 +145,10 @@ export function BudgetAdjustDrawer({
               onClick={handleApplyAI}
               style={{
                 marginTop: 4, alignSelf: 'flex-start',
-                fontSize: 12, color: ACCENT, fontWeight: 600,
-                background: 'none', border: `1px solid ${ACCENT}`,
+                fontSize: 12, color: 'var(--osmos-brand-primary)', fontWeight: 600,
+                background: 'none', border: `1px solid var(--osmos-brand-primary)`,
                 borderRadius: 6, padding: '4px 12px', cursor: 'pointer',
-                fontFamily: FONT,
+                fontFamily: "'Open Sans', sans-serif",
               }}
             >
               Use AI suggestion
@@ -173,24 +160,24 @@ export function BudgetAdjustDrawer({
             display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10,
           }}>
             <div style={{
-              background: BG_SUB, borderRadius: 8,
-              border: `1px solid ${BORDER}`, padding: '12px 14px',
+              background: 'var(--osmos-bg-subtle)', borderRadius: 8,
+              border: `1px solid var(--osmos-border)`, padding: '12px 14px',
             }}>
-              <div style={{ fontSize: 11, color: TEXT_SUB, marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.4, fontWeight: 600 }}>Current</div>
-              <div style={{ fontSize: 18, fontWeight: 700, color: TEXT }}>
+              <div style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.4, fontWeight: 600 }}>Current</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--osmos-fg)' }}>
                 ₹{currentBudget.toLocaleString('en-IN')}
-                <span style={{ fontSize: 12, fontWeight: 400, color: TEXT_MID }}> /day</span>
+                <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--osmos-fg-muted)' }}> /day</span>
               </div>
             </div>
             <div style={{
-              background: numVal > 0 ? GREEN_M : BG_SUB, borderRadius: 8,
-              border: `1px solid ${numVal > 0 ? GREEN : BORDER}`, padding: '12px 14px',
+              background: numVal > 0 ? 'var(--osmos-brand-green-muted)' : 'var(--osmos-bg-subtle)', borderRadius: 8,
+              border: `1px solid ${numVal > 0 ? 'var(--osmos-brand-green)' : 'var(--osmos-border)'}`, padding: '12px 14px',
               transition: 'background 0.2s, border-color 0.2s',
             }}>
-              <div style={{ fontSize: 11, color: TEXT_SUB, marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.4, fontWeight: 600 }}>New</div>
-              <div style={{ fontSize: 18, fontWeight: 700, color: numVal > 0 ? GREEN : TEXT }}>
+              <div style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.4, fontWeight: 600 }}>New</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: numVal > 0 ? 'var(--osmos-brand-green)' : 'var(--osmos-fg)' }}>
                 {numVal > 0 ? `₹${numVal.toLocaleString('en-IN')}` : '—'}
-                {numVal > 0 && <span style={{ fontSize: 12, fontWeight: 400, color: TEXT_MID }}> /day</span>}
+                {numVal > 0 && <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--osmos-fg-muted)' }}> /day</span>}
               </div>
             </div>
           </div>
@@ -198,15 +185,15 @@ export function BudgetAdjustDrawer({
           {/* ── Delta callout (shown when new !== current) ─────────────── */}
           {numVal > 0 && numVal !== currentBudget && (
             <div style={{
-              background: isIncrease ? GREEN_M : `rgba(239,68,68,0.08)`,
-              border: `1px solid ${isIncrease ? GREEN : '#ef4444'}`,
+              background: isIncrease ? 'var(--osmos-brand-green-muted)' : `rgba(239,68,68,0.08)`,
+              border: `1px solid ${isIncrease ? 'var(--osmos-brand-green)' : '#ef4444'}`,
               borderRadius: 8, padding: '10px 14px',
               display: 'flex', alignItems: 'center', gap: 8,
-              fontSize: 12, color: isIncrease ? GREEN : '#ef4444', fontWeight: 600,
+              fontSize: 12, color: isIncrease ? 'var(--osmos-brand-green)' : '#ef4444', fontWeight: 600,
             }}>
               <span style={{ fontSize: 16 }}>{isIncrease ? '↑' : '↓'}</span>
               {isIncrease ? '+' : '-'}₹{deltaAmt}/day
-              <span style={{ fontWeight: 400, color: TEXT_MID }}>
+              <span style={{ fontWeight: 400, color: 'var(--osmos-fg-muted)' }}>
                 ({isIncrease ? '+' : ''}{deltaPct}% change from current budget)
               </span>
             </div>
@@ -227,18 +214,18 @@ export function BudgetAdjustDrawer({
             {error && (
               <span style={{ fontSize: 11, color: '#ef4444' }}>{error}</span>
             )}
-            <span style={{ fontSize: 11, color: TEXT_SUB }}>
+            <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)' }}>
               Minimum ₹500/day · Maximum ₹10,00,000/day
             </span>
           </div>
 
           {/* ── Pacing note ───────────────────────────────────────────── */}
           <div style={{
-            background: BG_SUB, borderRadius: 8,
-            border: `1px solid ${BORDER}`, padding: '10px 14px',
-            fontSize: 12, color: TEXT_MID, lineHeight: 1.6,
+            background: 'var(--osmos-bg-subtle)', borderRadius: 8,
+            border: `1px solid var(--osmos-border)`, padding: '10px 14px',
+            fontSize: 12, color: 'var(--osmos-fg-muted)', lineHeight: 1.6,
           }}>
-            <strong style={{ color: TEXT }}>Even pacing</strong> — Your budget will be distributed
+            <strong style={{ color: 'var(--osmos-fg)' }}>Even pacing</strong> — Your budget will be distributed
             evenly throughout the day for consistent delivery. Budget changes take effect within
             1–2 hours.
           </div>

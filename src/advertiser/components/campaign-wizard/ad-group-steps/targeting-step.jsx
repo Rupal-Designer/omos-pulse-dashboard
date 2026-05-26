@@ -1,17 +1,6 @@
 import { useState } from 'react';
 import { Button, CheckIcon, ChevronDownIcon, ChevronRightIcon, CloseIcon, Icon } from '../../../../ui';
 
-const FONT     = "'Open Sans', sans-serif";
-const TEXT     = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_SUB = 'var(--osmos-fg-subtle)';
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-const AMBER    = 'var(--osmos-brand-amber)';
-
 // ── Icons ─────────────────────────────────────────────────────────────────────
 const UsersIcon = (props) => (
   <Icon {...props}>
@@ -75,28 +64,28 @@ function SectionHeader({ IconComp, label, count, countLabel, subtitle, isExpande
       style={{
         width: '100%', padding: 16,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: hov ? BG_SUB : BG,
+        background: hov ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
         border: 'none', cursor: 'pointer',
-        transition: 'background 0.12s', fontFamily: FONT,
+        transition: 'background 0.12s', fontFamily: "'Open Sans', sans-serif",
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{
           width: 40, height: 40, borderRadius: 8,
-          background: BG_SUB,
+          background: 'var(--osmos-bg-subtle)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
         }}>
-          <IconComp size={20} color={TEXT_MID} />
+          <IconComp size={20} color={'var(--osmos-fg-muted)'} />
         </div>
         <div style={{ textAlign: 'left' }}>
-          <h4 style={{ fontWeight: 500, color: TEXT }}>{label}</h4>
-          {subtitle && <span style={{ fontSize: 12, color: TEXT_MID }}>{subtitle}</span>}
-          {count > 0 && <span style={{ fontSize: 12, color: ACCENT, display: 'block' }}>{count} {countLabel || 'selected'}</span>}
+          <h4 style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>{label}</h4>
+          {subtitle && <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{subtitle}</span>}
+          {count > 0 && <span style={{ fontSize: 12, color: 'var(--osmos-brand-primary)', display: 'block' }}>{count} {countLabel || 'selected'}</span>}
         </div>
       </div>
       {isExpanded
-        ? <ChevronDownIcon size={20} color={TEXT_MID} />
-        : <ChevronRightIcon size={20} color={TEXT_MID} />
+        ? <ChevronDownIcon size={20} color={'var(--osmos-fg-muted)'} />
+        : <ChevronRightIcon size={20} color={'var(--osmos-fg-muted)'} />
       }
     </button>
   );
@@ -113,17 +102,17 @@ function OptionChip({ label, isSelected, onClick }) {
       style={{
         display: 'flex', alignItems: 'center', gap: 8,
         padding: '8px 16px', borderRadius: 8, textAlign: 'left',
-        border: `1px solid ${isSelected ? ACCENT : hov ? TEXT_MID : BORDER}`,
-        background: isSelected ? ACCENT_M : hov ? BG_SUB : BG,
-        color: isSelected ? ACCENT : TEXT_MID,
+        border: `1px solid ${isSelected ? 'var(--osmos-brand-primary)' : hov ? 'var(--osmos-fg-muted)' : 'var(--osmos-border)'}`,
+        background: isSelected ? 'var(--osmos-brand-primary-muted)' : hov ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
+        color: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)',
         fontSize: 13, cursor: 'pointer', transition: 'all 0.15s',
-        fontFamily: FONT,
+        fontFamily: "'Open Sans', sans-serif",
       }}
     >
       <div style={{
         width: 16, height: 16, borderRadius: 3, flexShrink: 0,
-        border: `2px solid ${isSelected ? ACCENT : BORDER}`,
-        background: isSelected ? ACCENT : 'transparent',
+        border: `2px solid ${isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)'}`,
+        background: isSelected ? 'var(--osmos-brand-primary)' : 'transparent',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         {isSelected && <CheckIcon size={10} color="#fff" />}
@@ -144,23 +133,23 @@ function StoreOption({ name, location, isSelected, onClick }) {
       style={{
         width: '100%', display: 'flex', alignItems: 'center', gap: 12,
         padding: '12px 16px', borderRadius: 8, textAlign: 'left',
-        border: `1px solid ${isSelected ? ACCENT : hov ? TEXT_MID : BORDER}`,
-        background: isSelected ? ACCENT_M : hov ? BG_SUB : BG,
+        border: `1px solid ${isSelected ? 'var(--osmos-brand-primary)' : hov ? 'var(--osmos-fg-muted)' : 'var(--osmos-border)'}`,
+        background: isSelected ? 'var(--osmos-brand-primary-muted)' : hov ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
         cursor: 'pointer', transition: 'all 0.15s',
-        fontFamily: FONT,
+        fontFamily: "'Open Sans', sans-serif",
       }}
     >
       <div style={{
         width: 16, height: 16, borderRadius: 3, flexShrink: 0,
-        border: `2px solid ${isSelected ? ACCENT : BORDER}`,
-        background: isSelected ? ACCENT : 'transparent',
+        border: `2px solid ${isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)'}`,
+        background: isSelected ? 'var(--osmos-brand-primary)' : 'transparent',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         {isSelected && <CheckIcon size={10} color="#fff" />}
       </div>
       <div>
-        <div style={{ fontWeight: 500, color: isSelected ? ACCENT : TEXT, fontSize: 13 }}>{name}</div>
-        <div style={{ fontSize: 12, color: TEXT_SUB }}>{location}</div>
+        <div style={{ fontWeight: 500, color: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg)', fontSize: 13 }}>{name}</div>
+        <div style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>{location}</div>
       </div>
     </button>
   );
@@ -177,22 +166,22 @@ function NetworkOption({ logo, name, isSelected, onClick }) {
       style={{
         display: 'flex', alignItems: 'center', gap: 12,
         padding: '12px 16px', borderRadius: 8, textAlign: 'left',
-        border: `1px solid ${isSelected ? ACCENT : hov ? TEXT_MID : BORDER}`,
-        background: isSelected ? ACCENT_M : hov ? BG_SUB : BG,
+        border: `1px solid ${isSelected ? 'var(--osmos-brand-primary)' : hov ? 'var(--osmos-fg-muted)' : 'var(--osmos-border)'}`,
+        background: isSelected ? 'var(--osmos-brand-primary-muted)' : hov ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
         cursor: 'pointer', transition: 'all 0.15s',
-        fontFamily: FONT,
+        fontFamily: "'Open Sans', sans-serif",
       }}
     >
       <div style={{
         width: 16, height: 16, borderRadius: 3, flexShrink: 0,
-        border: `2px solid ${isSelected ? ACCENT : BORDER}`,
-        background: isSelected ? ACCENT : 'transparent',
+        border: `2px solid ${isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)'}`,
+        background: isSelected ? 'var(--osmos-brand-primary)' : 'transparent',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         {isSelected && <CheckIcon size={10} color="#fff" />}
       </div>
       <span style={{ fontSize: 18 }}>{logo}</span>
-      <span style={{ fontWeight: 500, color: isSelected ? ACCENT : TEXT_MID, fontSize: 13 }}>{name}</span>
+      <span style={{ fontWeight: 500, color: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)', fontSize: 13 }}>{name}</span>
     </button>
   );
 }
@@ -302,21 +291,21 @@ export function TargetingStep({ data, updateData }) {
   };
 
   // Shared styles
-  const card = { background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, overflow: 'hidden' };
+  const card = { background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, overflow: 'hidden' };
   const inputStyle = {
     flex: 1, padding: '8px 16px',
-    border: `1px solid ${BORDER}`, borderRadius: 8,
-    fontSize: 13, color: TEXT, background: BG,
-    fontFamily: FONT, outline: 'none',
+    border: `1px solid ${'var(--osmos-border)'}`, borderRadius: 8,
+    fontSize: 13, color: 'var(--osmos-fg)', background: 'var(--osmos-bg)',
+    fontFamily: "'Open Sans', sans-serif", outline: 'none',
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: FONT }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: "'Open Sans', sans-serif" }}>
       <div>
-        <h2 style={{ fontSize: 24, fontWeight: 600, color: TEXT, marginBottom: 8 }}>
+        <h2 style={{ fontSize: 24, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8 }}>
           Audience Targeting
         </h2>
-        <p style={{ color: TEXT_MID }}>
+        <p style={{ color: 'var(--osmos-fg-muted)' }}>
           Define who should see your ads based on demographics, interests, behaviors, stores, and networks.
         </p>
       </div>
@@ -334,7 +323,7 @@ export function TargetingStep({ data, updateData }) {
               onClick={() => toggleSection(key)}
             />
             {isExpanded && (
-              <div style={{ padding: '0 16px 16px', borderTop: `1px solid ${BORDER}` }}>
+              <div style={{ padding: '0 16px 16px', borderTop: `1px solid ${'var(--osmos-border)'}` }}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, paddingTop: 16 }}>
                   {options.map((option) => (
                     <OptionChip
@@ -360,7 +349,7 @@ export function TargetingStep({ data, updateData }) {
           onClick={() => toggleSection('stores')}
         />
         {expandedSections.includes('stores') && (
-          <div style={{ padding: '0 16px 16px', borderTop: `1px solid ${BORDER}` }}>
+          <div style={{ padding: '0 16px 16px', borderTop: `1px solid ${'var(--osmos-border)'}` }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, paddingTop: 16 }}>
               {availableStores.map((store) => (
                 <StoreOption
@@ -386,7 +375,7 @@ export function TargetingStep({ data, updateData }) {
           onClick={() => toggleSection('networks')}
         />
         {expandedSections.includes('networks') && (
-          <div style={{ padding: '0 16px 16px', borderTop: `1px solid ${BORDER}` }}>
+          <div style={{ padding: '0 16px 16px', borderTop: `1px solid ${'var(--osmos-border)'}` }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, paddingTop: 16 }}>
               {availableNetworks.map((network) => (
                 <NetworkOption
@@ -402,14 +391,14 @@ export function TargetingStep({ data, updateData }) {
       </div>
 
       {/* Keyword Targeting */}
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 16 }}>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 8, background: BG_SUB, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <TagIcon size={20} color={TEXT_MID} />
+          <div style={{ width: 40, height: 40, borderRadius: 8, background: 'var(--osmos-bg-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <TagIcon size={20} color={'var(--osmos-fg-muted)'} />
           </div>
           <div>
-            <h4 style={{ fontWeight: 500, color: TEXT }}>Keyword Targeting</h4>
-            <span style={{ fontSize: 12, color: TEXT_MID }}>Target users searching for specific terms</span>
+            <h4 style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>Keyword Targeting</h4>
+            <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>Target users searching for specific terms</span>
           </div>
         </div>
         <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
@@ -428,11 +417,11 @@ export function TargetingStep({ data, updateData }) {
             {data.targeting.keywords.map((keyword) => (
               <span key={keyword} style={{
                 display: 'inline-flex', alignItems: 'center', gap: 4,
-                padding: '4px 12px', background: ACCENT_M, color: ACCENT,
+                padding: '4px 12px', background: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)',
                 borderRadius: 999, fontSize: 13,
               }}>
                 {keyword}
-                <button onClick={() => removeKeyword(keyword)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: ACCENT, lineHeight: 1, padding: 0, fontSize: 16 }}>×</button>
+                <button onClick={() => removeKeyword(keyword)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--osmos-brand-primary)', lineHeight: 1, padding: 0, fontSize: 16 }}>×</button>
               </span>
             ))}
           </div>
@@ -440,14 +429,14 @@ export function TargetingStep({ data, updateData }) {
       </div>
 
       {/* Negative Keyword Targeting */}
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 16 }}>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
           <div style={{ width: 40, height: 40, borderRadius: 8, background: 'var(--osmos-brand-amber-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <CloseIcon size={20} color={AMBER} />
+            <CloseIcon size={20} color={'var(--osmos-brand-amber)'} />
           </div>
           <div>
-            <h4 style={{ fontWeight: 500, color: TEXT }}>Negative Keyword Targeting</h4>
-            <span style={{ fontSize: 12, color: TEXT_MID }}>Exclude users searching for specific terms</span>
+            <h4 style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>Negative Keyword Targeting</h4>
+            <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>Exclude users searching for specific terms</span>
           </div>
         </div>
         <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
@@ -462,9 +451,9 @@ export function TargetingStep({ data, updateData }) {
           <button
             onClick={addNegativeKeyword}
             style={{
-              padding: '8px 16px', background: AMBER, color: '#fff',
+              padding: '8px 16px', background: 'var(--osmos-brand-amber)', color: '#fff',
               border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 500,
-              cursor: 'pointer', fontFamily: FONT, transition: 'opacity 0.12s',
+              cursor: 'pointer', fontFamily: "'Open Sans', sans-serif", transition: 'opacity 0.12s',
             }}
           >
             Add
@@ -475,11 +464,11 @@ export function TargetingStep({ data, updateData }) {
             {data.targeting.negativeKeywords.map((keyword) => (
               <span key={keyword} style={{
                 display: 'inline-flex', alignItems: 'center', gap: 4,
-                padding: '4px 12px', background: 'var(--osmos-brand-amber-muted)', color: AMBER,
+                padding: '4px 12px', background: 'var(--osmos-brand-amber-muted)', color: 'var(--osmos-brand-amber)',
                 borderRadius: 999, fontSize: 13,
               }}>
                 {keyword}
-                <button onClick={() => removeNegativeKeyword(keyword)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: AMBER, lineHeight: 1, padding: 0, fontSize: 16 }}>×</button>
+                <button onClick={() => removeNegativeKeyword(keyword)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--osmos-brand-amber)', lineHeight: 1, padding: 0, fontSize: 16 }}>×</button>
               </span>
             ))}
           </div>

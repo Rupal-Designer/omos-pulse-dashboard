@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { SearchIcon } from '../atoms/Icon';
 
-const FONT = "'Open Sans', sans-serif";
-
 // ── GlobalSearch ──────────────────────────────────────────────────────────────
 // Self-contained: renders the trigger button + full-screen search overlay.
 // Drop <GlobalSearch /> anywhere in a header row — no parent state needed.
@@ -67,7 +65,7 @@ export function GlobalSearch() {
               borderRadius: 10,
               background: 'var(--osmos-bg)',
               boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
-              fontFamily: FONT,
+              fontFamily: "'Open Sans', sans-serif",
               overflow: 'hidden',
             }}
             onClick={e => e.stopPropagation()}
@@ -86,7 +84,7 @@ export function GlobalSearch() {
                 style={{
                   flex: 1, border: 'none', outline: 'none',
                   fontSize: 14, color: 'var(--osmos-fg)',
-                  background: 'transparent', fontFamily: FONT,
+                  background: 'transparent', fontFamily: "'Open Sans', sans-serif",
                 }}
               />
               <kbd style={{
@@ -95,7 +93,7 @@ export function GlobalSearch() {
                 color: 'var(--osmos-fg-muted)',
                 background: 'var(--osmos-bg-subtle)',
                 border: '1px solid var(--osmos-border)',
-                borderRadius: 4, fontFamily: FONT,
+                borderRadius: 4, fontFamily: "'Open Sans', sans-serif",
                 cursor: 'pointer',
               }}
                 onClick={() => setOpen(false)}

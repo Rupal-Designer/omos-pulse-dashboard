@@ -10,17 +10,6 @@ function WarnBanner({ message }) {
   );
 }
 
-const FONT     = "'Open Sans', sans-serif";
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const TEXT_HI  = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_LO  = 'var(--osmos-fg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const GREEN    = 'var(--osmos-brand-green)';
-const AMBER    = 'var(--osmos-brand-amber)';
-
 // ── Launch animation state machine ───────────────────────────────────────────
 // idle → launching (0–600ms) → success (600–1800ms) → done
 
@@ -43,12 +32,12 @@ function useTypewriter(text, speed = 40) {
 
 function SectionReview({ title, stepId, children, onEdit }) {
   return (
-    <div style={{ background: BG, border: `1px solid ${BORDER}`, borderRadius: 10, overflow: 'hidden', marginBottom: 12, fontFamily: FONT }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: `1px solid ${BORDER}`, background: BG_SUB }}>
-        <span style={{ fontSize: 13, fontWeight: 700, color: TEXT_HI }}>{title}</span>
+    <div style={{ background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 10, overflow: 'hidden', marginBottom: 12, fontFamily: "'Open Sans', sans-serif" }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: `1px solid var(--osmos-border)`, background: 'var(--osmos-bg-subtle)' }}>
+        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--osmos-fg)' }}>{title}</span>
         <button
           onClick={() => onEdit(stepId)}
-          style={{ fontSize: 12, color: ACCENT, background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, fontFamily: FONT }}
+          style={{ fontSize: 12, color: 'var(--osmos-brand-primary)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, fontFamily: "'Open Sans', sans-serif" }}
         >
           Edit →
         </button>
@@ -62,18 +51,18 @@ function SectionReview({ title, stepId, children, onEdit }) {
 
 function ReviewRow({ label, value }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 8, fontFamily: FONT }}>
-      <span style={{ fontSize: 12, fontWeight: 600, color: TEXT_MID, width: 130, flexShrink: 0 }}>{label}</span>
-      <span style={{ fontSize: 12, color: TEXT_HI }}>{value || <span style={{ color: TEXT_LO }}>—</span>}</span>
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>
+      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)', width: 130, flexShrink: 0 }}>{label}</span>
+      <span style={{ fontSize: 12, color: 'var(--osmos-fg)' }}>{value || <span style={{ color: 'var(--osmos-fg-subtle)' }}>—</span>}</span>
     </div>
   );
 }
 
 function LaunchButton({ onLaunchClick, launchState }) {
   const STATES = {
-    idle:      { label: '🚀 Launch Campaign', bg: ACCENT,  color: '#fff' },
-    launching: { label: 'Launching...',        bg: ACCENT,  color: '#fff' },
-    success:   { label: '✓ Launched!',         bg: GREEN,   color: '#fff' },
+    idle:      { label: '🚀 Launch Campaign', bg: 'var(--osmos-brand-primary)',  color: '#fff' },
+    launching: { label: 'Launching...',        bg: 'var(--osmos-brand-primary)',  color: '#fff' },
+    success:   { label: '✓ Launched!',         bg: 'var(--osmos-brand-green)',   color: '#fff' },
   };
   const s = STATES[launchState] || STATES.idle;
 
@@ -83,7 +72,7 @@ function LaunchButton({ onLaunchClick, launchState }) {
       disabled={launchState !== 'idle'}
       style={{
         padding: '10px 24px', borderRadius: 8, border: 'none', cursor: launchState === 'idle' ? 'pointer' : 'default',
-        background: s.bg, color: s.color, fontSize: 14, fontWeight: 700, fontFamily: FONT,
+        background: s.bg, color: s.color, fontSize: 14, fontWeight: 700, fontFamily: "'Open Sans', sans-serif",
         display: 'flex', alignItems: 'center', gap: 8,
         transition: 'background 0.3s, transform 0.15s',
         transform: launchState === 'launching' ? 'translateY(-2px)' : 'translateY(0)',
@@ -145,26 +134,26 @@ export default function ReviewLaunchStep({ campaignData, onChange, onStepClick, 
   if (!budget?.endDate) warnings.push('No end date set. Campaign will run until manually paused.');
 
   return (
-    <div style={{ fontFamily: FONT, maxWidth: 680 }}>
-      <h2 style={{ fontSize: 18, fontWeight: 700, color: TEXT_HI, margin: '0 0 4px' }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif", maxWidth: 680 }}>
+      <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--osmos-fg)', margin: '0 0 4px' }}>
         Review & Launch
       </h2>
-      <p style={{ fontSize: 13, color: TEXT_MID, margin: '0 0 24px' }}>
+      <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', margin: '0 0 24px' }}>
         Review your campaign details. You can edit any section before launching.
       </p>
 
       {/* Campaign name */}
       <div style={{ marginBottom: 20 }}>
-        <label style={{ fontSize: 12, fontWeight: 600, color: TEXT_MID, display: 'block', marginBottom: 6, fontFamily: FONT }}>
+        <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)', display: 'block', marginBottom: 6, fontFamily: "'Open Sans', sans-serif" }}>
           Campaign Name
         </label>
         <Input
           value={campaignData.campaignName}
           onChange={e => onChange({ campaignName: e.target.value })}
           placeholder={suggestedName}
-          style={{ fontSize: 14, fontFamily: FONT }}
+          style={{ fontSize: 14, fontFamily: "'Open Sans', sans-serif" }}
         />
-        <p style={{ fontSize: 11, color: TEXT_LO, margin: '4px 0 0', fontFamily: FONT }}>
+        <p style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', margin: '4px 0 0', fontFamily: "'Open Sans', sans-serif" }}>
           Auto-suggested from your selections. Edit if needed.
         </p>
       </div>
@@ -184,7 +173,7 @@ export default function ReviewLaunchStep({ campaignData, onChange, onStepClick, 
             <ReviewRow label="Objective" value={ch.objective} />
           </>
         ) : (
-          <span style={{ fontSize: 12, color: AMBER }}>⚠ Not configured</span>
+          <span style={{ fontSize: 12, color: 'var(--osmos-brand-amber)' }}>⚠ Not configured</span>
         )}
       </SectionReview>
 
@@ -202,19 +191,19 @@ export default function ReviewLaunchStep({ campaignData, onChange, onStepClick, 
             )}
           </>
         ) : (
-          <span style={{ fontSize: 12, color: AMBER }}>⚠ Not configured</span>
+          <span style={{ fontSize: 12, color: 'var(--osmos-brand-amber)' }}>⚠ Not configured</span>
         )}
       </SectionReview>
 
       <SectionReview title="Products" stepId={3} onEdit={onStepClick}>
         <ReviewRow label="Products selected" value={productCount > 0 ? `${productCount} product${productCount !== 1 ? 's' : ''}` : undefined} />
         {productCount > 0 && campaignData.selectedProducts?.slice(0, 3).map(p => (
-          <div key={p.id} style={{ fontSize: 12, color: TEXT_MID, paddingLeft: 130, marginBottom: 2, fontFamily: FONT }}>
+          <div key={p.id} style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', paddingLeft: 130, marginBottom: 2, fontFamily: "'Open Sans', sans-serif" }}>
             {p.img} {p.name}
           </div>
         ))}
         {productCount > 3 && (
-          <div style={{ fontSize: 11, color: TEXT_LO, paddingLeft: 130, fontFamily: FONT }}>
+          <div style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', paddingLeft: 130, fontFamily: "'Open Sans', sans-serif" }}>
             +{productCount - 3} more
           </div>
         )}
@@ -226,7 +215,7 @@ export default function ReviewLaunchStep({ campaignData, onChange, onStepClick, 
           value={creativeCount > 0 ? `${creativeCount} file${creativeCount !== 1 ? 's' : ''}` : undefined}
         />
         {creativeCount > 0 && campaignData.creatives?.slice(0, 3).map((c, i) => (
-          <div key={i} style={{ fontSize: 12, color: TEXT_MID, paddingLeft: 130, marginBottom: 2, fontFamily: FONT }}>
+          <div key={i} style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', paddingLeft: 130, marginBottom: 2, fontFamily: "'Open Sans', sans-serif" }}>
             {c.format}: {c.name}
           </div>
         ))}
@@ -246,14 +235,14 @@ export default function ReviewLaunchStep({ campaignData, onChange, onStepClick, 
             <ReviewRow label="Pacing" value={budget.pacing} />
           </>
         ) : (
-          <span style={{ fontSize: 12, color: AMBER }}>⚠ Not configured</span>
+          <span style={{ fontSize: 12, color: 'var(--osmos-brand-amber)' }}>⚠ Not configured</span>
         )}
       </SectionReview>
 
       {/* Footer action row — rendered here, not in the wizard footer for step 6 */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '20px 0 0', borderTop: `1px solid ${BORDER}`, marginTop: 8,
+        padding: '20px 0 0', borderTop: `1px solid var(--osmos-border)`, marginTop: 8,
       }}>
         <Button variant="ghost" onClick={() => onStepClick?.(5)}>← Back</Button>
         <div style={{ display: 'flex', gap: 12 }}>

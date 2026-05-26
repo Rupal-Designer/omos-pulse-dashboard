@@ -1,16 +1,6 @@
 import { useState } from 'react';
 import { CalendarIcon, InfoIcon, Icon, Select } from '../../../../ui';
 
-const FONT     = "'Open Sans', sans-serif";
-const TEXT     = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_SUB = 'var(--osmos-fg-subtle)';
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-
 // ── Icons ─────────────────────────────────────────────────────────────────────
 const ClockIcon = (props) => (
   <Icon {...props}>
@@ -49,29 +39,29 @@ export function ConfigStep({ data, updateData }) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: FONT }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: "'Open Sans', sans-serif" }}>
       <div>
-        <h2 style={{ fontSize: 24, fontWeight: 600, color: TEXT, marginBottom: 8 }}>
+        <h2 style={{ fontSize: 24, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8 }}>
           Configuration
         </h2>
-        <p style={{ color: TEXT_MID }}>
+        <p style={{ color: 'var(--osmos-fg-muted)' }}>
           Fine-tune delivery settings for your ad group.
         </p>
       </div>
 
       {/* Frequency Capping */}
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <ClockIcon size={20} color={TEXT_MID} />
-          <h4 style={{ fontWeight: 500, color: TEXT }}>Frequency Capping</h4>
-          <InfoIcon size={14} color={TEXT_SUB} />
+          <ClockIcon size={20} color={'var(--osmos-fg-muted)'} />
+          <h4 style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>Frequency Capping</h4>
+          <InfoIcon size={14} color={'var(--osmos-fg-subtle)'} />
         </div>
-        <p style={{ fontSize: 13, color: TEXT_MID, marginBottom: 16 }}>
+        <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', marginBottom: 16 }}>
           Limit how often a user sees your ad to prevent ad fatigue.
         </p>
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 16 }}>
           <div>
-            <label style={{ display: 'block', fontSize: 13, color: TEXT_MID, marginBottom: 8 }}>
+            <label style={{ display: 'block', fontSize: 13, color: 'var(--osmos-fg-muted)', marginBottom: 8 }}>
               Max impressions
             </label>
             <input
@@ -80,9 +70,9 @@ export function ConfigStep({ data, updateData }) {
               onChange={(e) => updateConfig('frequencyCap', e.target.value)}
               style={{
                 width: 96, padding: '8px 12px',
-                border: `1px solid ${BORDER}`, borderRadius: 8,
-                fontSize: 13, color: TEXT, background: BG,
-                fontFamily: FONT, outline: 'none',
+                border: `1px solid ${'var(--osmos-border)'}`, borderRadius: 8,
+                fontSize: 13, color: 'var(--osmos-fg)', background: 'var(--osmos-bg)',
+                fontFamily: "'Open Sans', sans-serif", outline: 'none',
               }}
             />
           </div>
@@ -98,10 +88,10 @@ export function ConfigStep({ data, updateData }) {
       </div>
 
       {/* Delivery Type */}
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <ZapIcon size={20} color={TEXT_MID} />
-          <h4 style={{ fontWeight: 500, color: TEXT }}>Delivery Type</h4>
+          <ZapIcon size={20} color={'var(--osmos-fg-muted)'} />
+          <h4 style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>Delivery Type</h4>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
           {deliveryOptions.map(({ id, label, description }) => {
@@ -115,16 +105,16 @@ export function ConfigStep({ data, updateData }) {
                 onMouseLeave={() => setHoveredDelivery(null)}
                 style={{
                   padding: 16, borderRadius: 8, textAlign: 'left',
-                  border: `2px solid ${isSelected ? ACCENT : isHovered ? TEXT_MID : BORDER}`,
-                  background: isSelected ? ACCENT_M : isHovered ? BG_SUB : BG,
+                  border: `2px solid ${isSelected ? 'var(--osmos-brand-primary)' : isHovered ? 'var(--osmos-fg-muted)' : 'var(--osmos-border)'}`,
+                  background: isSelected ? 'var(--osmos-brand-primary-muted)' : isHovered ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
                   cursor: 'pointer', transition: 'all 0.15s',
-                  fontFamily: FONT,
+                  fontFamily: "'Open Sans', sans-serif",
                 }}
               >
-                <h5 style={{ fontWeight: 500, marginBottom: 4, color: isSelected ? ACCENT : TEXT }}>
+                <h5 style={{ fontWeight: 500, marginBottom: 4, color: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg)' }}>
                   {label}
                 </h5>
-                <p style={{ fontSize: 12, color: TEXT_MID }}>{description}</p>
+                <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{description}</p>
               </button>
             );
           })}
@@ -132,13 +122,13 @@ export function ConfigStep({ data, updateData }) {
       </div>
 
       {/* Day Parting */}
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <CalendarIcon size={20} color={TEXT_MID} />
-          <h4 style={{ fontWeight: 500, color: TEXT }}>Day Parting</h4>
-          <span style={{ fontSize: 12, color: TEXT_SUB }}>(Optional)</span>
+          <CalendarIcon size={20} color={'var(--osmos-fg-muted)'} />
+          <h4 style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>Day Parting</h4>
+          <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>(Optional)</span>
         </div>
-        <p style={{ fontSize: 13, color: TEXT_MID, marginBottom: 16 }}>
+        <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', marginBottom: 16 }}>
           Select specific days and hours when your ads should run.
         </p>
 
@@ -160,11 +150,11 @@ export function ConfigStep({ data, updateData }) {
                 onMouseLeave={() => setHoveredDay(null)}
                 style={{
                   padding: '8px 12px', borderRadius: 8, fontSize: 13, fontWeight: 500,
-                  border: `1px solid ${isSelected ? ACCENT : isHovered ? TEXT_MID : BORDER}`,
-                  background: isSelected ? ACCENT_M : isHovered ? BG_SUB : BG,
-                  color: isSelected ? ACCENT : TEXT_MID,
+                  border: `1px solid ${isSelected ? 'var(--osmos-brand-primary)' : isHovered ? 'var(--osmos-fg-muted)' : 'var(--osmos-border)'}`,
+                  background: isSelected ? 'var(--osmos-brand-primary-muted)' : isHovered ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
+                  color: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)',
                   cursor: 'pointer', transition: 'all 0.15s',
-                  fontFamily: FONT,
+                  fontFamily: "'Open Sans', sans-serif",
                 }}
               >
                 {day}
@@ -174,8 +164,8 @@ export function ConfigStep({ data, updateData }) {
         </div>
 
         {data.config.dayParting.length > 0 && (
-          <div style={{ padding: 12, background: BG_SUB, borderRadius: 8 }}>
-            <p style={{ fontSize: 13, color: TEXT_MID }}>
+          <div style={{ padding: 12, background: 'var(--osmos-bg-subtle)', borderRadius: 8 }}>
+            <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>
               Ads will run on:{' '}
               {data.config.dayParting.map((d) => d.split('-')[0]).join(', ')}
             </p>

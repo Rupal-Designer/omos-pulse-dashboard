@@ -1,14 +1,5 @@
 import { Input, Select } from '../../../../ui';
 
-const FONT     = "'Open Sans', sans-serif";
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const TEXT_HI  = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_LO  = 'var(--osmos-fg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-
 const BID_STRATEGIES = {
   Meta: ['CBO (Campaign Budget Optimisation)', 'Manual CPC', 'Lowest Cost', 'Bid Cap'],
   Google: ['Target ROAS', 'Target CPA', 'Maximise Conversions', 'Manual CPC'],
@@ -22,10 +13,10 @@ const PACING_OPTIONS = ['Standard', 'Accelerated'];
 
 function FieldRow({ label, hint, children }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 5, fontFamily: FONT }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 5, fontFamily: "'Open Sans', sans-serif" }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        <label style={{ fontSize: 12, fontWeight: 600, color: TEXT_MID }}>{label}</label>
-        {hint && <span style={{ fontSize: 11, color: TEXT_LO }}>({hint})</span>}
+        <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)' }}>{label}</label>
+        {hint && <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)' }}>({hint})</span>}
       </div>
       {children}
     </div>
@@ -34,9 +25,9 @@ function FieldRow({ label, hint, children }) {
 
 function SectionCard({ title, description, children }) {
   return (
-    <div style={{ background: BG, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '20px', marginBottom: 16, fontFamily: FONT }}>
-      <h3 style={{ fontSize: 14, fontWeight: 700, color: TEXT_HI, margin: '0 0 4px' }}>{title}</h3>
-      {description && <p style={{ fontSize: 12, color: TEXT_MID, margin: '0 0 16px' }}>{description}</p>}
+    <div style={{ background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 10, padding: '20px', marginBottom: 16, fontFamily: "'Open Sans', sans-serif" }}>
+      <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--osmos-fg)', margin: '0 0 4px' }}>{title}</h3>
+      {description && <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', margin: '0 0 16px' }}>{description}</p>}
       {children}
     </div>
   );
@@ -75,17 +66,17 @@ export default function BudgetScheduleStep({ campaignData, onChange }) {
   const est = budget.type === 'daily' ? estimatedTotal() : null;
 
   return (
-    <div style={{ fontFamily: FONT, maxWidth: 600 }}>
-      <h2 style={{ fontSize: 18, fontWeight: 700, color: TEXT_HI, margin: '0 0 4px' }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif", maxWidth: 600 }}>
+      <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--osmos-fg)', margin: '0 0 4px' }}>
         Budget & Schedule
       </h2>
-      <p style={{ fontSize: 13, color: TEXT_MID, margin: '0 0 24px' }}>
+      <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', margin: '0 0 24px' }}>
         Set how much you want to spend and when your campaign runs.
       </p>
 
       {/* Budget type toggle */}
       <SectionCard title="Budget" description="Choose a daily or lifetime budget for your campaign.">
-        <div style={{ display: 'flex', gap: 0, border: `1px solid ${BORDER}`, borderRadius: 8, overflow: 'hidden', marginBottom: 16, width: 'fit-content' }}>
+        <div style={{ display: 'flex', gap: 0, border: `1px solid var(--osmos-border)`, borderRadius: 8, overflow: 'hidden', marginBottom: 16, width: 'fit-content' }}>
           {[
             { value: 'daily',    label: 'Daily Budget' },
             { value: 'lifetime', label: 'Lifetime Budget' },
@@ -94,9 +85,9 @@ export default function BudgetScheduleStep({ campaignData, onChange }) {
               key={opt.value}
               onClick={() => update({ type: opt.value })}
               style={{
-                padding: '7px 18px', border: 'none', cursor: 'pointer', fontFamily: FONT,
-                background: budget.type === opt.value ? ACCENT : BG_SUB,
-                color: budget.type === opt.value ? '#fff' : TEXT_MID,
+                padding: '7px 18px', border: 'none', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
+                background: budget.type === opt.value ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg-subtle)',
+                color: budget.type === opt.value ? '#fff' : 'var(--osmos-fg-muted)',
                 fontSize: 13, fontWeight: budget.type === opt.value ? 600 : 400,
                 transition: 'all 0.15s',
               }}
@@ -107,13 +98,13 @@ export default function BudgetScheduleStep({ campaignData, onChange }) {
         </div>
 
         <FieldRow label={budget.type === 'daily' ? 'Daily Budget' : 'Lifetime Budget'} hint="INR">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 0, border: `1px solid ${BORDER}`, borderRadius: 8, overflow: 'hidden', background: BG }}>
-            <span style={{ padding: '8px 12px', background: BG_SUB, borderRight: `1px solid ${BORDER}`, fontSize: 13, color: TEXT_MID, fontWeight: 600 }}>₹</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 0, border: `1px solid var(--osmos-border)`, borderRadius: 8, overflow: 'hidden', background: 'var(--osmos-bg)' }}>
+            <span style={{ padding: '8px 12px', background: 'var(--osmos-bg-subtle)', borderRight: `1px solid var(--osmos-border)`, fontSize: 13, color: 'var(--osmos-fg-muted)', fontWeight: 600 }}>₹</span>
             <input
               type="number" min={0} placeholder="0"
               value={budget.type === 'daily' ? budget.dailyBudget : budget.lifetimeBudget}
               onChange={e => update({ [budget.type === 'daily' ? 'dailyBudget' : 'lifetimeBudget']: e.target.value })}
-              style={{ flex: 1, border: 'none', padding: '8px 12px', fontSize: 14, fontFamily: FONT, outline: 'none', background: 'transparent', color: TEXT_HI }}
+              style={{ flex: 1, border: 'none', padding: '8px 12px', fontSize: 14, fontFamily: "'Open Sans', sans-serif", outline: 'none', background: 'transparent', color: 'var(--osmos-fg)' }}
             />
           </div>
         </FieldRow>
@@ -127,7 +118,7 @@ export default function BudgetScheduleStep({ campaignData, onChange }) {
               type="date"
               value={budget.startDate}
               onChange={e => update({ startDate: e.target.value })}
-              style={{ padding: '8px 10px', borderRadius: 8, border: `1px solid ${BORDER}`, fontSize: 13, fontFamily: FONT, color: TEXT_HI, background: BG }}
+              style={{ padding: '8px 10px', borderRadius: 8, border: `1px solid var(--osmos-border)`, fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)', background: 'var(--osmos-bg)' }}
             />
           </FieldRow>
           <FieldRow label="End Date">
@@ -135,7 +126,7 @@ export default function BudgetScheduleStep({ campaignData, onChange }) {
               type="date"
               value={budget.endDate}
               onChange={e => update({ endDate: e.target.value })}
-              style={{ padding: '8px 10px', borderRadius: 8, border: `1px solid ${BORDER}`, fontSize: 13, fontFamily: FONT, color: TEXT_HI, background: BG }}
+              style={{ padding: '8px 10px', borderRadius: 8, border: `1px solid var(--osmos-border)`, fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)', background: 'var(--osmos-bg)' }}
             />
           </FieldRow>
         </div>
@@ -149,7 +140,7 @@ export default function BudgetScheduleStep({ campaignData, onChange }) {
               value={budget.bidStrategy}
               onChange={e => update({ bidStrategy: e.target.value })}
               options={[{ value: '', label: 'Select strategy...' }, ...bidOptions.map(opt => ({ value: opt, label: opt }))]}
-              style={{ fontFamily: FONT }}
+              style={{ fontFamily: "'Open Sans', sans-serif" }}
             />
           </FieldRow>
           <FieldRow label="Pacing">
@@ -157,7 +148,7 @@ export default function BudgetScheduleStep({ campaignData, onChange }) {
               value={budget.pacing}
               onChange={e => update({ pacing: e.target.value })}
               options={PACING_OPTIONS.map(opt => ({ value: opt, label: opt }))}
-              style={{ fontFamily: FONT }}
+              style={{ fontFamily: "'Open Sans', sans-serif" }}
             />
           </FieldRow>
         </div>
@@ -166,20 +157,20 @@ export default function BudgetScheduleStep({ campaignData, onChange }) {
       {/* Estimated total spend */}
       {est && (
         <div style={{
-          background: BG_SUB, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '14px 18px',
+          background: 'var(--osmos-bg-subtle)', border: `1px solid var(--osmos-border)`, borderRadius: 10, padding: '14px 18px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
           <div>
-            <p style={{ fontSize: 11, fontWeight: 600, color: TEXT_LO, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 4px' }}>
+            <p style={{ fontSize: 11, fontWeight: 600, color: 'var(--osmos-fg-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 4px' }}>
               Estimated Total Spend
             </p>
-            <p style={{ fontSize: 18, fontWeight: 700, color: TEXT_HI, margin: 0, fontFamily: FONT }}>
+            <p style={{ fontSize: 18, fontWeight: 700, color: 'var(--osmos-fg)', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>
               ₹{est.total.toLocaleString('en-IN')}
             </p>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <p style={{ fontSize: 12, color: TEXT_MID, margin: '0 0 2px' }}>Duration</p>
-            <p style={{ fontSize: 14, fontWeight: 600, color: TEXT_HI, margin: 0 }}>
+            <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', margin: '0 0 2px' }}>Duration</p>
+            <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)', margin: 0 }}>
               {est.days} day{est.days !== 1 ? 's' : ''}
             </p>
           </div>

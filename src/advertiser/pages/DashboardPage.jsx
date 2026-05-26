@@ -7,11 +7,6 @@ import { PerformanceTable } from '../components/performance-table';
 import { AIDebuggerPanel } from '../components/ai-debugger-panel';
 import { BudgetAdjustDrawer } from '../components/budget-adjust-drawer';
 
-// ── Design tokens ─────────────────────────────────────────────────────────────
-const FONT      = "'Open Sans', sans-serif";
-const BG        = 'var(--osmos-bg)';
-const BG_SUBTLE = 'var(--osmos-bg-subtle)';
-
 // ── DashboardPage ─────────────────────────────────────────────────────────────
 export default function DashboardPage({ activeAdType: propAdType, onAdTypeChange: propOnChange }) {
   const [localAdType, setLocalAdType] = useState('Product Ads');
@@ -26,12 +21,12 @@ export default function DashboardPage({ activeAdType: propAdType, onAdTypeChange
   };
 
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: BG_SUBTLE, fontFamily: FONT }}>
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: 'var(--osmos-bg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>
       <Sidebar onAdTypeChange={handleAdTypeChange} activeAdType={activeAdType} />
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         {/* Sticky topbar */}
-        <div style={{ position: 'sticky', top: 0, zIndex: 30, background: BG }}>
+        <div style={{ position: 'sticky', top: 0, zIndex: 30, background: 'var(--osmos-bg)' }}>
           <Header activeAdType={activeAdType} />
         </div>
 
@@ -40,7 +35,7 @@ export default function DashboardPage({ activeAdType: propAdType, onAdTypeChange
           flex: 1, overflowY: 'auto',
           padding: '20px 24px',
           display: 'flex', flexDirection: 'column', gap: 20,
-          background: BG_SUBTLE,
+          background: 'var(--osmos-bg-subtle)',
         }}>
           <InteractiveDashboard
             activeAdType={activeAdType}

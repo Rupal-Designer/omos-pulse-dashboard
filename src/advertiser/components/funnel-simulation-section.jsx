@@ -45,35 +45,22 @@ function injectFunnelSimStyles() {
   document.head.appendChild(style);
 }
 
-// ── Design tokens ─────────────────────────────────────────────────────────────
-const FONT     = "'Open Sans', sans-serif";
-const TEXT     = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_SUB = 'var(--osmos-fg-subtle)';
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-const GREEN    = 'var(--osmos-brand-green)';
-const GREEN_M  = 'var(--osmos-brand-green-muted)';
-const AMBER    = 'var(--osmos-brand-amber)';
 
 // ── Icons ─────────────────────────────────────────────────────────────────────
-const SparklesIcon = ({ size = 14, color = ACCENT }) => (
+const SparklesIcon = ({ size = 14, color = 'var(--osmos-brand-primary)' }) => (
   <Icon size={size} color={color}>
     <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z" />
   </Icon>
 );
 
-const CheckCircleIcon = ({ size = 14, color = GREEN }) => (
+const CheckCircleIcon = ({ size = 14, color = 'var(--osmos-brand-green)' }) => (
   <Icon size={size} color={color}>
     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
     <polyline points="22 4 12 14.01 9 11.01" />
   </Icon>
 );
 
-const XCircleIcon = ({ size = 14, color = TEXT_SUB }) => (
+const XCircleIcon = ({ size = 14, color = 'var(--osmos-fg-subtle)' }) => (
   <Icon size={size} color={color}>
     <circle cx="12" cy="12" r="10" />
     <line x1="15" y1="9" x2="9" y2="15" />
@@ -81,7 +68,7 @@ const XCircleIcon = ({ size = 14, color = TEXT_SUB }) => (
   </Icon>
 );
 
-const HourglassIcon = ({ size = 28, color = AMBER }) => (
+const HourglassIcon = ({ size = 28, color = 'var(--osmos-brand-amber)' }) => (
   <Icon size={size} color={color}>
     <path d="M5 22h14" />
     <path d="M5 2h14" />
@@ -197,10 +184,10 @@ function TierSegmented({ tiers, value, onChange }) {
         display: 'grid',
         gridTemplateColumns: `repeat(${tiers.length}, 1fr)`,
         gap: 0,
-        background: BG_SUB,
+        background: 'var(--osmos-bg-subtle)',
         padding: 4,
         borderRadius: 8,
-        fontFamily: FONT,
+        fontFamily: "'Open Sans', sans-serif",
       }}
     >
       {tiers.map((t, idx) => {
@@ -222,22 +209,22 @@ function TierSegmented({ tiers, value, onChange }) {
               borderRadius: 6,
               border: 'none',
               cursor: 'pointer',
-              background: selected ? BG : 'transparent',
+              background: selected ? 'var(--osmos-bg)' : 'transparent',
               boxShadow: selected ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
               transition: 'background 0.15s ease',
-              fontFamily: FONT,
+              fontFamily: "'Open Sans', sans-serif",
             }}
           >
             <span style={{
               fontSize: 13,
               fontWeight: 600,
-              color: selected ? TEXT : TEXT_MID,
+              color: selected ? 'var(--osmos-fg)' : 'var(--osmos-fg-muted)',
             }}>
               {t.label}
             </span>
             <span style={{
               fontSize: 11,
-              color: selected ? ACCENT : TEXT_SUB,
+              color: selected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-subtle)',
               fontWeight: selected ? 600 : 400,
             }}>
               ₹{t.budget.toLocaleString('en-IN')}/day · {t.sublabel}
@@ -256,13 +243,13 @@ function BandLegend() {
       display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 14,
       padding: '8px 0 0',
       fontSize: 11,
-      color: TEXT_MID,
-      fontFamily: FONT,
+      color: 'var(--osmos-fg-muted)',
+      fontFamily: "'Open Sans', sans-serif",
     }}>
       {/* Solid current band */}
       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
         <span style={{
-          display: 'inline-block', width: 22, height: 8, borderRadius: 4, background: ACCENT,
+          display: 'inline-block', width: 22, height: 8, borderRadius: 4, background: 'var(--osmos-brand-primary)',
         }} />
         <span>At your current budget</span>
       </div>
@@ -277,7 +264,7 @@ function BandLegend() {
       {/* Median tick */}
       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
         <span style={{
-          display: 'inline-block', width: 2, height: 12, background: ACCENT, opacity: 0.75,
+          display: 'inline-block', width: 2, height: 12, background: 'var(--osmos-brand-primary)', opacity: 0.75,
         }} />
         <span>Model's median</span>
       </div>
@@ -306,32 +293,32 @@ function FunnelRow({ label, sublabel, current, ideal, format, emphasis = false }
   const deltaHigh = Math.max(0, ideal.high - current.low);
 
   return (
-    <div style={{ padding: '14px 0', borderBottom: `1px solid ${BORDER}` }}>
+    <div style={{ padding: '14px 0', borderBottom: `1px solid var(--osmos-border)` }}>
       {/* Label + value-range row */}
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8, gap: 12 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 1, minWidth: 0 }}>
           <span style={{
             fontSize: emphasis ? 14 : 13,
             fontWeight: emphasis ? 700 : 600,
-            color: TEXT,
+            color: 'var(--osmos-fg)',
           }}>
             {label}
           </span>
           {sublabel && (
-            <span style={{ fontSize: 11, color: TEXT_SUB }}>{sublabel}</span>
+            <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)' }}>{sublabel}</span>
           )}
         </div>
         <div style={{
           display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1,
           fontVariantNumeric: 'tabular-nums',
         }}>
-          <span style={{ fontSize: 11, color: TEXT_SUB }}>
+          <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)' }}>
             now {fmt(current.low)}–{fmt(current.high)}
           </span>
           <span style={{
             fontSize: emphasis ? 15 : 13,
             fontWeight: 700,
-            color: TEXT,
+            color: 'var(--osmos-fg)',
           }}>
             {fmt(ideal.low)}–{fmt(ideal.high)}
           </span>
@@ -343,7 +330,7 @@ function FunnelRow({ label, sublabel, current, ideal, format, emphasis = false }
         position: 'relative',
         height: trackH,
         borderRadius: trackH / 2,
-        background: BG_SUB,
+        background: 'var(--osmos-bg-subtle)',
         overflow: 'hidden',
       }}>
         {/* Ideal band ghost (low → high) — dashed pattern (WCAG 1.4.1 not color-only) */}
@@ -365,7 +352,7 @@ function FunnelRow({ label, sublabel, current, ideal, format, emphasis = false }
             left:  `${cLowPct}%`,
             width: `${Math.max(2, cHighPct - cLowPct)}%`,
             top: 0, bottom: 0,
-            background: ACCENT,
+            background: 'var(--osmos-brand-primary)',
             transition: 'left 280ms cubic-bezier(0.16, 1, 0.3, 1), width 280ms cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         />
@@ -377,7 +364,7 @@ function FunnelRow({ label, sublabel, current, ideal, format, emphasis = false }
             left: `${iMidPct}%`,
             top: -2, bottom: -2,
             width: 2,
-            background: ACCENT,
+            background: 'var(--osmos-brand-primary)',
             opacity: 0.75,
             transform: 'translateX(-50%)',
             transition: 'left 280ms cubic-bezier(0.16, 1, 0.3, 1)',
@@ -391,7 +378,7 @@ function FunnelRow({ label, sublabel, current, ideal, format, emphasis = false }
             left: `${cMidPct}%`,
             top: 2, bottom: 2,
             width: 2,
-            background: BG,
+            background: 'var(--osmos-bg)',
             transform: 'translateX(-50%)',
             transition: 'left 280ms cubic-bezier(0.16, 1, 0.3, 1),',
           }}
@@ -405,8 +392,8 @@ function FunnelRow({ label, sublabel, current, ideal, format, emphasis = false }
             display: 'inline-flex', alignItems: 'center', gap: 4,
             padding: '2px 8px',
             borderRadius: 999,
-            background: GREEN_M,
-            color: GREEN,
+            background: 'var(--osmos-brand-green-muted)',
+            color: 'var(--osmos-brand-green)',
             fontSize: 11,
             fontWeight: 600,
             fontVariantNumeric: 'tabular-nums',
@@ -490,12 +477,12 @@ export function FunnelSimulationSection({
     : null;
 
   return (
-    <SectionCard bodyBg={BG} bodyPad={0} style={{ fontFamily: FONT }} title={undefined}>
+    <SectionCard bodyBg="var(--osmos-bg)" bodyPad={0} style={{ fontFamily: "'Open Sans', sans-serif" }} title={undefined}>
 
       {/* ── Sofie tier header ────────────────────────────────────────────── */}
       <div style={{
         padding: '12px 20px',
-        borderBottom: `1px solid ${BORDER}`,
+        borderBottom: `1px solid var(--osmos-border)`,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         gap: 12, flexWrap: 'wrap',
       }}>
@@ -505,8 +492,8 @@ export function FunnelSimulationSection({
             display: 'inline-flex', alignItems: 'center',
             padding: '2px 8px',
             borderRadius: 4,
-            background: ACCENT_M,
-            color: ACCENT,
+            background: 'var(--osmos-brand-primary-muted)',
+            color: 'var(--osmos-brand-primary)',
             fontSize: 10,
             fontWeight: 700,
             letterSpacing: 0.4,
@@ -514,8 +501,8 @@ export function FunnelSimulationSection({
           }}>
             Growth
           </span>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: TEXT_MID, fontWeight: 500 }}>
-            <SparklesIcon size={13} color={ACCENT} />
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--osmos-fg-muted)', fontWeight: 500 }}>
+            <SparklesIcon size={13} color="var(--osmos-brand-primary)" />
             Sofie recommends
           </span>
           {/* Model confidence chip — promoted to medium emphasis (Hick's: trust-pivot signal). */}
@@ -529,14 +516,14 @@ export function FunnelSimulationSection({
               padding: '3px 8px',
               minHeight: 24,                      // WCAG 2.5.8 target size
               borderRadius: 4,
-              background: ACCENT_M,
+              background: 'var(--osmos-brand-primary-muted)',
               fontSize: 11,
               fontWeight: 600,
-              color: ACCENT,
+              color: 'var(--osmos-brand-primary)',
               fontVariantNumeric: 'tabular-nums',
               cursor: 'help',
               border: 'none',
-              fontFamily: FONT,
+              fontFamily: "'Open Sans', sans-serif",
             }}
           >
             {confidencePct}% confidence
@@ -553,7 +540,7 @@ export function FunnelSimulationSection({
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             }}
           >
-            <InfoIcon size={14} color={TEXT_SUB} />
+            <InfoIcon size={14} color="var(--osmos-fg-subtle)" />
           </button>
         </div>
         <button
@@ -562,8 +549,8 @@ export function FunnelSimulationSection({
           aria-label="Why this number — opens an explanation of how the forecast was generated"
           style={{
             background: 'none', border: 'none', cursor: 'pointer',
-            fontSize: 12, fontWeight: 600, color: ACCENT,
-            fontFamily: FONT,
+            fontSize: 12, fontWeight: 600, color: 'var(--osmos-brand-primary)',
+            fontFamily: "'Open Sans', sans-serif",
             padding: '6px 8px',                   // expands hit target ≥ 24×24
             minHeight: 24,
             borderRadius: 4,
@@ -580,8 +567,8 @@ export function FunnelSimulationSection({
         <>
           {/* Last-actioned indicator */}
           {actionedLabel && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: TEXT_SUB, padding: '8px 20px 0' }}>
-              <CheckCircleIcon size={12} color={GREEN} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--osmos-fg-subtle)', padding: '8px 20px 0' }}>
+              <CheckCircleIcon size={12} color="var(--osmos-brand-green)" />
               {actionedLabel} · here's how the projection updated
             </div>
           )}
@@ -592,15 +579,15 @@ export function FunnelSimulationSection({
               margin: 0,
               fontSize: 18,
               fontWeight: 700,
-              color: TEXT,
-              fontFamily: FONT,
+              color: 'var(--osmos-fg)',
+              fontFamily: "'Open Sans', sans-serif",
             }}>
               Lift your daily budget to ₹{idealBudget.toLocaleString('en-IN')}/day
             </h3>
             <p style={{
               margin: '4px 0 0',
               fontSize: 13,
-              color: TEXT_MID,
+              color: 'var(--osmos-fg-muted)',
               lineHeight: 1.55,
             }}>
               Your current ₹{currentBudget.toLocaleString('en-IN')}/day captures part of the demand band we forecast for your products. {selectedTier.label === 'Recommended' ? "Sofie's recommended budget" : `A ${selectedTier.label.toLowerCase()} budget`} could unlock the upper end of the range.
@@ -641,9 +628,9 @@ export function FunnelSimulationSection({
           <div style={{
             padding: '12px 20px',
             display: 'flex', flexWrap: 'wrap', gap: 16,
-            fontSize: 11, color: TEXT_SUB, lineHeight: 1.6,
+            fontSize: 11, color: 'var(--osmos-fg-subtle)', lineHeight: 1.6,
           }}>
-            <span>Est. ROI: <strong style={{ color: TEXT_MID }}>{idealFunnel.roi}x</strong></span>
+            <span>Est. ROI: <strong style={{ color: 'var(--osmos-fg-muted)' }}>{idealFunnel.roi}x</strong></span>
             <span>·</span>
             <span>Bands shown are the model's {confidencePct}% confidence interval (Funnel Predictor).</span>
             <span>·</span>
@@ -656,15 +643,15 @@ export function FunnelSimulationSection({
               role="status"
               style={{
                 padding: '14px 20px',
-                borderTop: `1px solid ${BORDER}`,
-                background: GREEN_M,
+                borderTop: `1px solid var(--osmos-border)`,
+                background: 'var(--osmos-brand-green-muted)',
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 gap: 12, flexWrap: 'wrap',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <CheckCircleIcon size={16} color={GREEN} />
-                <span style={{ fontSize: 13, fontWeight: 600, color: TEXT }}>
+                <CheckCircleIcon size={16} color="var(--osmos-brand-green)" />
+                <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)' }}>
                   Budget set to ₹{applied.value.toLocaleString('en-IN')}/day
                 </span>
               </div>
@@ -675,7 +662,7 @@ export function FunnelSimulationSection({
                 aria-label={`Undo: revert daily budget to ₹${currentBudget.toLocaleString('en-IN')}`}
                 style={{
                   background: 'none', border: 'none', cursor: 'pointer',
-                  fontSize: 12, fontWeight: 600, color: ACCENT, fontFamily: FONT,
+                  fontSize: 12, fontWeight: 600, color: 'var(--osmos-brand-primary)', fontFamily: "'Open Sans', sans-serif",
                   padding: '6px 10px',                  // hit target ≥ 24×24
                   minHeight: 24,
                   borderRadius: 4,
@@ -687,7 +674,7 @@ export function FunnelSimulationSection({
           ) : (
             <div style={{
               padding: '14px 20px',
-              borderTop: `1px solid ${BORDER}`,
+              borderTop: `1px solid var(--osmos-border)`,
               display: 'flex', flexDirection: 'column', gap: 10,
               minHeight: showRejection ? undefined : 78,    // reserve space so chip reveal doesn't push wallet card
             }}>
@@ -700,19 +687,19 @@ export function FunnelSimulationSection({
                   style={{
                     flex: '1 1 280px',
                     minHeight: 44,
-                    background: ACCENT,
+                    background: 'var(--osmos-brand-primary)',
                     color: '#fff',
                     border: 'none',
                     borderRadius: 8,
                     cursor: 'pointer',
-                    fontFamily: FONT,
+                    fontFamily: "'Open Sans', sans-serif",
                     padding: '8px 16px',
                     display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                     gap: 1,
                     transition: 'background 0.15s ease',
                   }}
                   onMouseEnter={(e) => { e.currentTarget.style.background = 'color-mix(in srgb, var(--osmos-brand-primary) 90%, black)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = ACCENT; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--osmos-brand-primary)'; }}
                 >
                   <span style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.2 }}>
                     Use ₹{idealBudget.toLocaleString('en-IN')}/day
@@ -732,16 +719,16 @@ export function FunnelSimulationSection({
                     minHeight: 44,
                     padding: '10px 16px',
                     background: 'none',
-                    color: TEXT_MID,
-                    border: `1px solid ${BORDER}`,
+                    color: 'var(--osmos-fg-muted)',
+                    border: `1px solid var(--osmos-border)`,
                     borderRadius: 8,
                     cursor: 'pointer',
-                    fontFamily: FONT,
+                    fontFamily: "'Open Sans', sans-serif",
                     fontSize: 13,
                     fontWeight: 500,
                     transition: 'background 0.15s ease',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = BG_SUB; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--osmos-bg-subtle)'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
                 >
                   Use my own number
@@ -759,7 +746,7 @@ export function FunnelSimulationSection({
                     fontSize: 11,
                   }}
                 >
-                  <span style={{ fontSize: 11, color: TEXT_SUB, alignSelf: 'center', marginRight: 4 }}>Quick reason:</span>
+                  <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', alignSelf: 'center', marginRight: 4 }}>Quick reason:</span>
                   {['Too aggressive', 'Already optimized', "Don't trust the projection", 'Other'].map((r) => (
                     <button
                       key={r}
@@ -770,16 +757,16 @@ export function FunnelSimulationSection({
                         padding: '6px 10px',
                         minHeight: 24,                  // WCAG 2.5.8 target size
                         borderRadius: 999,
-                        border: `1px solid ${BORDER}`,
-                        background: BG,
-                        color: TEXT_MID,
+                        border: `1px solid var(--osmos-border)`,
+                        background: 'var(--osmos-bg)',
+                        color: 'var(--osmos-fg-muted)',
                         fontSize: 11,
                         fontWeight: 500,
                         cursor: 'pointer',
-                        fontFamily: FONT,
+                        fontFamily: "'Open Sans', sans-serif",
                       }}
-                      onMouseEnter={(e) => { e.currentTarget.style.background = BG_SUB; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.background = BG; }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--osmos-bg-subtle)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--osmos-bg)'; }}
                     >
                       {r}
                     </button>
@@ -824,23 +811,23 @@ function LearningModeState({ data }) {
         background: 'var(--osmos-brand-amber-muted)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        <HourglassIcon size={28} color={AMBER} />
+        <HourglassIcon size={28} color="var(--osmos-brand-amber)" />
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxWidth: 400 }}>
-        <span style={{ fontSize: 16, fontWeight: 700, color: TEXT }}>
+        <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--osmos-fg)' }}>
           Your campaign is building momentum
         </span>
-        <span style={{ fontSize: 13, color: TEXT_MID, lineHeight: 1.6 }}>
+        <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', lineHeight: 1.6 }}>
           We're gathering enough data to make your first forecast. Here's where things stand:
         </span>
       </div>
 
       <div style={{ width: '100%', maxWidth: 360, display: 'flex', flexDirection: 'column', gap: 6 }}>
-        <div style={{ width: '100%', height: 6, borderRadius: 99, background: BORDER, overflow: 'hidden' }}>
-          <div style={{ width: `${pct}%`, height: '100%', borderRadius: 99, background: AMBER, transition: 'width 0.5s ease' }} />
+        <div style={{ width: '100%', height: 6, borderRadius: 99, background: 'var(--osmos-border)', overflow: 'hidden' }}>
+          <div style={{ width: `${pct}%`, height: '100%', borderRadius: 99, background: 'var(--osmos-brand-amber)', transition: 'width 0.5s ease' }} />
         </div>
-        <span style={{ fontSize: 11, color: TEXT_SUB, textAlign: 'right' }}>
+        <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', textAlign: 'right' }}>
           {metMet} of {totalCrit} signals collected
         </span>
       </div>
@@ -850,19 +837,19 @@ function LearningModeState({ data }) {
           <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
             <div style={{ flexShrink: 0, marginTop: 1 }}>
               {c.met
-                ? <CheckCircleIcon size={15} color={GREEN} />
-                : <XCircleIcon    size={15} color={TEXT_SUB} />
+                ? <CheckCircleIcon size={15} color="var(--osmos-brand-green)" />
+                : <XCircleIcon    size={15} color="var(--osmos-fg-subtle)" />
               }
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <span style={{ fontSize: 13, color: c.met ? TEXT : TEXT_MID }}>{c.label}</span>
-              {c.detail && <span style={{ fontSize: 11, color: TEXT_SUB }}>{c.detail}</span>}
+              <span style={{ fontSize: 13, color: c.met ? 'var(--osmos-fg)' : 'var(--osmos-fg-muted)' }}>{c.label}</span>
+              {c.detail && <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)' }}>{c.detail}</span>}
             </div>
           </div>
         ))}
       </div>
 
-      <span style={{ fontSize: 12, color: TEXT_SUB, maxWidth: 360, lineHeight: 1.6 }}>
+      <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', maxWidth: 360, lineHeight: 1.6 }}>
         Estimates typically appear within 2–3 days of consistent campaign activity.
       </span>
     </div>

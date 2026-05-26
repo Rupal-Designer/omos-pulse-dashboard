@@ -1,9 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Icon, DownloadIcon, FileIcon, CloseIcon } from '../../ui/atoms/Icon';
-import { Button } from '../../ui/atoms/Button';
-import { Toast, useToast } from '../../ui/atoms/Toast';
-
-const FONT = "'Open Sans', sans-serif";
+import { Icon, DownloadIcon, FileIcon, CloseIcon, Button, Toast, useToast } from '../../ui';
 
 export default function PersonaAllocationPage() {
   const [dragOver, setDragOver] = useState(false);
@@ -27,7 +23,7 @@ export default function PersonaAllocationPage() {
   }
 
   return (
-    <div style={{ padding: '20px 24px', fontFamily: FONT }}>
+    <div style={{ padding: '20px 24px', fontFamily: "'Open Sans', sans-serif" }}>
       <Toast {...toast} />
 
       <div style={{ maxWidth: 700, display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -39,17 +35,17 @@ export default function PersonaAllocationPage() {
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
               </Icon>
             </div>
-            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>Advertiser Persona Allocation</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>Advertiser Persona Allocation</span>
           </div>
-          <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)', lineHeight: 1.6, fontFamily: FONT }}>
+          <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)', lineHeight: 1.6, fontFamily: "'Open Sans', sans-serif" }}>
             Bulk-assign personas (Platinum / Gold / Silver / Beta) to advertisers by uploading a spreadsheet. Download the template, fill in the Advertiser ID and Persona columns, then upload.
           </p>
         </div>
 
         {/* Step 1 — Download Template */}
         <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 8, padding: '20px' }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 6, fontFamily: FONT }}>Step 1 — Download Template</div>
-          <p style={{ margin: '0 0 14px', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 6, fontFamily: "'Open Sans', sans-serif" }}>Step 1 — Download Template</div>
+          <p style={{ margin: '0 0 14px', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
             Download the Excel template with required column headers: <strong>Advertiser ID</strong>, <strong>Persona</strong>.
           </p>
           <Button variant="outline" onClick={() => showToast('Template downloaded')}>
@@ -60,8 +56,8 @@ export default function PersonaAllocationPage() {
 
         {/* Step 2 — Upload */}
         <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 8, padding: '20px' }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 6, fontFamily: FONT }}>Step 2 — Upload Filled Template</div>
-          <p style={{ margin: '0 0 14px', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 6, fontFamily: "'Open Sans', sans-serif" }}>Step 2 — Upload Filled Template</div>
+          <p style={{ margin: '0 0 14px', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
             Supports .xlsx files. Maximum 1000 rows per upload.
           </p>
 
@@ -82,7 +78,7 @@ export default function PersonaAllocationPage() {
               {uploading ? (
                 <>
                   <div style={{ width: 32, height: 32, border: '3px solid var(--osmos-brand-primary-muted)', borderTop: '3px solid var(--osmos-brand-primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-                  <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>Uploading…</span>
+                  <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>Uploading…</span>
                 </>
               ) : (
                 <>
@@ -91,8 +87,8 @@ export default function PersonaAllocationPage() {
                     <polyline points="17 8 12 3 7 8"/>
                     <line x1="12" y1="3" x2="12" y2="15"/>
                   </Icon>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>Drag & drop your file here</span>
-                  <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', fontFamily: FONT }}>or click to browse (.xlsx, max 1000 rows)</span>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>Drag & drop your file here</span>
+                  <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>or click to browse (.xlsx, max 1000 rows)</span>
                 </>
               )}
               <input ref={fileRef} type="file" accept=".xlsx,.csv" style={{ display: 'none' }} onChange={e => handleFile(e.target.files[0])} />
@@ -102,8 +98,8 @@ export default function PersonaAllocationPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <FileIcon size={20} color="var(--osmos-brand-green)" />
                 <div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-brand-green)', fontFamily: FONT }}>{uploadedFile.name}</div>
-                  <div style={{ fontSize: 11, color: 'var(--osmos-brand-green)', fontFamily: FONT }}>{(uploadedFile.size / 1024).toFixed(1)} KB · Uploaded successfully</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-brand-green)', fontFamily: "'Open Sans', sans-serif" }}>{uploadedFile.name}</div>
+                  <div style={{ fontSize: 11, color: 'var(--osmos-brand-green)', fontFamily: "'Open Sans', sans-serif" }}>{(uploadedFile.size / 1024).toFixed(1)} KB · Uploaded successfully</div>
                 </div>
               </div>
               <button onClick={() => setUploadedFile(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--osmos-brand-green)', display: 'flex', alignItems: 'center', padding: 4 }}>
@@ -115,7 +111,7 @@ export default function PersonaAllocationPage() {
 
         {/* How it works */}
         <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 8, padding: '20px' }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 14, fontFamily: FONT }}>How it works</div>
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 14, fontFamily: "'Open Sans', sans-serif" }}>How it works</div>
           {[
             { step: 1, text: 'Download the Excel template using the button above' },
             { step: 2, text: 'Fill in Advertiser ID and the target Persona (Platinum / Gold / Silver / Beta)' },
@@ -123,10 +119,10 @@ export default function PersonaAllocationPage() {
             { step: 4, text: 'A summary report will be shown after processing. You can download it for audit purposes.' },
           ].map(item => (
             <div key={item.step} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 12 }}>
-              <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: FONT }}>
+              <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: "'Open Sans', sans-serif" }}>
                 {item.step}
               </div>
-              <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', lineHeight: 1.6, paddingTop: 2, fontFamily: FONT }}>{item.text}</span>
+              <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', lineHeight: 1.6, paddingTop: 2, fontFamily: "'Open Sans', sans-serif" }}>{item.text}</span>
             </div>
           ))}
         </div>

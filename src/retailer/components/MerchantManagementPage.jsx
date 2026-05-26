@@ -1,14 +1,10 @@
 import React from 'react';
 
-const FONT = "'Open Sans', sans-serif";
-const BG   = 'var(--osmos-bg-subtle)';
-const FG   = 'var(--osmos-fg-muted)';
-
 export default function MerchantManagementPage() {
   return (
-    <div style={{ fontFamily: FONT, background: BG, minHeight: '100vh',
+    <div style={{ fontFamily: "'Open Sans', sans-serif", background: 'var(--osmos-bg-subtle)', minHeight: '100vh',
       padding: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ textAlign: 'center', color: FG }}>
+      <div style={{ textAlign: 'center', color: 'var(--osmos-fg-muted)' }}>
         <svg width={40} height={40} viewBox="0 0 24 24" fill="none"
           stroke="var(--osmos-border)" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
           style={{ marginBottom: 16 }}>

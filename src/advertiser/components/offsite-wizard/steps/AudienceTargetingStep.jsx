@@ -21,15 +21,6 @@ function RemovableTag({ children, onRemove }) {
   );
 }
 
-const FONT     = "'Open Sans', sans-serif";
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const TEXT_HI  = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_LO  = 'var(--osmos-fg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-
 const LOCATIONS = [
   'India', 'Mumbai', 'Delhi', 'Bangalore', 'Chennai',
   'Hyderabad', 'Pune', 'Kolkata', 'US', 'UK', 'UAE',
@@ -42,16 +33,16 @@ const PIXEL_EVENTS = [
 function SectionHeader({ title, description }) {
   return (
     <div style={{ marginBottom: 16 }}>
-      <h3 style={{ fontSize: 14, fontWeight: 700, color: TEXT_HI, margin: '0 0 4px', fontFamily: FONT }}>{title}</h3>
-      {description && <p style={{ fontSize: 12, color: TEXT_MID, margin: 0, fontFamily: FONT }}>{description}</p>}
+      <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--osmos-fg)', margin: '0 0 4px', fontFamily: "'Open Sans', sans-serif" }}>{title}</h3>
+      {description && <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>{description}</p>}
     </div>
   );
 }
 
 function FieldRow({ label, children }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 5, fontFamily: FONT }}>
-      <label style={{ fontSize: 12, fontWeight: 600, color: TEXT_MID }}>{label}</label>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 5, fontFamily: "'Open Sans', sans-serif" }}>
+      <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)' }}>{label}</label>
       {children}
     </div>
   );
@@ -60,22 +51,22 @@ function FieldRow({ label, children }) {
 function AccordionSection({ title, description, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div style={{ border: `1px solid ${BORDER}`, borderRadius: 10, overflow: 'hidden', marginTop: 12, fontFamily: FONT }}>
+    <div style={{ border: `1px solid var(--osmos-border)`, borderRadius: 10, overflow: 'hidden', marginTop: 12, fontFamily: "'Open Sans', sans-serif" }}>
       <button
         onClick={() => setOpen(o => !o)}
         style={{
           width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '12px 16px', background: BG_SUB, border: 'none', cursor: 'pointer', textAlign: 'left',
+          padding: '12px 16px', background: 'var(--osmos-bg-subtle)', border: 'none', cursor: 'pointer', textAlign: 'left',
         }}
       >
         <div>
-          <span style={{ fontSize: 13, fontWeight: 600, color: TEXT_HI }}>{title}</span>
-          {description && <span style={{ fontSize: 11, color: TEXT_MID, marginLeft: 8 }}>{description}</span>}
+          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)' }}>{title}</span>
+          {description && <span style={{ fontSize: 11, color: 'var(--osmos-fg-muted)', marginLeft: 8 }}>{description}</span>}
         </div>
-        <span style={{ fontSize: 14, color: TEXT_MID, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▾</span>
+        <span style={{ fontSize: 14, color: 'var(--osmos-fg-muted)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▾</span>
       </button>
       {open && (
-        <div style={{ padding: '16px', background: BG }}>
+        <div style={{ padding: '16px', background: 'var(--osmos-bg)' }}>
           {children}
         </div>
       )}
@@ -121,11 +112,11 @@ export default function AudienceTargetingStep({ campaignData, onChange }) {
   }
 
   return (
-    <div style={{ fontFamily: FONT, maxWidth: 640 }}>
-      <h2 style={{ fontSize: 18, fontWeight: 700, color: TEXT_HI, margin: '0 0 4px' }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif", maxWidth: 640 }}>
+      <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--osmos-fg)', margin: '0 0 4px' }}>
         Audience & Targeting
       </h2>
-      <p style={{ fontSize: 13, color: TEXT_MID, margin: '0 0 24px' }}>
+      <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', margin: '0 0 24px' }}>
         Define who should see your ads. Channel-specific options appear below.
       </p>
 
@@ -136,7 +127,7 @@ export default function AudienceTargetingStep({ campaignData, onChange }) {
       )}
 
       {/* Shared demographics */}
-      <div style={{ background: BG, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '20px 20px', marginBottom: 8 }}>
+      <div style={{ background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 10, padding: '20px 20px', marginBottom: 8 }}>
         <SectionHeader title="Demographics" description="Shared across all selected channels" />
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
@@ -145,7 +136,7 @@ export default function AudienceTargetingStep({ campaignData, onChange }) {
               type="number" min={18} max={65}
               value={audience.ageMin}
               onChange={e => update({ ageMin: Number(e.target.value) })}
-              style={{ fontFamily: FONT }}
+              style={{ fontFamily: "'Open Sans', sans-serif" }}
             />
           </FieldRow>
           <FieldRow label="Maximum Age">
@@ -153,7 +144,7 @@ export default function AudienceTargetingStep({ campaignData, onChange }) {
               type="number" min={18} max={65}
               value={audience.ageMax}
               onChange={e => update({ ageMax: Number(e.target.value) })}
-              style={{ fontFamily: FONT }}
+              style={{ fontFamily: "'Open Sans', sans-serif" }}
             />
           </FieldRow>
         </div>
@@ -166,7 +157,7 @@ export default function AudienceTargetingStep({ campaignData, onChange }) {
                 { value: 'male', label: 'Male' },
                 { value: 'female', label: 'Female' },
               ].map(g => (
-                <label key={g.value} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: TEXT_HI, cursor: 'pointer' }}>
+                <label key={g.value} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--osmos-fg)', cursor: 'pointer' }}>
                   <input
                     type="radio" name="gender" value={g.value}
                     checked={audience.gender === g.value}
@@ -186,7 +177,7 @@ export default function AudienceTargetingStep({ campaignData, onChange }) {
                 value={locationInput}
                 onChange={e => { setLocationInput(e.target.value); addLocation(e.target.value); }}
                 options={[{ value: '', label: 'Select location...' }, ...LOCATIONS.map(l => ({ value: l, label: l }))]}
-                style={{ flex: 1, fontFamily: FONT }}
+                style={{ flex: 1, fontFamily: "'Open Sans', sans-serif" }}
               />
             </div>
             {audience.location && (
@@ -215,11 +206,11 @@ export default function AudienceTargetingStep({ campaignData, onChange }) {
                   value={customAudienceInput}
                   onChange={e => setCustomAudienceInput(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && addCustomAudience(customAudienceInput)}
-                  style={{ flex: 1, fontFamily: FONT }}
+                  style={{ flex: 1, fontFamily: "'Open Sans', sans-serif" }}
                 />
                 <button
                   onClick={() => addCustomAudience(customAudienceInput)}
-                  style={{ padding: '6px 14px', borderRadius: 7, border: `1px solid ${BORDER}`, background: BG_SUB, color: TEXT_HI, fontSize: 12, cursor: 'pointer', fontFamily: FONT }}
+                  style={{ padding: '6px 14px', borderRadius: 7, border: `1px solid var(--osmos-border)`, background: 'var(--osmos-bg-subtle)', color: 'var(--osmos-fg)', fontSize: 12, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}
                 >
                   Add
                 </button>
@@ -243,7 +234,7 @@ export default function AudienceTargetingStep({ campaignData, onChange }) {
                 {PIXEL_EVENTS.map(event => {
                   const checked = (audience.pixelEvents || []).includes(event);
                   return (
-                    <label key={event} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: TEXT_HI, cursor: 'pointer', padding: '4px 10px', border: `1px solid ${checked ? ACCENT : BORDER}`, borderRadius: 20, background: checked ? `${ACCENT}10` : BG }}>
+                    <label key={event} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: 'var(--osmos-fg)', cursor: 'pointer', padding: '4px 10px', border: `1px solid ${checked ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)'}`, borderRadius: 20, background: checked ? `var(--osmos-brand-primary)10` : 'var(--osmos-bg)' }}>
                       <Checkbox
                         checked={checked}
                         onChange={() => togglePixelEvent(event)}

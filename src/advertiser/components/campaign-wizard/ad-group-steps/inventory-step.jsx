@@ -1,18 +1,6 @@
 import { useState } from 'react';
 import { CheckIcon, Icon } from '../../../../ui';
 
-const FONT     = "'Open Sans', sans-serif";
-const TEXT     = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_SUB = 'var(--osmos-fg-subtle)';
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-const AMBER    = 'var(--osmos-brand-amber)';
-const VIOLET   = '#7349a1'; // brand-secondary — no osmos token yet
-
 // ── Icons ─────────────────────────────────────────────────────────────────────
 const SparklesIcon = (props) => (
   <Icon {...props}>
@@ -60,22 +48,22 @@ export function InventoryStep({ data, updateData }) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: FONT }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: "'Open Sans', sans-serif" }}>
       <div>
-        <h2 style={{ fontSize: 24, fontWeight: 600, color: TEXT, marginBottom: 8 }}>
+        <h2 style={{ fontSize: 24, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8 }}>
           Select Inventory
         </h2>
-        <p style={{ color: TEXT_MID }}>
+        <p style={{ color: 'var(--osmos-fg-muted)' }}>
           Choose the website pages where your ads will be displayed.
         </p>
       </div>
 
       {/* Bid Override Toggle */}
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 16 }}>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <DollarSignIcon size={16} color={VIOLET} />
-            <span style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>
+            <DollarSignIcon size={16} color={'#7349a1'} />
+            <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>
               Enable Inventory-Level Bid Overrides
             </span>
           </div>
@@ -85,7 +73,7 @@ export function InventoryStep({ data, updateData }) {
             style={{
               position: 'relative',
               width: 44, height: 24, borderRadius: 999,
-              background: showBidOverrides ? VIOLET : TEXT_SUB,
+              background: showBidOverrides ? '#7349a1' : 'var(--osmos-fg-subtle)',
               border: 'none', cursor: 'pointer',
               transition: 'background 0.15s', flexShrink: 0,
             }}
@@ -100,7 +88,7 @@ export function InventoryStep({ data, updateData }) {
           </button>
         </div>
         {showBidOverrides && (
-          <p style={{ fontSize: 12, color: TEXT_MID, marginTop: 8 }}>
+          <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', marginTop: 8 }}>
             Set custom bid amounts for specific inventory pages to prioritize high-value placements
           </p>
         )}
@@ -120,48 +108,48 @@ export function InventoryStep({ data, updateData }) {
                 style={{
                   position: 'relative', width: '100%',
                   padding: 20, borderRadius: 12, textAlign: 'left',
-                  border: `2px solid ${isSelected ? ACCENT : isHovered ? TEXT_MID : BORDER}`,
-                  background: isSelected ? ACCENT_M : isHovered ? BG_SUB : BG,
+                  border: `2px solid ${isSelected ? 'var(--osmos-brand-primary)' : isHovered ? 'var(--osmos-fg-muted)' : 'var(--osmos-border)'}`,
+                  background: isSelected ? 'var(--osmos-brand-primary-muted)' : isHovered ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
                   cursor: 'pointer', transition: 'all 0.15s',
-                  fontFamily: FONT,
+                  fontFamily: "'Open Sans', sans-serif",
                 }}
               >
                 {isSelected && (
                   <div style={{
                     position: 'absolute', top: 12, right: 12,
                     width: 24, height: 24, borderRadius: '50%',
-                    background: ACCENT,
+                    background: 'var(--osmos-brand-primary)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
                     <CheckIcon size={14} color="#fff" />
                   </div>
                 )}
 
-                <h4 style={{ fontWeight: 600, marginBottom: 8, color: isSelected ? ACCENT : TEXT }}>
+                <h4 style={{ fontWeight: 600, marginBottom: 8, color: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg)' }}>
                   {page.name}
                 </h4>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: AMBER, fontSize: 13, marginBottom: 12 }}>
-                  <SparklesIcon size={14} color={AMBER} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--osmos-brand-amber)', fontSize: 13, marginBottom: 12 }}>
+                  <SparklesIcon size={14} color={'var(--osmos-brand-amber)'} />
                   <span>Est. Daily Imp: {page.impressions}</span>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 13, color: TEXT_MID }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>Total Inventories</span>
-                    <span style={{ fontWeight: 500, color: TEXT }}>{page.inventories}</span>
+                    <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>{page.inventories}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>Targeting Options</span>
-                    <span style={{ fontWeight: 500, color: TEXT }}>{page.targeting}</span>
+                    <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>{page.targeting}</span>
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
                   {page.tags.map((tag) => (
                     <span key={tag} style={{
-                      padding: '4px 8px', background: BG_SUB,
-                      color: TEXT_MID, fontSize: 12, borderRadius: 4,
+                      padding: '4px 8px', background: 'var(--osmos-bg-subtle)',
+                      color: 'var(--osmos-fg-muted)', fontSize: 12, borderRadius: 4,
                     }}>
                       {tag}
                     </span>
@@ -172,10 +160,10 @@ export function InventoryStep({ data, updateData }) {
               {/* Bid Override Input */}
               {isSelected && showBidOverrides && (
                 <div style={{
-                  padding: '12px 16px', background: BG_SUB,
-                  borderRadius: 8, border: `1px solid ${BORDER}`,
+                  padding: '12px 16px', background: 'var(--osmos-bg-subtle)',
+                  borderRadius: 8, border: `1px solid ${'var(--osmos-border)'}`,
                 }}>
-                  <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: TEXT_MID, marginBottom: 8 }}>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: 'var(--osmos-fg-muted)', marginBottom: 8 }}>
                     Custom Bid ($)
                   </label>
                   <input
@@ -185,9 +173,9 @@ export function InventoryStep({ data, updateData }) {
                     placeholder="Leave empty for default"
                     style={{
                       width: '100%', boxSizing: 'border-box',
-                      padding: '8px 12px', border: `1px solid ${BORDER}`,
-                      borderRadius: 8, fontSize: 13, color: TEXT,
-                      background: BG, fontFamily: FONT, outline: 'none',
+                      padding: '8px 12px', border: `1px solid ${'var(--osmos-border)'}`,
+                      borderRadius: 8, fontSize: 13, color: 'var(--osmos-fg)',
+                      background: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif", outline: 'none',
                     }}
                   />
                 </div>
@@ -200,10 +188,10 @@ export function InventoryStep({ data, updateData }) {
       {/* Selection Summary */}
       {data.selectedPages.length > 0 && (
         <div style={{
-          background: ACCENT_M, borderRadius: 8, padding: 16,
+          background: 'var(--osmos-brand-primary-muted)', borderRadius: 8, padding: 16,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
-          <span style={{ fontSize: 13, color: ACCENT }}>
+          <span style={{ fontSize: 13, color: 'var(--osmos-brand-primary)' }}>
             {data.selectedPages.length} page(s) selected
           </span>
           <button
@@ -211,9 +199,9 @@ export function InventoryStep({ data, updateData }) {
             onMouseEnter={() => setClearHovered(true)}
             onMouseLeave={() => setClearHovered(false)}
             style={{
-              fontSize: 13, color: ACCENT, background: 'none', border: 'none',
+              fontSize: 13, color: 'var(--osmos-brand-primary)', background: 'none', border: 'none',
               cursor: 'pointer', textDecoration: clearHovered ? 'underline' : 'none',
-              fontFamily: FONT,
+              fontFamily: "'Open Sans', sans-serif",
             }}
           >
             Clear all

@@ -1,18 +1,6 @@
 import { useState } from 'react';
 import { InfoIcon, Icon } from '../../../../ui';
 
-const FONT     = "'Open Sans', sans-serif";
-const TEXT     = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_SUB = 'var(--osmos-fg-subtle)';
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-const ERROR    = 'var(--alert-error-primary)';
-const GREEN    = 'var(--osmos-brand-green)';
-
 // ── Icons ─────────────────────────────────────────────────────────────────────
 const ClockIcon = (props) => (
   <Icon {...props}>
@@ -53,20 +41,20 @@ export function BiddingStep({ data, updateData }) {
   const [hoveredPriority, setHoveredPriority] = useState(null);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: FONT }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: "'Open Sans', sans-serif" }}>
       <div>
-        <h2 style={{ fontSize: 24, fontWeight: 600, color: TEXT, marginBottom: 8 }}>
+        <h2 style={{ fontSize: 24, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8 }}>
           Bidding Strategy
         </h2>
-        <p style={{ color: TEXT_MID }}>
+        <p style={{ color: 'var(--osmos-fg-muted)' }}>
           Choose how you want to pay for your ads and control delivery.
         </p>
       </div>
 
       {/* Buying Type */}
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
-        <div style={{ fontSize: 13, fontWeight: 500, color: TEXT, marginBottom: 16 }}>
-          Select Buying Type <span style={{ color: ERROR }}>*</span>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
+        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 16 }}>
+          Select Buying Type <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
           {strategies.map((strategy) => {
@@ -81,25 +69,25 @@ export function BiddingStep({ data, updateData }) {
                 style={{
                   position: 'relative',
                   padding: 16, borderRadius: 12, textAlign: 'left',
-                  border: `2px solid ${isSelected ? ACCENT : isHovered ? TEXT_MID : BORDER}`,
-                  background: isSelected ? ACCENT_M : isHovered ? BG_SUB : BG,
+                  border: `2px solid ${isSelected ? 'var(--osmos-brand-primary)' : isHovered ? 'var(--osmos-fg-muted)' : 'var(--osmos-border)'}`,
+                  background: isSelected ? 'var(--osmos-brand-primary-muted)' : isHovered ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
                   cursor: 'pointer', transition: 'all 0.15s',
-                  fontFamily: FONT,
+                  fontFamily: "'Open Sans', sans-serif",
                 }}
               >
                 {strategy.recommended && (
                   <span style={{
                     position: 'absolute', top: -8, right: -8,
-                    padding: '2px 8px', background: GREEN, color: '#fff',
+                    padding: '2px 8px', background: 'var(--osmos-brand-green)', color: '#fff',
                     fontSize: 10, fontWeight: 500, borderRadius: 999,
                   }}>
                     Recommended
                   </span>
                 )}
-                <h4 style={{ fontWeight: 600, marginBottom: 4, color: isSelected ? ACCENT : TEXT }}>
+                <h4 style={{ fontWeight: 600, marginBottom: 4, color: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg)' }}>
                   {strategy.label}
                 </h4>
-                <p style={{ fontSize: 12, color: TEXT_MID }}>{strategy.description}</p>
+                <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{strategy.description}</p>
               </button>
             );
           })}
@@ -107,10 +95,10 @@ export function BiddingStep({ data, updateData }) {
       </div>
 
       {/* Pacing */}
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 500, color: TEXT, marginBottom: 16 }}>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 16 }}>
           Campaign Pacing
-          <InfoIcon size={12} color={TEXT_SUB} />
+          <InfoIcon size={12} color={'var(--osmos-fg-subtle)'} />
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
           {pacingOptions.map(({ id, label, description, IconComp }) => {
@@ -125,24 +113,24 @@ export function BiddingStep({ data, updateData }) {
                 style={{
                   display: 'flex', alignItems: 'flex-start', gap: 16,
                   padding: 20, borderRadius: 12, textAlign: 'left',
-                  border: `2px solid ${isSelected ? ACCENT : isHovered ? TEXT_MID : BORDER}`,
-                  background: isSelected ? ACCENT_M : isHovered ? BG_SUB : BG,
+                  border: `2px solid ${isSelected ? 'var(--osmos-brand-primary)' : isHovered ? 'var(--osmos-fg-muted)' : 'var(--osmos-border)'}`,
+                  background: isSelected ? 'var(--osmos-brand-primary-muted)' : isHovered ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
                   cursor: 'pointer', transition: 'all 0.15s',
-                  fontFamily: FONT,
+                  fontFamily: "'Open Sans', sans-serif",
                 }}
               >
                 <div style={{
                   width: 40, height: 40, borderRadius: 8, flexShrink: 0,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: isSelected ? ACCENT : BG_SUB,
+                  background: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg-subtle)',
                 }}>
-                  <IconComp size={20} color={isSelected ? '#fff' : TEXT_MID} />
+                  <IconComp size={20} color={isSelected ? '#fff' : 'var(--osmos-fg-muted)'} />
                 </div>
                 <div>
-                  <h4 style={{ fontWeight: 500, marginBottom: 4, color: isSelected ? ACCENT : TEXT }}>
+                  <h4 style={{ fontWeight: 500, marginBottom: 4, color: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg)' }}>
                     {label}
                   </h4>
-                  <p style={{ fontSize: 12, color: TEXT_MID }}>{description}</p>
+                  <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{description}</p>
                 </div>
               </button>
             );
@@ -151,10 +139,10 @@ export function BiddingStep({ data, updateData }) {
       </div>
 
       {/* Priority */}
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 500, color: TEXT, marginBottom: 16 }}>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 16 }}>
           Campaign Priority
-          <InfoIcon size={12} color={TEXT_SUB} />
+          <InfoIcon size={12} color={'var(--osmos-fg-subtle)'} />
         </div>
         <div style={{ display: 'flex', gap: 12 }}>
           {priorityOptions.map((option) => {
@@ -168,16 +156,16 @@ export function BiddingStep({ data, updateData }) {
                 onMouseLeave={() => setHoveredPriority(null)}
                 style={{
                   padding: '12px 20px', borderRadius: 8, textAlign: 'left',
-                  border: `2px solid ${isSelected ? ACCENT : isHovered ? TEXT_MID : BORDER}`,
-                  background: isSelected ? ACCENT_M : isHovered ? BG_SUB : BG,
+                  border: `2px solid ${isSelected ? 'var(--osmos-brand-primary)' : isHovered ? 'var(--osmos-fg-muted)' : 'var(--osmos-border)'}`,
+                  background: isSelected ? 'var(--osmos-brand-primary-muted)' : isHovered ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
                   cursor: 'pointer', transition: 'all 0.15s',
-                  fontFamily: FONT,
+                  fontFamily: "'Open Sans', sans-serif",
                 }}
               >
-                <h4 style={{ fontWeight: 500, fontSize: 13, marginBottom: 2, color: isSelected ? ACCENT : TEXT }}>
+                <h4 style={{ fontWeight: 500, fontSize: 13, marginBottom: 2, color: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg)' }}>
                   {option.label}
                 </h4>
-                <p style={{ fontSize: 12, color: TEXT_MID }}>{option.description}</p>
+                <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{option.description}</p>
               </button>
             );
           })}

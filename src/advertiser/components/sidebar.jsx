@@ -112,7 +112,25 @@ export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNaviga
       active: currentRoute === '/byot',
     },
     { id: 'packages',        label: 'Packages',        icon: ICON_LAYOUT_GRID, hasSub: true, badge: 'Alpha' },
-    { id: 'finance',         label: 'Finance',         icon: ICON_DOLLAR,      hasSub: true },
+    {
+      id: 'finance',
+      label: 'Finance',
+      icon: ICON_DOLLAR,
+      subItems: [
+        {
+          id: 'manage-billing',
+          label: 'Manage Billing',
+          active: currentRoute === '/finance/manage-billing',
+          onClick: () => navigate('/finance/manage-billing'),
+        },
+        {
+          id: 'transaction-log',
+          label: 'Transaction Log',
+          active: currentRoute === '/finance/transaction-log',
+          onClick: () => navigate('/finance/transaction-log'),
+        },
+      ],
+    },
     { id: 'activity-center', label: 'Activity Center', icon: ICON_ACTIVITY,    hasSub: true },
     { id: 'help-center',     label: 'Help Center',     icon: ICON_HELP,        hasSub: true },
   ];
@@ -126,6 +144,7 @@ export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNaviga
   }
 
   const activeId = currentRoute === '/byot' ? 'byot'
+    : currentRoute.startsWith('/finance') ? 'finance'
     : currentRoute === '/offsite' ? 'campaigns'
     : 'campaigns';
 

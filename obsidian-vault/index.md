@@ -1,6 +1,6 @@
 ---
 type: vault-index
-last-updated: 2026-05-14T00:00:00Z
+last-updated: 2026-05-18T00:00:00Z
 tags: [index, vault]
 ---
 
@@ -37,6 +37,12 @@ Last full rebuild: 2026-05-14T00:00:00Z (phases 5–7b: InStore, BYOT, Packages,
 - [[Pages/index]] — All pages with nav IDs, sections, and screen types
 - [[Navigation/structure]] — Full LeftNav tree with wikilinks
 - [[Figma/index]] — Known Figma frames (app screens)
+- [[Tokens/index]] — **Token system overview + decision rules**
+- [[Tokens/figma-to-code]] — **Figma variable → CSS var bridge table** (start here for any color decision)
+- [[Tokens/colors]] — Full primitive palette with hex values
+- [[Tokens/semantic]] — Semantic surface tokens: bg, fg, border, alerts, brand
+- [[Tokens/typography]] — Type scale (Open Sans, sizes 10–40px)
+- [[Tokens/spacing]] — Spacing, radius, shadows, icon sizes, drawer widths
 - [[Tokens/audit]] — Latest token violation report
 - [[Skills/index]] — All 17 Claude Code skills with invocation guide
 - [[Personas/index]] — 7 first-class persona voice models
@@ -117,13 +123,13 @@ Last full rebuild: 2026-05-14T00:00:00Z (phases 5–7b: InStore, BYOT, Packages,
 
 | Time | Note | Trigger |
 |------|------|---------|
-| 2026-05-15T06:30:12Z | Components/advertiser/metrics-cards.md | src/advertiser/components/metrics-cards.jsx |
-| 2026-05-15T06:30:09Z | Components/advertiser/funnel-simulation-section.md | src/advertiser/components/funnel-simulation-section.jsx |
-| 2026-05-15T06:30:09Z | Components/advertiser/theme-provider.md | src/advertiser/components/theme-provider.jsx |
-| 2026-05-15T06:30:09Z | Components/advertiser/TopBar.md | src/advertiser/components/TopBar.jsx |
-| 2026-05-15T06:30:09Z | Components/advertiser/sofie-chat-panel.md | src/advertiser/components/sofie-chat-panel.jsx |
-| 2026-05-15T06:30:08Z | Components/advertiser/budget-adjust-drawer.md | src/advertiser/components/budget-adjust-drawer.jsx |
-| 2026-05-15T06:30:08Z | Components/advertiser/sidebar.md | src/advertiser/components/sidebar.jsx |
-| 2026-05-15T06:30:08Z | Components/advertiser/ai-suggestions-panel.md | src/advertiser/components/ai-suggestions-panel.jsx |
-| 2026-05-15T06:30:08Z | Components/advertiser/performance-table.md | src/advertiser/components/performance-table.jsx |
-| 2026-05-15T06:30:08Z | Components/advertiser/filter-builder.md | src/advertiser/components/filter-builder.jsx |
+| 2026-05-18T06:30:11Z | Components/advertiser/metrics-cards.md | src/advertiser/components/metrics-cards.jsx |
+| 2026-05-18T06:30:07Z | Components/advertiser/funnel-simulation-section.md | src/advertiser/components/funnel-simulation-section.jsx |
+| 2026-05-18T06:30:07Z | Components/advertiser/theme-provider.md | src/advertiser/components/theme-provider.jsx |
+| 2026-05-18T06:30:07Z | Components/advertiser/TopBar.md | src/advertiser/components/TopBar.jsx |
+| 2026-05-18T06:30:07Z | Components/advertiser/sofie-chat-panel.md | src/advertiser/components/sofie-chat-panel.jsx |
+| 2026-05-18T06:30:07Z | Components/advertiser/budget-adjust-drawer.md | src/advertiser/components/budget-adjust-drawer.jsx |
+| 2026-05-18T06:30:07Z | Components/advertiser/sidebar.md | src/advertiser/components/sidebar.jsx |
+| 2026-05-18T06:30:07Z | Components/advertiser/ai-suggestions-panel.md | src/advertiser/components/ai-suggestions-panel.jsx |
+| 2026-05-18T06:30:07Z | Components/advertiser/performance-table.md | src/advertiser/components/performance-table.jsx |
+| 2026-05-18T06:30:07Z | Components/advertiser/filter-builder.md | src/advertiser/components/filter-builder.jsx |

@@ -16,17 +16,6 @@ import { AdCreativeStep } from "./ad-group-steps/ad-creative-step";
 import { ConfigStep } from "./ad-group-steps/config-step";
 import { createPortal } from "react-dom";
 
-// ── Design tokens ──────────────────────────────────────────────────────────────
-const FONT    = "'Open Sans', sans-serif";
-const TEXT    = "var(--osmos-fg)";
-const TEXT_MID = "var(--osmos-fg-muted)";
-const TEXT_SUB = "var(--osmos-fg-subtle)";
-const BORDER  = "var(--osmos-border)";
-const BG      = "var(--osmos-bg)";
-const BG_SUB  = "var(--osmos-bg-subtle)";
-const ACCENT  = "var(--osmos-brand-primary)";
-const ACCENT_M = "var(--osmos-brand-primary-muted)";
-
 // ── Hand-rolled icons not in the ui export ─────────────────────────────────────
 const ArrowLeftIcon = (props) => (
   <Icon {...props}>
@@ -204,12 +193,12 @@ function StepButton({ step, isCurrent, isCompleted, isDisabled, onClick }) {
     cursor: isDisabled ? "not-allowed" : "pointer",
     opacity: isDisabled ? 0.5 : 1,
     background: isCurrent
-      ? ACCENT_M
+      ? "var(--osmos-brand-primary-muted)"
       : hov && !isDisabled
-        ? BG_SUB
+        ? "var(--osmos-bg-subtle)"
         : "transparent",
-    border: isCurrent ? `1px solid ${ACCENT}` : "1px solid transparent",
-    fontFamily: FONT,
+    border: isCurrent ? `1px solid ${"var(--osmos-brand-primary)"}` : "1px solid transparent",
+    fontFamily: "'Open Sans', sans-serif",
   };
 
   const dotStyle = {
@@ -223,8 +212,8 @@ function StepButton({ step, isCurrent, isCompleted, isDisabled, onClick }) {
     fontWeight: 500,
     flexShrink: 0,
     transition: "all 0.15s",
-    background: isCompleted ? "#16a34a" : isCurrent ? ACCENT : "var(--osmos-bg-subtle)",
-    color: isCompleted || isCurrent ? "#fff" : TEXT_SUB,
+    background: isCompleted ? "#16a34a" : isCurrent ? "var(--osmos-brand-primary)" : "var(--osmos-bg-subtle)",
+    color: isCompleted || isCurrent ? "#fff" : "var(--osmos-fg-subtle)",
   };
 
   return (
@@ -245,13 +234,13 @@ function StepButton({ step, isCurrent, isCompleted, isDisabled, onClick }) {
           overflow: "hidden",
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",
-          color: isCurrent ? ACCENT : isCompleted ? TEXT : TEXT_SUB,
+          color: isCurrent ? "var(--osmos-brand-primary)" : isCompleted ? "var(--osmos-fg)" : "var(--osmos-fg-subtle)",
         }}>
           {step.label}
         </div>
         <div style={{
           fontSize: 12,
-          color: TEXT_MID,
+          color: "var(--osmos-fg-muted)",
           overflow: "hidden",
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",
@@ -278,7 +267,7 @@ function CarouselNavButton({ onClick, side }) {
         width: 28,
         height: 28,
         borderRadius: 999,
-        background: hov ? BG : "rgba(255,255,255,0.9)",
+        background: hov ? "var(--osmos-bg)" : "rgba(255,255,255,0.9)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -290,8 +279,8 @@ function CarouselNavButton({ onClick, side }) {
       }}
     >
       {side === "left"
-        ? <ChevronLeftIcon size={16} style={{ color: TEXT }} />
-        : <ChevronRightIcon size={16} style={{ color: TEXT }} />}
+        ? <ChevronLeftIcon size={16} style={{ color: "var(--osmos-fg)" }} />
+        : <ChevronRightIcon size={16} style={{ color: "var(--osmos-fg)" }} />}
     </button>
   );
 }
@@ -306,10 +295,10 @@ function PreviewButton({ onClick }) {
       style={{
         padding: 6,
         borderRadius: 8,
-        background: hov ? BG_SUB : "transparent",
+        background: hov ? "var(--osmos-bg-subtle)" : "transparent",
         border: "none",
         cursor: "pointer",
-        color: TEXT_SUB,
+        color: "var(--osmos-fg-subtle)",
         display: "flex",
         alignItems: "center",
         transition: "all 0.15s",
@@ -330,7 +319,7 @@ function CloseHeaderButton({ onClick }) {
       style={{
         padding: 8,
         borderRadius: 8,
-        background: hov ? BG_SUB : "transparent",
+        background: hov ? "var(--osmos-bg-subtle)" : "transparent",
         border: "none",
         cursor: "pointer",
         display: "flex",
@@ -338,7 +327,7 @@ function CloseHeaderButton({ onClick }) {
         transition: "all 0.15s",
       }}
     >
-      <CloseIcon size={20} style={{ color: TEXT_MID }} />
+      <CloseIcon size={20} style={{ color: "var(--osmos-fg-muted)" }} />
     </button>
   );
 }
@@ -353,7 +342,7 @@ function BackHeaderButton({ onClick }) {
       style={{
         padding: 8,
         borderRadius: 8,
-        background: hov ? BG_SUB : "transparent",
+        background: hov ? "var(--osmos-bg-subtle)" : "transparent",
         border: "none",
         cursor: "pointer",
         display: "flex",
@@ -361,7 +350,7 @@ function BackHeaderButton({ onClick }) {
         transition: "all 0.15s",
       }}
     >
-      <ArrowLeftIcon size={20} style={{ color: TEXT_MID }} />
+      <ArrowLeftIcon size={20} style={{ color: "var(--osmos-fg-muted)" }} />
     </button>
   );
 }
@@ -509,27 +498,27 @@ export function AdGroupWizard({ open, onClose, onSave, editingAdGroup }) {
   const renderStep1 = () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <div>
-        <h2 style={{ fontSize: 24, fontWeight: 600, color: TEXT, marginBottom: 8, fontFamily: FONT }}>
+        <h2 style={{ fontSize: 24, fontWeight: 600, color: "var(--osmos-fg)", marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>
           Ad Group Basics
         </h2>
-        <p style={{ fontSize: 14, color: TEXT_MID, fontFamily: FONT }}>
+        <p style={{ fontSize: 14, color: "var(--osmos-fg-muted)", fontFamily: "'Open Sans', sans-serif" }}>
           Give your ad group a descriptive name.
         </p>
       </div>
 
       <div style={{
-        background: BG,
+        background: "var(--osmos-bg)",
         borderRadius: 12,
-        border: `1px solid ${BORDER}`,
+        border: `1px solid ${"var(--osmos-border)"}`,
         padding: 24,
       }}>
         <label style={{
           display: "block",
           fontSize: 13,
           fontWeight: 500,
-          color: TEXT,
+          color: "var(--osmos-fg)",
           marginBottom: 8,
-          fontFamily: FONT,
+          fontFamily: "'Open Sans', sans-serif",
         }}>
           Ad Group Name <span style={{ color: "#ef4444" }}>*</span>
         </label>
@@ -539,7 +528,7 @@ export function AdGroupWizard({ open, onClose, onSave, editingAdGroup }) {
           placeholder="e.g., Homepage Banner Ads, Product Page Promotions"
           style={{ width: "100%" }}
         />
-        <p style={{ fontSize: 12, color: TEXT_SUB, marginTop: 8, fontFamily: FONT }}>
+        <p style={{ fontSize: 12, color: "var(--osmos-fg-subtle)", marginTop: 8, fontFamily: "'Open Sans', sans-serif" }}>
           Use a name that describes the inventory or targeting strategy
         </p>
       </div>
@@ -549,18 +538,18 @@ export function AdGroupWizard({ open, onClose, onSave, editingAdGroup }) {
   const renderStep2 = () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <div>
-        <h2 style={{ fontSize: 24, fontWeight: 600, color: TEXT, marginBottom: 8, fontFamily: FONT }}>
+        <h2 style={{ fontSize: 24, fontWeight: 600, color: "var(--osmos-fg)", marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>
           Select Target Pages
         </h2>
-        <p style={{ fontSize: 14, color: TEXT_MID, fontFamily: FONT }}>
+        <p style={{ fontSize: 14, color: "var(--osmos-fg-muted)", fontFamily: "'Open Sans', sans-serif" }}>
           Choose which pages to display your ads on. Available ad formats will be determined by your selection.
         </p>
       </div>
 
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
+      <div style={{ background: "var(--osmos-bg)", borderRadius: 12, border: `1px solid ${"var(--osmos-border)"}`, padding: 24 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-          <h3 style={{ fontWeight: 500, color: TEXT, fontSize: 14, fontFamily: FONT }}>Available Pages</h3>
-          <span style={{ fontSize: 13, color: TEXT_MID, fontFamily: FONT }}>
+          <h3 style={{ fontWeight: 500, color: "var(--osmos-fg)", fontSize: 14, fontFamily: "'Open Sans', sans-serif" }}>Available Pages</h3>
+          <span style={{ fontSize: 13, color: "var(--osmos-fg-muted)", fontFamily: "'Open Sans', sans-serif" }}>
             {adGroupData.selectedPages.length} selected
           </span>
         </div>
@@ -587,10 +576,10 @@ export function AdGroupWizard({ open, onClose, onSave, editingAdGroup }) {
           borderRadius: 12,
           padding: 16,
         }}>
-          <h4 style={{ fontWeight: 500, color: "#166534", marginBottom: 8, fontSize: 14, fontFamily: FONT }}>
+          <h4 style={{ fontWeight: 500, color: "#166534", marginBottom: 8, fontSize: 14, fontFamily: "'Open Sans', sans-serif" }}>
             Available Ad Formats
           </h4>
-          <p style={{ fontSize: 13, color: "#15803d", fontFamily: FONT }}>
+          <p style={{ fontSize: 13, color: "#15803d", fontFamily: "'Open Sans', sans-serif" }}>
             Based on your selection, you can use:{" "}
             {getAvailableFormats().map((f) => f.name).join(", ")}
           </p>
@@ -604,10 +593,10 @@ export function AdGroupWizard({ open, onClose, onSave, editingAdGroup }) {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
         <div>
-          <h2 style={{ fontSize: 24, fontWeight: 600, color: TEXT, marginBottom: 8, fontFamily: FONT }}>
+          <h2 style={{ fontSize: 24, fontWeight: 600, color: "var(--osmos-fg)", marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>
             Choose Ad Format
           </h2>
-          <p style={{ fontSize: 14, color: TEXT_MID, fontFamily: FONT }}>
+          <p style={{ fontSize: 14, color: "var(--osmos-fg-muted)", fontFamily: "'Open Sans', sans-serif" }}>
             Select the format for your ad group creatives. Available formats are based on your selected pages.
           </p>
         </div>
@@ -619,7 +608,7 @@ export function AdGroupWizard({ open, onClose, onSave, editingAdGroup }) {
             borderRadius: 12,
             padding: 16,
           }}>
-            <p style={{ color: "#92400e", fontSize: 14, fontFamily: FONT }}>
+            <p style={{ color: "#92400e", fontSize: 14, fontFamily: "'Open Sans', sans-serif" }}>
               Please go back and select at least one page to see available ad formats.
             </p>
           </div>
@@ -687,11 +676,11 @@ export function AdGroupWizard({ open, onClose, onSave, editingAdGroup }) {
         width: "calc(100% - 280px)",
         maxWidth: 1400,
         zIndex: 111,
-        background: BG_SUB,
+        background: "var(--osmos-bg-subtle)",
         display: "flex",
         flexDirection: "column",
         boxShadow: "0 25px 50px rgba(0,0,0,0.25)",
-        fontFamily: FONT,
+        fontFamily: "'Open Sans', sans-serif",
       }}>
 
         {/* Header */}
@@ -700,16 +689,16 @@ export function AdGroupWizard({ open, onClose, onSave, editingAdGroup }) {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "16px 24px",
-          borderBottom: `1px solid ${BORDER}`,
-          background: BG,
+          borderBottom: `1px solid ${"var(--osmos-border)"}`,
+          background: "var(--osmos-bg)",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <BackHeaderButton onClick={onClose} />
             <div>
-              <h2 style={{ fontSize: 16, fontWeight: 600, color: TEXT, fontFamily: FONT }}>
+              <h2 style={{ fontSize: 16, fontWeight: 600, color: "var(--osmos-fg)", fontFamily: "'Open Sans', sans-serif" }}>
                 Create Display Ad Group
               </h2>
-              <p style={{ fontSize: 13, color: TEXT_MID, fontFamily: FONT }}>
+              <p style={{ fontSize: 13, color: "var(--osmos-fg-muted)", fontFamily: "'Open Sans', sans-serif" }}>
                 Step {currentStep} of {adGroupSteps.length} • Return to Campaign
               </p>
             </div>
@@ -723,8 +712,8 @@ export function AdGroupWizard({ open, onClose, onSave, editingAdGroup }) {
           {/* Steps sidebar */}
           <div style={{
             width: 256,
-            background: BG,
-            borderRight: `1px solid ${BORDER}`,
+            background: "var(--osmos-bg)",
+            borderRight: `1px solid ${"var(--osmos-border)"}`,
             display: "flex",
             flexDirection: "column",
           }}>
@@ -748,18 +737,18 @@ export function AdGroupWizard({ open, onClose, onSave, editingAdGroup }) {
 
             {/* Ad Group Summary */}
             <div style={{
-              borderTop: `1px solid ${BORDER}`,
+              borderTop: `1px solid ${"var(--osmos-border)"}`,
               padding: 16,
-              background: BG_SUB,
+              background: "var(--osmos-bg-subtle)",
             }}>
               <h4 style={{
                 fontSize: 11,
                 fontWeight: 600,
-                color: TEXT_SUB,
+                color: "var(--osmos-fg-subtle)",
                 textTransform: "uppercase",
                 letterSpacing: "0.06em",
                 marginBottom: 12,
-                fontFamily: FONT,
+                fontFamily: "'Open Sans', sans-serif",
               }}>
                 Ad Group Summary
               </h4>
@@ -771,16 +760,16 @@ export function AdGroupWizard({ open, onClose, onSave, editingAdGroup }) {
                   { label: "Creatives", value: adGroupData.creatives.length },
                 ].map(({ label, value }) => (
                   <div key={label} style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
-                    <span style={{ color: TEXT_MID, fontFamily: FONT }}>{label}</span>
+                    <span style={{ color: "var(--osmos-fg-muted)", fontFamily: "'Open Sans', sans-serif" }}>{label}</span>
                     <span style={{
                       fontWeight: 500,
-                      color: TEXT,
+                      color: "var(--osmos-fg)",
                       textTransform: label === "Format" ? "capitalize" : undefined,
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       whiteSpace: "nowrap",
                       maxWidth: 120,
-                      fontFamily: FONT,
+                      fontFamily: "'Open Sans', sans-serif",
                     }}>
                       {value}
                     </span>
@@ -800,19 +789,19 @@ export function AdGroupWizard({ open, onClose, onSave, editingAdGroup }) {
 
         {/* Footer */}
         <div style={{
-          borderTop: `1px solid ${BORDER}`,
-          background: BG,
+          borderTop: `1px solid ${"var(--osmos-border)"}`,
+          background: "var(--osmos-bg)",
           padding: "16px 24px",
         }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div style={{ flex: 1 }}>
               {currentStep === 2 && adGroupData.selectedPages.length === 0 && (
-                <p style={{ fontSize: 13, color: "#ef4444", fontFamily: FONT }}>
+                <p style={{ fontSize: 13, color: "#ef4444", fontFamily: "'Open Sans', sans-serif" }}>
                   Select at least one page to continue
                 </p>
               )}
               {currentStep === 3 && !adGroupData.adFormat && (
-                <p style={{ fontSize: 13, color: "#ef4444", fontFamily: FONT }}>
+                <p style={{ fontSize: 13, color: "#ef4444", fontFamily: "'Open Sans', sans-serif" }}>
                   Select an ad format to continue
                 </p>
               )}
@@ -854,11 +843,11 @@ function PageRow({ page, isSelected, onToggle }) {
         padding: 16,
         borderRadius: 12,
         border: isSelected
-          ? `2px solid ${ACCENT}`
+          ? `2px solid ${"var(--osmos-brand-primary)"}`
           : hov
             ? `2px solid var(--osmos-border)`
             : `2px solid var(--osmos-border)`,
-        background: isSelected ? ACCENT_M : "var(--osmos-bg)",
+        background: isSelected ? "var(--osmos-brand-primary-muted)" : "var(--osmos-bg)",
         cursor: "pointer",
         transition: "all 0.15s",
       }}
@@ -871,16 +860,16 @@ function PageRow({ page, isSelected, onToggle }) {
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
           <LayoutIcon size={16} style={{ color: "var(--osmos-fg-muted)", flexShrink: 0 }} />
-          <p style={{ fontWeight: 500, color: "var(--osmos-fg)", fontSize: 14, fontFamily: FONT }}>
+          <p style={{ fontWeight: 500, color: "var(--osmos-fg)", fontSize: 14, fontFamily: "'Open Sans', sans-serif" }}>
             {page.name}
           </p>
         </div>
-        <p style={{ fontSize: 13, color: "var(--osmos-fg-muted)", marginBottom: 8, fontFamily: FONT }}>
+        <p style={{ fontSize: 13, color: "var(--osmos-fg-muted)", marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>
           {page.description}
         </p>
         <div style={{ display: "flex", alignItems: "center", gap: 16, fontSize: 12 }}>
-          <span style={{ color: "#16a34a", fontFamily: FONT }}>{page.reach}</span>
-          <span style={{ color: "var(--osmos-fg-subtle)", fontFamily: FONT }}>
+          <span style={{ color: "#16a34a", fontFamily: "'Open Sans', sans-serif" }}>{page.reach}</span>
+          <span style={{ color: "var(--osmos-fg-subtle)", fontFamily: "'Open Sans', sans-serif" }}>
             Formats:{" "}
             {page.supportedFormats
               .map((f) => f.charAt(0).toUpperCase() + f.slice(1))
@@ -905,7 +894,7 @@ function FormatCard({ format, isSelected, carouselIndex, onSelect, onCarouselPre
         background: "var(--osmos-bg)",
         borderRadius: 12,
         border: isSelected
-          ? `2px solid ${ACCENT}`
+          ? `2px solid ${"var(--osmos-brand-primary)"}`
           : hov
             ? `2px solid var(--osmos-border)`
             : `2px solid var(--osmos-border)`,
@@ -927,13 +916,13 @@ function FormatCard({ format, isSelected, carouselIndex, onSelect, onCarouselPre
           <div style={{
             padding: 8,
             borderRadius: 8,
-            background: isSelected ? ACCENT_M : "var(--osmos-bg-subtle)",
-            color: isSelected ? ACCENT : "var(--osmos-fg-muted)",
+            background: isSelected ? "var(--osmos-brand-primary-muted)" : "var(--osmos-bg-subtle)",
+            color: isSelected ? "var(--osmos-brand-primary)" : "var(--osmos-fg-muted)",
             display: "flex",
           }}>
             {getFormatIcon(format.id)}
           </div>
-          <span style={{ fontWeight: 600, color: "var(--osmos-fg)", fontSize: 14, fontFamily: FONT }}>
+          <span style={{ fontWeight: 600, color: "var(--osmos-fg)", fontSize: 14, fontFamily: "'Open Sans', sans-serif" }}>
             {format.name}
           </span>
         </div>
@@ -981,7 +970,7 @@ function FormatCard({ format, isSelected, carouselIndex, onSelect, onCarouselPre
                 borderRadius: 999,
                 transition: "all 0.15s",
                 background: (carouselIndex[format.id] || 0) === idx
-                  ? ACCENT
+                  ? "var(--osmos-brand-primary)"
                   : "rgba(0,0,0,0.2)",
               }}
             />
@@ -991,14 +980,14 @@ function FormatCard({ format, isSelected, carouselIndex, onSelect, onCarouselPre
 
       {/* Description & features */}
       <div style={{ padding: 16 }}>
-        <p style={{ fontSize: 13, color: "var(--osmos-fg-muted)", marginBottom: 12, fontFamily: FONT }}>
+        <p style={{ fontSize: 13, color: "var(--osmos-fg-muted)", marginBottom: 12, fontFamily: "'Open Sans', sans-serif" }}>
           {format.description}
         </p>
         <ul style={{ display: "flex", flexDirection: "column", gap: 6, listStyle: "none", padding: 0, margin: 0 }}>
           {format.features.map((feature, idx) => (
             <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 12 }}>
               <CheckIcon size={14} style={{ color: "#16a34a", marginTop: 1, flexShrink: 0 }} />
-              <span style={{ color: "var(--osmos-fg)", fontFamily: FONT }}>{feature}</span>
+              <span style={{ color: "var(--osmos-fg)", fontFamily: "'Open Sans', sans-serif" }}>{feature}</span>
             </li>
           ))}
         </ul>
@@ -1014,9 +1003,9 @@ function FormatCard({ format, isSelected, carouselIndex, onSelect, onCarouselPre
           fontSize: 13,
           textAlign: "center",
           transition: "all 0.15s",
-          background: isSelected ? ACCENT : "var(--osmos-bg-subtle)",
+          background: isSelected ? "var(--osmos-brand-primary)" : "var(--osmos-bg-subtle)",
           color: isSelected ? "#fff" : "var(--osmos-fg)",
-          fontFamily: FONT,
+          fontFamily: "'Open Sans', sans-serif",
         }}>
           {isSelected ? "Selected" : "Select"}
         </div>

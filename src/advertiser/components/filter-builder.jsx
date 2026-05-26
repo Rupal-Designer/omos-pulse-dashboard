@@ -1,15 +1,6 @@
 import { useState } from 'react';
 import { PlusIcon, CloseIcon } from '../../ui';
 
-// ── Design tokens ────────────────────────────────────────────────────────────
-const FONT      = "'Open Sans', sans-serif";
-const BG        = 'var(--osmos-bg)';
-const BG_SUBTLE = 'var(--osmos-bg-subtle)';
-const BORDER    = 'var(--osmos-border)';
-const TEXT      = 'var(--osmos-fg)';
-const TEXT_MID  = 'var(--osmos-fg-muted)';
-const ACCENT    = 'var(--osmos-brand-primary)';
-const ACCENT_M  = 'var(--osmos-brand-primary-muted)';
 
 // ── Defaults ─────────────────────────────────────────────────────────────────
 const defaultOperators = [
@@ -21,8 +12,8 @@ const defaultOperators = [
 ];
 
 const SELECT_STYLE = {
-  padding: '8px 12px', border: `1px solid ${BORDER}`, borderRadius: 8,
-  fontSize: 13, outline: 'none', color: TEXT, background: BG, fontFamily: FONT,
+  padding: '8px 12px', border: '1px solid var(--osmos-border)', borderRadius: 8,
+  fontSize: 13, outline: 'none', color: 'var(--osmos-fg)', background: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif",
   cursor: 'pointer',
 };
 
@@ -61,13 +52,13 @@ export function FilterBuilder({
   const activeFilters = filterRows.filter((f) => f.field && f.value);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontFamily: FONT }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontFamily: "'Open Sans', sans-serif" }}>
       {/* ── Builder panel ── */}
       {showFilterBuilder && (
         <div style={{
           display: 'flex', flexDirection: 'column', gap: 12,
-          padding: 16, borderRadius: 8, border: `1px solid ${BORDER}`,
-          backgroundColor: BG_SUBTLE,
+          padding: 16, borderRadius: 8, border: `1px solid var(--osmos-border)`,
+          backgroundColor: 'var(--osmos-bg-subtle)',
         }}>
           {filterRows.map((filter, index) => (
             <div key={index} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -77,12 +68,12 @@ export function FilterBuilder({
                 style={{
                   display: 'flex', alignItems: 'center', gap: 8,
                   padding: '8px 16px', borderRadius: 999, cursor: 'pointer',
-                  border: `1px solid ${activeFilterIndex === index ? ACCENT : BORDER}`,
-                  backgroundColor: BG, fontFamily: FONT, fontSize: 13, color: TEXT,
+                  border: `1px solid ${activeFilterIndex === index ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)'}`,
+                  backgroundColor: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif", fontSize: 13, color: 'var(--osmos-fg)',
                   transition: 'all 0.15s',
                 }}
               >
-                <PlusIcon size={14} color={TEXT_MID} />
+                <PlusIcon size={14} color="var(--osmos-fg-muted)" />
                 Add a Filter
               </button>
 
@@ -91,7 +82,7 @@ export function FilterBuilder({
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: 12,
                   padding: 12, borderRadius: 8,
-                  border: `1px solid ${BORDER}`, backgroundColor: BG,
+                  border: `1px solid var(--osmos-border)`, backgroundColor: 'var(--osmos-bg)',
                 }}>
                   <select
                     value={filter.field}
@@ -127,8 +118,8 @@ export function FilterBuilder({
                     onClick={handleApplyFilter}
                     style={{
                       padding: '8px 16px', borderRadius: 8, border: 'none',
-                      backgroundColor: ACCENT, color: '#fff', fontSize: 13,
-                      fontWeight: 500, cursor: 'pointer', fontFamily: FONT,
+                      backgroundColor: 'var(--osmos-brand-primary)', color: '#fff', fontSize: 13,
+                      fontWeight: 500, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
                       transition: 'opacity 0.15s',
                     }}
                     onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
@@ -151,14 +142,14 @@ export function FilterBuilder({
               style={{
                 display: 'flex', alignItems: 'center', gap: 8,
                 padding: '8px 16px', borderRadius: 999, cursor: 'pointer',
-                border: `1px solid ${BORDER}`, backgroundColor: BG,
-                fontFamily: FONT, fontSize: 13, color: TEXT_MID,
+                border: `1px solid var(--osmos-border)`, backgroundColor: 'var(--osmos-bg)',
+                fontFamily: "'Open Sans', sans-serif", fontSize: 13, color: 'var(--osmos-fg-muted)',
                 transition: 'opacity 0.15s',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
             >
-              <PlusIcon size={14} color={TEXT_MID} />
+              <PlusIcon size={14} color="var(--osmos-fg-muted)" />
               Add a Filter
             </button>
           )}
@@ -172,13 +163,13 @@ export function FilterBuilder({
           style={{
             display: 'flex', alignItems: 'center', gap: 4,
             border: 'none', background: 'transparent',
-            fontSize: 13, color: TEXT_MID, cursor: 'pointer', fontFamily: FONT,
+            fontSize: 13, color: 'var(--osmos-fg-muted)', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
             transition: 'opacity 0.15s',
           }}
           onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
           onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
         >
-          <PlusIcon size={14} color={TEXT_MID} />
+          <PlusIcon size={14} color="var(--osmos-fg-muted)" />
           Add a Filter
         </button>
       )}
@@ -192,9 +183,9 @@ export function FilterBuilder({
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 padding: '6px 12px', borderRadius: 999,
-                border: `1px solid ${ACCENT_M}`,
-                backgroundColor: ACCENT_M,
-                color: ACCENT, fontSize: 13,
+                border: `1px solid ${'var(--osmos-brand-primary-muted)'}`,
+                backgroundColor: 'var(--osmos-brand-primary-muted)',
+                color: 'var(--osmos-brand-primary)', fontSize: 13,
               }}
             >
               <span>
@@ -206,13 +197,13 @@ export function FilterBuilder({
                 onClick={() => handleRemoveFilter(index)}
                 style={{
                   border: 'none', background: 'transparent',
-                  color: ACCENT, cursor: 'pointer', padding: 0,
+                  color: 'var(--osmos-brand-primary)', cursor: 'pointer', padding: 0,
                   display: 'flex', alignItems: 'center',
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
                 onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
               >
-                <CloseIcon size={14} color={ACCENT} />
+                <CloseIcon size={14} color="var(--osmos-brand-primary)" />
               </button>
             </div>
           ))}

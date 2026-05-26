@@ -1,17 +1,6 @@
 import { useState } from 'react';
 import { Input, Icon, EyeIcon } from '../../../../ui';
 
-const FONT     = "'Open Sans', sans-serif";
-const TEXT     = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_SUB = 'var(--osmos-fg-subtle)';
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-const ERROR    = 'var(--alert-error-primary)';
-
 // ── Icons ─────────────────────────────────────────────────────────────────────
 const TrendingUpIcon = (props) => (
   <Icon {...props}>
@@ -67,18 +56,18 @@ export function CampaignBasicsStep({ data, updateData }) {
   const [hoveredId, setHoveredId] = useState(null);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: FONT }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: "'Open Sans', sans-serif" }}>
       <div>
-        <h2 style={{ fontSize: 24, fontWeight: 600, color: TEXT, marginBottom: 8 }}>
+        <h2 style={{ fontSize: 24, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8 }}>
           Campaign Basics
         </h2>
-        <p style={{ color: TEXT_MID }}>
+        <p style={{ color: 'var(--osmos-fg-muted)' }}>
           Give your campaign a name and select your primary objective.
         </p>
       </div>
 
       {/* Campaign Name */}
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
         <div style={{ maxWidth: 480 }}>
           <Input
             label="Campaign Name"
@@ -88,15 +77,15 @@ export function CampaignBasicsStep({ data, updateData }) {
             placeholder="Enter a descriptive name for your campaign"
           />
         </div>
-        <p style={{ fontSize: 12, color: TEXT_SUB, marginTop: 8 }}>
+        <p style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', marginTop: 8 }}>
           Use a clear name that helps you identify this campaign later (e.g., "Summer Sale 2025")
         </p>
       </div>
 
       {/* Campaign Objective */}
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
-        <div style={{ fontSize: 13, fontWeight: 500, color: TEXT, marginBottom: 16 }}>
-          Campaign Objective <span style={{ color: ERROR }}>*</span>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
+        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 16 }}>
+          Campaign Objective <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
           {objectives.map(({ id, label, description, IconComp }) => {
@@ -110,27 +99,27 @@ export function CampaignBasicsStep({ data, updateData }) {
                 onMouseLeave={() => setHoveredId(null)}
                 style={{
                   padding: 20, borderRadius: 12, textAlign: 'left',
-                  border: `2px solid ${isSelected ? ACCENT : isHovered ? TEXT_MID : BORDER}`,
-                  background: isSelected ? ACCENT_M : isHovered ? BG_SUB : BG,
+                  border: `2px solid ${isSelected ? 'var(--osmos-brand-primary)' : isHovered ? 'var(--osmos-fg-muted)' : 'var(--osmos-border)'}`,
+                  background: isSelected ? 'var(--osmos-brand-primary-muted)' : isHovered ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
                   cursor: 'pointer', transition: 'all 0.15s',
-                  fontFamily: FONT,
+                  fontFamily: "'Open Sans', sans-serif",
                 }}
               >
                 <div style={{
                   width: 40, height: 40, borderRadius: 8,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   marginBottom: 12,
-                  background: isSelected ? ACCENT : BG_SUB,
+                  background: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg-subtle)',
                 }}>
-                  <IconComp size={20} color={isSelected ? '#fff' : TEXT_MID} />
+                  <IconComp size={20} color={isSelected ? '#fff' : 'var(--osmos-fg-muted)'} />
                 </div>
                 <h4 style={{
                   fontWeight: 500, marginBottom: 4, fontSize: 14,
-                  color: isSelected ? ACCENT : TEXT,
+                  color: isSelected ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg)',
                 }}>
                   {label}
                 </h4>
-                <p style={{ fontSize: 12, color: TEXT_MID, margin: 0 }}>
+                <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', margin: 0 }}>
                   {description}
                 </p>
               </button>

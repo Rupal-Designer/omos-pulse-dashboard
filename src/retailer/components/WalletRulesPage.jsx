@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import { Icon, SearchIcon, PlusIcon, CloseIcon } from '../../ui/atoms/Icon';
-import { Button } from '../../ui/atoms/Button';
-import { Input, Select } from '../../ui/atoms/Input';
-import { Toast, useToast } from '../../ui/atoms/Toast';
-
-const FONT = "'Open Sans', sans-serif";
+import { Icon, SearchIcon, PlusIcon, CloseIcon, Button, Input, Select, Toast, useToast } from '../../ui';
 
 const INITIAL_RULES = [
   { id: 1, segmentName: 'High Value Advertisers', label: 'HVA Rule',        rule: 'Balance < ₹5,000',       description: 'Auto top-up when balance falls below ₹5,000',     ruleType: 'Auto Top-Up', actions: 'Enabled',  lastExecuted: '21 Apr 26, 09:00 AM', createdBy: 'Alice Johnson',  createdOn: '15 Jan 25', lastEditedBy: 'Alice Johnson' },
@@ -60,7 +55,7 @@ export default function WalletRulesPage() {
   );
 
   return (
-    <div style={{ padding: '20px 24px', fontFamily: FONT }}>
+    <div style={{ padding: '20px 24px', fontFamily: "'Open Sans', sans-serif" }}>
       <Toast visible={toast.visible} message={toast.message} type={toast.type} />
 
       <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 8, overflow: 'hidden' }}>
@@ -72,7 +67,7 @@ export default function WalletRulesPage() {
               <line x1="2" y1="10" x2="22" y2="10" />
             </Icon>
           </div>
-          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>Wallet Rules</span>
+          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>Wallet Rules</span>
         </div>
 
         {/* Toolbar */}
@@ -87,7 +82,7 @@ export default function WalletRulesPage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search rules…"
-              style={{ border: 'none', outline: 'none', fontSize: 12, color: 'var(--osmos-fg)', fontFamily: FONT, width: 180, background: 'transparent' }}
+              style={{ border: 'none', outline: 'none', fontSize: 12, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif", width: 180, background: 'transparent' }}
             />
           </div>
           <Button size="sm" onClick={openAdd}>
@@ -98,7 +93,7 @@ export default function WalletRulesPage() {
 
         {/* Table */}
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12, fontFamily: FONT }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12, fontFamily: "'Open Sans', sans-serif" }}>
             <thead>
               <tr style={{ background: 'var(--osmos-bg-subtle)', borderBottom: '1px solid var(--osmos-border)' }}>
                 {['Segment Name', 'Label', 'Rule', 'Description', 'Rule Type', 'Actions', 'Last Executed', 'Created By', 'Created On', 'Last Edited By', ''].map(h => (
@@ -127,7 +122,7 @@ export default function WalletRulesPage() {
                       onClick={() => toggleAction(row)}
                       style={{
                         padding: '3px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600,
-                        border: 'none', cursor: 'pointer', fontFamily: FONT,
+                        border: 'none', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
                         background: row.actions === 'Enabled' ? 'var(--osmos-brand-green-muted)' : 'rgba(220,38,38,0.08)',
                         color: row.actions === 'Enabled' ? 'var(--osmos-brand-green)' : 'var(--alert-error-primary)',
                       }}
@@ -160,7 +155,7 @@ export default function WalletRulesPage() {
             style={{ background: 'var(--osmos-bg)', borderRadius: 10, width: 480, boxShadow: '0 20px 60px rgba(0,0,0,0.2)', overflow: 'hidden' }}
           >
             <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--osmos-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--osmos-fg)', fontFamily: FONT }}>
+              <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>
                 {editRow ? 'Edit Wallet Rule' : 'Add Wallet Rule'}
               </span>
               <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', padding: 4 }}>
@@ -187,14 +182,14 @@ export default function WalletRulesPage() {
                 placeholder="e.g. Balance < ₹5,000"
               />
               <div>
-                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)', marginBottom: 4, display: 'block', fontFamily: FONT }}>Description</label>
+                <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)', marginBottom: 4, display: 'block', fontFamily: "'Open Sans', sans-serif" }}>Description</label>
                 <textarea
                   value={form.description}
                   onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                   placeholder="Describe what this rule does"
                   style={{
                     width: '100%', padding: '8px 10px', border: '1px solid var(--osmos-border)', borderRadius: 6,
-                    fontSize: 13, fontFamily: FONT, color: 'var(--osmos-fg)', outline: 'none',
+                    fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)', outline: 'none',
                     boxSizing: 'border-box', height: 80, resize: 'vertical', background: 'var(--osmos-bg)',
                   }}
                 />

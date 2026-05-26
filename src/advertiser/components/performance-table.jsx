@@ -3,20 +3,8 @@ import { Icon, InfoIcon, RefreshIcon, DownloadIcon, ChevronDownIcon, SearchIcon 
 import { FilterBuilder } from './filter-builder';
 import { DataTable, ColHeader, useOsmosTable } from '../../shared/components/data-table';
 
-// ── Design tokens ────────────────────────────────────────────────────────────
-const FONT      = "'Open Sans', sans-serif";
-const BG        = 'var(--osmos-bg)';
-const BG_SUBTLE = 'var(--osmos-bg-subtle)';
-const BORDER    = 'var(--osmos-border)';
-const TEXT      = 'var(--osmos-fg)';
-const TEXT_MID  = 'var(--osmos-fg-muted)';
-const TEXT_SUB  = 'var(--osmos-fg-subtle)';
-const ACCENT    = 'var(--osmos-brand-primary)';
-const ACCENT_M  = 'var(--osmos-brand-primary-muted)';
-const GREEN     = 'var(--osmos-brand-green)';
-
 // ── Hand-rolled BarChart2 icon ────────────────────────────────────────────────
-const BarChartIcon = ({ size = 16, color = ACCENT }) => (
+const BarChartIcon = ({ size = 16, color = 'var(--osmos-brand-primary)' }) => (
   <Icon size={size} color={color}>
     <line x1="18" x2="18" y1="20" y2="10" />
     <line x1="12" x2="12" y1="20" y2="4" />
@@ -108,14 +96,14 @@ const metricCols = [
   {
     id: 'roas', accessorKey: 'roas', enableSorting: false,
     header: () => <ColHeader label="ROAS" info />,
-    cell: info => <span style={{ fontWeight: 500, color: GREEN }}>{info.getValue()}</span>,
+    cell: info => <span style={{ fontWeight: 500, color: 'var(--osmos-brand-green)' }}>{info.getValue()}</span>,
   },
 ];
 
 const nameCol = {
   id: 'name', accessorKey: 'name',
   header: () => <ColHeader label="Name" info />,
-  cell: info => <span style={{ color: ACCENT, cursor: 'pointer' }}>{info.getValue()}</span>,
+  cell: info => <span style={{ color: 'var(--osmos-brand-primary)', cursor: 'pointer' }}>{info.getValue()}</span>,
 };
 
 const VIEW_SECOND_COL = {
@@ -158,41 +146,41 @@ export function PerformanceTable() {
   }
 
   return (
-    <div style={{ borderRadius: 8, border: `1px solid ${BORDER}`, backgroundColor: BG, fontFamily: FONT }}>
+    <div style={{ borderRadius: 8, border: `1px solid var(--osmos-border)`, backgroundColor: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif" }}>
       {/* ── Header bar ── */}
-      <div style={{ padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${BORDER}` }}>
+      <div style={{ padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid var(--osmos-border)` }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: ACCENT_M }}>
-            <BarChartIcon size={16} color={ACCENT} />
+          <div style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--osmos-brand-primary-muted)' }}>
+            <BarChartIcon size={16} color="var(--osmos-brand-primary)" />
           </div>
-          <span style={{ fontWeight: 500, color: TEXT }}>PERFORMANCE</span>
-          <InfoIcon size={14} color={TEXT_SUB} />
+          <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>PERFORMANCE</span>
+          <InfoIcon size={14} color="var(--osmos-fg-subtle)" />
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <IconBtn><RefreshIcon size={14} color={TEXT_MID} /></IconBtn>
-          <div style={{ display: 'flex', alignItems: 'center', border: `1px solid ${BORDER}`, borderRadius: 8 }}>
-            <button style={{ padding: '6px 12px', border: 'none', background: 'transparent', cursor: 'pointer', color: TEXT_MID, display: 'flex', alignItems: 'center' }}>
-              <BarChartIcon size={14} color={TEXT_MID} />
+          <IconBtn><RefreshIcon size={14} color="var(--osmos-fg-muted)" /></IconBtn>
+          <div style={{ display: 'flex', alignItems: 'center', border: `1px solid var(--osmos-border)`, borderRadius: 8 }}>
+            <button style={{ padding: '6px 12px', border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center' }}>
+              <BarChartIcon size={14} color="var(--osmos-fg-muted)" />
             </button>
-            <ChevronDownIcon size={14} color={TEXT_MID} style={{ marginRight: 8 }} />
+            <ChevronDownIcon size={14} color="var(--osmos-fg-muted)" style={{ marginRight: 8 }} />
           </div>
-          <IconBtn><DownloadIcon size={14} color={TEXT_MID} /></IconBtn>
+          <IconBtn><DownloadIcon size={14} color="var(--osmos-fg-muted)" /></IconBtn>
         </div>
       </div>
 
       {/* ── View tabs + search ── */}
-      <div style={{ padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${BORDER}` }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: 4, borderRadius: 8, backgroundColor: BG_SUBTLE }}>
+      <div style={{ padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid var(--osmos-border)` }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: 4, borderRadius: 8, backgroundColor: 'var(--osmos-bg-subtle)' }}>
           {VIEWS.map((v) => (
             <button
               key={v}
               onClick={() => handleViewChange(v)}
               style={{
                 padding: '8px 16px', borderRadius: 6, border: 'none', cursor: 'pointer',
-                fontSize: 13, fontWeight: 500, fontFamily: FONT, transition: 'all 0.15s',
-                backgroundColor: view === v ? BG : 'transparent',
-                color: view === v ? TEXT : TEXT_MID,
+                fontSize: 13, fontWeight: 500, fontFamily: "'Open Sans', sans-serif", transition: 'all 0.15s',
+                backgroundColor: view === v ? 'var(--osmos-bg)' : 'transparent',
+                color: view === v ? 'var(--osmos-fg)' : 'var(--osmos-fg-muted)',
                 boxShadow: view === v ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
               }}
             >
@@ -201,20 +189,20 @@ export function PerformanceTable() {
           ))}
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px', border: `1px solid ${BORDER}`, borderRadius: 8 }}>
-          <SearchIcon size={14} color={TEXT_SUB} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px', border: `1px solid var(--osmos-border)`, borderRadius: 8 }}>
+          <SearchIcon size={14} color="var(--osmos-fg-subtle)" />
           <input
             type="text"
             value={globalFilter}
             onChange={e => setGlobalFilter(e.target.value)}
             placeholder={`Search ${view}`}
-            style={{ border: 'none', outline: 'none', width: 128, fontSize: 13, color: TEXT, background: 'transparent', fontFamily: FONT }}
+            style={{ border: 'none', outline: 'none', width: 128, fontSize: 13, color: 'var(--osmos-fg)', background: 'transparent', fontFamily: "'Open Sans', sans-serif" }}
           />
         </div>
       </div>
 
       {/* ── Filter builder ── */}
-      <div style={{ padding: '8px 16px', borderBottom: `1px solid ${BORDER}` }}>
+      <div style={{ padding: '8px 16px', borderBottom: `1px solid var(--osmos-border)` }}>
         <FilterBuilder filterFields={filterFields} onFiltersChange={setActiveFilters} />
       </div>
 
@@ -222,9 +210,9 @@ export function PerformanceTable() {
       <DataTable table={table} footer={footer} />
 
       {/* ── Footer bar ── */}
-      <div style={{ padding: '8px 16px', display: 'flex', justifyContent: 'space-between', fontSize: 12, color: TEXT_MID, borderTop: `1px solid ${BORDER}` }}>
+      <div style={{ padding: '8px 16px', display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--osmos-fg-muted)', borderTop: `1px solid var(--osmos-border)` }}>
         <span>Comparison mode not applicable</span>
-        <span>One Filter Applicable: <span style={{ color: TEXT, fontWeight: 500 }}>Date</span></span>
+        <span>One Filter Applicable: <span style={{ color: 'var(--osmos-fg)', fontWeight: 500 }}>Date</span></span>
       </div>
     </div>
   );
@@ -240,8 +228,8 @@ function IconBtn({ children, onClick }) {
       onMouseLeave={() => setHover(false)}
       style={{
         width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        border: `1px solid ${BORDER}`, borderRadius: 8, cursor: 'pointer',
-        background: hover ? BG_SUBTLE : 'transparent', transition: 'all 0.15s',
+        border: `1px solid var(--osmos-border)`, borderRadius: 8, cursor: 'pointer',
+        background: hover ? 'var(--osmos-bg-subtle)' : 'transparent', transition: 'all 0.15s',
       }}
     >
       {children}

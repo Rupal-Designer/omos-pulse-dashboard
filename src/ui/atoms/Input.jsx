@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 
-const FONT = "'Open Sans', sans-serif";
-
 const baseInputStyle = {
   width: '100%',
   padding: '7px 10px',
   border: '1px solid var(--osmos-border)',
   borderRadius: 6,
   fontSize: 13,
-  fontFamily: FONT,
+  fontFamily: "'Open Sans', sans-serif",
   color: 'var(--osmos-fg)',
   background: 'var(--osmos-bg)',
   outline: 'none',
@@ -22,7 +20,7 @@ const labelStyle = {
   fontWeight: 600,
   color: 'var(--osmos-fg)',
   marginBottom: 5,
-  fontFamily: FONT,
+  fontFamily: "'Open Sans', sans-serif",
 };
 
 export function Input({

@@ -5,19 +5,6 @@ import {
 } from 'recharts';
 import { Icon, StatCard, ChevronDownIcon, InfoIcon, DownloadIcon } from '../../ui';
 
-/* ── palette & tokens ─────────────────────────────────────────── */
-const BG       = 'var(--osmos-bg-subtle)';
-const WHITE    = 'var(--osmos-bg)';
-const BORDER   = 'var(--osmos-border)';
-const NAV_BG   = 'var(--osmos-nav-bg)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const TEXT_HI  = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_LO  = 'var(--osmos-fg-subtle)';
-const GREEN    = 'var(--alert-success-primary)';        // semantic positive — keep
-const RED      = 'var(--alert-error-primary)';        // semantic negative — keep
-const ORANGE   = 'var(--osmos-brand-amber)';
-
 // StatCard, ChevronDownIcon, InfoIcon, DownloadIcon imported from src/ui
 
 /* ── Chart data ───────────────────────────────────────────────── */
@@ -30,7 +17,7 @@ function MetricPill({ color, label }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer' }}>
       <div style={{ width: 10, height: 10, borderRadius: 2, background: color }}/>
-      <span style={{ fontSize: 11, color: TEXT_HI, fontWeight: 500 }}>{label}</span>
+      <span style={{ fontSize: 11, color: 'var(--osmos-fg)', fontWeight: 500 }}>{label}</span>
       <ChevronDownIcon size={10} />
     </div>
   );
@@ -43,8 +30,8 @@ function ChartCard({ leftMetric, leftColor, rightMetric, rightColor, data, leftK
   );
   return (
     <div style={{
-      background: WHITE, borderRadius: 8, flex: 1,
-      border: `1px solid ${BORDER}`, overflow: 'hidden',
+      background: 'var(--osmos-bg)', borderRadius: 8, flex: 1,
+      border: `1px solid var(--osmos-border)`, overflow: 'hidden',
     }}>
       {/* Header */}
       <div style={{
@@ -54,10 +41,10 @@ function ChartCard({ leftMetric, leftColor, rightMetric, rightColor, data, leftK
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 26, height: 26, background: '#F0F4FF', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Icon size={13} color={ACCENT}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></Icon>
+            <Icon size={13} color='var(--osmos-brand-primary)'><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></Icon>
           </div>
           <MetricPill color={leftColor} label={leftMetric} />
-          <span style={{ fontSize: 11, color: TEXT_LO }}>vs</span>
+          <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)' }}>vs</span>
           <MetricPill color={rightColor} label={rightMetric} />
         </div>
         <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}><DownloadIcon /></button>
@@ -85,8 +72,8 @@ function ChartCard({ leftMetric, leftColor, rightMetric, rightColor, data, leftK
               <path d="M3 3v18h18"/>
               <path d="M7 16l4-4 4 4 4-8" stroke="#D8D8D8"/>
             </svg>
-            <span style={{ fontSize: 12, color: TEXT_LO, fontWeight: 500 }}>No data for selected period</span>
-            <span style={{ fontSize: 10, color: TEXT_LO }}>Connect a data source or adjust the date range</span>
+            <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', fontWeight: 500 }}>No data for selected period</span>
+            <span style={{ fontSize: 10, color: 'var(--osmos-fg-subtle)' }}>Connect a data source or adjust the date range</span>
           </div>
         )}
       </div>
@@ -102,7 +89,7 @@ const PROJECT_COLS = [
 
 function ProjectsTable() {
   return (
-    <div style={{ background: WHITE, borderRadius: 8, border: `1px solid ${BORDER}`, overflow: 'hidden', marginBottom: 8 }}>
+    <div style={{ background: 'var(--osmos-bg)', borderRadius: 8, border: `1px solid var(--osmos-border)`, overflow: 'hidden', marginBottom: 8 }}>
       {/* Header */}
       <div style={{
         padding: '16px 20px', display: 'flex',
@@ -113,13 +100,13 @@ function ProjectsTable() {
           <div style={{ width: 28, height: 28, background: '#FFF0F0', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Icon size={14} color="#E53E3E"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></Icon>
           </div>
-          <span style={{ fontSize: 14, fontWeight: 600, color: TEXT_HI }}>Projects</span>
+          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)' }}>Projects</span>
           <InfoIcon />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button style={{
             height: 32, padding: '0 10px', display: 'flex', alignItems: 'center', gap: 5,
-            background: WHITE, border: `1px solid ${BORDER}`, borderRadius: 6,
+            background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 6,
             cursor: 'pointer', fontSize: 11, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif",
           }}>
             <Icon size={13} color="#666"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></Icon>
@@ -127,9 +114,9 @@ function ProjectsTable() {
           </button>
           <div style={{
             height: 32, padding: '0 10px', display: 'flex', alignItems: 'center', gap: 6,
-            border: `1px solid ${BORDER}`, borderRadius: 6,
+            border: `1px solid var(--osmos-border)`, borderRadius: 6,
           }}>
-            <Icon size={13} color={TEXT_LO}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>
+            <Icon size={13} color='var(--osmos-fg-subtle)'><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></Icon>
             <input placeholder="Search" style={{
               border: 'none', outline: 'none', fontSize: 11, color: 'var(--osmos-fg)',
               fontFamily: "'Open Sans', sans-serif", width: 100, background: 'transparent',
@@ -146,15 +133,15 @@ function ProjectsTable() {
               {PROJECT_COLS.map((col, i) => (
                 <th key={col} style={{
                   padding: '10px 16px', textAlign: 'left',
-                  fontWeight: 500, color: TEXT_MID, fontSize: 11,
+                  fontWeight: 500, color: 'var(--osmos-fg-muted)', fontSize: 11,
                   whiteSpace: 'nowrap',
                   borderBottom: i === PROJECT_COLS.length - 2
-                    ? `2px solid ${ACCENT}` : undefined,
+                    ? `2px solid var(--osmos-brand-primary)` : undefined,
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                     {col}
                     {col === 'Last Updated On' && (
-                      <Icon size={11} color={TEXT_LO}>
+                      <Icon size={11} color='var(--osmos-fg-subtle)'>
                         <line x1="8" y1="6" x2="21" y2="6"/>
                         <line x1="8" y1="12" x2="21" y2="12"/>
                         <line x1="8" y1="18" x2="21" y2="18"/>
@@ -177,20 +164,20 @@ function ProjectsTable() {
           width: 56, height: 56, borderRadius: '50%',
           background: '#F0F4FF', display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          <Icon size={24} color={ACCENT}>
+          <Icon size={24} color='var(--osmos-brand-primary)'>
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
             <polyline points="14 2 14 8 20 8"/>
             <line x1="16" y1="13" x2="8" y2="13"/>
             <line x1="16" y1="17" x2="8" y2="17"/>
           </Icon>
         </div>
-        <span style={{ fontSize: 13, color: TEXT_MID, fontWeight: 600 }}>No projects yet</span>
-        <span style={{ fontSize: 11, color: TEXT_LO, textAlign: 'center', maxWidth: 220 }}>
+        <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontWeight: 600 }}>No projects yet</span>
+        <span style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', textAlign: 'center', maxWidth: 220 }}>
           Projects you create will appear here. Get started by adding your first one.
         </span>
         <button style={{
           marginTop: 4, height: 32, padding: '0 16px',
-          background: ACCENT, color: '#fff', border: 'none', borderRadius: 6,
+          background: 'var(--osmos-brand-primary)', color: '#fff', border: 'none', borderRadius: 6,
           fontSize: 12, fontWeight: 600, cursor: 'pointer',
           fontFamily: "'Open Sans', sans-serif",
           transition: 'opacity 0.12s',
@@ -210,7 +197,7 @@ function Footer() {
   return (
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '0 0 16px', fontSize: 10, color: TEXT_LO, fontStyle: 'italic',
+      padding: '0 0 16px', fontSize: 10, color: 'var(--osmos-fg-subtle)', fontStyle: 'italic',
     }}>
       <span>Date range mode not applicable</span>
       <span style={{ fontStyle: 'normal' }}>© 2017 - 2026 OSK Techlabs Private Ltd. All rights reserved.</span>
@@ -224,7 +211,7 @@ function ChatBubble() {
     <div style={{
       position: 'fixed', bottom: 24, right: 24, zIndex: 999,
       width: 48, height: 48, borderRadius: '50%',
-      background: NAV_BG, display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: 'var(--osmos-nav-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center',
       boxShadow: '0 4px 16px rgba(33,37,99,0.35)', cursor: 'pointer',
     }}>
       <Icon size={22} color="#fff" strokeWidth={1.6}>
@@ -239,9 +226,9 @@ function CompareBanner() {
   return (
     <div style={{
       position: 'absolute', top: 72, right: 24,
-      background: WHITE, border: `1px solid ${BORDER}`,
+      background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`,
       borderRadius: '0 0 8px 8px', padding: '4px 12px',
-      fontSize: 10, color: TEXT_MID, zIndex: 10,
+      fontSize: 10, color: 'var(--osmos-fg-muted)', zIndex: 10,
       boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
     }}>
       Compare 24 Mar 26 - 30 Mar 26
@@ -253,8 +240,8 @@ function CompareBanner() {
 function HomeTopBar() {
   return (
     <header style={{
-      height: 72, background: WHITE,
-      borderBottom: `1px solid ${BORDER}`,
+      height: 72, background: 'var(--osmos-bg)',
+      borderBottom: `1px solid var(--osmos-border)`,
       display: 'flex', alignItems: 'center',
       justifyContent: 'space-between',
       padding: '0 24px', flexShrink: 0, gap: 16,
@@ -263,11 +250,11 @@ function HomeTopBar() {
       {/* Left */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{ width: 36, height: 36, background: '#EFEFEF', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Icon size={17} color={TEXT_MID}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></Icon>
+          <Icon size={17} color='var(--osmos-fg-muted)'><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></Icon>
         </div>
         <div>
-          <div style={{ fontSize: 11, color: TEXT_LO, marginBottom: 1 }}>Dashboard &gt; Overview</div>
-          <div style={{ fontSize: 17, fontWeight: 700, color: TEXT_HI, lineHeight: 1 }}>Home</div>
+          <div style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', marginBottom: 1 }}>Dashboard &gt; Overview</div>
+          <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--osmos-fg)', lineHeight: 1 }}>Home</div>
         </div>
       </div>
 
@@ -281,11 +268,11 @@ function HomeTopBar() {
           <button key={label} aria-label={label} title={label} style={{
             width: 44, height: 44, display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center', gap: 2,
-            background: WHITE, border: `1px solid ${BORDER}`, borderRadius: 8,
+            background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 8,
             cursor: 'pointer', color: 'var(--osmos-fg-muted)', transition: 'background 0.12s',
           }}
             onMouseEnter={e => e.currentTarget.style.background = '#F5F5F8'}
-            onMouseLeave={e => e.currentTarget.style.background = WHITE}
+            onMouseLeave={e => e.currentTarget.style.background = 'var(--osmos-bg)'}
           >
             <Icon size={15}>{svg}</Icon>
             <span style={{ fontSize: 8, color: 'var(--osmos-fg-subtle)', fontWeight: 500, lineHeight: 1, letterSpacing: 0.2 }}>{label}</span>
@@ -295,7 +282,7 @@ function HomeTopBar() {
         {/* Date range */}
         <button style={{
           height: 36, padding: '0 12px', display: 'flex', alignItems: 'center', gap: 6,
-          background: WHITE, border: `1px solid ${BORDER}`, borderRadius: 8,
+          background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 8,
           cursor: 'pointer', fontSize: 12, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif",
         }}>
           <Icon size={13} color="#E53E3E">
@@ -335,13 +322,13 @@ export default function HomePage() {
         {/* Charts */}
         <div style={{ display: 'flex', gap: 20, marginBottom: 20 }}>
           <ChartCard
-            leftMetric="Ad Revenue" leftColor={ACCENT} leftKey="revenue" leftLabel="Ad Revenue"
-            rightMetric="CPC"       rightColor={ORANGE} rightKey="cpc"     rightLabel="CPC"
+            leftMetric="Ad Revenue" leftColor='var(--osmos-brand-primary)' leftKey="revenue" leftLabel="Ad Revenue"
+            rightMetric="CPC"       rightColor='var(--osmos-brand-amber)' rightKey="cpc"     rightLabel="CPC"
             data={revenueData}
           />
           <ChartCard
-            leftMetric="Ad Clicks" leftColor={ACCENT} leftKey="clicks" leftLabel="Ad Clicks"
-            rightMetric="CTR"      rightColor={ORANGE} rightKey="ctr"   rightLabel="CTR"
+            leftMetric="Ad Clicks" leftColor='var(--osmos-brand-primary)' leftKey="clicks" leftLabel="Ad Clicks"
+            rightMetric="CTR"      rightColor='var(--osmos-brand-amber)' rightKey="ctr"   rightLabel="CTR"
             data={clicksData}
           />
         </div>

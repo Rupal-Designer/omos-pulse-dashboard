@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { EditIcon, InfoIcon, RefreshIcon } from '../../ui/atoms/Icon';
 import { Toast, useToast } from '../../ui/atoms/Toast';
+import { Tabs } from '../../ui';
 
 // ── Mock Data ─────────────────────────────────────────────────────────────────
 
@@ -40,8 +41,10 @@ const ADVANCE_SETTINGS = [
   { key: 'audience',       label: 'Audience Targeting',        hasAssignUrl: true  },
 ];
 
-const TABS = ['Page Setup', 'Inventory Setup'];
-const TAB_IDS = { 'Page Setup': 'tab-page-setup', 'Inventory Setup': 'tab-inventory-setup' };
+const TAB_ITEMS = [
+  { id: 'Page Setup', label: 'Page Setup' },
+  { id: 'Inventory Setup', label: 'Inventory Setup' },
+];
 const PANEL_IDS = { 'Page Setup': 'panel-page-setup', 'Inventory Setup': 'panel-inventory-setup' };
 
 // ── Shared Styles ─────────────────────────────────────────────────────────────
@@ -440,45 +443,21 @@ function InventorySetupTab({ showToast }) {
 // ── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function DisplayAdsInventoryMgmtPage() {
-  const [activeTab, setActiveTab] = useState(TABS[0]);
+  const [activeTab, setActiveTab] = useState(TAB_ITEMS[0].id);
   const { toast, showToast } = useToast();
 
   return (
     <div style={{ fontFamily: "'Open Sans', sans-serif", background: 'var(--osmos-bg)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Tab bar */}
-      <div role="tablist" aria-label="Inventory Management sections" style={{ display: 'flex', borderBottom: '1px solid var(--osmos-border)', paddingLeft: 20, background: 'var(--osmos-bg)', flexShrink: 0 }}>
-        {TABS.map(tab => {
-          const isActive = activeTab === tab;
-          return (
-            <button
-              key={tab}
-              id={TAB_IDS[tab]}
-              role="tab"
-              aria-selected={isActive}
-              aria-controls={PANEL_IDS[tab]}
-              onClick={() => setActiveTab(tab)}
-              style={{
-                padding: '10px 20px', border: 'none',
-                borderBottom: isActive ? '2px solid var(--osmos-brand-primary)' : '2px solid transparent',
-                background: 'transparent', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
-                fontSize: 13, fontWeight: isActive ? 600 : 400,
-                color: isActive ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)',
-                marginBottom: -1, transition: 'color 0.15s, border-color 0.15s',
-              }}
-            >
-              {tab}
-            </button>
-          );
-        })}
-      </div>
+      <Tabs value={activeTab} onValueChange={setActiveTab} items={TAB_ITEMS} />
 
       {/* Tab content */}
-      {TABS.map(tab => (
+      {TAB_ITEMS.map(({ id: tab }) => (
         <div
           key={tab}
           id={PANEL_IDS[tab]}
           role="tabpanel"
-          aria-labelledby={TAB_IDS[tab]}
+          aria-labelledby={`tab-${tab.toLowerCase().replace(/\s+/g, '-')}`}
           hidden={activeTab !== tab}
           style={{ flex: 1 }}
         >
