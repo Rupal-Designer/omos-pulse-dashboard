@@ -89,7 +89,8 @@ const CAMPAIGN_SUB_ITEMS = [
 export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNavigate }) {
   const currentRoute = window.location.hash.replace(/^#/, '') || '/';
 
-  const isYieldRoute = currentRoute === '/yield-control/cpc' || currentRoute === '/yield-control/cpm';
+  const isYieldRoute  = currentRoute === '/yield-control/cpc' || currentRoute === '/yield-control/cpm';
+  const isOffsiteRoute = currentRoute === '/offsite';
 
   function navigate(path) {
     if (onNavigate) onNavigate(path);
@@ -101,16 +102,25 @@ export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNaviga
       id: 'campaigns',
       label: 'Campaigns',
       icon: ICON_ROCKET,
-      subItems: CAMPAIGN_SUB_ITEMS.map(s => ({
-        id: s.label,
-        label: s.label,
-        icon: s.icon,
-        active: !isYieldRoute && activeAdType === s.label && (currentRoute === '/' || currentRoute === ''),
-        onClick: () => {
-          onAdTypeChange?.(s.label);
-          navigate('/');
-        },
-      })),
+      subItems: CAMPAIGN_SUB_ITEMS.map(s => {
+        const isOffsite = s.label === 'Offsite Ads';
+        return {
+          id: s.label,
+          label: s.label,
+          icon: s.icon,
+          active: isOffsite
+            ? isOffsiteRoute
+            : !isYieldRoute && !isOffsiteRoute && activeAdType === s.label && (currentRoute === '/' || currentRoute === ''),
+          onClick: () => {
+            if (isOffsite) {
+              navigate('/offsite');
+            } else {
+              onAdTypeChange?.(s.label);
+              navigate('/');
+            }
+          },
+        };
+      }),
     },
     {
       id: 'yield-control',
@@ -158,7 +168,7 @@ export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNaviga
     ? 'byot'
     : isYieldRoute
     ? 'yield-control'
-    : 'campaigns';
+    : 'campaigns'; // covers '/', '/home', '/offsite', etc.
 
   return (
     <NavShell

@@ -7,6 +7,7 @@ import BYOTDashboardPage from './pages/BYOTDashboardPage';
 import BYOTCampaignDetailPage from './pages/BYOTCampaignDetailPage';
 import CPCControlsPage from './pages/CPCControlsPage';
 import CPMControlsPage from './pages/CPMControlsPage';
+import OffsiteAdsPage from './pages/OffsiteAdsPage';
 import { Sidebar } from './components/sidebar';
 import { Header } from './components/header';
 
@@ -85,6 +86,8 @@ export default function App() {
         return <CPCControlsPage />;
       case '/yield-control/cpm':
         return <CPMControlsPage />;
+      case '/offsite':
+        return <OffsiteAdsPage />;
       case '/design-system':
         return <DesignSystemPage />;
       default:
@@ -108,7 +111,7 @@ export default function App() {
       <Sidebar onAdTypeChange={setActiveAdType} activeAdType={activeAdType} onNavigate={(r) => { window.location.hash = r; }} />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <div style={{ position: 'sticky', top: 0, zIndex: 30, background: 'var(--osmos-bg)' }}>
-          <Header activeAdType={activeAdType} onAdTypeChange={setActiveAdType} />
+          <Header activeAdType={route === '/offsite' ? 'Offsite Ads' : activeAdType} onAdTypeChange={setActiveAdType} />
         </div>
         <div style={{ flex: 1, overflowY: 'auto' }}>
           {renderPage()}
