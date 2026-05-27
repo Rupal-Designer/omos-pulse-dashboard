@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { Icon, ChevronRightIcon } from '../atoms/Icon';
+import {
+  LuChevronRight,
+  LuChevronUp,
+} from 'react-icons/lu';
 
 /**
  * NavShell — shared left-nav chrome for all Osmos portals.
@@ -9,6 +12,10 @@ import { Icon, ChevronRightIcon } from '../atoms/Icon';
  *     hasSub?,      // true → renders a › chevron, caller handles via subnavPanel prop
  *     subItems?     // [{ id, label, icon?, active, onClick }] → inline expand inside rail
  *   }
+ *
+ * ⚠️  icon must now be a React component reference (not a JSX element / SVG fragment).
+ *      Example: import { LuRocket } from 'react-icons/lu'; → { icon: LuRocket }
+ *      Or use any component from @icons/index (os-icons-v2 brand set).
  *
  * Props:
  *   items         Item[]
@@ -83,8 +90,10 @@ export function NavShell({
           gap: 10,
           borderBottom: '1px solid var(--osmos-nav-border)',
         }}>
-          {/* Mark — always visible */}
-          {logoMark}
+          {/* Mark — always visible; clicking navigates to landing */}
+          <a href="/" style={{ display: 'flex', flexShrink: 0, cursor: 'pointer' }}>
+            {logoMark}
+          </a>
 
           {/* Wordmark + badge — only when expanded */}
           {wide && logoText && (
@@ -182,7 +191,27 @@ export function NavShell({
   );
 }
 
+// ── NavIcon helper ────────────────────────────────────────────────────────────
+// Handles both component references (react-icons) and raw SVG JSX elements.
+function NavIcon({ icon: Ic, size, color }) {
+  if (!Ic) return null;
+  if (typeof Ic === 'function') return <Ic size={size} color={color} />;
+  // Raw JSX element — wrap in an SVG
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      {Ic}
+    </svg>
+  );
+}
+
 // ── NavRailItem ───────────────────────────────────────────────────────────────
+// WCAG 4.1.2 fixes applied:
+//   - aria-label={item.label} on icon-only (collapsed) buttons so screen readers
+//     announce the destination even without visible text.
+//   - title={item.label} retained for sighted mouse users as a native tooltip.
+//   - aria-current="page" on the active item (WCAG 2.4.8 / 4.1.2).
+//   - aria-expanded on items that control a sub-menu (WCAG 4.1.2).
 function NavRailItem({ item, active, wide, isOpen, onClick, muted = false }) {
   const [hover, setHover] = useState(false);
 
@@ -198,10 +227,8 @@ function NavRailItem({ item, active, wide, isOpen, onClick, muted = false }) {
     ? 'var(--osmos-nav-active-bg)'
     : hover ? 'rgba(255,255,255,0.08)' : 'transparent';
 
-  // Chevron: up when open (inline expand), right when closed / has side panel
-  const chevronPaths = isOpen
-    ? <path d="m18 15-6-6-6 6" />       // chevron-up
-    : <polyline points="9 18 15 12 9 6"/>; // chevron-right
+  const ChevronIcon = isOpen ? LuChevronUp : LuChevronRight;
+  const hasSubItems = item.hasSub || item.subItems?.length > 0;
 
   return (
     <>
@@ -209,7 +236,14 @@ function NavRailItem({ item, active, wide, isOpen, onClick, muted = false }) {
         <div style={{ height: 1, background: 'var(--osmos-nav-border)', margin: '6px 0' }} />
       )}
       <button
+        // Tooltip for sighted users in collapsed rail (icon-only mode)
         title={!wide ? item.label : undefined}
+        // aria-label ensures screen readers get the label when there is no visible text (WCAG 4.1.2)
+        aria-label={!wide ? item.label : undefined}
+        // Mark the currently active page for assistive technologies (WCAG 2.4.8 / 4.1.2)
+        aria-current={active ? 'page' : undefined}
+        // Communicate expanded/collapsed state for items with sub-menus (WCAG 4.1.2)
+        aria-expanded={hasSubItems ? isOpen : undefined}
         onClick={onClick}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
@@ -228,7 +262,7 @@ function NavRailItem({ item, active, wide, isOpen, onClick, muted = false }) {
       >
         {/* Icon — always left-pinned, never centred. size=20 matches nav density. */}
         <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-          <Icon size={20} color={iconColor}>{item.icon}</Icon>
+          <NavIcon icon={item.icon} size={20} color={iconColor} />
         </div>
 
         {/* Label + badge + chevron — visible only when wide */}
@@ -253,13 +287,11 @@ function NavRailItem({ item, active, wide, isOpen, onClick, muted = false }) {
               </span>
             )}
 
-            {(item.hasSub || item.subItems?.length > 0) && (
-              <Icon
+            {hasSubItems && (
+              <ChevronIcon
                 size={13}
                 color={active ? 'var(--osmos-nav-accent)' : 'rgba(255,255,255,0.3)'}
-              >
-                {chevronPaths}
-              </Icon>
+              />
             )}
           </>
         )}
@@ -299,31 +331,38 @@ function CollapseToggle({ isPinned, onToggle }) {
 }
 
 // ── SubRailItem — indented inline sub-item (advertiser pattern) ───────────────
+// WCAG 4.1.2 fix: changed from <div onClick> to <button> so the element is
+// natively keyboard-focusable and operable with Enter/Space. aria-current="page"
+// marks the active sub-item for assistive technologies.
 function SubRailItem({ item, onClick }) {
   const [hover, setHover] = useState(false);
   const color = item.active || hover ? '#fff' : 'rgba(255,255,255,0.7)';
 
   return (
-    <div
+    <button
       onClick={onClick}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      // Mark active sub-item for screen readers (WCAG 4.1.2 / 2.4.8)
+      aria-current={item.active ? 'page' : undefined}
       style={{
+        width: '100%',
         display: 'flex', alignItems: 'center', gap: 12,
         padding: '0 12px', height: 40, borderRadius: 8,
         cursor: 'pointer', transition: 'background 0.15s',
         background: item.active ? 'var(--osmos-nav-accent)' : hover ? 'rgba(255,255,255,0.08)' : 'transparent',
         whiteSpace: 'nowrap', overflow: 'hidden',
+        border: 'none', textAlign: 'left',
       }}
     >
       {item.icon && (
         <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-          <Icon size={18} color={color}>{item.icon}</Icon>
+          <NavIcon icon={item.icon} size={18} color={color} />
         </div>
       )}
       <span style={{ fontSize: 13, fontWeight: item.active ? 600 : 400, color }}>
         {item.label}
       </span>
-    </div>
+    </button>
   );
 }

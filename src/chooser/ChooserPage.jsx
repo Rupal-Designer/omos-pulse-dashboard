@@ -1,15 +1,5 @@
 import React from 'react';
 
-/* ── Tokens ──────────────────────────────────────────────────────── */
-const FONT     = "'Open Sans', sans-serif";
-const BORDER   = 'var(--osmos-border)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const WHITE    = 'var(--osmos-bg)';
-const TEXT_HI  = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-
 /* ── Card definitions ────────────────────────────────────────────── */
 const APPS = [
   {
@@ -17,8 +7,8 @@ const APPS = [
     title: 'Retailer Console',
     tag: 'For retailers',
     desc: 'Run the retail-media platform — manage advertisers, catalog rules, segments, ad ops, finance, and reports.',
-    accent: ACCENT,
-    accentSoft: ACCENT_M,
+    accent: 'var(--osmos-brand-primary)',
+    accentSoft: 'var(--osmos-brand-primary-muted)',
     icon: (size, color) => (
       <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
         stroke={color} strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
@@ -55,8 +45,8 @@ function AppCard({ app }) {
       style={{
         display: 'block',
         textDecoration: 'none',
-        background: WHITE,
-        border: `1px solid ${hover ? app.accent : BORDER}`,
+        background: 'var(--osmos-bg)',
+        border: `1px solid ${hover ? app.accent : 'var(--osmos-border)'}`,
         borderRadius: 14,
         padding: '28px 26px',
         width: 320,
@@ -65,7 +55,7 @@ function AppCard({ app }) {
           : '0 1px 3px rgba(0,0,0,0.04)',
         transform: hover ? 'translateY(-3px)' : 'translateY(0)',
         transition: 'all 0.18s ease',
-        fontFamily: FONT,
+        fontFamily: "'Open Sans', sans-serif",
         cursor: 'pointer',
       }}
     >
@@ -92,7 +82,7 @@ function AppCard({ app }) {
 
       {/* Title */}
       <div style={{
-        fontSize: 18, fontWeight: 700, color: TEXT_HI,
+        fontSize: 18, fontWeight: 700, color: 'var(--osmos-fg)',
         marginBottom: 8, letterSpacing: '-0.01em',
       }}>
         {app.title}
@@ -100,7 +90,7 @@ function AppCard({ app }) {
 
       {/* Description */}
       <p style={{
-        fontSize: 13, color: TEXT_MID, lineHeight: 1.55,
+        fontSize: 13, color: 'var(--osmos-fg-muted)', lineHeight: 1.55,
         margin: 0, marginBottom: 18,
       }}>
         {app.desc}
@@ -127,7 +117,7 @@ function AppCard({ app }) {
 export default function ChooserPage() {
   return (
     <div style={{
-      minHeight: '100vh', background: BG_SUB, fontFamily: FONT,
+      minHeight: '100vh', background: 'var(--osmos-bg-subtle)', fontFamily: "'Open Sans', sans-serif",
       display: 'flex', flexDirection: 'column', alignItems: 'center',
       justifyContent: 'center', padding: '40px 20px',
     }}>
@@ -137,20 +127,20 @@ export default function ChooserPage() {
       }}>
         <div style={{
           width: 28, height: 28, borderRadius: 7,
-          background: ACCENT,
+          background: 'var(--osmos-brand-primary)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           color: '#fff', fontWeight: 800, fontSize: 14, letterSpacing: '-0.02em',
         }}>
           O
         </div>
-        <span style={{ fontSize: 18, fontWeight: 700, color: TEXT_HI, letterSpacing: '-0.01em' }}>
+        <span style={{ fontSize: 18, fontWeight: 700, color: 'var(--osmos-fg)', letterSpacing: '-0.01em' }}>
           Pulse
         </span>
       </div>
 
       {/* Subhead */}
       <p style={{
-        fontSize: 13, color: TEXT_MID, margin: '0 0 36px',
+        fontSize: 13, color: 'var(--osmos-fg-muted)', margin: '0 0 36px',
       }}>
         Choose a console to continue
       </p>

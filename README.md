@@ -16,6 +16,162 @@ pnpm build
 
 ---
 
+## Database (Neon)
+
+The app uses a shared [Neon](https://neon.tech) PostgreSQL database for all mock data — campaigns, advertisers, display pages, inventories, wallets, yield control rows, and more. Each developer works on their own **instant database branch** so nobody's migrations affect anyone else.
+
+### First-time setup (new contributors)
+
+**1. Copy the env template**
+```bash
+cp .env.example .env
+```
+
+**2. Fill in two values in `.env`**
+
+| Variable | Where to get it |
+|----------|----------------|
+| `VITE_DATABASE_URL` | Ask a teammate — it's the main branch connection string (in the team password manager) |
+| `NEON_API_KEY` | Your personal key — generate at [console.neon.tech/app/settings/api-keys](https://console.neon.tech/app/settings/api-keys) |
+
+**3. Create your personal database branch**
+```bash
+pnpm db:branch
+```
+This calls the Neon API, creates an isolated copy of the database under `dev/your-git-name`, and updates `VITE_DATABASE_URL` in your `.env` to point to it. The original main URL is preserved as `NEON_MAIN_DATABASE_URL`.
+
+**4. Seed your branch**
+```bash
+pnpm db:migrate
+```
+Drops and recreates all 17 tables in *your branch only*, then seeds them with realistic mock data. Nobody else's data is touched.
+
+---
+
+### DB scripts
+
+| Command | What it does |
+|---------|-------------|
+| `pnpm db:branch` | Creates a personal Neon branch (`dev/<your-git-name>`) and updates `.env` |
+| `pnpm db:branch dev/custom-name` | Same, with an explicit branch name |
+| `pnpm db:migrate` | Resets + reseeds all tables on your current branch |
+
+---
+
+### Schema — 17 tables
+
+| Table | Contents |
+|-------|----------|
+| `advertisers` | 9 merchants with persona, payment type, onboarding metadata |
+| `platform_users` | 15 users across super_admin / ops / admin / advertiser roles |
+| `campaigns` | 20 campaigns (display + sponsored) with full metrics |
+| `products` | 8 products with category, brand, price, stock |
+| `display_pages` | Page Setup data — name, API ID, tag, impressions, inventory usage |
+| `display_inventories` | Inventory slots linked to pages, with position + status |
+| `targeting_keys` | BYOT targeting keys |
+| `targeting_values` | Values per targeting key (joined via `key_id`) |
+| `wallets` | Per-advertiser wallet balances and top-up counts |
+| `wallet_transactions` | Transaction log — Top-Up, Deduction, Refund |
+| `wallet_rules` | Automated wallet rules (triggers, segments, rule types) |
+| `audience_attributes` | Audience targeting attributes for Audience Manager |
+| `activity_logs` | Platform audit log — user, action, description, timestamp |
+| `display_demand_supply` | Display ad placement metrics (fill rate, CPM, impressions) |
+| `sponsored_demand_supply` | Sponsored ad unit metrics (fill rate, CPC, clicks) |
+| `product_yield_cpc` | CPC yield control by category (floor, ceiling, multiplier, perf metrics) |
+| `product_yield_cpm` | CPM yield control by category |
+
+---
+
+### Using DB data in a component
+
+The query layer lives in `src/db/queries/`. Drop the hardcoded mock array and replace with a single hook call:
+
+```jsx
+// Before — hardcoded mock data
+const PAGE_DATA = [
+  { name: 'TestQA98', apiId: 'home_pg', ... },
+  ...
+];
+
+// After — live Neon query
+import { useQuery } from '../../hooks/useQuery';
+import { getDisplayPages } from '../../db/queries/displayAds';
+
+const { data: pages, loading } = useQuery(getDisplayPages);
+```
+
+Available query functions:
+
+| Import from | Functions |
+|-------------|-----------|
+| `src/db/queries/advertisers` | `getAdvertisers`, `getAdvertiserById`, `getOnboardingCatalog` |
+| `src/db/queries/users` | `getSuperAdminUsers`, `getOpsUsers`, `getAdvertiserUsers` |
+| `src/db/queries/campaigns` | `getCampaigns`, `getDisplayCampaigns`, `getSponsoredCampaigns` |
+| `src/db/queries/displayAds` | `getDisplayPages`, `getDisplayInventories`, `getDisplayDemandSupply`, `getTargetingKeys`, `getTargetingValues` |
+| `src/db/queries/finance` | `getWallets`, `getWalletTransactions`, `getWalletRules`, `getFinanceAdvertisers` |
+| `src/db/queries/controlCenter` | `getAudienceAttributes`, `getActivityLogs`, `getProducts`, `getSponsoredDemandSupply` |
+| `src/db/queries/yieldControl` | `getCPCYieldRows`, `getCPMYieldRows` |
+
+---
+
+### Branching model
+
+```
+neondb (main branch)      ← clean seed, only CI/migration-owner touches this
+  ├── dev/rishikesh       ← your personal branch, fully isolated
+  ├── dev/alice           ← Alice's branch
+  └── dev/bob             ← Bob's branch
+```
+
+Branches are **zero-copy and instantaneous** — Neon only stores the delta. Running `pnpm db:migrate` on your branch costs nothing and affects nobody else. To switch back to the main branch at any time, swap `VITE_DATABASE_URL` and `NEON_MAIN_DATABASE_URL` in your `.env`.
+
+---
+
+## Installing skills in another repo
+
+If you are **not** forking this repo but want the same Claude Code skills in your own project, install the published npm package:
+
+### Prerequisites
+
+1. **Claude Code** — `npm install -g @anthropic-ai/claude-code`
+2. **GitHub PAT** with `read:packages` scope — [generate one here](https://github.com/settings/tokens)
+3. Add to your shell profile (`~/.zshrc` or `~/.bashrc`):
+   ```bash
+   export NPM_TOKEN=ghp_your_token_here
+   ```
+
+### Add registry config
+
+Add to your project's `.npmrc`:
+```
+@rishikeshjoshi-morpheus:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NPM_TOKEN}
+```
+
+### Install
+
+```bash
+pnpm add -D @rishikeshjoshi-morpheus/claude-skills
+```
+
+All 13 skills are copied into `.claude/skills/` automatically by the postinstall script. Claude Code picks them up immediately — no restart needed.
+
+### Daily vault rebuild (optional)
+
+To grow an Obsidian knowledge vault daily at 12:00pm, run once after install:
+
+```bash
+pnpm setup:vault-cron
+```
+
+To update skills when a new version is published:
+
+```bash
+pnpm update @rishikeshjoshi-morpheus/claude-skills
+```
+
+---
+
 ## Claude Code setup (for forks)
 
 This repo ships with a full Claude Code skill suite in `.claude/skills/`. Some skills work immediately after cloning; others require external tools or plugins that are **not committed to git**.
@@ -99,6 +255,7 @@ These are **not in the repo** — they live in `~/.claude/` and must be installe
 [ ] pnpm install
 [ ] python3 -m venv .venv && .venv/bin/pip install graphifyy
 [ ] .venv/bin/graphify update .
+[ ] pnpm setup:vault-cron              ← registers daily 12pm vault rebuild
 [ ] Connect Figma MCP server + add permission to settings.local.json
 [ ] claude plugin install <any anthropic-skills you need>
 [ ] Say "sync obsidian vault" to Claude to build the knowledge vault
@@ -191,7 +348,7 @@ The repo maintains three layered knowledge sources that Claude reads before work
 | AST code graph | `graphify-out/` | File-level import edges and community clusters |
 | Obsidian vault | `obsidian-vault/` | Interlinked notes for components, pages, Figma frames, nav structure, token audit |
 
-The Obsidian vault updates automatically every time Claude writes a `src/` file (via a `PostToolUse` hook in `.claude/settings.json`). For a full rebuild, say **"sync obsidian vault"** in any Claude Code session.
+The Obsidian vault updates automatically every time Claude writes a `src/` file (via a `PostToolUse` hook in `.claude/settings.json`). A full rebuild of all `src/` files also runs daily at **12:00pm** via a crontab entry registered by `pnpm setup:vault-cron`. Logs go to `.claude/vault-rebuild.log`. For an on-demand rebuild, say **"sync obsidian vault"** in any Claude Code session.
 
 ---
 
@@ -202,7 +359,12 @@ src/
 ├── retailer/          Legacy retailer console (50+ pages)
 ├── advertiser/        Advertiser "Beat" console (shadcn + Tailwind → Osmos migration in progress)
 ├── chooser/           Landing page / app selector
-└── ui/                Shared component library (atoms, molecules, patterns)
+├── ui/                Shared component library (atoms, molecules, patterns)
+├── db/
+│   ├── client.js      Neon HTTP client (reads VITE_DATABASE_URL)
+│   └── queries/       Per-entity query functions (advertisers, campaigns, displayAds, …)
+└── hooks/
+    └── useQuery.js    Generic React hook: useQuery(queryFn, ...args)
 
 .claude/
 ├── skills/            14 Claude Code skills (design-to-code pipeline + review suite)
@@ -211,5 +373,15 @@ src/
 graphify-out/          AST knowledge graph (generated, committed)
 obsidian-vault/        Obsidian-compatible knowledge vault (generated, committed)
 scripts/
-└── vault-sync.py      Incremental vault updater (called by PostToolUse hook)
+├── db-branch.js       Creates a personal Neon DB branch + updates .env (pnpm db:branch)
+├── db-migrate.js      Drops + recreates + seeds all 17 tables (pnpm db:migrate)
+├── vault-sync.py      Incremental vault updater (called by PostToolUse hook)
+├── rebuild-vault.sh   Full daily vault rebuild (run by cron at 12:00pm)
+├── setup-cron.js      Registers the daily cron entry (pnpm setup:vault-cron)
+└── sync-skills.js     Syncs .claude/skills/ → claude-skills/ before publish
+
+claude-skills/         Publishable npm package (@rishikeshjoshi-morpheus/claude-skills)
+├── package.json
+├── install.js         Postinstall — copies skills to consumer's .claude/skills/
+└── skills/            Snapshot of all 13 skills (generated by pnpm sync:skills)
 ```

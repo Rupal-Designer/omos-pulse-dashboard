@@ -1,0 +1,37 @@
+{
+  "eval_id": 1,
+  "run_type": "with_skill",
+  "expectations": [
+    {
+      "text": "produces_rigor_matrix_table",
+      "passed": true,
+      "evidence": "File contains a markdown table with all four dimensions (Feasibility, UX, Business, Delight) in the Rigor Matrix section."
+    },
+    {
+      "text": "includes_numeric_scores",
+      "passed": true,
+      "evidence": "Each dimension row has a numeric score: Feasibility 3/5, UX 3/5, Business 4/5, Delight 2/5, plus a Composite Score of 12/20."
+    },
+    {
+      "text": "has_verdict_section",
+      "passed": true,
+      "evidence": "File contains '## Verdict' header followed by a full verdict paragraph."
+    },
+    {
+      "text": "covers_all_four_lenses",
+      "passed": true,
+      "evidence": "File contains '## Feasibility Analysis', '## UX Analysis', '## Business Analysis', and '## Delight Analysis' as section headers inside collapsible details blocks."
+    },
+    {
+      "text": "surfaces_conflicts_or_agreements",
+      "passed": true,
+      "evidence": "File contains a dedicated '## Conflicts (Needs Human Judgment)' section with two named conflicts (Drawer vs Redirect, and Launch Now vs Default-to-Draft)."
+    },
+    {
+      "text": "opinionated_not_hedged",
+      "passed": true,
+      "evidence": "Verdict opens with 'Build campaign duplication, but not as described' and gives a numbered, concrete four-step build sequence with explicit kill decisions."
+    }
+  ],
+  "overall_pass_rate": 1.0
+}

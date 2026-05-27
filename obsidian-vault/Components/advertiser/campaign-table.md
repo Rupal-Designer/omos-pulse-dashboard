@@ -1,0 +1,12 @@
+---
+type: component
+layer: advertiser
+name: campaign-table
+source-file: src/advertiser/components/campaign-table.jsx
+last-updated: 2026-05-25T06:30:08Z
+tags: [advertiser, ui-component]
+---
+
+# campaign-table
+
+<!-- Auto-generated stub — run obsidian-knowledge-graph skill for full rebuild -->

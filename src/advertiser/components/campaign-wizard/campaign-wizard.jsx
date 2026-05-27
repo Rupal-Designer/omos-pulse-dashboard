@@ -7,21 +7,6 @@ import { BudgetStep } from "./steps/budget-step";
 import { ProductAdGroupWizard } from "./product-ad-group-wizard";
 import { OffsiteAdGroupWizard } from "./offsite-ad-group-wizard";
 
-// ── Design tokens ────────────────────────────────────────────────────────────
-const FONT     = "'Open Sans', sans-serif";
-const TEXT     = 'var(--osmos-fg)';
-const TEXT_MID = 'var(--osmos-fg-muted)';
-const TEXT_SUB = 'var(--osmos-fg-subtle)';
-const BORDER   = 'var(--osmos-border)';
-const BG       = 'var(--osmos-bg)';
-const BG_SUB   = 'var(--osmos-bg-subtle)';
-const ACCENT   = 'var(--osmos-brand-primary)';
-const ACCENT_M = 'var(--osmos-brand-primary-muted)';
-const GREEN    = 'var(--osmos-brand-green)';
-const AMBER    = 'var(--osmos-brand-amber)';
-const VI       = 'var(--osmos-brand-violet)';
-const VI_BG    = 'var(--osmos-brand-violet-muted)';
-
 // ── Hand-rolled icon atoms ────────────────────────────────────────────────────
 const CheckIcon = (props) => (
   <Icon {...props}><polyline points="20 6 9 17 4 12" /></Icon>
@@ -72,7 +57,7 @@ const campaignSteps = [
 ];
 
 // ── IconButton helper (hover state) ──────────────────────────────────────────
-function IconBtn({ onClick, title, hoverBg = BG_SUB, color = TEXT_MID, dangerHover = false, children }) {
+function IconBtn({ onClick, title, hoverBg = 'var(--osmos-bg-subtle)', color = 'var(--osmos-fg-muted)', dangerHover = false, children }) {
   const [hov, setHov] = useState(false);
   return (
     <button
@@ -90,7 +75,7 @@ function IconBtn({ onClick, title, hoverBg = BG_SUB, color = TEXT_MID, dangerHov
         cursor: 'pointer',
         transition: 'all 0.15s',
         padding: 0,
-        fontFamily: FONT,
+        fontFamily: "'Open Sans', sans-serif",
       }}
     >
       {children}
@@ -386,17 +371,17 @@ export function CampaignWizard({
   );
 
   const renderAdGroupsStep = () => {
-    const adGroupTypeColor = isProductAds ? '#059669' : isOffsiteAds ? '#f59e0b' : ACCENT;
+    const adGroupTypeColor = isProductAds ? '#059669' : isOffsiteAds ? '#f59e0b' : 'var(--osmos-brand-primary)';
 
     return (
       <div style={{ maxWidth: 896, margin: '0 auto' }}>
         {/* Header row */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <div>
-            <h2 style={{ fontSize: 24, fontWeight: 600, color: '#2d2d2d', margin: 0, fontFamily: FONT }}>
+            <h2 style={{ fontSize: 24, fontWeight: 600, color: '#2d2d2d', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>
               Ad Groups
             </h2>
-            <p style={{ color: TEXT_MID, marginTop: 4, marginBottom: 0, fontFamily: FONT }}>
+            <p style={{ color: 'var(--osmos-fg-muted)', marginTop: 4, marginBottom: 0, fontFamily: "'Open Sans', sans-serif" }}>
               {isProductAds
                 ? "Create ad groups to organize products, bidding, keywords, and network targeting"
                 : isOffsiteAds
@@ -413,7 +398,7 @@ export function CampaignWizard({
 
         {campaignData.adGroups.length === 0 ? (
           <div style={{
-            background: BG, borderRadius: 12, border: `1px solid ${BORDER}`,
+            background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`,
             padding: 48, textAlign: 'center',
           }}>
             <div style={{
@@ -422,16 +407,16 @@ export function CampaignWizard({
               margin: '0 auto 16px',
             }}>
               {isProductAds
-                ? <PackageIcon size={24} style={{ color: ACCENT }} />
+                ? <PackageIcon size={24} style={{ color: 'var(--osmos-brand-primary)' }} />
                 : isOffsiteAds
                   ? <PackageIcon size={24} style={{ color: '#f59e0b' }} />
-                  : <LayersIcon  size={24} style={{ color: ACCENT }} />
+                  : <LayersIcon  size={24} style={{ color: 'var(--osmos-brand-primary)' }} />
               }
             </div>
-            <h3 style={{ fontSize: 16, fontWeight: 600, color: '#2d2d2d', marginBottom: 8, fontFamily: FONT }}>
+            <h3 style={{ fontSize: 16, fontWeight: 600, color: '#2d2d2d', marginBottom: 8, fontFamily: "'Open Sans', sans-serif" }}>
               No Ad Groups Yet
             </h3>
-            <p style={{ color: TEXT_MID, marginBottom: 24, maxWidth: 448, marginLeft: 'auto', marginRight: 'auto', fontFamily: FONT }}>
+            <p style={{ color: 'var(--osmos-fg-muted)', marginBottom: 24, maxWidth: 448, marginLeft: 'auto', marginRight: 'auto', fontFamily: "'Open Sans', sans-serif" }}>
               {isProductAds
                 ? "Ad groups let you organize your product campaigns with different product selections, bidding strategies, keywords, and network targeting."
                 : isOffsiteAds
@@ -468,10 +453,10 @@ export function CampaignWizard({
   const renderReviewStep = () => (
     <div style={{ maxWidth: 896, margin: '0 auto' }}>
       <div style={{ marginBottom: 32 }}>
-        <h2 style={{ fontSize: 24, fontWeight: 600, color: '#2d2d2d', margin: 0, fontFamily: FONT }}>
+        <h2 style={{ fontSize: 24, fontWeight: 600, color: '#2d2d2d', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>
           Review &amp; Launch
         </h2>
-        <p style={{ color: TEXT_MID, marginTop: 4, marginBottom: 0, fontFamily: FONT }}>
+        <p style={{ color: 'var(--osmos-fg-muted)', marginTop: 4, marginBottom: 0, fontFamily: "'Open Sans', sans-serif" }}>
           Review your campaign settings before launching
         </p>
       </div>
@@ -485,39 +470,39 @@ export function CampaignWizard({
             borderRadius: 12, padding: 20, color: '#fff',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-              <span style={{ fontSize: 13, fontWeight: 500, opacity: 0.9, fontFamily: FONT }}>Campaign Health</span>
+              <span style={{ fontSize: 13, fontWeight: 500, opacity: 0.9, fontFamily: "'Open Sans', sans-serif" }}>Campaign Health</span>
               <CheckIcon size={18} />
             </div>
-            <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 4, fontFamily: FONT }}>Ready</div>
-            <p style={{ fontSize: 12, opacity: 0.8, margin: 0, fontFamily: FONT }}>All requirements met</p>
+            <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 4, fontFamily: "'Open Sans', sans-serif" }}>Ready</div>
+            <p style={{ fontSize: 12, opacity: 0.8, margin: 0, fontFamily: "'Open Sans', sans-serif" }}>All requirements met</p>
           </div>
 
           {/* Reach card */}
-          <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 20 }}>
-            <div style={{ fontSize: 13, color: TEXT_MID, marginBottom: 4, fontFamily: FONT }}>Est. Daily Reach</div>
-            <div style={{ fontSize: 24, fontWeight: 700, color: '#2d2d2d', fontFamily: FONT }}>
+          <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 20 }}>
+            <div style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', marginBottom: 4, fontFamily: "'Open Sans', sans-serif" }}>Est. Daily Reach</div>
+            <div style={{ fontSize: 24, fontWeight: 700, color: '#2d2d2d', fontFamily: "'Open Sans', sans-serif" }}>
               {campaignData.adGroups.length > 0
                 ? `${(Number.parseFloat(campaignData.dailyBudget || "0") * 125).toLocaleString()}`
                 : "-"}
             </div>
-            <p style={{ fontSize: 12, color: GREEN, marginTop: 4, marginBottom: 0, fontFamily: FONT }}>+12% vs average</p>
+            <p style={{ fontSize: 12, color: 'var(--osmos-brand-green)', marginTop: 4, marginBottom: 0, fontFamily: "'Open Sans', sans-serif" }}>+12% vs average</p>
           </div>
 
           {/* Impressions card */}
-          <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 20 }}>
-            <div style={{ fontSize: 13, color: TEXT_MID, marginBottom: 4, fontFamily: FONT }}>Est. Impressions</div>
-            <div style={{ fontSize: 24, fontWeight: 700, color: '#2d2d2d', fontFamily: FONT }}>
+          <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 20 }}>
+            <div style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', marginBottom: 4, fontFamily: "'Open Sans', sans-serif" }}>Est. Impressions</div>
+            <div style={{ fontSize: 24, fontWeight: 700, color: '#2d2d2d', fontFamily: "'Open Sans', sans-serif" }}>
               {campaignData.adGroups.length > 0
                 ? `${(Number.parseFloat(campaignData.dailyBudget || "0") * 450).toLocaleString()}`
                 : "-"}
             </div>
-            <p style={{ fontSize: 12, color: TEXT_MID, marginTop: 4, marginBottom: 0, fontFamily: FONT }}>Per day</p>
+            <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', marginTop: 4, marginBottom: 0, fontFamily: "'Open Sans', sans-serif" }}>Per day</p>
           </div>
         </div>
 
         {/* Campaign overview */}
-        <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
-          <h3 style={{ fontWeight: 600, color: '#2d2d2d', marginBottom: 16, fontFamily: FONT, margin: '0 0 16px' }}>
+        <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
+          <h3 style={{ fontWeight: 600, color: '#2d2d2d', marginBottom: 16, fontFamily: "'Open Sans', sans-serif", margin: '0 0 16px' }}>
             Campaign Overview
           </h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 16 }}>
@@ -530,20 +515,20 @@ export function CampaignWizard({
               { label: "Pacing",           value: campaignData.pacing === "even" ? "Standard (Even)" : "Accelerated" },
             ].map(({ label, value }) => (
               <div key={label}>
-                <label style={{ fontSize: 12, color: TEXT_MID, fontFamily: FONT, display: 'block', marginBottom: 2 }}>{label}</label>
-                <p style={{ fontWeight: 500, color: TEXT, margin: 0, fontFamily: FONT }}>{value}</p>
+                <label style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif", display: 'block', marginBottom: 2 }}>{label}</label>
+                <p style={{ fontWeight: 500, color: 'var(--osmos-fg)', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>{value}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Ad groups summary */}
-        <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, padding: 24 }}>
+        <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-            <h3 style={{ fontWeight: 600, color: '#2d2d2d', margin: 0, fontFamily: FONT }}>
+            <h3 style={{ fontWeight: 600, color: '#2d2d2d', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>
               Ad Groups ({campaignData.adGroups.length})
             </h3>
-            <span style={{ fontSize: 13, color: TEXT_MID, fontFamily: FONT }}>
+            <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
               ${campaignData.dailyBudget || "0"} daily budget
             </span>
           </div>
@@ -552,31 +537,31 @@ export function CampaignWizard({
               const summary = getAdGroupSummary(adGroup);
               return (
                 <div key={adGroup.id} style={{
-                  padding: 16, background: BG_SUB, borderRadius: 8,
-                  border: `1px solid ${BORDER}`,
+                  padding: 16, background: 'var(--osmos-bg-subtle)', borderRadius: 8,
+                  border: `1px solid ${'var(--osmos-border)'}`,
                 }}>
                   <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 12 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                       <div style={{
                         width: 32, height: 32, background: '#f0f4ff', borderRadius: 8,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', color: ACCENT,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--osmos-brand-primary)',
                       }}>
                         {summary.icon}
                       </div>
                       <div>
-                        <span style={{ fontWeight: 500, color: TEXT, fontFamily: FONT }}>{adGroup.name}</span>
+                        <span style={{ fontWeight: 500, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>{adGroup.name}</span>
                         {isOffsiteAds && adGroup.platform && (
                           <span style={{
                             marginLeft: 8, padding: '2px 8px', fontSize: 12, fontWeight: 500,
                             background: 'rgba(245,158,11,0.1)', color: '#f59e0b', borderRadius: 4,
-                            fontFamily: FONT,
+                            fontFamily: "'Open Sans', sans-serif",
                           }}>
                             {adGroup.platform.charAt(0).toUpperCase() + adGroup.platform.slice(1)}
                           </span>
                         )}
                       </div>
                     </div>
-                    <span style={{ fontSize: 12, color: TEXT_MID, fontFamily: FONT }}>
+                    <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
                       Est. ${(Number.parseFloat(campaignData.dailyBudget || "0") / campaignData.adGroups.length).toFixed(0)}/day
                     </span>
                   </div>
@@ -584,26 +569,26 @@ export function CampaignWizard({
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12, fontSize: 13 }}>
                     {summary.details.map((detail, idx) => (
                       <div key={idx}>
-                        <span style={{ color: TEXT_MID, fontSize: 12, fontFamily: FONT }}>{detail.label}</span>
-                        <p style={{ fontWeight: 500, color: TEXT, margin: '2px 0 0', fontFamily: FONT }}>{detail.value}</p>
+                        <span style={{ color: 'var(--osmos-fg-muted)', fontSize: 12, fontFamily: "'Open Sans', sans-serif" }}>{detail.label}</span>
+                        <p style={{ fontWeight: 500, color: 'var(--osmos-fg)', margin: '2px 0 0', fontFamily: "'Open Sans', sans-serif" }}>{detail.value}</p>
                       </div>
                     ))}
                   </div>
 
                   {isOffsiteAds && adGroup.placements && adGroup.placements.length > 0 && (
                     <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid #e5e7eb` }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: TEXT_MID, flexWrap: 'wrap', fontFamily: FONT }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'var(--osmos-fg-muted)', flexWrap: 'wrap', fontFamily: "'Open Sans', sans-serif" }}>
                         <span>Placements:</span>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                           {adGroup.placements.slice(0, 3).map((placement) => (
                             <span key={placement} style={{
-                              padding: '2px 8px', background: BG, borderRadius: 4, color: TEXT, fontFamily: FONT,
+                              padding: '2px 8px', background: 'var(--osmos-bg)', borderRadius: 4, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif",
                             }}>
                               {placement.replace(/_/g, " ").split(" ").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
                             </span>
                           ))}
                           {adGroup.placements.length > 3 && (
-                            <span style={{ padding: '2px 8px', color: TEXT_MID, fontFamily: FONT }}>
+                            <span style={{ padding: '2px 8px', color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
                               +{adGroup.placements.length - 3} more
                             </span>
                           )}
@@ -614,9 +599,9 @@ export function CampaignWizard({
 
                   {!isOffsiteAds && adGroup.creatives && adGroup.creatives.length > 0 && (
                     <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid #e5e7eb` }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontFamily: FONT }}>
-                        <span style={{ color: TEXT_MID }}>Creatives:</span>
-                        <span style={{ fontWeight: 500, color: TEXT }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontFamily: "'Open Sans', sans-serif" }}>
+                        <span style={{ color: 'var(--osmos-fg-muted)' }}>Creatives:</span>
+                        <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>
                           {adGroup.creatives.length} {adGroup.creatives.length === 1 ? "variant" : "variants"}
                         </span>
                       </div>
@@ -631,30 +616,30 @@ export function CampaignWizard({
         {/* Optimization tips */}
         {campaignData.adGroups.length > 0 && (
           <div style={{
-            background: ACCENT_M, borderRadius: 12,
+            background: 'var(--osmos-brand-primary-muted)', borderRadius: 12,
             border: `1px solid rgba(0,151,240,0.2)`, padding: 20,
           }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
               <div style={{
-                width: 32, height: 32, borderRadius: 999, background: ACCENT,
+                width: 32, height: 32, borderRadius: 999, background: 'var(--osmos-brand-primary)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
               }}>
                 <SparklesIcon size={16} style={{ color: '#fff' }} />
               </div>
               <div style={{ flex: 1 }}>
-                <p style={{ fontSize: 13, fontWeight: 500, color: '#0369a1', marginBottom: 8, marginTop: 0, fontFamily: FONT }}>
+                <p style={{ fontSize: 13, fontWeight: 500, color: '#0369a1', marginBottom: 8, marginTop: 0, fontFamily: "'Open Sans', sans-serif" }}>
                   Optimization Tips
                 </p>
                 <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
                   {campaignData.pacing === "even" && (
-                    <li style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: '#0c4ae6', fontFamily: FONT }}>
+                    <li style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: '#0c4ae6', fontFamily: "'Open Sans', sans-serif" }}>
                       <CheckIcon size={14} style={{ marginTop: 2, flexShrink: 0 }} />
                       <span>Even pacing will distribute your budget throughout the day for consistent delivery</span>
                     </li>
                   )}
                   {campaignData.adGroups.length === 1 && (
-                    <li style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: '#0c4ae6', fontFamily: FONT }}>
-                      <span style={{ color: AMBER, marginTop: 2, flexShrink: 0 }}>💡</span>
+                    <li style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: '#0c4ae6', fontFamily: "'Open Sans', sans-serif" }}>
+                      <span style={{ color: 'var(--osmos-brand-amber)', marginTop: 2, flexShrink: 0 }}>💡</span>
                       <span>
                         Consider creating multiple ad groups to test different{" "}
                         {isOffsiteAds ? "platforms and targeting" : "placements and creatives"}
@@ -662,7 +647,7 @@ export function CampaignWizard({
                     </li>
                   )}
                   {Number.parseFloat(campaignData.dailyBudget || "0") > 0 && (
-                    <li style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: '#0c4ae6', fontFamily: FONT }}>
+                    <li style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: '#0c4ae6', fontFamily: "'Open Sans', sans-serif" }}>
                       <CheckIcon size={14} style={{ marginTop: 2, flexShrink: 0 }} />
                       <span>
                         Your budget is estimated to reach{" "}
@@ -682,7 +667,7 @@ export function CampaignWizard({
   // ── Footer renderer ─────────────────────────────────────────────────────────
   const renderFooter = () => {
     const footerStyle = {
-      background: BG, borderTop: `1px solid ${BORDER}`,
+      background: 'var(--osmos-bg)', borderTop: `1px solid ${'var(--osmos-border)'}`,
       padding: '16px 32px',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       flexShrink: 0,
@@ -691,9 +676,9 @@ export function CampaignWizard({
     if (mode === "add_ad_group") {
       return (
         <div style={footerStyle}>
-          <div style={{ fontSize: 13, color: TEXT_MID, fontFamily: FONT }}>
+          <div style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
             {campaignData.adGroups.length === 0 && (
-              <span style={{ color: AMBER }}>Create at least one ad group to continue</span>
+              <span style={{ color: 'var(--osmos-brand-amber)' }}>Create at least one ad group to continue</span>
             )}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -713,9 +698,9 @@ export function CampaignWizard({
 
     return (
       <div style={footerStyle}>
-        <div style={{ fontSize: 13, color: TEXT_MID, fontFamily: FONT }}>
+        <div style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
           {currentStep === 2 && campaignData.adGroups.length === 0 && (
-            <span style={{ color: AMBER }}>Create at least one ad group to continue</span>
+            <span style={{ color: 'var(--osmos-brand-amber)' }}>Create at least one ad group to continue</span>
           )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -743,30 +728,30 @@ export function CampaignWizard({
   const wizardContent = (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 100,
-      background: BG, display: 'flex', height: '100vh', overflow: 'hidden',
-      fontFamily: FONT,
+      background: 'var(--osmos-bg)', display: 'flex', height: '100vh', overflow: 'hidden',
+      fontFamily: "'Open Sans', sans-serif",
     }}>
       <div style={{ position: 'relative', display: 'flex', width: '100%', height: '100%', overflow: 'hidden' }}>
 
         {/* ── Left Sidebar ── */}
         <div style={{
-          width: 288, background: BG_SUB, borderRight: `1px solid ${BORDER}`,
+          width: 288, background: 'var(--osmos-bg-subtle)', borderRight: `1px solid ${'var(--osmos-border)'}`,
           display: 'flex', flexDirection: 'column', flexShrink: 0,
           height: '100%', overflow: 'hidden',
         }}>
           {/* Sidebar header */}
-          <div style={{ padding: 24, borderBottom: `1px solid ${BORDER}`, flexShrink: 0 }}>
+          <div style={{ padding: 24, borderBottom: `1px solid ${'var(--osmos-border)'}`, flexShrink: 0 }}>
             <h2 style={{
-              fontWeight: 600, color: TEXT, margin: 0,
+              fontWeight: 600, color: 'var(--osmos-fg)', margin: 0,
               overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-              fontFamily: FONT,
+              fontFamily: "'Open Sans', sans-serif",
             }}>
               {mode === "add_ad_group"
                 ? selectedCampaign?.name || "Select Campaign"
                 : campaignData.name || "New Campaign"}
             </h2>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4, flexWrap: 'wrap' }}>
-              <p style={{ fontSize: 12, color: '#9a9a9a', margin: 0, fontFamily: FONT }}>
+              <p style={{ fontSize: 12, color: '#9a9a9a', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>
                 {mode === "add_ad_group"
                   ? "Adding Ad Groups"
                   : getObjectiveLabel(campaignData.objective)}
@@ -774,9 +759,9 @@ export function CampaignWizard({
               {initialData?.template === "ai" && mode === "create_campaign" && (
                 <span style={{
                   padding: '2px 8px', fontSize: 10, fontWeight: 500,
-                  background: VI, color: '#fff', borderRadius: 999,
+                  background: 'var(--osmos-brand-violet)', color: '#fff', borderRadius: 999,
                   display: 'inline-flex', alignItems: 'center', gap: 4,
-                  fontFamily: FONT,
+                  fontFamily: "'Open Sans', sans-serif",
                 }}>
                   <SparklesIcon size={10} />
                   AI Setup
@@ -784,8 +769,8 @@ export function CampaignWizard({
               )}
               <span style={{
                 padding: '2px 8px', fontSize: 10, fontWeight: 500, borderRadius: 999,
-                background: isProductAds ? '#059669' : isOffsiteAds ? '#f59e0b' : ACCENT,
-                color: '#fff', fontFamily: FONT,
+                background: isProductAds ? '#059669' : isOffsiteAds ? '#f59e0b' : 'var(--osmos-brand-primary)',
+                color: '#fff', fontFamily: "'Open Sans', sans-serif",
               }}>
                 {isProductAds ? "Product Ads" : isOffsiteAds ? "Offsite Ads" : "Display Ads"}
               </span>
@@ -808,11 +793,11 @@ export function CampaignWizard({
               </div>
 
               {/* Campaign summary */}
-              <div style={{ marginTop: 24, paddingTop: 16, borderTop: `1px solid ${BORDER}` }}>
+              <div style={{ marginTop: 24, paddingTop: 16, borderTop: `1px solid ${'var(--osmos-border)'}` }}>
                 <h4 style={{
                   fontSize: 12, fontWeight: 600, color: '#9a9a9a',
                   textTransform: 'uppercase', letterSpacing: '0.05em',
-                  marginBottom: 12, marginTop: 0, fontFamily: FONT,
+                  marginBottom: 12, marginTop: 0, fontFamily: "'Open Sans', sans-serif",
                 }}>
                   Campaign Summary
                 </h4>
@@ -823,8 +808,8 @@ export function CampaignWizard({
                     { label: "Ad Groups",    value: campaignData.adGroups.length },
                   ].map(({ label, value }) => (
                     <div key={label} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: TEXT_MID, fontFamily: FONT }}>{label}</span>
-                      <span style={{ fontWeight: 500, color: TEXT, fontFamily: FONT }}>{value}</span>
+                      <span style={{ color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>{label}</span>
+                      <span style={{ fontWeight: 500, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>{value}</span>
                     </div>
                   ))}
                 </div>
@@ -839,24 +824,24 @@ export function CampaignWizard({
                   <h4 style={{
                     fontSize: 12, fontWeight: 600, color: '#9a9a9a',
                     textTransform: 'uppercase', letterSpacing: '0.05em',
-                    marginBottom: 8, marginTop: 0, fontFamily: FONT,
+                    marginBottom: 8, marginTop: 0, fontFamily: "'Open Sans', sans-serif",
                   }}>
                     Campaign Info
                   </h4>
                   <div style={{
-                    background: BG, borderRadius: 8, padding: 12,
+                    background: 'var(--osmos-bg)', borderRadius: 8, padding: 12,
                     display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13,
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: TEXT_MID, fontFamily: FONT }}>Ad Type</span>
-                      <span style={{ fontWeight: 500, color: TEXT, textTransform: 'capitalize', fontFamily: FONT }}>
+                      <span style={{ color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>Ad Type</span>
+                      <span style={{ fontWeight: 500, color: 'var(--osmos-fg)', textTransform: 'capitalize', fontFamily: "'Open Sans', sans-serif" }}>
                         {selectedCampaign?.adType || adType}
                       </span>
                     </div>
                     {selectedCampaign?.objective && (
                       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: TEXT_MID, fontFamily: FONT }}>Objective</span>
-                        <span style={{ fontWeight: 500, color: TEXT, fontFamily: FONT }}>
+                        <span style={{ color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>Objective</span>
+                        <span style={{ fontWeight: 500, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>
                           {getObjectiveLabel(selectedCampaign.objective)}
                         </span>
                       </div>
@@ -867,15 +852,15 @@ export function CampaignWizard({
                   <h4 style={{
                     fontSize: 12, fontWeight: 600, color: '#9a9a9a',
                     textTransform: 'uppercase', letterSpacing: '0.05em',
-                    marginBottom: 8, marginTop: 0, fontFamily: FONT,
+                    marginBottom: 8, marginTop: 0, fontFamily: "'Open Sans', sans-serif",
                   }}>
                     New Ad Groups
                   </h4>
-                  <div style={{ background: BG, borderRadius: 8, padding: 12 }}>
-                    <div style={{ fontSize: 24, fontWeight: 700, color: ACCENT, fontFamily: FONT }}>
+                  <div style={{ background: 'var(--osmos-bg)', borderRadius: 8, padding: 12 }}>
+                    <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--osmos-brand-primary)', fontFamily: "'Open Sans', sans-serif" }}>
                       {campaignData.adGroups.length}
                     </div>
-                    <p style={{ fontSize: 12, color: TEXT_MID, marginTop: 4, marginBottom: 0, fontFamily: FONT }}>
+                    <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', marginTop: 4, marginBottom: 0, fontFamily: "'Open Sans', sans-serif" }}>
                       {campaignData.adGroups.length === 0
                         ? "No ad groups created yet"
                         : `${campaignData.adGroups.length} ad group${campaignData.adGroups.length > 1 ? "s" : ""} ready to save`}
@@ -891,24 +876,24 @@ export function CampaignWizard({
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100%', overflow: 'hidden' }}>
           {/* Header */}
           <div style={{
-            padding: '16px 24px', background: BG, borderBottom: `1px solid ${BORDER}`,
+            padding: '16px 24px', background: 'var(--osmos-bg)', borderBottom: `1px solid ${'var(--osmos-border)'}`,
             overflowX: 'auto', flexShrink: 0,
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 32, minWidth: 'min-content' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{
-                  width: 32, height: 32, borderRadius: 8, background: BG_SUB,
+                  width: 32, height: 32, borderRadius: 8, background: 'var(--osmos-bg-subtle)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
-                  <LayersIcon size={16} style={{ color: TEXT_MID }} />
+                  <LayersIcon size={16} style={{ color: 'var(--osmos-fg-muted)' }} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: 16, fontWeight: 600, color: TEXT, margin: 0, fontFamily: FONT }}>
+                  <h2 style={{ fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>
                     {mode === "add_ad_group"
                       ? `Add Ad Groups to ${selectedCampaign?.name}`
                       : "Create Campaign"}
                   </h2>
-                  <p style={{ fontSize: 13, color: TEXT_MID, marginTop: 2, marginBottom: 0, fontFamily: FONT }}>
+                  <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', marginTop: 2, marginBottom: 0, fontFamily: "'Open Sans', sans-serif" }}>
                     {mode === "add_ad_group"
                       ? "Create and configure new ad groups for this campaign"
                       : "Set up a new campaign with ad groups"}
@@ -968,7 +953,7 @@ function StepButton({ step, currentStep, onClick, disabled }) {
         width: '100%', display: 'flex', alignItems: 'flex-start', gap: 12,
         padding: 12, borderRadius: 8, border: 'none',
         background: isActive
-          ? `${BG}`
+          ? 'var(--osmos-bg)'
           : (isComplete && hov) ? 'rgba(255,255,255,0.5)' : 'transparent',
         outline: isActive ? `1px solid rgba(37,99,235,0.2)` : 'none',
         opacity: disabled ? 0.5 : 1,
@@ -989,7 +974,7 @@ function StepButton({ step, currentStep, onClick, disabled }) {
       <div style={{ textAlign: 'left' }}>
         <p style={{
           fontSize: 13, fontWeight: 500, margin: '0 0 2px',
-          color: isActive ? '#2563eb' : isComplete ? TEXT : '#9a9a9a',
+          color: isActive ? '#2563eb' : isComplete ? 'var(--osmos-fg)' : '#9a9a9a',
           fontFamily: "'Open Sans', sans-serif",
         }}>
           {step.title}
@@ -1009,8 +994,8 @@ function AdGroupCard({ adGroup, summary, onDuplicate, onEdit, onDelete }) {
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        background: BG, borderRadius: 12,
-        border: `1px solid ${hov ? 'rgba(37,99,235,0.3)' : BORDER}`,
+        background: 'var(--osmos-bg)', borderRadius: 12,
+        border: `1px solid ${hov ? 'rgba(37,99,235,0.3)' : 'var(--osmos-border)'}`,
         padding: 20, transition: 'all 0.15s',
       }}
     >
@@ -1018,19 +1003,19 @@ function AdGroupCard({ adGroup, summary, onDuplicate, onEdit, onDelete }) {
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
           <div style={{
             width: 40, height: 40, background: '#f0f4ff', borderRadius: 8,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', color: ACCENT,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--osmos-brand-primary)',
           }}>
             {summary.icon}
           </div>
           <div>
-            <h4 style={{ fontWeight: 600, color: '#2d2d2d', margin: '0 0 8px', fontFamily: FONT }}>
+            <h4 style={{ fontWeight: 600, color: '#2d2d2d', margin: '0 0 8px', fontFamily: "'Open Sans', sans-serif" }}>
               {adGroup.name}
             </h4>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: TEXT_MID, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: 'var(--osmos-fg-muted)', flexWrap: 'wrap' }}>
               {summary.details.map((detail, idx) => (
-                <span key={idx} style={{ fontFamily: FONT }}>
+                <span key={idx} style={{ fontFamily: "'Open Sans', sans-serif" }}>
                   {detail.label}:{' '}
-                  <span style={{ fontWeight: 500, color: TEXT }}>{detail.value}</span>
+                  <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>{detail.value}</span>
                 </span>
               ))}
             </div>
@@ -1059,8 +1044,8 @@ function CampaignSetupStep({ data, updateData, aiSuggestedFields, onFieldChange,
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 4,
       padding: '2px 8px', fontSize: 10, fontWeight: 500,
-      background: VI_BG, color: VI,
-      borderRadius: 999, marginLeft: 8, fontFamily: FONT,
+      background: 'var(--osmos-brand-violet-muted)', color: 'var(--osmos-brand-violet)',
+      borderRadius: 999, marginLeft: 8, fontFamily: "'Open Sans', sans-serif",
     }}>
       <SparklesIcon size={10} />
       AI Recommended
@@ -1076,17 +1061,17 @@ function CampaignSetupStep({ data, updateData, aiSuggestedFields, onFieldChange,
         }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
             <div style={{
-              width: 32, height: 32, borderRadius: 999, background: VI,
+              width: 32, height: 32, borderRadius: 999, background: 'var(--osmos-brand-violet)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
             }}>
               <SparklesIcon size={16} style={{ color: '#fff' }} />
             </div>
             <div>
-              <p style={{ fontSize: 13, fontWeight: 500, color: VI, marginBottom: 4, marginTop: 0, fontFamily: FONT }}>
+              <p style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-brand-violet)', marginBottom: 4, marginTop: 0, fontFamily: "'Open Sans', sans-serif" }}>
                 AI Recommendation Summary
               </p>
-              <p style={{ fontSize: 13, color: '#64748b', margin: 0, fontFamily: FONT }}>{aiReasoning}</p>
-              <p style={{ fontSize: 12, color: '#9a9a9a', marginTop: 8, marginBottom: 0, fontFamily: FONT }}>
+              <p style={{ fontSize: 13, color: '#64748b', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>{aiReasoning}</p>
+              <p style={{ fontSize: 12, color: '#9a9a9a', marginTop: 8, marginBottom: 0, fontFamily: "'Open Sans', sans-serif" }}>
                 Fields with the AI badge are pre-filled based on your inputs. Feel free to modify them.
               </p>
             </div>
@@ -1094,17 +1079,17 @@ function CampaignSetupStep({ data, updateData, aiSuggestedFields, onFieldChange,
         </div>
       )}
 
-      <div style={{ background: BG_SUB, borderRadius: 8, padding: 16, border: `1px solid ${BORDER}` }}>
+      <div style={{ background: 'var(--osmos-bg-subtle)', borderRadius: 8, padding: 16, border: `1px solid ${'var(--osmos-border)'}` }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <p style={{ fontSize: 12, color: '#9a9a9a', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 4px', fontFamily: FONT }}>
+            <p style={{ fontSize: 12, color: '#9a9a9a', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 4px', fontFamily: "'Open Sans', sans-serif" }}>
               Campaign
             </p>
-            <p style={{ fontSize: 16, fontWeight: 600, color: TEXT, margin: 0, fontFamily: FONT }}>{data.name}</p>
+            <p style={{ fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>{data.name}</p>
           </div>
           <div style={{
-            padding: '6px 12px', background: '#e8f4fd', color: ACCENT,
-            fontSize: 13, fontWeight: 500, borderRadius: 999, fontFamily: FONT,
+            padding: '6px 12px', background: '#e8f4fd', color: 'var(--osmos-brand-primary)',
+            fontSize: 13, fontWeight: 500, borderRadius: 999, fontFamily: "'Open Sans', sans-serif",
           }}>
             {getObjectiveLabel(data.objective)}
           </div>
@@ -1112,11 +1097,11 @@ function CampaignSetupStep({ data, updateData, aiSuggestedFields, onFieldChange,
       </div>
 
       {/* Schedule */}
-      <div style={{ background: BG, borderRadius: 8, border: `1px solid ${BORDER}`, padding: 24 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 600, color: TEXT, marginBottom: 16, marginTop: 0, fontFamily: FONT }}>Schedule</h3>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 8, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
+        <h3 style={{ fontSize: 15, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 16, marginTop: 0, fontFamily: "'Open Sans', sans-serif" }}>Schedule</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 24 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <label style={{ fontSize: 13, color: TEXT_MID, fontFamily: FONT }}>
+            <label style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
               Start Date <span style={{ color: '#d83c3b' }}>*</span>
             </label>
             <Input
@@ -1126,7 +1111,7 @@ function CampaignSetupStep({ data, updateData, aiSuggestedFields, onFieldChange,
             />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <label style={{ fontSize: 13, color: TEXT_MID, fontFamily: FONT }}>End Date (Optional)</label>
+            <label style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>End Date (Optional)</label>
             <Input
               type="date"
               value={data.endDate}
@@ -1134,17 +1119,17 @@ function CampaignSetupStep({ data, updateData, aiSuggestedFields, onFieldChange,
             />
           </div>
         </div>
-        <p style={{ fontSize: 12, color: '#9a9a9a', marginTop: 8, marginBottom: 0, fontFamily: FONT }}>
+        <p style={{ fontSize: 12, color: '#9a9a9a', marginTop: 8, marginBottom: 0, fontFamily: "'Open Sans', sans-serif" }}>
           * Date will be set in the Asia/Kolkata timezone
         </p>
       </div>
 
       {/* Budget */}
-      <div style={{ background: BG, borderRadius: 8, border: `1px solid ${BORDER}`, padding: 24 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 600, color: TEXT, marginBottom: 16, marginTop: 0, fontFamily: FONT }}>Budget</h3>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 8, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
+        <h3 style={{ fontSize: 15, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 16, marginTop: 0, fontFamily: "'Open Sans', sans-serif" }}>Budget</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <label style={{ fontSize: 13, color: TEXT_MID, display: 'flex', alignItems: 'center', fontFamily: FONT }}>
+            <label style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center', fontFamily: "'Open Sans', sans-serif" }}>
               Total Budget ($) <span style={{ color: '#d83c3b' }}>*</span>
               {isAiSuggested("totalBudget") && <AiBadge />}
             </label>
@@ -1153,12 +1138,12 @@ function CampaignSetupStep({ data, updateData, aiSuggestedFields, onFieldChange,
               placeholder="Enter amount"
               value={data.totalBudget}
               onChange={(e) => onFieldChange?.("totalBudget", e.target.value) || updateData({ totalBudget: e.target.value })}
-              style={isAiSuggested("totalBudget") ? { boxShadow: '0 0 0 2px rgba(124,58,237,0.2)' /* VI focus ring */ } : {}}
+              style={isAiSuggested("totalBudget") ? { boxShadow: '0 0 0 2px rgba(124,58,237,0.2)' /* 'var(--osmos-brand-violet)' focus ring */ } : {}}
             />
-            <p style={{ fontSize: 12, color: '#9a9a9a', margin: 0, fontFamily: FONT }}>Minimum budget should be $10</p>
+            <p style={{ fontSize: 12, color: '#9a9a9a', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>Minimum budget should be $10</p>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <label style={{ fontSize: 13, color: TEXT_MID, display: 'flex', alignItems: 'center', fontFamily: FONT }}>
+            <label style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center', fontFamily: "'Open Sans', sans-serif" }}>
               Daily Budget ($) <span style={{ color: '#d83c3b' }}>*</span>
               {isAiSuggested("dailyBudget") && <AiBadge />}
             </label>
@@ -1167,12 +1152,12 @@ function CampaignSetupStep({ data, updateData, aiSuggestedFields, onFieldChange,
               placeholder="Enter amount"
               value={data.dailyBudget}
               onChange={(e) => onFieldChange?.("dailyBudget", e.target.value) || updateData({ dailyBudget: e.target.value })}
-              style={isAiSuggested("dailyBudget") ? { boxShadow: '0 0 0 2px rgba(124,58,237,0.2)' /* VI focus ring */ } : {}}
+              style={isAiSuggested("dailyBudget") ? { boxShadow: '0 0 0 2px rgba(124,58,237,0.2)' /* 'var(--osmos-brand-violet)' focus ring */ } : {}}
             />
-            <p style={{ fontSize: 12, color: '#9a9a9a', margin: 0, fontFamily: FONT }}>Minimum budget should be $10</p>
+            <p style={{ fontSize: 12, color: '#9a9a9a', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>Minimum budget should be $10</p>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <label style={{ fontSize: 13, color: TEXT_MID, fontFamily: FONT }}>
+            <label style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
               Choose Wallet <span style={{ color: '#d83c3b' }}>*</span>
             </label>
             <Select
@@ -1184,17 +1169,17 @@ function CampaignSetupStep({ data, updateData, aiSuggestedFields, onFieldChange,
                 { value: "promo",     label: "Promotional wallet" },
               ]}
             />
-            <p style={{ fontSize: 12, color: '#9a9a9a', margin: 0, fontFamily: FONT }}>Wallet Balance: $5,850,489.59</p>
+            <p style={{ fontSize: 12, color: '#9a9a9a', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>Wallet Balance: $5,850,489.59</p>
           </div>
         </div>
       </div>
 
       {/* Bidding strategy */}
-      <div style={{ background: BG, borderRadius: 8, border: `1px solid ${BORDER}`, padding: 24 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 600, color: TEXT, marginBottom: 16, marginTop: 0, fontFamily: FONT }}>Bidding Strategy</h3>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 8, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
+        <h3 style={{ fontSize: 15, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 16, marginTop: 0, fontFamily: "'Open Sans', sans-serif" }}>Bidding Strategy</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <label style={{ fontSize: 13, color: TEXT_MID, display: 'flex', alignItems: 'center', fontFamily: FONT }}>
+            <label style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center', fontFamily: "'Open Sans', sans-serif" }}>
               Buying Type <span style={{ color: '#d83c3b' }}>*</span>
               {isAiSuggested("biddingStrategy") && <AiBadge />}
             </label>
@@ -1206,11 +1191,11 @@ function CampaignSetupStep({ data, updateData, aiSuggestedFields, onFieldChange,
                 { value: "cpc", label: "CPC (Cost per Click)" },
                 { value: "cpa", label: "CPA (Cost per Action)" },
               ]}
-              style={isAiSuggested("biddingStrategy") ? { boxShadow: '0 0 0 2px rgba(124,58,237,0.2)' /* VI focus ring */ } : {}}
+              style={isAiSuggested("biddingStrategy") ? { boxShadow: '0 0 0 2px rgba(124,58,237,0.2)' /* 'var(--osmos-brand-violet)' focus ring */ } : {}}
             />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <label style={{ fontSize: 13, color: TEXT_MID, display: 'flex', alignItems: 'center', fontFamily: FONT }}>
+            <label style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center', fontFamily: "'Open Sans', sans-serif" }}>
               Priority Level
               {isAiSuggested("priority") && <AiBadge />}
             </label>
@@ -1223,11 +1208,11 @@ function CampaignSetupStep({ data, updateData, aiSuggestedFields, onFieldChange,
                 { value: "medium",     label: "Medium" },
                 { value: "low",        label: "Low" },
               ]}
-              style={isAiSuggested("priority") ? { boxShadow: '0 0 0 2px rgba(124,58,237,0.2)' /* VI focus ring */ } : {}}
+              style={isAiSuggested("priority") ? { boxShadow: '0 0 0 2px rgba(124,58,237,0.2)' /* 'var(--osmos-brand-violet)' focus ring */ } : {}}
             />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <label style={{ fontSize: 13, color: TEXT_MID, display: 'flex', alignItems: 'center', fontFamily: FONT }}>
+            <label style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center', fontFamily: "'Open Sans', sans-serif" }}>
               Pacing
               {isAiSuggested("pacing") && <AiBadge />}
             </label>
@@ -1238,7 +1223,7 @@ function CampaignSetupStep({ data, updateData, aiSuggestedFields, onFieldChange,
                 { value: "standard",    label: "Standard" },
                 { value: "accelerated", label: "Accelerated" },
               ]}
-              style={isAiSuggested("pacing") ? { boxShadow: '0 0 0 2px rgba(124,58,237,0.2)' /* VI focus ring */ } : {}}
+              style={isAiSuggested("pacing") ? { boxShadow: '0 0 0 2px rgba(124,58,237,0.2)' /* 'var(--osmos-brand-violet)' focus ring */ } : {}}
             />
           </div>
         </div>
@@ -1250,18 +1235,18 @@ function CampaignSetupStep({ data, updateData, aiSuggestedFields, onFieldChange,
 // ── ReviewStep (kept, converted) ─────────────────────────────────────────────
 function ReviewStep({ data }) {
   return (
-    <div style={{ maxWidth: 896, display: 'flex', flexDirection: 'column', gap: 24, fontFamily: FONT }}>
+    <div style={{ maxWidth: 896, display: 'flex', flexDirection: 'column', gap: 24, fontFamily: "'Open Sans', sans-serif" }}>
       <div>
-        <h2 style={{ fontSize: 20, fontWeight: 600, color: TEXT, margin: '0 0 4px', fontFamily: FONT }}>
+        <h2 style={{ fontSize: 20, fontWeight: 600, color: 'var(--osmos-fg)', margin: '0 0 4px', fontFamily: "'Open Sans', sans-serif" }}>
           Review &amp; Launch
         </h2>
-        <p style={{ fontSize: 13, color: TEXT_MID, margin: 0, fontFamily: FONT }}>
+        <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>
           Review your campaign settings before launching.
         </p>
       </div>
 
-      <div style={{ background: BG, borderRadius: 8, border: `1px solid ${BORDER}`, padding: 24 }}>
-        <h3 style={{ fontWeight: 600, color: TEXT, margin: '0 0 16px', fontFamily: FONT }}>Campaign Details</h3>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 8, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
+        <h3 style={{ fontWeight: 600, color: 'var(--osmos-fg)', margin: '0 0 16px', fontFamily: "'Open Sans', sans-serif" }}>Campaign Details</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 16, fontSize: 13 }}>
           {[
             { label: "Name:",         value: data.name },
@@ -1270,28 +1255,28 @@ function ReviewStep({ data }) {
             { label: "Bidding:",      value: <span style={{ textTransform: 'uppercase' }}>{data.bidStrategy}</span> },
           ].map(({ label, value }, idx) => (
             <div key={idx}>
-              <span style={{ color: '#9a9a9a', fontFamily: FONT }}>{label}</span>
-              <span style={{ marginLeft: 8, color: TEXT, fontFamily: FONT }}>{value}</span>
+              <span style={{ color: '#9a9a9a', fontFamily: "'Open Sans', sans-serif" }}>{label}</span>
+              <span style={{ marginLeft: 8, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>{value}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <div style={{ background: BG, borderRadius: 8, border: `1px solid ${BORDER}`, padding: 24 }}>
-        <h3 style={{ fontWeight: 600, color: TEXT, margin: '0 0 16px', fontFamily: FONT }}>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 8, border: `1px solid ${'var(--osmos-border)'}`, padding: 24 }}>
+        <h3 style={{ fontWeight: 600, color: 'var(--osmos-fg)', margin: '0 0 16px', fontFamily: "'Open Sans', sans-serif" }}>
           Ad Groups ({data.adGroups.length})
         </h3>
         {data.adGroups.length === 0 ? (
-          <p style={{ fontSize: 13, color: '#9a9a9a', margin: 0, fontFamily: FONT }}>No ad groups created yet.</p>
+          <p style={{ fontSize: 13, color: '#9a9a9a', margin: 0, fontFamily: "'Open Sans', sans-serif" }}>No ad groups created yet.</p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {data.adGroups.map((ag) => (
               <div key={ag.id} style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                padding: 12, background: BG_SUB, borderRadius: 8,
+                padding: 12, background: 'var(--osmos-bg-subtle)', borderRadius: 8,
               }}>
-                <span style={{ fontSize: 13, color: TEXT, fontFamily: FONT }}>{ag.name}</span>
-                <span style={{ fontSize: 12, color: '#9a9a9a', fontFamily: FONT }}>
+                <span style={{ fontSize: 13, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>{ag.name}</span>
+                <span style={{ fontSize: 12, color: '#9a9a9a', fontFamily: "'Open Sans', sans-serif" }}>
                   {ag.selectedPages.length} pages selected
                 </span>
               </div>

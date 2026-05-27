@@ -1,0 +1,37 @@
+{
+  "eval_id": 1,
+  "eval_name": "campaign-duplicate-feature-critique",
+  "prompt": "Critique this design idea for our Sponsored Ads platform: we want to add a 'Duplicate Campaign' button to each row in the campaign table. Clicking it copies all settings from that campaign and opens a pre-filled campaign creation form in a side drawer. The form highlights what was copied, lets the user rename it, and has a 'Save as Draft' vs 'Launch Now' option at the bottom. Should we build this exactly as described, or is there a better way?",
+  "assertions": [
+    {
+      "name": "produces_rigor_matrix_table",
+      "description": "Output contains a markdown table with all four dimensions: Feasibility, UX, Business, Delight",
+      "check": "file contains '| Feasibility' AND '| UX' AND '| Business' AND '| Delight'"
+    },
+    {
+      "name": "includes_numeric_scores",
+      "description": "Each dimension row has a numeric score (1-5)",
+      "check": "file contains score values in the matrix rows (digits 1-5 in table cells)"
+    },
+    {
+      "name": "has_verdict_section",
+      "description": "Output includes a Verdict section that is actionable — says what to build, defer, or cut",
+      "check": "file contains '## Verdict' or '**Verdict**' header"
+    },
+    {
+      "name": "covers_all_four_lenses",
+      "description": "Each of the four agent lenses produces a distinct analysis section",
+      "check": "file contains 'Feasibility Analysis' AND 'UX Analysis' AND 'Business Analysis' AND 'Delight Analysis'"
+    },
+    {
+      "name": "surfaces_conflicts_or_agreements",
+      "description": "Synthesis section identifies where agents agree or conflict",
+      "check": "file contains 'Conflicts' or 'conflicts' or 'agrees' or 'alignment' in synthesis section"
+    },
+    {
+      "name": "opinionated_not_hedged",
+      "description": "Verdict uses direct language, not wishy-washy hedging ('this will' not 'this might')",
+      "check": "qualitative — reviewer checks that verdict takes a clear position"
+    }
+  ]
+}

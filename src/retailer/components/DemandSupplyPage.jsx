@@ -3,9 +3,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { Icon, SearchIcon, FilterIcon, ColumnsIcon, DownloadIcon, PlusIcon, ChevronDownIcon, CalendarIcon, MoreIcon } from '../../ui/atoms/Icon';
-
-const FONT = "'Open Sans', sans-serif";
+import { Icon, SearchIcon, FilterIcon, ColumnsIcon, DownloadIcon, PlusIcon, ChevronDownIcon, CalendarIcon, MoreIcon } from '../../ui';
 
 // ─── Constants & Mock Data ────────────────────────────────────────────────────
 
@@ -70,13 +68,13 @@ function Heatmap({ cells }) {
       <div style={{ display: 'grid', gridTemplateColumns: '50px repeat(24, 1fr)', gap: 2, minWidth: 720 }}>
         <div />
         {Array.from({ length: 24 }).map((_, h) => (
-          <div key={h} style={{ fontSize: 10, color: 'var(--osmos-fg-muted)', textAlign: 'center', paddingBottom: 4, fontFamily: FONT }}>
+          <div key={h} style={{ fontSize: 10, color: 'var(--osmos-fg-muted)', textAlign: 'center', paddingBottom: 4, fontFamily: "'Open Sans', sans-serif" }}>
             {h % 2 === 0 ? `${h}:00` : ''}
           </div>
         ))}
         {DAYS.map((day, d) => (
           <React.Fragment key={day}>
-            <div style={{ fontSize: 11, color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center', paddingRight: 8, fontFamily: FONT }}>
+            <div style={{ fontSize: 11, color: 'var(--osmos-fg-muted)', display: 'flex', alignItems: 'center', paddingRight: 8, fontFamily: "'Open Sans', sans-serif" }}>
               {day}
             </div>
             {cells
@@ -90,7 +88,7 @@ function Heatmap({ cells }) {
                     height: 22, borderRadius: 2,
                     fontSize: 9, color: 'rgba(255,255,255,0.85)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontWeight: 600, fontFamily: FONT,
+                    fontWeight: 600, fontFamily: "'Open Sans', sans-serif",
                   }}
                 >
                   {c.level >= 3 ? c.value : ''}
@@ -108,11 +106,11 @@ function Heatmap({ cells }) {
 const TH = {
   textAlign: 'left', padding: '10px 16px', fontSize: 12, fontWeight: 600,
   color: 'var(--osmos-fg-muted)', background: 'var(--osmos-bg-subtle)',
-  borderBottom: '1px solid var(--osmos-border)', whiteSpace: 'nowrap', fontFamily: FONT,
+  borderBottom: '1px solid var(--osmos-border)', whiteSpace: 'nowrap', fontFamily: "'Open Sans', sans-serif",
 };
 const TD = {
   padding: '10px 16px', fontSize: 13, color: 'var(--osmos-fg)',
-  borderBottom: '1px solid var(--osmos-border)', verticalAlign: 'middle', fontFamily: FONT,
+  borderBottom: '1px solid var(--osmos-border)', verticalAlign: 'middle', fontFamily: "'Open Sans', sans-serif",
 };
 const TD_BOLD = { ...TD, fontWeight: 700, background: 'var(--osmos-bg-subtle)' };
 
@@ -125,7 +123,7 @@ function Panel({ title, icon, toolbar, children, footerNote }) {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '16px 20px 12px', flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {icon && <span style={{ display: 'flex', alignItems: 'center', color: 'var(--osmos-brand-primary)' }}>{icon}</span>}
-          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>{title}</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>{title}</span>
           <span style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             width: 14, height: 14, borderRadius: '50%',
@@ -137,7 +135,7 @@ function Panel({ title, icon, toolbar, children, footerNote }) {
       </div>
       {children}
       {footerNote && (
-        <div style={{ padding: '8px 20px 12px', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>
+        <div style={{ padding: '8px 20px 12px', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
           {footerNote}
         </div>
       )}
@@ -151,7 +149,7 @@ function DropdownPill({ label }) {
       display: 'inline-flex', alignItems: 'center', gap: 4,
       background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)',
       borderRadius: 6, padding: '4px 10px', fontSize: 12, fontWeight: 500,
-      color: 'var(--osmos-fg-muted)', cursor: 'pointer', fontFamily: FONT,
+      color: 'var(--osmos-fg-muted)', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
     }}>
       {label}
       <ChevronDownIcon size={12} />
@@ -186,7 +184,7 @@ function SearchInput({ placeholder }) {
       padding: '4px 10px', background: 'var(--osmos-bg)', minWidth: 200, height: 28,
     }}>
       <SearchIcon size={13} color="var(--osmos-fg-muted)" />
-      <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', fontFamily: FONT }}>{placeholder}</span>
+      <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>{placeholder}</span>
     </div>
   );
 }
@@ -196,14 +194,14 @@ function PageToolbar() {
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       padding: '12px 16px', background: 'var(--osmos-bg)',
-      borderBottom: '1px solid var(--osmos-border)', fontFamily: FONT,
+      borderBottom: '1px solid var(--osmos-border)', fontFamily: "'Open Sans', sans-serif",
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <Icon size={18} color="var(--osmos-brand-primary)">
           <path d="M3 3v18h18"/>
           <path d="M7 14l4-4 4 4 4-4"/>
         </Icon>
-        <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>Demand &amp; Supply</span>
+        <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>Demand &amp; Supply</span>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
         <IconBtn ariaLabel="Search"><SearchIcon size={14} /></IconBtn>
@@ -217,7 +215,7 @@ function PageToolbar() {
           padding: '4px 10px', background: 'var(--osmos-bg)', height: 28, marginLeft: 4,
         }}>
           <CalendarIcon size={13} color="var(--osmos-fg-muted)" />
-          <span style={{ fontSize: 12, color: 'var(--osmos-fg)', fontFamily: FONT }}>08 May 26 - 14 May 26</span>
+          <span style={{ fontSize: 12, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>08 May 26 - 14 May 26</span>
           <ChevronDownIcon size={12} color="var(--osmos-fg-muted)" />
         </div>
       </div>
@@ -284,7 +282,7 @@ function SeasonalityTabs({ value, onChange }) {
             background: value === t ? 'var(--osmos-bg)' : 'transparent',
             color: value === t ? 'var(--osmos-fg)' : 'var(--osmos-fg-muted)',
             boxShadow: value === t ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-            fontFamily: FONT,
+            fontFamily: "'Open Sans', sans-serif",
           }}
         >
           {labels[t]}
@@ -333,7 +331,7 @@ export default function DemandSupplyPage() {
   const checkIcon = <Icon size={14}><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></Icon>;
 
   return (
-    <div style={{ fontFamily: FONT }}>
+    <div style={{ fontFamily: "'Open Sans', sans-serif" }}>
       <PageToolbar />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 16 }}>
 
@@ -343,7 +341,7 @@ export default function DemandSupplyPage() {
           icon={trendIcon}
           toolbar={
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <button style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--osmos-brand-primary)', fontFamily: FONT }}>
+              <button style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--osmos-brand-primary)', fontFamily: "'Open Sans', sans-serif" }}>
                 <PlusIcon size={12} color="var(--osmos-brand-primary)" /> Add a Filter
               </button>
               <div style={{ flex: 1 }} />
@@ -389,11 +387,11 @@ export default function DemandSupplyPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <div style={{ width: 10, height: 10, borderRadius: 2, background: 'var(--osmos-brand-amber)' }} />
-                  <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>Non-Advertiser Members</span>
+                  <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>Non-Advertiser Members</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <div style={{ width: 10, height: 10, borderRadius: 2, background: 'var(--osmos-brand-green)' }} />
-                  <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>Advertiser Members</span>
+                  <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>Advertiser Members</span>
                 </div>
               </div>
               <div style={{ flex: 1 }} />
@@ -408,7 +406,7 @@ export default function DemandSupplyPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--osmos-border)" vertical={false} />
                 <XAxis dataKey="name" stroke="var(--osmos-fg-subtle)" fontSize={11} tickLine={false} axisLine={{ stroke: 'var(--osmos-border)' }} />
                 <YAxis stroke="var(--osmos-fg-subtle)" fontSize={11} tickLine={false} axisLine={{ stroke: 'var(--osmos-border)' }} />
-                <Tooltip cursor={{ fill: 'rgba(0,0,0,0.03)' }} contentStyle={{ fontSize: '12px', borderRadius: '6px', fontFamily: FONT }} />
+                <Tooltip cursor={{ fill: 'rgba(0,0,0,0.03)' }} contentStyle={{ fontSize: '12px', borderRadius: '6px', fontFamily: "'Open Sans', sans-serif" }} />
                 <Bar dataKey="adv"    stackId="a" fill="var(--osmos-brand-amber)" name="Non-Advertiser Members" radius={[0, 0, 0, 0]} />
                 <Bar dataKey="nonAdv" stackId="a" fill="var(--osmos-brand-green)" name="Advertiser Members"     radius={[2, 2, 0, 0]} />
               </BarChart>
@@ -430,10 +428,10 @@ export default function DemandSupplyPage() {
           <div style={{ borderTop: '1px solid var(--osmos-border)' }}>
             <div style={{ display: 'flex', background: 'var(--osmos-bg-subtle)', padding: '10px 16px', gap: 32 }}>
               {['Category L1', 'Total Search Volume', 'High Demand Search Queries', 'Response Rate of High Demand Search Queries'].map((c) => (
-                <span key={c} style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)', flex: 1, fontFamily: FONT }}>{c}</span>
+                <span key={c} style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)', flex: 1, fontFamily: "'Open Sans', sans-serif" }}>{c}</span>
               ))}
             </div>
-            <div style={{ padding: '56px 16px', textAlign: 'center', color: 'var(--osmos-fg-subtle)', fontSize: 13, fontFamily: FONT }}>
+            <div style={{ padding: '56px 16px', textAlign: 'center', color: 'var(--osmos-fg-subtle)', fontSize: 13, fontFamily: "'Open Sans', sans-serif" }}>
               No Data Available
             </div>
           </div>

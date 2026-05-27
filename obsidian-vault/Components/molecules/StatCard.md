@@ -2,13 +2,19 @@
 type: component
 layer: molecule
 name: StatCard
+figma-node-id: "996:7697"
+figma-library: "Design System OS"
+figma-path: "design_systems/Design System OS/components/Cards"
 tags: [molecule, ui-component, data, display]
 source-file: src/ui/molecules/StatCard.jsx
 export-name: StatCard
-last-updated: 2026-05-02T00:00:00Z
+png: ../Assets/Components/molecules/StatCard.png
+last-updated: 2026-05-25T06:30:03Z
 ---
 
 # StatCard
+
+![StatCard](../Assets/Components/molecules/StatCard.png)
 
 KPI metric card. Used in dashboard screens for primary headline metrics. Supports optional comparison row, sub-text, and icon badge.
 

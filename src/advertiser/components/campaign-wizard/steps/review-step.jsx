@@ -1,17 +1,5 @@
 import { CalendarIcon, CheckIcon, Icon } from '../../../../ui';
 
-const FONT      = "'Open Sans', sans-serif";
-const TEXT      = 'var(--osmos-fg)';
-const TEXT_MID  = 'var(--osmos-fg-muted)';
-const BORDER    = 'var(--osmos-border)';
-const BG        = 'var(--osmos-bg)';
-const BG_SUB    = 'var(--osmos-bg-subtle)';
-const ACCENT    = 'var(--osmos-brand-primary)';
-const ACCENT_M  = 'var(--osmos-brand-primary-muted)';
-const GREEN     = 'var(--osmos-brand-green)';
-const GREEN_M   = 'var(--osmos-brand-green-muted)';
-const AMBER     = 'var(--osmos-brand-amber)';
-
 // ── Icons ─────────────────────────────────────────────────────────────────────
 const DollarSignIcon = (props) => (
   <Icon {...props}>
@@ -46,22 +34,22 @@ export function ReviewStep({ data }) {
       label:    'Schedule',
       value:    `${data.startDate} ${data.endDate ? `- ${data.endDate}` : '(Ongoing)'}`,
       IconComp: CalendarIcon,
-      iconBg:   ACCENT_M,
-      iconColor: ACCENT,
+      iconBg:   'var(--osmos-brand-primary-muted)',
+      iconColor: 'var(--osmos-brand-primary)',
     },
     {
       label:    'Budget',
       value:    `$${totalBudget.toLocaleString()} total · $${dailyBudget.toLocaleString()}/day`,
       IconComp: DollarSignIcon,
-      iconBg:   GREEN_M,
-      iconColor: GREEN,
+      iconBg:   'var(--osmos-brand-green-muted)',
+      iconColor: 'var(--osmos-brand-green)',
     },
     {
       label:    'Bidding',
       value:    `${data.biddingStrategy} · ${data.pacing} pacing`.toUpperCase(),
       IconComp: TargetIcon,
       iconBg:   'var(--osmos-brand-amber-muted)',
-      iconColor: AMBER,
+      iconColor: 'var(--osmos-brand-amber)',
     },
     {
       label:    'Ad Groups',
@@ -81,23 +69,23 @@ export function ReviewStep({ data }) {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: FONT }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, fontFamily: "'Open Sans', sans-serif" }}>
       <div>
-        <h2 style={{ fontSize: 24, fontWeight: 600, color: TEXT, marginBottom: 8 }}>
+        <h2 style={{ fontSize: 24, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8 }}>
           Review &amp; Launch
         </h2>
-        <p style={{ color: TEXT_MID }}>
+        <p style={{ color: 'var(--osmos-fg-muted)' }}>
           Review your campaign settings before launching.
         </p>
       </div>
 
       {/* Campaign Overview */}
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, overflow: 'hidden' }}>
-        <div style={{ padding: '16px 24px', background: BG_SUB, borderBottom: `1px solid ${BORDER}` }}>
-          <h3 style={{ fontWeight: 600, color: TEXT }}>
+      <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, overflow: 'hidden' }}>
+        <div style={{ padding: '16px 24px', background: 'var(--osmos-bg-subtle)', borderBottom: `1px solid ${'var(--osmos-border)'}` }}>
+          <h3 style={{ fontWeight: 600, color: 'var(--osmos-fg)' }}>
             {data.name || 'Untitled Campaign'}
           </h3>
-          <p style={{ fontSize: 13, color: TEXT_MID, textTransform: 'capitalize' }}>
+          <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', textTransform: 'capitalize' }}>
             {data.objective.replace('_', ' ')} Campaign
           </p>
         </div>
@@ -113,8 +101,8 @@ export function ReviewStep({ data }) {
                 <IconComp size={20} color={iconColor} />
               </div>
               <div>
-                <h4 style={{ fontWeight: 500, color: TEXT, marginBottom: 4 }}>{label}</h4>
-                <p style={{ fontSize: 13, color: TEXT_MID }}>{value}</p>
+                <h4 style={{ fontWeight: 500, color: 'var(--osmos-fg)', marginBottom: 4 }}>{label}</h4>
+                <p style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{value}</p>
               </div>
             </div>
           ))}
@@ -123,9 +111,9 @@ export function ReviewStep({ data }) {
 
       {/* Ad Groups Summary */}
       {data.adGroups.length > 0 && (
-        <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BORDER}`, overflow: 'hidden' }}>
-          <div style={{ padding: '16px 24px', borderBottom: `1px solid ${BORDER}` }}>
-            <h3 style={{ fontWeight: 600, color: TEXT }}>Ad Groups Summary</h3>
+        <div style={{ background: 'var(--osmos-bg)', borderRadius: 12, border: `1px solid ${'var(--osmos-border)'}`, overflow: 'hidden' }}>
+          <div style={{ padding: '16px 24px', borderBottom: `1px solid ${'var(--osmos-border)'}` }}>
+            <h3 style={{ fontWeight: 600, color: 'var(--osmos-fg)' }}>Ad Groups Summary</h3>
           </div>
           <div>
             {data.adGroups.map((adGroup, index) => (
@@ -133,22 +121,22 @@ export function ReviewStep({ data }) {
                 key={adGroup.id}
                 style={{
                   padding: 16,
-                  borderTop: index > 0 ? `1px solid ${BORDER}` : 'none',
+                  borderTop: index > 0 ? `1px solid ${'var(--osmos-border)'}` : 'none',
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{
                     width: 32, height: 32, borderRadius: '50%',
-                    background: ACCENT_M,
+                    background: 'var(--osmos-brand-primary-muted)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 13, fontWeight: 500, color: ACCENT, flexShrink: 0,
+                    fontSize: 13, fontWeight: 500, color: 'var(--osmos-brand-primary)', flexShrink: 0,
                   }}>
                     {index + 1}
                   </div>
                   <div>
-                    <h4 style={{ fontWeight: 500, color: TEXT }}>{adGroup.name}</h4>
-                    <p style={{ fontSize: 12, color: TEXT_MID }}>
+                    <h4 style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>{adGroup.name}</h4>
+                    <p style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>
                       {adGroup.selectedPages.length} pages ·{' '}
                       {adGroup.adFormat || 'No format'} ·{' '}
                       {adGroup.creatives.length} creative(s)
@@ -156,8 +144,8 @@ export function ReviewStep({ data }) {
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <CheckIcon size={16} color={GREEN} />
-                  <span style={{ fontSize: 13, color: GREEN }}>Ready</span>
+                  <CheckIcon size={16} color={'var(--osmos-brand-green)'} />
+                  <span style={{ fontSize: 13, color: 'var(--osmos-brand-green)' }}>Ready</span>
                 </div>
               </div>
             ))}
@@ -167,21 +155,21 @@ export function ReviewStep({ data }) {
 
       {/* Checklist */}
       <div style={{
-        background: GREEN_M,
+        background: 'var(--osmos-brand-green-muted)',
         borderRadius: 12, border: `1px solid var(--alert-success-lighter)`,
         padding: 24,
       }}>
         <h3 style={{
-          fontWeight: 600, color: GREEN, marginBottom: 16,
+          fontWeight: 600, color: 'var(--osmos-brand-green)', marginBottom: 16,
           display: 'flex', alignItems: 'center', gap: 8,
         }}>
-          <CheckIcon size={20} color={GREEN} />
+          <CheckIcon size={20} color={'var(--osmos-brand-green)'} />
           Ready to Launch
         </h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {checklistItems.map((item) => (
-            <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: TEXT }}>
-              <CheckIcon size={14} color={GREEN} />
+            <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--osmos-fg)' }}>
+              <CheckIcon size={14} color={'var(--osmos-brand-green)'} />
               {item}
             </div>
           ))}

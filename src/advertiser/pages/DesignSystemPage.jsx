@@ -1,14 +1,8 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
+import { Card, Badge, Tabs } from '@rishikeshjoshi-morpheus/ui';
+const { Header: CardHeader, Body: CardContent, Title: CardTitle, Description: CardDescription } = Card;
+const { List: TabsList, Trigger: TabsTrigger, Content: TabsContent } = Tabs;
 
 export default function DesignSystemPage() {
   return (

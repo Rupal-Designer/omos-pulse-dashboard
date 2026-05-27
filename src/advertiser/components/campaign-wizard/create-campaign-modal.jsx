@@ -32,22 +32,6 @@ const SpinnerIcon = ({ size = 24, color = '#fff' }) => (
   </svg>
 );
 
-// ── design tokens ─────────────────────────────────────────────────────────────
-const FONT      = "'Open Sans', sans-serif";
-const BG        = 'var(--osmos-bg)';
-const BG_SUBTLE = 'var(--osmos-bg-subtle)';
-const BG_MUTED  = 'var(--osmos-bg-muted)';
-const BORDER    = 'var(--osmos-border)';
-const TEXT      = 'var(--osmos-fg)';
-const TEXT_MID  = 'var(--osmos-fg-muted)';
-const TEXT_SUB  = 'var(--osmos-fg-subtle)';
-const ACCENT    = 'var(--osmos-brand-primary)';
-const ACCENT_M  = 'var(--osmos-brand-primary-muted)';
-const GREEN     = 'var(--osmos-brand-green)';
-const VI        = 'var(--osmos-brand-violet)';        // AI violet
-const VI_BG     = 'var(--osmos-brand-violet-muted)';  // AI violet muted (0.10)
-const VI_LIGHT  = 'rgba(124,58,237,0.06)';            // AI violet extra-light (no token yet)
-
 // ── static data ───────────────────────────────────────────────────────────────
 const TEMPLATES = [
   { id: 'scratch',    label: 'Start from scratch',      description: 'Create a new campaign with default settings',    Icon: FileIcon,      badge: null },
@@ -144,32 +128,32 @@ export function CreateCampaignModal({ open, onClose, onContinue, adType = 'produ
     : 'Please wait while we analyse your inputs…';
 
   return createPortal(
-    <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT }}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Open Sans', sans-serif" }}>
       {/* Backdrop */}
       <div onClick={handleClose} style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)' }} />
 
       {/* Modal */}
-      <div style={{ position: 'relative', backgroundColor: BG, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.18)', width: '100%', maxWidth: 600, margin: '0 16px', overflow: 'hidden', display: 'flex', flexDirection: 'column', maxHeight: '90vh' }}>
+      <div style={{ position: 'relative', backgroundColor: 'var(--osmos-bg)', borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.18)', width: '100%', maxWidth: 600, margin: '0 16px', overflow: 'hidden', display: 'flex', flexDirection: 'column', maxHeight: '90vh' }}>
 
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 24px', borderBottom: `1px solid ${BORDER}`, flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 24px', borderBottom: `1px solid ${'var(--osmos-border)'}`, flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             {step !== 'initial' && step !== 'ai-generating' && (
               <button onClick={handleBack} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = BG_MUTED)}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--osmos-bg-muted)')}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}>
-                <ChevronLeftIcon size={18} color={TEXT_MID} />
+                <ChevronLeftIcon size={18} color={'var(--osmos-fg-muted)'} />
               </button>
             )}
             <div>
-              <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: TEXT }}>{stepTitle}</h2>
-              <p style={{ margin: '2px 0 0', fontSize: 13, color: TEXT_MID }}>{stepSubtitle}</p>
+              <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)' }}>{stepTitle}</h2>
+              <p style={{ margin: '2px 0 0', fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{stepSubtitle}</p>
             </div>
           </div>
           <button onClick={handleClose} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = BG_MUTED)}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--osmos-bg-muted)')}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}>
-            <CloseIcon size={18} color={TEXT_MID} />
+            <CloseIcon size={18} color={'var(--osmos-fg-muted)'} />
           </button>
         </div>
 
@@ -181,48 +165,48 @@ export function CreateCampaignModal({ open, onClose, onContinue, adType = 'produ
             <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
               {/* Campaign name */}
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: TEXT, marginBottom: 8 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8 }}>
                   Campaign Name <span style={{ color: '#EF4444' }}>*</span>
                 </label>
                 <input
                   placeholder="e.g., Summer Sale 2025, Black Friday Promotion"
                   value={name}
                   onChange={(e) => { setName(e.target.value); setError(''); }}
-                  style={{ width: '100%', padding: '10px 14px', border: `1.5px solid ${name ? ACCENT : BORDER}`, borderRadius: 8, fontSize: 14, fontFamily: FONT, color: TEXT, backgroundColor: BG, outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.15s' }}
-                  onFocus={(e) => (e.target.style.borderColor = ACCENT)}
-                  onBlur={(e) => (e.target.style.borderColor = name ? ACCENT : BORDER)}
+                  style={{ width: '100%', padding: '10px 14px', border: `1.5px solid ${name ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)'}`, borderRadius: 8, fontSize: 14, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)', backgroundColor: 'var(--osmos-bg)', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.15s' }}
+                  onFocus={(e) => (e.target.style.borderColor = 'var(--osmos-brand-primary)')}
+                  onBlur={(e) => (e.target.style.borderColor = name ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)')}
                 />
-                <p style={{ margin: '6px 0 0', fontSize: 12, color: TEXT_SUB }}>Choose a descriptive name to easily identify this campaign later</p>
+                <p style={{ margin: '6px 0 0', fontSize: 12, color: 'var(--osmos-fg-subtle)' }}>Choose a descriptive name to easily identify this campaign later</p>
               </div>
 
               {/* Template selector */}
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: TEXT, marginBottom: 12 }}>How would you like to start?</label>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 12 }}>How would you like to start?</label>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {TEMPLATES.map(({ id, label, description, Icon: TIcon, badge }) => {
                     const sel = template === id;
-                    const iconColor = id === 'ai' ? VI : ACCENT;
+                    const iconColor = id === 'ai' ? 'var(--osmos-brand-violet)' : 'var(--osmos-brand-primary)';
                     return (
                       <button key={id} onClick={() => setTemplate(id)} style={{
                         display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
-                        border: `1.5px solid ${sel ? (id === 'ai' ? VI : ACCENT) : BORDER}`,
+                        border: `1.5px solid ${sel ? (id === 'ai' ? 'var(--osmos-brand-violet)' : 'var(--osmos-brand-primary)') : 'var(--osmos-border)'}`,
                         borderRadius: 10, cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
-                        backgroundColor: sel ? (id === 'ai' ? VI_LIGHT : ACCENT_M) : BG,
-                        fontFamily: FONT,
+                        backgroundColor: sel ? (id === 'ai' ? 'rgba(124,58,237,0.06)' : 'var(--osmos-brand-primary-muted)') : 'var(--osmos-bg)',
+                        fontFamily: "'Open Sans', sans-serif",
                       }}>
                         <div style={{
                           width: 40, height: 40, borderRadius: 10, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          backgroundColor: sel ? (id === 'ai' ? VI : ACCENT) : BG_MUTED,
+                          backgroundColor: sel ? (id === 'ai' ? 'var(--osmos-brand-violet)' : 'var(--osmos-brand-primary)') : 'var(--osmos-bg-muted)',
                           transition: 'all 0.15s',
                         }}>
-                          <TIcon size={19} color={sel ? '#fff' : (id === 'ai' ? VI : TEXT_MID)} />
+                          <TIcon size={19} color={sel ? '#fff' : (id === 'ai' ? 'var(--osmos-brand-violet)' : 'var(--osmos-fg-muted)')} />
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
-                            <span style={{ fontSize: 14, fontWeight: 600, color: sel ? (id === 'ai' ? VI : ACCENT) : TEXT }}>{label}</span>
-                            {badge && <span style={{ padding: '2px 8px', fontSize: 10, fontWeight: 700, backgroundColor: VI, color: '#fff', borderRadius: 999, letterSpacing: '0.03em' }}>{badge}</span>}
+                            <span style={{ fontSize: 14, fontWeight: 600, color: sel ? (id === 'ai' ? 'var(--osmos-brand-violet)' : 'var(--osmos-brand-primary)') : 'var(--osmos-fg)' }}>{label}</span>
+                            {badge && <span style={{ padding: '2px 8px', fontSize: 10, fontWeight: 700, backgroundColor: 'var(--osmos-brand-violet)', color: '#fff', borderRadius: 999, letterSpacing: '0.03em' }}>{badge}</span>}
                           </div>
-                          <p style={{ margin: 0, fontSize: 12, color: TEXT_MID }}>{description}</p>
+                          <p style={{ margin: 0, fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{description}</p>
                         </div>
                         <RadioDot selected={sel} size={18} />
                       </button>
@@ -238,15 +222,15 @@ export function CreateCampaignModal({ open, onClose, onContinue, adType = 'produ
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div style={{ position: 'relative' }}>
                 <div style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-                  <SearchIcon size={16} color={TEXT_SUB} />
+                  <SearchIcon size={16} color={'var(--osmos-fg-subtle)'} />
                 </div>
                 <input
                   placeholder="Search campaigns…"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  style={{ width: '100%', padding: '10px 14px 10px 38px', border: `1.5px solid ${BORDER}`, borderRadius: 8, fontSize: 13, fontFamily: FONT, color: TEXT, backgroundColor: BG, outline: 'none', boxSizing: 'border-box' }}
-                  onFocus={(e) => (e.target.style.borderColor = ACCENT)}
-                  onBlur={(e) => (e.target.style.borderColor = BORDER)}
+                  style={{ width: '100%', padding: '10px 14px 10px 38px', border: `1.5px solid ${'var(--osmos-border)'}`, borderRadius: 8, fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)', backgroundColor: 'var(--osmos-bg)', outline: 'none', boxSizing: 'border-box' }}
+                  onFocus={(e) => (e.target.style.borderColor = 'var(--osmos-brand-primary)')}
+                  onBlur={(e) => (e.target.style.borderColor = 'var(--osmos-border)')}
                 />
               </div>
 
@@ -257,24 +241,24 @@ export function CreateCampaignModal({ open, onClose, onContinue, adType = 'produ
                   return (
                     <button key={campaign.id} onClick={() => { setSelectedCampaignId(campaign.id); setError(''); }} style={{
                       display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
-                      border: `1.5px solid ${sel ? ACCENT : BORDER}`, borderRadius: 10,
+                      border: `1.5px solid ${sel ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)'}`, borderRadius: 10,
                       cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
-                      backgroundColor: sel ? ACCENT_M : BG, fontFamily: FONT,
+                      backgroundColor: sel ? 'var(--osmos-brand-primary-muted)' : 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif",
                     }}>
-                      <div style={{ width: 40, height: 40, borderRadius: 10, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: sel ? ACCENT : BG_MUTED }}>
-                        <CopyIcon size={17} color={sel ? '#fff' : TEXT_MID} />
+                      <div style={{ width: 40, height: 40, borderRadius: 10, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: sel ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg-muted)' }}>
+                        <CopyIcon size={17} color={sel ? '#fff' : 'var(--osmos-fg-muted)'} />
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                          <span style={{ fontSize: 13, fontWeight: 600, color: sel ? ACCENT : TEXT, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{campaign.name}</span>
+                          <span style={{ fontSize: 13, fontWeight: 600, color: sel ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{campaign.name}</span>
                           <span style={{ padding: '2px 8px', fontSize: 11, fontWeight: 500, borderRadius: 999, flexShrink: 0, backgroundColor: chip.bg, color: chip.color, textTransform: 'capitalize' }}>{campaign.status}</span>
                         </div>
                         <div style={{ display: 'flex', gap: 16 }}>
-                          <span style={{ fontSize: 12, color: TEXT_MID }}>Budget: {campaign.budget}</span>
-                          <span style={{ fontSize: 12, color: TEXT_MID }}>Performance: {campaign.performance}</span>
+                          <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>Budget: {campaign.budget}</span>
+                          <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>Performance: {campaign.performance}</span>
                         </div>
                       </div>
-                      <div style={{ width: 22, height: 22, borderRadius: '50%', border: `2px solid ${sel ? ACCENT : BORDER}`, backgroundColor: sel ? ACCENT : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.15s' }}>
+                      <div style={{ width: 22, height: 22, borderRadius: '50%', border: `2px solid ${sel ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)'}`, backgroundColor: sel ? 'var(--osmos-brand-primary)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.15s' }}>
                         {sel && <CheckIcon size={12} color="#fff" />}
                       </div>
                     </button>
@@ -283,10 +267,10 @@ export function CreateCampaignModal({ open, onClose, onContinue, adType = 'produ
               </div>
 
               {selectedCampaign && (
-                <div style={{ padding: 14, backgroundColor: BG_SUBTLE, borderRadius: 10, border: `1px solid ${BORDER}` }}>
-                  <p style={{ margin: '0 0 4px', fontSize: 11, fontWeight: 600, color: TEXT_SUB, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Preview</p>
-                  <p style={{ margin: 0, fontSize: 13, color: TEXT }}>New campaign: <span style={{ fontWeight: 600 }}>{name || `${selectedCampaign.name} (Copy)`}</span></p>
-                  <p style={{ margin: '4px 0 0', fontSize: 12, color: TEXT_MID }}>All settings, ad groups, and configurations will be duplicated. You can modify them before launching.</p>
+                <div style={{ padding: 14, backgroundColor: 'var(--osmos-bg-subtle)', borderRadius: 10, border: `1px solid ${'var(--osmos-border)'}` }}>
+                  <p style={{ margin: '0 0 4px', fontSize: 11, fontWeight: 600, color: 'var(--osmos-fg-subtle)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Preview</p>
+                  <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg)' }}>New campaign: <span style={{ fontWeight: 600 }}>{name || `${selectedCampaign.name} (Copy)`}</span></p>
+                  <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--osmos-fg-muted)' }}>All settings, ad groups, and configurations will be duplicated. You can modify them before launching.</p>
                 </div>
               )}
             </div>
@@ -297,16 +281,16 @@ export function CreateCampaignModal({ open, onClose, onContinue, adType = 'produ
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               {/* AI intro banner */}
               <div style={{ padding: 14, background: `linear-gradient(135deg, rgba(124,58,237,0.08), rgba(99,108,255,0.06))`, borderRadius: 10, border: `1px solid rgba(124,58,237,0.2)`, display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                <SparklesIcon size={18} color={VI} />
+                <SparklesIcon size={18} color={'var(--osmos-brand-violet)'} />
                 <div>
-                  <p style={{ margin: '0 0 4px', fontSize: 13, fontWeight: 600, color: VI }}>AI-Powered Recommendations</p>
-                  <p style={{ margin: 0, fontSize: 12, color: TEXT_MID }}>Answer a few questions and our AI will suggest optimal campaign settings based on your goals and industry best practices.</p>
+                  <p style={{ margin: '0 0 4px', fontSize: 13, fontWeight: 600, color: 'var(--osmos-brand-violet)' }}>AI-Powered Recommendations</p>
+                  <p style={{ margin: 0, fontSize: 12, color: 'var(--osmos-fg-muted)' }}>Answer a few questions and our AI will suggest optimal campaign settings based on your goals and industry best practices.</p>
                 </div>
               </div>
 
               {/* Goal */}
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: TEXT, marginBottom: 10 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 10 }}>
                   What's your primary goal? <span style={{ color: '#EF4444' }}>*</span>
                 </label>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
@@ -318,20 +302,20 @@ export function CreateCampaignModal({ open, onClose, onContinue, adType = 'produ
 
               {/* Audience */}
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: TEXT, marginBottom: 8 }}>Describe your target audience <span style={{ fontWeight: 400, color: TEXT_SUB }}>(optional)</span></label>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 8 }}>Describe your target audience <span style={{ fontWeight: 400, color: 'var(--osmos-fg-subtle)' }}>(optional)</span></label>
                 <input
                   placeholder="e.g., Health-conscious millennials, tech enthusiasts, parents with young children"
                   value={aiAnswers.audience}
                   onChange={(e) => setAiAnswers((p) => ({ ...p, audience: e.target.value }))}
-                  style={{ width: '100%', padding: '10px 14px', border: `1.5px solid ${BORDER}`, borderRadius: 8, fontSize: 13, fontFamily: FONT, color: TEXT, backgroundColor: BG, outline: 'none', boxSizing: 'border-box' }}
-                  onFocus={(e) => (e.target.style.borderColor = VI)}
-                  onBlur={(e) => (e.target.style.borderColor = BORDER)}
+                  style={{ width: '100%', padding: '10px 14px', border: `1.5px solid ${'var(--osmos-border)'}`, borderRadius: 8, fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)', backgroundColor: 'var(--osmos-bg)', outline: 'none', boxSizing: 'border-box' }}
+                  onFocus={(e) => (e.target.style.borderColor = 'var(--osmos-brand-violet)')}
+                  onBlur={(e) => (e.target.style.borderColor = 'var(--osmos-border)')}
                 />
               </div>
 
               {/* Budget */}
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: TEXT, marginBottom: 10 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 10 }}>
                   Budget range <span style={{ color: '#EF4444' }}>*</span>
                 </label>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
@@ -343,7 +327,7 @@ export function CreateCampaignModal({ open, onClose, onContinue, adType = 'produ
 
               {/* Timeline */}
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: TEXT, marginBottom: 10 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 10 }}>
                   How soon do you need results? <span style={{ color: '#EF4444' }}>*</span>
                 </label>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
@@ -358,19 +342,19 @@ export function CreateCampaignModal({ open, onClose, onContinue, adType = 'produ
           {/* ── Step: ai-generating ── */}
           {step === 'ai-generating' && (
             <div style={{ padding: '48px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-              <div style={{ width: 64, height: 64, borderRadius: '50%', background: `linear-gradient(135deg, ${VI}, ${ACCENT})`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24 }}>
+              <div style={{ width: 64, height: 64, borderRadius: '50%', background: `linear-gradient(135deg, ${'var(--osmos-brand-violet)'}, ${'var(--osmos-brand-primary)'})`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24 }}>
                 <SpinnerIcon size={30} color="#fff" />
               </div>
-              <h3 style={{ margin: '0 0 8px', fontSize: 16, fontWeight: 600, color: TEXT }}>Generating AI Recommendations</h3>
-              <p style={{ margin: 0, fontSize: 13, color: TEXT_MID, textAlign: 'center', maxWidth: 360 }}>Our AI is analysing your requirements and generating optimised campaign settings based on industry best practices.</p>
+              <h3 style={{ margin: '0 0 8px', fontSize: 16, fontWeight: 600, color: 'var(--osmos-fg)' }}>Generating AI Recommendations</h3>
+              <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)', textAlign: 'center', maxWidth: 360 }}>Our AI is analysing your requirements and generating optimised campaign settings based on industry best practices.</p>
               <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 10, width: '100%', maxWidth: 280 }}>
                 {[['Analysing campaign goal', true], ['Processing budget constraints', true], ['Generating recommendations…', false]].map(([label, done]) => (
                   <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     {done
-                      ? <div style={{ width: 18, height: 18, borderRadius: '50%', backgroundColor: GREEN, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><CheckIcon size={10} color="#fff" /></div>
-                      : <SpinnerIcon size={18} color={VI} />
+                      ? <div style={{ width: 18, height: 18, borderRadius: '50%', backgroundColor: 'var(--osmos-brand-green)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><CheckIcon size={10} color="#fff" /></div>
+                      : <SpinnerIcon size={18} color={'var(--osmos-brand-violet)'} />
                     }
-                    <span style={{ fontSize: 13, color: done ? TEXT : TEXT_MID }}>{label}</span>
+                    <span style={{ fontSize: 13, color: done ? 'var(--osmos-fg)' : 'var(--osmos-fg-muted)' }}>{label}</span>
                   </div>
                 ))}
               </div>
@@ -387,14 +371,14 @@ export function CreateCampaignModal({ open, onClose, onContinue, adType = 'produ
 
         {/* Footer */}
         {step !== 'ai-generating' && (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10, padding: '16px 24px', borderTop: `1px solid ${BORDER}`, backgroundColor: BG_SUBTLE, flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10, padding: '16px 24px', borderTop: `1px solid ${'var(--osmos-border)'}`, backgroundColor: 'var(--osmos-bg-subtle)', flexShrink: 0 }}>
             <Button variant="outline" onClick={step === 'initial' ? handleClose : handleBack}>
               {step === 'initial' ? 'Cancel' : 'Back'}
             </Button>
             <Button
               variant="primary"
               onClick={step === 'initial' ? handleContinue : step === 'copy-select' ? handleCopyCampaign : handleAiGenerate}
-              style={step === 'ai-questionnaire' ? { backgroundColor: VI } : {}}
+              style={step === 'ai-questionnaire' ? { backgroundColor: 'var(--osmos-brand-violet)' } : {}}
             >
               {step === 'initial'          && 'Continue to Setup'}
               {step === 'copy-select'      && 'Copy & Continue'}
@@ -412,12 +396,12 @@ export function CreateCampaignModal({ open, onClose, onContinue, adType = 'produ
 function AiChoiceBtn({ selected, onClick, label, desc, center }) {
   return (
     <button onClick={onClick} style={{
-      padding: '12px 14px', border: `1.5px solid ${selected ? VI : BORDER}`, borderRadius: 10,
-      cursor: 'pointer', textAlign: center ? 'center' : 'left', fontFamily: FONT, transition: 'all 0.15s',
-      backgroundColor: selected ? VI_LIGHT : BG,
+      padding: '12px 14px', border: `1.5px solid ${selected ? 'var(--osmos-brand-violet)' : 'var(--osmos-border)'}`, borderRadius: 10,
+      cursor: 'pointer', textAlign: center ? 'center' : 'left', fontFamily: "'Open Sans', sans-serif", transition: 'all 0.15s',
+      backgroundColor: selected ? 'rgba(124,58,237,0.06)' : 'var(--osmos-bg)',
     }}>
-      <p style={{ margin: '0 0 3px', fontSize: 13, fontWeight: 600, color: selected ? VI : TEXT }}>{label}</p>
-      <p style={{ margin: 0, fontSize: 11, color: TEXT_MID }}>{desc}</p>
+      <p style={{ margin: '0 0 3px', fontSize: 13, fontWeight: 600, color: selected ? 'var(--osmos-brand-violet)' : 'var(--osmos-fg)' }}>{label}</p>
+      <p style={{ margin: 0, fontSize: 11, color: 'var(--osmos-fg-muted)' }}>{desc}</p>
     </button>
   );
 }

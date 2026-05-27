@@ -1,9 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Icon, FileIcon, DownloadIcon, UploadIcon, CloseIcon, InfoIcon } from '../../ui/atoms/Icon';
-import { Button } from '../../ui/atoms/Button';
-import { Toast, useToast } from '../../ui/atoms/Toast';
-
-const FONT = "'Open Sans', sans-serif";
+import { Icon, FileIcon, DownloadIcon, UploadIcon, CloseIcon, InfoIcon, Button, Toast, useToast } from '../../ui';
 
 export default function WalletTopUpPage() {
   const [dragOver, setDragOver] = useState(false);
@@ -27,7 +23,7 @@ export default function WalletTopUpPage() {
   }
 
   return (
-    <div style={{ padding: '20px 24px', fontFamily: FONT }}>
+    <div style={{ padding: '20px 24px', fontFamily: "'Open Sans', sans-serif" }}>
       <Toast visible={toast.visible} message={toast.message} type={toast.type} />
 
       <div style={{ maxWidth: 700, display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -46,11 +42,11 @@ export default function WalletTopUpPage() {
                 <line x1="2" y1="10" x2="22" y2="10" />
               </Icon>
             </div>
-            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>
+            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>
               Wallet Top Up
             </span>
           </div>
-          <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)', lineHeight: 1.6, fontFamily: FONT }}>
+          <p style={{ margin: 0, fontSize: 13, color: 'var(--osmos-fg-muted)', lineHeight: 1.6, fontFamily: "'Open Sans', sans-serif" }}>
             Bulk top-up advertiser wallets by uploading a spreadsheet. Download the template, fill in
             Advertiser IDs and amounts, then upload for processing.
           </p>
@@ -58,10 +54,10 @@ export default function WalletTopUpPage() {
 
         {/* Step 1 — Download Template */}
         <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 8, padding: 20 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 6, fontFamily: FONT }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 6, fontFamily: "'Open Sans', sans-serif" }}>
             Step 1 — Download Template
           </div>
-          <p style={{ margin: '0 0 14px', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>
+          <p style={{ margin: '0 0 14px', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
             Template columns: <strong>Advertiser ID</strong>, <strong>Top-Up Amount (₹)</strong>,{' '}
             <strong>Payment Method</strong>, <strong>Reference Number</strong>.
           </p>
@@ -73,10 +69,10 @@ export default function WalletTopUpPage() {
 
         {/* Step 2 — Upload */}
         <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 8, padding: 20 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 6, fontFamily: FONT }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', marginBottom: 6, fontFamily: "'Open Sans', sans-serif" }}>
             Step 2 — Upload Filled Template
           </div>
-          <p style={{ margin: '0 0 14px', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>
+          <p style={{ margin: '0 0 14px', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
             Supports .xlsx. Maximum 500 rows per upload.
           </p>
 
@@ -109,15 +105,15 @@ export default function WalletTopUpPage() {
                     borderRadius: '50%',
                     animation: 'spin 1s linear infinite',
                   }} />
-                  <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>Uploading…</span>
+                  <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>Uploading…</span>
                 </>
               ) : (
                 <>
                   <UploadIcon size={32} color="var(--osmos-fg-subtle)" />
-                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
                     Drag &amp; drop your file here
                   </span>
-                  <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', fontFamily: FONT }}>
+                  <span style={{ fontSize: 12, color: 'var(--osmos-fg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>
                     or click to browse (.xlsx, max 500 rows)
                   </span>
                 </>
@@ -143,10 +139,10 @@ export default function WalletTopUpPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <FileIcon size={20} color="var(--osmos-brand-green)" />
                 <div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-brand-green)', fontFamily: FONT }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-brand-green)', fontFamily: "'Open Sans', sans-serif" }}>
                     {uploadedFile.name}
                   </div>
-                  <div style={{ fontSize: 11, color: 'var(--osmos-brand-green)', opacity: 0.75, fontFamily: FONT }}>
+                  <div style={{ fontSize: 11, color: 'var(--osmos-brand-green)', opacity: 0.75, fontFamily: "'Open Sans', sans-serif" }}>
                     {(uploadedFile.size / 1024).toFixed(1)} KB · Uploaded successfully
                   </div>
                 </div>
@@ -179,10 +175,10 @@ export default function WalletTopUpPage() {
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
             <InfoIcon size={16} color="var(--osmos-brand-amber)" />
             <div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--osmos-brand-amber)', marginBottom: 4, fontFamily: FONT }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--osmos-brand-amber)', marginBottom: 4, fontFamily: "'Open Sans', sans-serif" }}>
                 Important Notes
               </div>
-              <ul style={{ margin: 0, padding: '0 0 0 16px', fontSize: 12, color: 'var(--osmos-brand-amber)', lineHeight: 1.8, fontFamily: FONT }}>
+              <ul style={{ margin: 0, padding: '0 0 0 16px', fontSize: 12, color: 'var(--osmos-brand-amber)', lineHeight: 1.8, fontFamily: "'Open Sans', sans-serif" }}>
                 <li>Ensure Advertiser IDs match exactly — invalid IDs will be skipped</li>
                 <li>Amounts must be in INR (₹) without commas or currency symbols</li>
                 <li>Processing may take up to 30 minutes after submission</li>

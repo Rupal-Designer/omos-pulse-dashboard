@@ -1,23 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Icon, CloseIcon, TrashIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon } from '../../ui';
 
-// ── Design tokens ─────────────────────────────────────────────────────────────
-const FONT      = "'Open Sans', sans-serif";
-const BG        = 'var(--osmos-bg)';
-const BG_SUBTLE = 'var(--osmos-bg-subtle)';
-const BG_MUTED  = 'var(--osmos-bg-muted)';
-const BORDER    = 'var(--osmos-border)';
-const TEXT      = 'var(--osmos-fg)';
-const TEXT_MID  = 'var(--osmos-fg-muted)';
-const TEXT_SUB  = 'var(--osmos-fg-subtle)';
-const ACCENT    = 'var(--osmos-brand-primary)';
-const ACCENT_M  = 'var(--osmos-brand-primary-muted)';
-const VI        = 'var(--osmos-brand-violet)';
-const VI_BG     = 'var(--osmos-brand-violet-muted)';
-const VI_LIGHT  = 'rgba(124,58,237,0.06)';
 
 // ── Icons ─────────────────────────────────────────────────────────────────────
-const SparklesIcon = ({ size = 16, color = VI }) => (
+const SparklesIcon = ({ size = 16, color = 'var(--osmos-brand-violet)' }) => (
   <Icon size={size} color={color}>
     <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3z" />
     <path d="M5 3v4" /><path d="M19 17v4" />
@@ -26,21 +12,21 @@ const SparklesIcon = ({ size = 16, color = VI }) => (
 );
 
 // CopyIcon — DS copy-06 (node 7391:30139)
-const CopyIcon = ({ size = 13, color = TEXT_MID }) => (
+const CopyIcon = ({ size = 13, color = 'var(--osmos-fg-muted)' }) => (
   <Icon size={size} color={color} strokeWidth={0} fill={color}>
     <path d="M14.5 7.7C14.5 7.12 14.499 6.75 14.476 6.468C14.453 6.196 14.416 6.095 14.391 6.046C14.295 5.858 14.142 5.705 13.954 5.609C13.905 5.584 13.804 5.547 13.532 5.524C13.249 5.501 12.876 5.5 12.3 5.5H4.2C3.624 5.5 3.251 5.501 2.968 5.524C2.696 5.547 2.595 5.584 2.546 5.609C2.358 5.705 2.205 5.858 2.109 6.046C2.084 6.095 2.047 6.196 2.024 6.468C2.001 6.751 2 7.124 2 7.7V15.8C2 16.376 2.001 16.749 2.024 17.032C2.047 17.304 2.084 17.405 2.109 17.454C2.205 17.642 2.358 17.795 2.546 17.891C2.595 17.916 2.696 17.953 2.968 17.976C3.251 17.999 3.624 18 4.2 18H12.3C12.876 18 13.249 17.999 13.532 17.976C13.804 17.953 13.905 17.916 13.954 17.891C14.142 17.795 14.295 17.642 14.391 17.454C14.416 17.405 14.453 17.304 14.476 17.032C14.499 16.749 14.5 16.376 14.5 15.8V7.7ZM18 14.5V7.4C18 6.264 17.9 5.471 17.85 4.854C17.8 4.249 17.807 3.901 17.673 3.638C17.385 3.073 16.927 2.615 16.362 2.327C16.099 2.193 15.751 2.1 15.146 2.051C14.529 2 13.736 2 12.6 2H5.5C4.948 2 4.5 1.552 4.5 1C4.5 0.448 4.948 0 5.5 0H12.6C13.703 0 14.591 0 15.309 0.058C16.037 0.117 16.677 0.243 17.27 0.545C18.21 1.024 18.976 1.79 19.455 2.73C19.757 3.323 19.883 3.963 19.942 4.691C20.001 5.409 20 6.297 20 7.4V14.5C20 15.052 19.552 15.5 19 15.5C18.448 15.5 18 15.052 18 14.5ZM16.5 15.8C16.5 16.343 16.501 16.812 16.47 17.195C16.437 17.591 16.366 17.984 16.173 18.362C15.885 18.927 15.427 19.385 14.862 19.673C14.484 19.866 14.091 19.937 13.695 19.97C13.312 20.001 12.843 20 12.3 20H4.2C3.657 20 3.188 20.001 2.805 19.97C2.409 19.937 2.016 19.866 1.638 19.673C1.073 19.385 0.615 18.927 0.327 18.362C0.134 17.984 0.063 17.591 0.03 17.195C-0.001 16.812 0 16.343 0 15.8V7.7C0 7.157 -0.001 6.688 0.03 6.305C0.063 5.909 0.134 5.516 0.327 5.138C0.615 4.573 1.073 4.115 1.638 3.827C2.016 3.634 2.409 3.563 2.805 3.53C3.188 3.499 3.657 3.5 4.2 3.5H12.3C12.843 3.5 13.312 3.499 13.695 3.53C14.091 3.563 14.484 3.634 14.862 3.827C15.427 4.115 15.885 4.573 16.173 5.138C16.366 5.516 16.437 5.909 16.47 6.305C16.501 6.688 16.5 7.157 16.5 7.7V15.8Z" />
   </Icon>
 );
 
 // ThumbUpIcon / ThumbDownIcon — not in DS, kept as custom
-const ThumbUpIcon = ({ size = 13, color = TEXT_MID }) => (
+const ThumbUpIcon = ({ size = 13, color = 'var(--osmos-fg-muted)' }) => (
   <Icon size={size} color={color}>
     <path d="M7 10v12" />
     <path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" />
   </Icon>
 );
 
-const ThumbDownIcon = ({ size = 13, color = TEXT_MID }) => (
+const ThumbDownIcon = ({ size = 13, color = 'var(--osmos-fg-muted)' }) => (
   <Icon size={size} color={color}>
     <path d="M17 14V2" />
     <path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z" />
@@ -150,13 +136,13 @@ function ThinkingSteps({ steps, onDone }) {
       aria-label="AI is analyzing your campaign"
       style={{
         display: 'flex', flexDirection: 'column', gap: 8,
-        padding: '12px 16px', borderRadius: 12, background: VI_LIGHT,
-        border: `1px solid ${BORDER}`, maxWidth: '85%',
+        padding: '12px 16px', borderRadius: 12, background: 'rgba(124,58,237,0.06)',
+        border: `1px solid var(--osmos-border)`, maxWidth: '85%',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-        <SparklesIcon size={13} color={VI} />
-        <span style={{ fontSize: 12, fontWeight: 600, color: VI, fontFamily: FONT }}>Planning…</span>
+        <SparklesIcon size={13} color="var(--osmos-brand-violet)" />
+        <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-brand-violet)', fontFamily: "'Open Sans', sans-serif" }}>Planning…</span>
       </div>
       {steps.map((step, i) => {
         const done    = i < current;
@@ -164,7 +150,7 @@ function ThinkingSteps({ steps, onDone }) {
         return (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: i > current ? 0.35 : 1, transition: 'opacity 0.3s' }}>
             <StepIcon done={done} running={running} />
-            <span style={{ fontSize: 12, color: done ? TEXT : TEXT_MID, fontFamily: FONT, transition: 'color 0.3s' }}>{step}</span>
+            <span style={{ fontSize: 12, color: done ? 'var(--osmos-fg)' : 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif", transition: 'color 0.3s' }}>{step}</span>
           </div>
         );
       })}
@@ -176,18 +162,18 @@ function StepIcon({ done, running }) {
   if (done) return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
       <circle cx="7" cy="7" r="7" fill="rgba(124,58,237,0.15)" />
-      <path d="M4.5 7l1.8 1.8L9.5 5.5" stroke={VI} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4.5 7l1.8 1.8L9.5 5.5" stroke="var(--osmos-brand-violet)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
   if (running) return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ animation: 'ai-spin 1s linear infinite' }}>
-      <circle cx="7" cy="7" r="5.5" stroke={BORDER} strokeWidth="1.5" />
-      <path d="M7 1.5A5.5 5.5 0 0 1 12.5 7" stroke={VI} strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="7" cy="7" r="5.5" stroke="var(--osmos-border)" strokeWidth="1.5" />
+      <path d="M7 1.5A5.5 5.5 0 0 1 12.5 7" stroke="var(--osmos-brand-violet)" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   );
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <circle cx="7" cy="7" r="5.5" stroke={BORDER} strokeWidth="1.5" />
+      <circle cx="7" cy="7" r="5.5" stroke="var(--osmos-border)" strokeWidth="1.5" />
     </svg>
   );
 }
@@ -211,7 +197,7 @@ function MessageBubble({ msg, onCopy, onRate }) {
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
         <div style={{
           maxWidth: '78%', padding: '10px 14px', borderRadius: '12px 12px 4px 12px',
-          background: ACCENT, color: '#fff', fontSize: 13, lineHeight: 1.5, fontFamily: FONT,
+          background: 'var(--osmos-brand-primary)', color: '#fff', fontSize: 13, lineHeight: 1.5, fontFamily: "'Open Sans', sans-serif",
         }}>
           {msg.text}
         </div>
@@ -235,13 +221,13 @@ function MessageBubble({ msg, onCopy, onRate }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginBottom: 12 }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, maxWidth: '85%' }}>
-        <div style={{ width: 26, height: 26, borderRadius: 999, background: VI_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-          <SparklesIcon size={13} color={VI} />
+        <div style={{ width: 26, height: 26, borderRadius: 999, background: 'var(--osmos-brand-violet-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+          <SparklesIcon size={13} color="var(--osmos-brand-violet)" />
         </div>
         <div style={{
           padding: '10px 14px', borderRadius: '12px 12px 12px 4px',
-          background: BG_SUBTLE, border: `1px solid ${BORDER}`,
-          fontSize: 13, lineHeight: 1.6, color: TEXT, fontFamily: FONT,
+          background: 'var(--osmos-bg-subtle)', border: `1px solid var(--osmos-border)`,
+          fontSize: 13, lineHeight: 1.6, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif",
         }}>
           {renderText(msg.text)}
         </div>
@@ -249,14 +235,14 @@ function MessageBubble({ msg, onCopy, onRate }) {
       {/* Actions row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginLeft: 34, marginTop: 6 }}>
         <ActionBtn onClick={handleCopy} title={copied ? 'Copied!' : 'Copy response'} active={copied}>
-          <CopyIcon size={12} color={copied ? ACCENT : TEXT_MID} />
-          <span style={{ fontSize: 11, color: copied ? ACCENT : TEXT_MID }}>{copied ? 'Copied' : 'Copy'}</span>
+          <CopyIcon size={12} color={copied ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)'} />
+          <span style={{ fontSize: 11, color: copied ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)' }}>{copied ? 'Copied' : 'Copy'}</span>
         </ActionBtn>
         <ActionBtn onClick={() => handleRate('up')} title="This was helpful" active={rating === 'up'}>
-          <ThumbUpIcon size={12} color={rating === 'up' ? ACCENT : TEXT_MID} />
+          <ThumbUpIcon size={12} color={rating === 'up' ? 'var(--osmos-brand-primary)' : 'var(--osmos-fg-muted)'} />
         </ActionBtn>
         <ActionBtn onClick={() => handleRate('down')} title="This wasn't helpful" active={rating === 'down'}>
-          <ThumbDownIcon size={12} color={rating === 'down' ? '#EF4444' : TEXT_MID} />
+          <ThumbDownIcon size={12} color={rating === 'down' ? '#EF4444' : 'var(--osmos-fg-muted)'} />
         </ActionBtn>
       </div>
     </div>
@@ -274,8 +260,8 @@ function ActionBtn({ children, onClick, title, active }) {
       onMouseLeave={() => setHover(false)}
       style={{
         display: 'flex', alignItems: 'center', gap: 4, padding: '3px 7px',
-        border: `1px solid ${active || hover ? BORDER : 'transparent'}`,
-        borderRadius: 6, background: hover ? BG_SUBTLE : 'transparent',
+        border: `1px solid ${active || hover ? 'var(--osmos-border)' : 'transparent'}`,
+        borderRadius: 6, background: hover ? 'var(--osmos-bg-subtle)' : 'transparent',
         cursor: 'pointer', transition: 'all 0.15s',
       }}
     >
@@ -290,25 +276,25 @@ function ThreadSidebar({ threads, activeId, onSelect, onNew, onDelete, collapsed
 
   if (collapsed) {
     return (
-      <div style={{ width: 32, borderRight: `1px solid ${BORDER}`, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '12px 0', gap: 8, flexShrink: 0 }}>
+      <div style={{ width: 32, borderRight: `1px solid var(--osmos-border)`, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '12px 0', gap: 8, flexShrink: 0 }}>
         <button
           onClick={onToggle}
           title="Show threads"
           style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: 4 }}
         >
-          <ChevronRightIcon size={14} color={TEXT_MID} />
+          <ChevronRightIcon size={14} color="var(--osmos-fg-muted)" />
         </button>
       </div>
     );
   }
 
   return (
-    <div style={{ width: 172, borderRight: `1px solid ${BORDER}`, display: 'flex', flexDirection: 'column', flexShrink: 0, overflow: 'hidden' }}>
+    <div style={{ width: 172, borderRight: `1px solid var(--osmos-border)`, display: 'flex', flexDirection: 'column', flexShrink: 0, overflow: 'hidden' }}>
       {/* Sidebar header */}
-      <div style={{ padding: '10px 12px', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: 11, fontWeight: 600, color: TEXT_MID, fontFamily: FONT, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Threads</span>
+      <div style={{ padding: '10px 12px', borderBottom: `1px solid var(--osmos-border)`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif", letterSpacing: '0.04em', textTransform: 'uppercase' }}>Threads</span>
         <button onClick={onToggle} title="Collapse" style={{ width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: 3 }}>
-          <ChevronLeftIcon size={13} color={TEXT_MID} />
+          <ChevronLeftIcon size={13} color="var(--osmos-fg-muted)" />
         </button>
       </div>
 
@@ -317,12 +303,12 @@ function ThreadSidebar({ threads, activeId, onSelect, onNew, onDelete, collapsed
         onClick={onNew}
         style={{
           display: 'flex', alignItems: 'center', gap: 6, padding: '8px 12px', margin: '8px 8px 4px',
-          border: `1px dashed ${BORDER}`, borderRadius: 6, background: 'transparent',
-          cursor: 'pointer', fontSize: 12, color: TEXT_MID, fontFamily: FONT,
+          border: `1px dashed var(--osmos-border)`, borderRadius: 6, background: 'transparent',
+          cursor: 'pointer', fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif",
           transition: 'all 0.15s',
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.color = ACCENT; }}
-        onMouseLeave={(e) => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = TEXT_MID; }}
+        onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--osmos-brand-primary)'; e.currentTarget.style.color = 'var(--osmos-brand-primary)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--osmos-border)'; e.currentTarget.style.color = 'var(--osmos-fg-muted)'; }}
       >
         <PlusIcon size={12} color="currentColor" />
         New Thread
@@ -341,18 +327,18 @@ function ThreadSidebar({ threads, activeId, onSelect, onNew, onDelete, collapsed
               onClick={() => onSelect(thread.id)}
               style={{
                 display: 'block', width: '100%', textAlign: 'left', padding: '8px 10px',
-                borderRadius: 6, border: 'none', cursor: 'pointer', fontFamily: FONT,
-                background: activeId === thread.id ? VI_BG : hoveredThread === thread.id ? BG_SUBTLE : 'transparent',
+                borderRadius: 6, border: 'none', cursor: 'pointer', fontFamily: "'Open Sans', sans-serif",
+                background: activeId === thread.id ? 'var(--osmos-brand-violet-muted)' : hoveredThread === thread.id ? 'var(--osmos-bg-subtle)' : 'transparent',
                 transition: 'all 0.15s',
               }}
             >
-              <div style={{ fontSize: 12, fontWeight: activeId === thread.id ? 600 : 400, color: activeId === thread.id ? VI : TEXT, marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div style={{ fontSize: 12, fontWeight: activeId === thread.id ? 600 : 400, color: activeId === thread.id ? 'var(--osmos-brand-violet)' : 'var(--osmos-fg)', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {thread.name}
               </div>
-              <div style={{ fontSize: 11, color: TEXT_SUB, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div style={{ fontSize: 11, color: 'var(--osmos-fg-subtle)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {thread.campaignName}
               </div>
-              <div style={{ fontSize: 10, color: TEXT_SUB, marginTop: 1 }}>{thread.date}</div>
+              <div style={{ fontSize: 10, color: 'var(--osmos-fg-subtle)', marginTop: 1 }}>{thread.date}</div>
             </button>
             {/* Delete — visible on hover, not active thread */}
             {hoveredThread === thread.id && (
@@ -367,7 +353,7 @@ function ThreadSidebar({ threads, activeId, onSelect, onNew, onDelete, collapsed
                   padding: 0,
                 }}
               >
-                <TrashIcon size={12} color={TEXT_MID} />
+                <TrashIcon size={12} color="var(--osmos-fg-muted)" />
               </button>
             )}
           </div>
@@ -384,16 +370,16 @@ function SuggestedPrompts({ campaign, onSelect }) {
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, padding: '24px 20px', gap: 20 }}>
       {/* Welcome */}
       <div style={{ textAlign: 'center', maxWidth: 320 }}>
-        <div style={{ width: 44, height: 44, borderRadius: 999, background: VI_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
-          <SparklesIcon size={20} color={VI} />
+        <div style={{ width: 44, height: 44, borderRadius: 999, background: 'var(--osmos-brand-violet-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+          <SparklesIcon size={20} color="var(--osmos-brand-violet)" />
         </div>
-        <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: TEXT, fontFamily: FONT }}>
+        <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>
           Hi! I can help you debug
         </p>
-        <p style={{ margin: '4px 0 0', fontSize: 13, color: TEXT_MID, fontFamily: FONT, lineHeight: 1.5 }}>
+        <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif", lineHeight: 1.5 }}>
           {campaign?.name || 'this campaign'}
         </p>
-        <p style={{ margin: '8px 0 0', fontSize: 12, color: TEXT_SUB, fontFamily: FONT }}>
+        <p style={{ margin: '8px 0 0', fontSize: 12, color: 'var(--osmos-fg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>
           Here are a few things you can ask:
         </p>
       </div>
@@ -405,19 +391,19 @@ function SuggestedPrompts({ campaign, onSelect }) {
             key={prompt}
             onClick={() => onSelect(prompt)}
             style={{
-              padding: '10px 14px', borderRadius: 20, border: `1px solid ${BORDER}`,
-              background: BG, color: TEXT, fontSize: 13, fontFamily: FONT,
+              padding: '10px 14px', borderRadius: 20, border: `1px solid var(--osmos-border)`,
+              background: 'var(--osmos-bg)', color: 'var(--osmos-fg)', fontSize: 13, fontFamily: "'Open Sans', sans-serif",
               cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s', lineHeight: 1.4,
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = ACCENT_M; e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.color = ACCENT; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = BG; e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = TEXT; }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--osmos-brand-primary-muted)'; e.currentTarget.style.borderColor = 'var(--osmos-brand-primary)'; e.currentTarget.style.color = 'var(--osmos-brand-primary)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--osmos-bg)'; e.currentTarget.style.borderColor = 'var(--osmos-border)'; e.currentTarget.style.color = 'var(--osmos-fg)'; }}
           >
             {prompt}
           </button>
         ))}
       </div>
 
-      <p style={{ margin: 0, fontSize: 11, color: TEXT_SUB, fontFamily: FONT }}>
+      <p style={{ margin: 0, fontSize: 11, color: 'var(--osmos-fg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>
         Beta · Responses are illustrative
       </p>
     </div>
@@ -429,12 +415,12 @@ function DeleteConfirm({ onConfirm, onCancel }) {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 500, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)' }} onClick={onCancel} />
-      <div style={{ position: 'relative', background: BG, borderRadius: 10, padding: 24, width: 300, boxShadow: '0 8px 32px rgba(0,0,0,0.18)', fontFamily: FONT }}>
-        <p style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 600, color: TEXT }}>Delete thread?</p>
-        <p style={{ margin: '0 0 20px', fontSize: 13, color: TEXT_MID, lineHeight: 1.5 }}>This conversation will be permanently deleted.</p>
+      <div style={{ position: 'relative', background: 'var(--osmos-bg)', borderRadius: 10, padding: 24, width: 300, boxShadow: '0 8px 32px rgba(0,0,0,0.18)', fontFamily: "'Open Sans', sans-serif" }}>
+        <p style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 600, color: 'var(--osmos-fg)' }}>Delete thread?</p>
+        <p style={{ margin: '0 0 20px', fontSize: 13, color: 'var(--osmos-fg-muted)', lineHeight: 1.5 }}>This conversation will be permanently deleted.</p>
         <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-          <button onClick={onCancel} style={{ padding: '7px 16px', border: `1px solid ${BORDER}`, borderRadius: 6, background: BG, color: TEXT_MID, fontSize: 13, cursor: 'pointer', fontFamily: FONT }}>Cancel</button>
-          <button onClick={onConfirm} style={{ padding: '7px 16px', border: 'none', borderRadius: 6, background: '#EF4444', color: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: FONT }}>Delete</button>
+          <button onClick={onCancel} style={{ padding: '7px 16px', border: `1px solid var(--osmos-border)`, borderRadius: 6, background: 'var(--osmos-bg)', color: 'var(--osmos-fg-muted)', fontSize: 13, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}>Cancel</button>
+          <button onClick={onConfirm} style={{ padding: '7px 16px', border: 'none', borderRadius: 6, background: '#EF4444', color: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: "'Open Sans', sans-serif" }}>Delete</button>
         </div>
       </div>
     </div>
@@ -581,7 +567,7 @@ export function AIDebuggerPanel({ open, campaign, onClose }) {
   const adTypeBadgeColor = campaign?.adType?.includes('Display') ? '#0ea5e9'
     : campaign?.adType?.includes('Offsite') ? '#8b5cf6'
     : campaign?.adType?.includes('In-Store') ? '#f59e0b'
-    : ACCENT;
+    : 'var(--osmos-brand-primary)';
 
   return (
     <>
@@ -598,9 +584,9 @@ export function AIDebuggerPanel({ open, campaign, onClose }) {
         style={{
           position: 'fixed', top: 0, right: 0, bottom: 0, zIndex: 400,
           width: 560, display: 'flex', flexDirection: 'column',
-          background: BG, borderLeft: `1px solid ${BORDER}`,
+          background: 'var(--osmos-bg)', borderLeft: `1px solid var(--osmos-border)`,
           boxShadow: '-4px 0 24px rgba(0,0,0,0.12)',
-          fontFamily: FONT, animation: 'ai-slide-in 0.22s ease-out',
+          fontFamily: "'Open Sans', sans-serif", animation: 'ai-slide-in 0.22s ease-out',
         }}
       >
         {/* CSS for animations */}
@@ -610,11 +596,11 @@ export function AIDebuggerPanel({ open, campaign, onClose }) {
         `}</style>
 
         {/* Context strip */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', background: VI_BG, borderBottom: `1px solid ${BORDER}`, flexShrink: 0 }}>
-          <SparklesIcon size={14} color={VI} />
-          <span style={{ fontSize: 13, fontWeight: 600, color: VI, fontFamily: FONT }}>Sofie</span>
-          <div style={{ width: 1, height: 14, background: BORDER }} />
-          <span style={{ fontSize: 13, fontWeight: 500, color: TEXT, flex: 1, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', background: 'var(--osmos-brand-violet-muted)', borderBottom: `1px solid var(--osmos-border)`, flexShrink: 0 }}>
+          <SparklesIcon size={14} color="var(--osmos-brand-violet)" />
+          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-brand-violet)', fontFamily: "'Open Sans', sans-serif" }}>Sofie</span>
+          <div style={{ width: 1, height: 14, background: 'var(--osmos-border)' }} />
+          <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)', flex: 1, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
             {campaign?.name ?? 'Campaign'}
           </span>
           {campaign?.status && (
@@ -629,10 +615,10 @@ export function AIDebuggerPanel({ open, campaign, onClose }) {
             onClick={onClose}
             aria-label="Close AI Debugger"
             style={{ width: 26, height: 26, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: 4, marginLeft: 4, flexShrink: 0 }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = BG_MUTED)}
+            onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--osmos-bg-muted)')}
             onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
           >
-            <CloseIcon size={14} color={TEXT_MID} />
+            <CloseIcon size={14} color="var(--osmos-fg-muted)" />
           </button>
         </div>
 
@@ -677,14 +663,14 @@ export function AIDebuggerPanel({ open, campaign, onClose }) {
             </div>
 
             {/* Input zone */}
-            <div style={{ padding: '12px 16px 16px', borderTop: `1px solid ${BORDER}`, flexShrink: 0 }}>
+            <div style={{ padding: '12px 16px 16px', borderTop: `1px solid var(--osmos-border)`, flexShrink: 0 }}>
               <div style={{
                 display: 'flex', alignItems: 'flex-end', gap: 8,
-                border: `1px solid ${BORDER}`, borderRadius: 10, padding: '8px 8px 8px 14px',
-                background: BG, transition: 'border-color 0.15s',
+                border: `1px solid var(--osmos-border)`, borderRadius: 10, padding: '8px 8px 8px 14px',
+                background: 'var(--osmos-bg)', transition: 'border-color 0.15s',
               }}
-                onFocusCapture={(e) => (e.currentTarget.style.borderColor = VI)}
-                onBlurCapture={(e) => (e.currentTarget.style.borderColor = BORDER)}
+                onFocusCapture={(e) => (e.currentTarget.style.borderColor = 'var(--osmos-brand-violet)')}
+                onBlurCapture={(e) => (e.currentTarget.style.borderColor = 'var(--osmos-border)')}
               >
                 <textarea
                   ref={textareaRef}
@@ -697,7 +683,7 @@ export function AIDebuggerPanel({ open, campaign, onClose }) {
                   rows={1}
                   style={{
                     flex: 1, border: 'none', outline: 'none', resize: 'none',
-                    fontSize: 13, color: TEXT, background: 'transparent', fontFamily: FONT,
+                    fontSize: 13, color: 'var(--osmos-fg)', background: 'transparent', fontFamily: "'Open Sans', sans-serif",
                     lineHeight: 1.5, maxHeight: 100, overflowY: 'auto',
                   }}
                   onInput={(e) => {
@@ -713,14 +699,14 @@ export function AIDebuggerPanel({ open, campaign, onClose }) {
                   style={{
                     width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
                     border: 'none', borderRadius: 7, cursor: inputValue.trim() && !isThinking ? 'pointer' : 'default',
-                    background: inputValue.trim() && !isThinking ? VI : BORDER,
+                    background: inputValue.trim() && !isThinking ? 'var(--osmos-brand-violet)' : 'var(--osmos-border)',
                     transition: 'all 0.15s', flexShrink: 0,
                   }}
                 >
                   <SendIcon size={14} color="#fff" />
                 </button>
               </div>
-              <p style={{ margin: '5px 0 0', fontSize: 11, color: TEXT_SUB, textAlign: 'right', fontFamily: FONT }}>
+              <p style={{ margin: '5px 0 0', fontSize: 11, color: 'var(--osmos-fg-subtle)', textAlign: 'right', fontFamily: "'Open Sans', sans-serif" }}>
                 ⌘ Enter to send · Esc to close
               </p>
             </div>
@@ -739,7 +725,7 @@ function StatusPill({ status }) {
   const colors = {
     ACTIVE: { dot: 'var(--osmos-brand-green)', text: 'var(--osmos-brand-green)', bg: 'var(--osmos-brand-green-muted)' },
     PAUSED: { dot: '#EF4444',                  text: '#EF4444',                  bg: 'rgba(239,68,68,0.10)' },
-    DRAFT:  { dot: TEXT_MID,                   text: TEXT_MID,                   bg: BG_SUBTLE },
+    DRAFT:  { dot: 'var(--osmos-fg-muted)',     text: 'var(--osmos-fg-muted)',     bg: 'var(--osmos-bg-subtle)' },
   };
   const c = colors[status] || colors.DRAFT;
   return (

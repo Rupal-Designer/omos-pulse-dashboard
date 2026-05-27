@@ -1,55 +1,47 @@
 ---
 type: meta
-last-updated: 2026-05-05T00:00:00Z
+last-updated: 2026-05-14T00:00:00Z
 tags: [meta, sync]
 ---
 
 # Last Sync
 
-**ISO timestamp:** 2026-05-05T00:00:00Z
+**ISO timestamp:** 2026-05-14T00:00:00Z
 
-**Triggered by:** obsidian-knowledge-graph skill (full rebuild — design pipeline expansion)
+**Triggered by:** obsidian-knowledge-graph skill (incremental sync — phases 5–7b)
 
 **Stats:**
-- Components: 8 atoms, 15 molecules, 1 pattern
-- Pages: 51 wired nav IDs (45 unique components), 7 unwired
-- Skills: **15 documented (NEW: osmos-design-translator)**
-- **Personas: 8 notes (1 index + 7 personas) — NEW Personas/ directory**
-- Figma frames: 8 mapped
-- Token violations: ~30 files with hardcoded colors (run `/token-enforcer` to fix)
+- Components: 8 atoms, 16 molecules (NavShell fully documented), 1 pattern
+- Pages: 57 wired nav IDs + 6 sub-pages, 7 unwired
+- Skills: **17 documented (NEW: anuj, ui-consistency-enforcer)**
+- Personas: 7 notes (unchanged)
+- Figma frames: 8 mapped (unchanged)
+- Token violations: ~40 files (phases 5–7b added new violations — run `/token-enforcer`)
 
 **Changes this sync:**
 
-### New skill
-- **`osmos-design-translator`** — judgment layer between design inspiration and Osmos output. 7 files: SKILL.md + 6 reference files (osmos-constraints, decision-trees, anti-patterns, component-recipes, reference-projects, laws). Sits between ux-ideator (strategy) and react-implementer (execution).
+### New pages registered (phases 5–7b)
+- [[Pages/InStoreDashboardPage]] — `in-store-digital` — DOOH dashboard + 3-step InStoreBookingDrawer
+- [[Pages/BYOTDashboardPage]] — `byot` — Campaigns + Trackers dual-tab
+- [[Pages/BYOTCampaignDetailPage]] — BYOT drill-down
+- [[Pages/PackagesDashboardPage]] — `packages` — packages catalog
+- [[Pages/PackagesAnalyticsPage]] — packages analytics
+- [[Pages/PackagesBooking1Page]] — PRE_AUCTION bookings
+- [[Pages/PackagesBooking2Page]] — Flexi bookings + upload progress bar
+- [[Pages/OffsiteDashboardPage]] — `offsite-ads` — multi-channel wizard entry
+- [[Pages/DisplayAdsDashboardPage]] — `display-ads`
+- [[Pages/ProductAdsDashboardPage]] — `product-ads` + Sofie AI panel
+- [[Pages/CPCControlsPage]] — CPC floor/ceiling controls
+- [[Pages/CPMControlsPage]] — CPM floor/ceiling controls
 
-### ux-ideator pipeline expanded 6 → 7 phases
-- **Phase 1** — added Meera business reframe (KPI mapping, segment, competitive parity)
-- **Phase 2** — added Arjun research-grounded UX audit alongside Dev's density audit
-- **Phase 3.5 (NEW)** — both concepts routed through osmos-design-translator for component recipes
-- **Phase 5** — design-critic loads full persona reference files (was inline)
-- **Phase 5.5 (NEW)** — Zara delight pass: exactly one delight moment OR "no delight, speed is the craft"
-- **Phase 6 Step 0** — Priya feasibility sanity check before code
-- **Phase 6 Step 1** — osmos-design-translator visual recipe locks tokens/components/states
+### New skills registered
+- [[Skills/anuj]] — power user persona (formerly "Dev" in ux-ideator)
+- [[Skills/ui-consistency-enforcer]] — cross-page layout drift enforcer
 
-### Personas
-- All 7 personas now have full voice models with Notion-grounded memories
-- Replaced fabricated fintech/consumer backstories with real Osmos events:
-  - 143 debug tickets/60 days breakdown (Dev, Arjun, Meera)
-  - Sofie v2 metrics — 343 feedback, <5% acceptance, 64% dismissal, 33% panel-collapse (Noor, Raj, Arjun, Zara)
-  - 9-agent debugger chain (Priya, Zara, Meera)
-  - Budget type "Not editable" verbatim (Noor, Raj)
-  - Pacing engine R=5 curves + remaining_budget invariant (Priya, Dev)
-  - Sofie Wallet pricing $2-$4 daily floor + July 2026 transition (Meera)
-
-### Vault notes added/updated
-- NEW: `Skills/osmos-design-translator.md`
-- NEW: `Personas/index.md`
-- NEW: `Personas/Noor.md`, `Dev.md`, `Raj.md` (ux-ideator personas)
-- NEW: `Personas/Priya.md`, `Arjun.md`, `Meera.md`, `Zara.md` (design-critic personas)
-- UPDATED: `Skills/ux-ideator.md` — full rewrite for 7-phase pipeline
-- UPDATED: `Skills/design-critic.md` — added persona reference file map + cross-skill activations
-- UPDATED: `Skills/index.md` — added osmos-design-translator + Personas section
-- UPDATED: `index.md` — master entry surfaces design pipeline expansion
-- UPDATED: `_meta/last-sync.md` (this file)
-- APPENDED: `_meta/sync-log.md`
+### Updated notes
+- [[Components/molecules/NavShell]] — stub → full documentation (props, icon rule, usage map)
+- [[Navigation/structure]] — added Product Ads, Display Ads, Offsite Ads, In-Store, BYOT, Packages sections
+- [[Pages/index]] — count updated to 57 nav IDs + 6 sub-pages
+- [[Skills/index]] — count updated to 17; anuj + ui-consistency-enforcer added
+- [[Tokens/audit]] — rebuilt for phases 5–7b (~40 violations)
+- [[index]] — master entry updated

@@ -7,7 +7,9 @@ import BYOTDashboardPage from './pages/BYOTDashboardPage';
 import BYOTCampaignDetailPage from './pages/BYOTCampaignDetailPage';
 import CPCControlsPage from './pages/CPCControlsPage';
 import CPMControlsPage from './pages/CPMControlsPage';
-import OffsiteAdsPage from './pages/OffsiteAdsPage';
+import OffsiteDashboardPage from './pages/OffsiteDashboardPage';
+import ManageBillingPage from './pages/ManageBillingPage';
+import TransactionLogPage from './pages/TransactionLogPage';
 import { Sidebar } from './components/sidebar';
 import { Header } from './components/header';
 
@@ -86,10 +88,15 @@ export default function App() {
         return <CPCControlsPage />;
       case '/yield-control/cpm':
         return <CPMControlsPage />;
-      case '/offsite':
-        return <OffsiteAdsPage />;
+
       case '/design-system':
         return <DesignSystemPage />;
+      case '/offsite':
+        return <OffsiteDashboardPage />;
+      case '/finance/manage-billing':
+        return <ManageBillingPage />;
+      case '/finance/transaction-log':
+        return <TransactionLogPage />;
       default:
         return <DashboardPage activeAdType={activeAdType} onAdTypeChange={setActiveAdType} />;
     }
@@ -107,7 +114,7 @@ export default function App() {
 
   // BYOT and other new pages — add sidebar + header wrapper
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#edf0f5' }}>
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: 'var(--screen-bg-2)' }}>
       <Sidebar onAdTypeChange={setActiveAdType} activeAdType={activeAdType} onNavigate={(r) => { window.location.hash = r; }} />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <div style={{ position: 'sticky', top: 0, zIndex: 30, background: 'var(--osmos-bg)' }}>

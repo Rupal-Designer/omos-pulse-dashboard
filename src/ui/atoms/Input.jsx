@@ -1,35 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const FONT = "'Open Sans', sans-serif";
-
-const BASE_INPUT = {
+const baseInputStyle = {
   width: '100%',
-  padding: '8px 10px',
+  padding: '7px 10px',
   border: '1px solid var(--osmos-border)',
   borderRadius: 6,
   fontSize: 13,
-  fontFamily: FONT,
+  fontFamily: "'Open Sans', sans-serif",
   color: 'var(--osmos-fg)',
+  background: 'var(--osmos-bg)',
   outline: 'none',
   boxSizing: 'border-box',
-  background: 'var(--osmos-bg)',
+  transition: 'border-color 0.15s',
 };
 
-const LABEL_STYLE = {
+const labelStyle = {
   display: 'block',
   fontSize: 12,
   fontWeight: 600,
-  color: 'var(--osmos-fg-muted)',
-  marginBottom: 4,
-  fontFamily: FONT,
+  color: 'var(--osmos-fg)',
+  marginBottom: 5,
+  fontFamily: "'Open Sans', sans-serif",
 };
 
-/**
- * Input atom.
- * label: optional string rendered above the input
- * type: 'text' | 'email' | 'number' | 'password' etc
- * inputStyle: extra style overrides applied to the <input> element
- */
 export function Input({
   value,
   onChange,
@@ -42,12 +35,14 @@ export function Input({
   style,
   id,
 }) {
-  const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
+  const [focused, setFocused] = useState(false);
+  const inputId = id || (label ? label.toLowerCase().replace(/[\s*]+/g, '-') : undefined);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', ...style }}>
       {label && (
-        <label htmlFor={inputId} style={LABEL_STYLE}>
-          {label}{required && <span style={{ color: 'var(--osmos-brand-primary)', marginLeft: 2 }}>*</span>}
+        <label htmlFor={inputId} style={labelStyle}>
+          {label}
         </label>
       )}
       <input
@@ -58,22 +53,37 @@ export function Input({
         placeholder={placeholder}
         disabled={disabled}
         required={required}
-        style={{ ...BASE_INPUT, ...(disabled ? { opacity: 0.5, cursor: 'not-allowed' } : {}), ...inputStyle }}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        style={{
+          ...baseInputStyle,
+          borderColor: focused ? 'var(--osmos-brand-primary)' : 'var(--osmos-border)',
+          opacity: disabled ? 0.5 : 1,
+          cursor: disabled ? 'not-allowed' : 'text',
+          ...inputStyle,
+        }}
       />
     </div>
   );
 }
 
-/**
- * Select atom — same visual as Input but renders a <select>.
- */
-export function Select({ value, onChange, options = [], label, disabled = false, required = false, style, id }) {
-  const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
+export function Select({
+  value,
+  onChange,
+  options = [],
+  label,
+  disabled = false,
+  required = false,
+  style,
+  id,
+}) {
+  const inputId = id || (label ? label.toLowerCase().replace(/[\s*]+/g, '-') : undefined);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', ...style }}>
       {label && (
-        <label htmlFor={inputId} style={LABEL_STYLE}>
-          {label}{required && <span style={{ color: 'var(--osmos-brand-primary)', marginLeft: 2 }}>*</span>}
+        <label htmlFor={inputId} style={labelStyle}>
+          {label}
         </label>
       )}
       <select
@@ -81,7 +91,13 @@ export function Select({ value, onChange, options = [], label, disabled = false,
         value={value}
         onChange={onChange}
         disabled={disabled}
-        style={{ ...BASE_INPUT, cursor: 'pointer', ...(disabled ? { opacity: 0.5 } : {}) }}
+        required={required}
+        style={{
+          ...baseInputStyle,
+          cursor: disabled ? 'not-allowed' : 'pointer',
+          opacity: disabled ? 0.5 : 1,
+          appearance: 'auto',
+        }}
       >
         {options.map(opt => (
           <option key={opt.value ?? opt} value={opt.value ?? opt}>

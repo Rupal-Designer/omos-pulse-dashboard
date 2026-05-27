@@ -1,0 +1,19 @@
+{
+  "name": "@rishikeshjoshi-morpheus/claude-skills",
+  "version": "1.1.0",
+  "description": "Claude Code skills for the Osmos design system.",
+  "license": "UNLICENSED",
+  "private": false,
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "files": [
+    "install.js",
+    "skills/**"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
+  },
+  "engines": { "node": ">=18" }
+}

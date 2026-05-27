@@ -2,13 +2,19 @@
 type: component
 layer: atom
 name: Icon
+figma-node-id: "1706:39354"
+figma-library: "Design System OS"
+figma-page: "❖ Icons"
 tags: [atom, ui-component, icon, display]
 source-file: src/ui/atoms/Icon.jsx
 export-name: Icon
-last-updated: 2026-04-29T18:00:00Z
+png: ../Assets/Components/atoms/Icons.png
+last-updated: 2026-05-25T06:30:05Z
 ---
 
 # Icon
+
+![Icons](../Assets/Components/atoms/Icons.png)
 
 Generic SVG icon wrapper + 20 pre-built named icon exports. Use named exports for all standard icons; use `Icon` with SVG path children only for custom icons not in the set.
 

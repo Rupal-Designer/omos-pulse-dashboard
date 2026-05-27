@@ -64,18 +64,6 @@ const ICON_LINK = <>
   <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
 </>;
 
-const ICON_SLIDERS = <>
-  <line x1="4" y1="21" x2="4" y2="14" />
-  <line x1="4" y1="10" x2="4" y2="3" />
-  <line x1="12" y1="21" x2="12" y2="12" />
-  <line x1="12" y1="8" x2="12" y2="3" />
-  <line x1="20" y1="21" x2="20" y2="16" />
-  <line x1="20" y1="12" x2="20" y2="3" />
-  <line x1="1" y1="14" x2="7" y2="14" />
-  <line x1="9" y1="8" x2="15" y2="8" />
-  <line x1="17" y1="16" x2="23" y2="16" />
-</>;
-
 // ── Sub-item icon constants ───────────────────────────────────────────────────
 const CAMPAIGN_SUB_ITEMS = [
   { icon: ICON_CART,         label: 'Product Ads' },
@@ -89,9 +77,6 @@ const CAMPAIGN_SUB_ITEMS = [
 export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNavigate }) {
   const currentRoute = window.location.hash.replace(/^#/, '') || '/';
 
-  const isYieldRoute  = currentRoute === '/yield-control/cpc' || currentRoute === '/yield-control/cpm';
-  const isOffsiteRoute = currentRoute === '/offsite';
-
   function navigate(path) {
     if (onNavigate) onNavigate(path);
     else window.location.hash = path;
@@ -102,44 +87,22 @@ export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNaviga
       id: 'campaigns',
       label: 'Campaigns',
       icon: ICON_ROCKET,
-      subItems: CAMPAIGN_SUB_ITEMS.map(s => {
-        const isOffsite = s.label === 'Offsite Ads';
-        return {
-          id: s.label,
-          label: s.label,
-          icon: s.icon,
-          active: isOffsite
-            ? isOffsiteRoute
-            : !isYieldRoute && !isOffsiteRoute && activeAdType === s.label && (currentRoute === '/' || currentRoute === ''),
-          onClick: () => {
-            if (isOffsite) {
-              navigate('/offsite');
-            } else {
-              onAdTypeChange?.(s.label);
-              navigate('/');
-            }
-          },
-        };
-      }),
-    },
-    {
-      id: 'yield-control',
-      label: 'Yield Control',
-      icon: ICON_SLIDERS,
-      subItems: [
-        {
-          id: 'cpc-controls',
-          label: 'CPC Controls',
-          active: currentRoute === '/yield-control/cpc',
-          onClick: () => navigate('/yield-control/cpc'),
+      subItems: CAMPAIGN_SUB_ITEMS.map(s => ({
+        id: s.label,
+        label: s.label,
+        icon: s.icon,
+        active: s.label === 'Offsite Ads'
+          ? currentRoute === '/offsite'
+          : activeAdType === s.label && (currentRoute === '/' || currentRoute === ''),
+        onClick: () => {
+          if (s.label === 'Offsite Ads') {
+            navigate('/offsite');
+          } else {
+            onAdTypeChange?.(s.label);
+            navigate('/');
+          }
         },
-        {
-          id: 'cpm-controls',
-          label: 'CPM Controls',
-          active: currentRoute === '/yield-control/cpm',
-          onClick: () => navigate('/yield-control/cpm'),
-        },
-      ],
+      })),
     },
     {
       id: 'byot',
@@ -149,7 +112,25 @@ export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNaviga
       active: currentRoute === '/byot',
     },
     { id: 'packages',        label: 'Packages',        icon: ICON_LAYOUT_GRID, hasSub: true, badge: 'Alpha' },
-    { id: 'finance',         label: 'Finance',         icon: ICON_DOLLAR,      hasSub: true },
+    {
+      id: 'finance',
+      label: 'Finance',
+      icon: ICON_DOLLAR,
+      subItems: [
+        {
+          id: 'manage-billing',
+          label: 'Manage Billing',
+          active: currentRoute === '/finance/manage-billing',
+          onClick: () => navigate('/finance/manage-billing'),
+        },
+        {
+          id: 'transaction-log',
+          label: 'Transaction Log',
+          active: currentRoute === '/finance/transaction-log',
+          onClick: () => navigate('/finance/transaction-log'),
+        },
+      ],
+    },
     { id: 'activity-center', label: 'Activity Center', icon: ICON_ACTIVITY,    hasSub: true },
     { id: 'help-center',     label: 'Help Center',     icon: ICON_HELP,        hasSub: true },
   ];
@@ -159,16 +140,13 @@ export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNaviga
   ];
 
   function handleSelect(id) {
-    if (id === 'byot') {
-      navigate('/byot');
-    }
+    if (id === 'byot') navigate('/byot');
   }
 
-  const activeId = currentRoute === '/byot'
-    ? 'byot'
-    : isYieldRoute
-    ? 'yield-control'
-    : 'campaigns'; // covers '/', '/home', '/offsite', etc.
+  const activeId = currentRoute === '/byot' ? 'byot'
+    : currentRoute.startsWith('/finance') ? 'finance'
+    : currentRoute === '/offsite' ? 'campaigns'
+    : 'campaigns';
 
   return (
     <NavShell

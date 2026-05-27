@@ -1,60 +1,39 @@
-import React from 'react';
+import { Badge as MorpheusBadge } from '@rishikeshjoshi-morpheus/ui';
 
-const FONT = "'Open Sans', sans-serif";
-
-// Status → colour map (CSS vars only — no hardcoded hex)
-const STATUS_MAP = {
-  Active:   { bg: 'var(--osmos-brand-green-muted)',    color: 'var(--osmos-brand-green)' },
-  Inactive: { bg: 'var(--osmos-bg-subtle)',            color: 'var(--osmos-fg-muted)' },
-  Paused:   { bg: 'var(--osmos-brand-amber-muted)',             color: 'var(--osmos-brand-amber)' },
-  Live:     { bg: 'var(--osmos-brand-green-muted)',    color: 'var(--osmos-brand-green)' },
-  Draft:    { bg: 'var(--osmos-brand-primary-muted)',  color: 'var(--osmos-brand-primary)' },
-  Error:    { bg: 'var(--tag-bg-error)',                color: 'var(--tag-fg-error)' },
+const STATUS_TO_PALETTE = {
+  Active:   'green',
+  Inactive: 'gray',
+  Paused:   'orange',
+  Live:     'green',
+  Draft:    'blue',
+  Error:    'red',
 };
 
-const BASE_STYLE = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 5,
-  padding: '3px 8px',
-  borderRadius: 10,
-  fontSize: 11,
-  fontWeight: 600,
-  fontFamily: FONT,
-  whiteSpace: 'nowrap',
-};
-
-/**
- * Badge — coloured pill for status values.
- * status: 'Active' | 'Inactive' | 'Paused' | 'Live' | 'Draft' | 'Error'
- * showDot: boolean (default true) — renders a 6×6 filled circle before the label
- */
-export function Badge({ status, children, showDot = true, style }) {
-  const colours = STATUS_MAP[status] || STATUS_MAP[children] || { bg: 'var(--osmos-bg-subtle)', color: 'var(--osmos-fg-muted)' };
+export function Badge({ status, children, showDot, style }) {
+  const label = status ?? children;
+  const palette = STATUS_TO_PALETTE[label] ?? 'gray';
   return (
-    <span style={{ ...BASE_STYLE, background: colours.bg, color: colours.color, ...style }}>
-      {showDot && (
-        <span style={{
-          width: 6, height: 6, borderRadius: '50%',
-          background: colours.color, flexShrink: 0,
-        }} />
-      )}
-      {status || children}
-    </span>
+    <MorpheusBadge colorPalette={palette} variant="subtle" style={style}>
+      {label}
+    </MorpheusBadge>
   );
 }
 
-/**
- * TypeBadge — coloured pill for arbitrary category types.
- * type: string key into colorMap
- * colorMap: { [type]: { bg, color } }
- * Falls back to gray if type not found in map.
- */
 export function TypeBadge({ type, colorMap = {}, style }) {
-  const colours = colorMap[type] || { bg: 'var(--osmos-bg-subtle)', color: 'var(--osmos-fg-muted)' };
+  const colours = colorMap[type];
+  if (colours) {
+    return (
+      <MorpheusBadge
+        variant="subtle"
+        style={{ background: colours.bg, color: colours.color, borderRadius: 6, ...style }}
+      >
+        {type}
+      </MorpheusBadge>
+    );
+  }
   return (
-    <span style={{ ...BASE_STYLE, borderRadius: 6, background: colours.bg, color: colours.color, ...style }}>
+    <MorpheusBadge colorPalette="gray" variant="subtle" style={{ borderRadius: 6, ...style }}>
       {type}
-    </span>
+    </MorpheusBadge>
   );
 }

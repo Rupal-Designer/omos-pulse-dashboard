@@ -1,7 +1,5 @@
 import React from 'react';
 
-const FONT = "'Open Sans', sans-serif";
-
 /**
  * KPIChip — compact live-insights chip showing a metric label + value.
  * label: string
@@ -18,7 +16,7 @@ export function KPIChip({ label, value, style }) {
       display: 'flex',
       flexDirection: 'column',
       gap: 4,
-      fontFamily: FONT,
+      fontFamily: "'Open Sans', sans-serif",
       minWidth: 160,
       ...style,
     }}>

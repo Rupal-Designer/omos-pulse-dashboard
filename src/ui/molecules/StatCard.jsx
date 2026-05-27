@@ -1,7 +1,5 @@
 import React from 'react';
 
-const FONT = "'Open Sans', sans-serif";
-
 /**
  * StatCard — KPI metric card.
  *
@@ -54,7 +52,7 @@ export function StatCard({
       display: 'flex',
       flexDirection: 'column',
       gap: 8,
-      fontFamily: FONT,
+      fontFamily: "'Open Sans', sans-serif",
       width: 260,
       minHeight: 109,
       flexShrink: 0,

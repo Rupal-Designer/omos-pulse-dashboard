@@ -1,6 +1,6 @@
 ---
 type: page-index
-last-updated: 2026-04-29T18:00:00Z
+last-updated: 2026-05-25T00:00:00Z
 tags: [index, pages]
 ---
 
@@ -8,7 +8,7 @@ tags: [index, pages]
 
 Source: `knowledge-graph.md` §1 Wired Pages Registry
 
-## Wired Pages (51 nav IDs → 45 unique components)
+## Wired Pages (58 nav IDs → 58+ unique components, phases 1–7b)
 
 | Nav ID | Page | Section | Group | Screen Type |
 |--------|------|---------|-------|-------------|
@@ -45,6 +45,7 @@ Source: `knowledge-graph.md` §1 Wired Pages Registry
 | `finance-dashboard` | [[Pages/FinanceDashboardPage]] | Finance | — | dashboard |
 | `wallet-topup` | [[Pages/WalletTopUpPage]] | Finance | — | upload-page |
 | `finance-advertisers` | [[Pages/FinanceAdvertiserManagementPage]] | Finance | — | data-management-list |
+| `finance/manage-billing` | [[Pages/ManageBillingPage]] | Finance | — | finance-billing | *(advertiser portal)* |
 | `overview` | [[Pages/HealthReportPage]] | Health | — | dashboard |
 | `budget-health` | [[Pages/HealthReportPage]] | Health | — | dashboard |
 | `delivery-health` | [[Pages/HealthReportPage]] | Health | — | dashboard |
@@ -64,6 +65,23 @@ Source: `knowledge-graph.md` §1 Wired Pages Registry
 | `product-ads-yield` | [[Pages/ProductAdsYieldControlPage]] | Product Ads | Campaign Management | data-management-list |
 | `product-ads-keyword` | [[Pages/ProductAdsKeywordBidPage]] | Product Ads | Campaign Management | upload-page |
 | `product-ads-bulk` | [[Pages/ProductAdsBulkActionsPage]] | Product Ads | Campaign Management | upload-page |
+| `product-ads` | [[Pages/ProductAdsDashboardPage]] | Product Ads | — | dashboard |
+| `display-ads` | [[Pages/DisplayAdsDashboardPage]] | Display Ads | — | dashboard |
+| `offsite-ads` | [[Pages/OffsiteDashboardPage]] | Offsite Ads | — | dashboard |
+| `in-store-digital` | [[Pages/InStoreDashboardPage]] | In-Store Digital Ads | — | dashboard |
+| `byot` | [[Pages/BYOTDashboardPage]] | BYOT (Beta) | — | dashboard |
+| `packages` | [[Pages/PackagesDashboardPage]] | Packages (Alpha) | — | data-management-list |
+
+## Sub-pages (no nav-id — accessed via parent section)
+
+| Page | Parent Section | Screen Type |
+|------|---------------|-------------|
+| [[Pages/BYOTCampaignDetailPage]] | BYOT | detail-view |
+| [[Pages/PackagesAnalyticsPage]] | Packages | dashboard |
+| [[Pages/PackagesBooking1Page]] | Packages | data-management-list |
+| [[Pages/PackagesBooking2Page]] | Packages | data-management-list |
+| [[Pages/CPCControlsPage]] | Product Ads | data-management-list |
+| [[Pages/CPMControlsPage]] | Product Ads | data-management-list |
 
 ## Unwired Pages (7 — LeftNav present, no App.jsx case)
 

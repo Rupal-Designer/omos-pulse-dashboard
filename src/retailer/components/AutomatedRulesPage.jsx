@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import { SearchIcon, PlusIcon, EditIcon, TrashIcon } from '../../ui/atoms/Icon';
-import { Button } from '../../ui/atoms/Button';
-import { TypeBadge } from '../../ui/atoms/Badge';
-import { Input, Select } from '../../ui/atoms/Input';
-import { Drawer } from '../../ui/molecules/Drawer';
-import { Toast, useToast } from '../../ui/atoms/Toast';
-
-const FONT = "'Open Sans', sans-serif";
+import { SearchIcon, PlusIcon, EditIcon, TrashIcon, Button, TypeBadge, Input, Select, Drawer, Toast, useToast } from '../../ui';
 
 const TRIGGER_TYPES = [
   { value: 'On Wallet Top-up',         label: 'On Wallet Top-up',         desc: 'Trigger when advertiser tops-up their wallet' },
@@ -149,7 +142,7 @@ export default function AutomatedRulesPage() {
   );
 
   return (
-    <div style={{ padding: '20px 24px', fontFamily: FONT }}>
+    <div style={{ padding: '20px 24px', fontFamily: "'Open Sans', sans-serif" }}>
       <Toast {...toast} />
 
       <div style={{ background: 'var(--osmos-bg)', border: '1px solid var(--osmos-border)', borderRadius: 8, overflow: 'hidden' }}>
@@ -158,7 +151,7 @@ export default function AutomatedRulesPage() {
         <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                       borderBottom: '1px solid var(--osmos-border)', gap: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>Segment</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>Segment</span>
             <span style={{ background: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)',
                            borderRadius: 10, fontSize: 11, fontWeight: 700, padding: '2px 8px' }}>
               {data.length}
@@ -170,7 +163,7 @@ export default function AutomatedRulesPage() {
               <SearchIcon size={13} color="var(--osmos-fg-subtle)" />
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search"
                 style={{ border: 'none', outline: 'none', fontSize: 12, color: 'var(--osmos-fg)',
-                         fontFamily: FONT, width: 160, background: 'transparent' }} />
+                         fontFamily: "'Open Sans', sans-serif", width: 160, background: 'transparent' }} />
             </div>
             <Button variant="primary" onClick={openCreate}>
               <PlusIcon size={12} color="#fff" />
@@ -181,13 +174,14 @@ export default function AutomatedRulesPage() {
 
         {/* Table */}
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12, fontFamily: FONT }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, fontFamily: "'Open Sans', sans-serif" }}>
             <thead>
               <tr style={{ background: 'var(--osmos-bg-subtle)', borderBottom: '1px solid var(--osmos-border)' }}>
                 {['Segment Name', 'Rule', 'Description', 'Rule Type', 'Actions', 'Last executed on', 'Created by', 'Created on', 'Last Edited by', ''].map(h => (
-                  <th key={h} style={{ padding: '9px 14px', textAlign: 'left', fontWeight: 700,
+                  <th key={h} style={{ padding: '9px 14px', textAlign: 'left', fontWeight: 600,
                                        color: 'var(--osmos-fg-muted)', fontSize: 11, whiteSpace: 'nowrap',
-                                       borderRight: h === '' ? 'none' : '1px solid var(--osmos-border)' }}>
+                                       borderRight: h === '' ? 'none' : '1px solid var(--osmos-border)',
+                                       textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                     {h}
                   </th>
                 ))}
@@ -281,7 +275,7 @@ export default function AutomatedRulesPage() {
         {/* Help link */}
         <div style={{ marginBottom: 20 }}>
           <button style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer',
-            fontSize: 12, color: 'var(--osmos-brand-primary)', fontFamily: FONT, textDecoration: 'underline' }}>
+            fontSize: 12, color: 'var(--osmos-brand-primary)', fontFamily: "'Open Sans', sans-serif", textDecoration: 'underline' }}>
             How to create and modify a campaign ?
           </button>
         </div>
@@ -289,23 +283,23 @@ export default function AutomatedRulesPage() {
         {/* Name */}
         <div style={{ marginBottom: 16 }}>
           <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)',
-                          display: 'flex', gap: 3, marginBottom: 6, fontFamily: FONT }}>
+                          display: 'flex', gap: 3, marginBottom: 6, fontFamily: "'Open Sans', sans-serif" }}>
             Name <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
           </label>
           <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--osmos-border)',
                         borderRadius: 6, overflow: 'hidden', background: 'var(--osmos-bg)' }}>
             <span style={{ padding: '0 10px', fontSize: 13, color: 'var(--osmos-fg-muted)',
                            borderRight: '1px solid var(--osmos-border)', lineHeight: '34px',
-                           background: 'var(--osmos-bg-subtle)', fontFamily: FONT }}>$</span>
+                           background: 'var(--osmos-bg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>$</span>
             <input
               value={form.name}
               onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
               placeholder="Enter Name"
               maxLength={50}
               style={{ flex: 1, border: 'none', outline: 'none', padding: '8px 10px',
-                       fontSize: 13, color: 'var(--osmos-fg)', fontFamily: FONT, background: 'transparent' }}
+                       fontSize: 13, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif", background: 'transparent' }}
             />
-            <span style={{ padding: '0 10px', fontSize: 11, color: 'var(--osmos-fg-subtle)', fontFamily: FONT }}>
+            <span style={{ padding: '0 10px', fontSize: 11, color: 'var(--osmos-fg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>
               {form.name.length}/50
             </span>
           </div>
@@ -314,7 +308,7 @@ export default function AutomatedRulesPage() {
         {/* Description */}
         <div style={{ marginBottom: 16 }}>
           <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)',
-                          display: 'flex', gap: 3, marginBottom: 6, fontFamily: FONT }}>
+                          display: 'flex', gap: 3, marginBottom: 6, fontFamily: "'Open Sans', sans-serif" }}>
             Description <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
           </label>
           <textarea
@@ -322,7 +316,7 @@ export default function AutomatedRulesPage() {
             onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
             placeholder="Enter Name"
             style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--osmos-border)',
-                     borderRadius: 6, fontSize: 13, fontFamily: FONT, color: 'var(--osmos-fg)',
+                     borderRadius: 6, fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)',
                      outline: 'none', boxSizing: 'border-box', height: 72, resize: 'vertical',
                      background: 'var(--osmos-bg)' }}
           />
@@ -331,11 +325,11 @@ export default function AutomatedRulesPage() {
         {/* Rule Type */}
         <div style={{ marginBottom: 16 }}>
           <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)',
-                          marginBottom: 8, display: 'block', fontFamily: FONT }}>Rule Type</label>
+                          marginBottom: 8, display: 'block', fontFamily: "'Open Sans', sans-serif" }}>Rule Type</label>
           <div style={{ display: 'flex', gap: 24 }}>
             {['Trigger', 'Schedule'].map(t => (
               <label key={t} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13,
-                                      cursor: 'pointer', color: 'var(--osmos-fg)', fontFamily: FONT }}>
+                                      cursor: 'pointer', color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>
                 <input type="radio" name="ruleType" value={t}
                   checked={form.ruleType === t}
                   onChange={() => setForm(f => ({ ...f, ruleType: t }))}
@@ -360,9 +354,9 @@ export default function AutomatedRulesPage() {
                     onChange={() => setForm(f => ({ ...f, triggerType: tt.value }))}
                     style={{ accentColor: 'var(--osmos-brand-primary)', marginTop: 2 }} />
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: FONT }}>{tt.label}</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>{tt.label}</div>
                     {tt.desc && (
-                      <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', marginTop: 2, fontFamily: FONT }}>{tt.desc}</div>
+                      <div style={{ fontSize: 12, color: 'var(--osmos-fg-muted)', marginTop: 2, fontFamily: "'Open Sans', sans-serif" }}>{tt.desc}</div>
                     )}
                   </div>
                 </label>
@@ -385,7 +379,7 @@ export default function AutomatedRulesPage() {
         <div style={{ marginBottom: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                         marginBottom: 8 }}>
-            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
               Conditions
             </span>
             <Button variant="outline" onClick={() => showToast('Conditions builder — coming soon')}>
@@ -393,7 +387,7 @@ export default function AutomatedRulesPage() {
             </Button>
           </div>
           <div style={{ padding: 12, background: 'var(--osmos-bg-subtle)', borderRadius: 6,
-                        fontSize: 12, color: 'var(--osmos-fg-subtle)', fontFamily: FONT }}>
+                        fontSize: 12, color: 'var(--osmos-fg-subtle)', fontFamily: "'Open Sans', sans-serif" }}>
             No conditions added yet.
           </div>
         </div>
@@ -402,7 +396,7 @@ export default function AutomatedRulesPage() {
         <div style={{ marginBottom: 16 }}>
           <div style={{ marginBottom: 8 }}>
             <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)',
-                            display: 'flex', gap: 3, fontFamily: FONT }}>
+                            display: 'flex', gap: 3, fontFamily: "'Open Sans', sans-serif" }}>
               Actions <span style={{ color: 'var(--alert-error-primary)' }}>*</span>
             </label>
           </div>
@@ -410,7 +404,7 @@ export default function AutomatedRulesPage() {
             value={form.action}
             onChange={e => setForm(f => ({ ...f, action: e.target.value }))}
             style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--osmos-border)', borderRadius: 6,
-                     fontSize: 13, fontFamily: FONT, color: form.action ? 'var(--osmos-fg)' : 'var(--osmos-fg-subtle)',
+                     fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: form.action ? 'var(--osmos-fg)' : 'var(--osmos-fg-subtle)',
                      background: 'var(--osmos-bg)', outline: 'none', cursor: 'pointer' }}
           >
             {ACTIONS_OPTIONS.map(a => (
@@ -419,7 +413,7 @@ export default function AutomatedRulesPage() {
           </select>
           {form.action === 'Add promotional balance as a percentage of the top-up amt' && (
             <div style={{ marginTop: 8, padding: 10, background: 'var(--osmos-bg-subtle)', borderRadius: 6,
-                          fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: FONT }}>
+                          fontSize: 12, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>
               This action will add promotional balance based on the top-up done by the merchant
             </div>
           )}
@@ -439,20 +433,20 @@ export default function AutomatedRulesPage() {
             <div style={{ marginBottom: 16, display: 'flex', gap: 12 }}>
               <div style={{ flex: 1 }}>
                 <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)',
-                                marginBottom: 6, display: 'block', fontFamily: FONT }}>Select Date</label>
+                                marginBottom: 6, display: 'block', fontFamily: "'Open Sans', sans-serif" }}>Select Date</label>
                 <input type="date" value={form.scheduleDate}
                   onChange={e => setForm(f => ({ ...f, scheduleDate: e.target.value }))}
                   style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--osmos-border)',
-                           borderRadius: 6, fontSize: 13, fontFamily: FONT, color: 'var(--osmos-fg)',
+                           borderRadius: 6, fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)',
                            background: 'var(--osmos-bg)', outline: 'none', boxSizing: 'border-box' }} />
               </div>
               <div style={{ flex: 1 }}>
                 <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--osmos-fg-muted)',
-                                marginBottom: 6, display: 'block', fontFamily: FONT }}>Select Time</label>
+                                marginBottom: 6, display: 'block', fontFamily: "'Open Sans', sans-serif" }}>Select Time</label>
                 <input type="time" value={form.scheduleTime}
                   onChange={e => setForm(f => ({ ...f, scheduleTime: e.target.value }))}
                   style={{ width: '100%', padding: '8px 10px', border: '1px solid var(--osmos-border)',
-                           borderRadius: 6, fontSize: 13, fontFamily: FONT, color: 'var(--osmos-fg)',
+                           borderRadius: 6, fontSize: 13, fontFamily: "'Open Sans', sans-serif", color: 'var(--osmos-fg)',
                            background: 'var(--osmos-bg)', outline: 'none', boxSizing: 'border-box' }} />
               </div>
             </div>
@@ -472,7 +466,7 @@ export default function AutomatedRulesPage() {
         {/* For internal use only */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                       padding: '10px 14px', background: 'var(--osmos-bg-subtle)', borderRadius: 6 }}>
-          <span style={{ fontSize: 13, color: 'var(--osmos-fg)', fontFamily: FONT }}>
+          <span style={{ fontSize: 13, color: 'var(--osmos-fg)', fontFamily: "'Open Sans', sans-serif" }}>
             For internal use only
           </span>
           <Toggle

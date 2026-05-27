@@ -1,19 +1,6 @@
 import { useState } from "react";
 import { Button, Input, Select, Icon, CheckIcon, PlusIcon, TrashIcon, SearchIcon, FilterIcon, CalendarIcon } from '../../../ui';
 
-// ─── Design tokens ────────────────────────────────────────────────────────────
-const FONT    = "'Open Sans', sans-serif";
-const TEXT    = 'var(--osmos-fg)';
-const TEXT_MID= 'var(--osmos-fg-muted)';
-const TEXT_SUB= 'var(--osmos-fg-subtle)';
-const BORDER  = 'var(--osmos-border)';
-const BG      = 'var(--osmos-bg)';
-const BG_SUB  = 'var(--osmos-bg-subtle)';
-const ACCENT  = 'var(--osmos-brand-primary)';
-const ACCENT_M= 'var(--osmos-brand-primary-muted)';
-const GREEN   = 'var(--osmos-brand-green)';
-const AMBER   = 'var(--osmos-brand-amber)';
-
 // ─── Hand-rolled SVG icons (not in ui exports) ────────────────────────────────
 function MapPinIcon(props) {
   return (
@@ -234,25 +221,25 @@ function InstoreAdGroupWizard({ open, onClose, onSave, campaignName = "In-store 
       <div
         style={{
           position: 'fixed', right: 0, top: 0, zIndex: 60, height: '100%',
-          background: BG, boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+          background: 'var(--osmos-bg)', boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
           display: 'flex', flexDirection: 'column', transition: 'transform 0.3s',
-          width: '85%', fontFamily: FONT,
+          width: '85%', fontFamily: "'Open Sans', sans-serif",
         }}
       >
         {/* Header */}
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '16px 24px', borderBottom: `1px solid ${BORDER}`,
+          padding: '16px 24px', borderBottom: `1px solid var(--osmos-border)`,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
-            <span style={{ color: TEXT_MID }}>{campaignName || "In-Store Digital Campaign"}</span>
-            <span style={{ color: TEXT_SUB }}>&gt;</span>
-            <span style={{ color: TEXT, fontWeight: 500 }}>{adGroupName || "New Ad Group"}</span>
+            <span style={{ color: 'var(--osmos-fg-muted)' }}>{campaignName || "In-Store Digital Campaign"}</span>
+            <span style={{ color: 'var(--osmos-fg-subtle)' }}>&gt;</span>
+            <span style={{ color: 'var(--osmos-fg)', fontWeight: 500 }}>{adGroupName || "New Ad Group"}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <a
               href="#"
-              style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: ACCENT, textDecoration: 'none' }}
+              style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--osmos-brand-primary)', textDecoration: 'none' }}
             >
               <HelpCircleIcon size={16} />
               How to create an In-store Ad Group?
@@ -265,7 +252,7 @@ function InstoreAdGroupWizard({ open, onClose, onSave, campaignName = "In-store 
         <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
           {/* Sidebar */}
           <div style={{
-            width: 256, borderRight: `1px solid ${BORDER}`, background: BG_SUB,
+            width: 256, borderRight: `1px solid var(--osmos-border)`, background: 'var(--osmos-bg-subtle)',
             display: 'flex', flexDirection: 'column',
           }}>
             <div style={{ padding: 16, flex: 1 }}>
@@ -287,25 +274,25 @@ function InstoreAdGroupWizard({ open, onClose, onSave, campaignName = "In-store 
             </div>
 
             {/* Ad Group Summary */}
-            <div style={{ borderTop: `1px solid ${BORDER}`, padding: 16 }}>
+            <div style={{ borderTop: `1px solid var(--osmos-border)`, padding: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                <StoreIcon size={16} color={ACCENT} />
-                <span style={{ fontWeight: 500, color: TEXT, fontSize: 13 }}>Ad Group Summary</span>
+                <StoreIcon size={16} color={'var(--osmos-brand-primary)'} />
+                <span style={{ fontWeight: 500, color: 'var(--osmos-fg)', fontSize: 13 }}>Ad Group Summary</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: TEXT_MID }}>Screens</span>
-                  <span style={{ color: TEXT, fontWeight: 500 }}>{eligibleScreens}</span>
+                  <span style={{ color: 'var(--osmos-fg-muted)' }}>Screens</span>
+                  <span style={{ color: 'var(--osmos-fg)', fontWeight: 500 }}>{eligibleScreens}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: TEXT_MID }}>Products</span>
-                  <span style={{ color: TEXT, fontWeight: 500 }}>
+                  <span style={{ color: 'var(--osmos-fg-muted)' }}>Products</span>
+                  <span style={{ color: 'var(--osmos-fg)', fontWeight: 500 }}>
                     {productFilters.length > 0 ? `${productFilters.length} filters` : "0 filters"}
                   </span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: TEXT_MID }}>Formats</span>
-                  <span style={{ color: TEXT, fontWeight: 500 }}>{selectedFormats.length}</span>
+                  <span style={{ color: 'var(--osmos-fg-muted)' }}>Formats</span>
+                  <span style={{ color: 'var(--osmos-fg)', fontWeight: 500 }}>{selectedFormats.length}</span>
                 </div>
               </div>
             </div>
@@ -316,23 +303,23 @@ function InstoreAdGroupWizard({ open, onClose, onSave, campaignName = "In-store 
             {currentStep === 1 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                 <div>
-                  <h2 style={{ fontSize: 20, fontWeight: 600, color: TEXT, margin: '0 0 8px' }}>Ad Group Details</h2>
-                  <p style={{ color: TEXT_MID, fontSize: 13, margin: '0 0 16px' }}>
+                  <h2 style={{ fontSize: 20, fontWeight: 600, color: 'var(--osmos-fg)', margin: '0 0 8px' }}>Ad Group Details</h2>
+                  <p style={{ color: 'var(--osmos-fg-muted)', fontSize: 13, margin: '0 0 16px' }}>
                     Name your ad group and select screens for targeting.
                   </p>
                 </div>
 
                 <div style={{
-                  background: BG, border: `1px solid ${BORDER}`, borderRadius: 12, padding: 20,
+                  background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 12, padding: 20,
                 }}>
-                  <label style={{ display: 'block', color: TEXT, fontWeight: 500, marginBottom: 8, fontSize: 13 }}>
+                  <label style={{ display: 'block', color: 'var(--osmos-fg)', fontWeight: 500, marginBottom: 8, fontSize: 13 }}>
                     Ad Group Name
                   </label>
                   <Input
                     value={adGroupName}
                     onChange={(e) => setAdGroupName(e.target.value)}
                     placeholder="Enter ad group name"
-                    style={{ background: BG, border: `1px solid ${BORDER}`, color: TEXT, height: 44 }}
+                    style={{ background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, color: 'var(--osmos-fg)', height: 44 }}
                   />
                 </div>
 
@@ -399,10 +386,10 @@ function InstoreAdGroupWizard({ open, onClose, onSave, campaignName = "In-store 
 
         {/* Footer */}
         <div style={{
-          borderTop: `1px solid ${BORDER}`, background: BG, padding: '16px 24px',
+          borderTop: `1px solid var(--osmos-border)`, background: 'var(--osmos-bg)', padding: '16px 24px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
-          <span style={{ fontSize: 13, color: TEXT_MID }}>
+          <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>
             Step {currentStep} of {steps.length}
           </span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -456,7 +443,7 @@ function CloseButton({ onClick }) {
       onMouseLeave={() => setHov(false)}
       style={{
         background: 'none', border: 'none', cursor: 'pointer', padding: 4,
-        color: hov ? TEXT : TEXT_MID, transition: 'color 0.15s',
+        color: hov ? 'var(--osmos-fg)' : 'var(--osmos-fg-muted)', transition: 'color 0.15s',
       }}
     >
       <Icon size={20}>
@@ -470,10 +457,10 @@ function CloseButton({ onClick }) {
 // ─── Step button (sidebar) ────────────────────────────────────────────────────
 function StepButton({ step, isActive, isCompleted, onClick }) {
   const [hov, setHov] = useState(false);
-  const bg = isActive ? ACCENT : (hov ? BORDER : 'transparent');
-  const color = isActive ? '#fff' : (isCompleted ? TEXT : TEXT_MID);
-  const badgeBg = isActive ? 'rgba(255,255,255,0.2)' : (isCompleted ? GREEN : BORDER);
-  const badgeColor = isActive ? '#fff' : (isCompleted ? '#fff' : TEXT_MID);
+  const bg = isActive ? 'var(--osmos-brand-primary)' : (hov ? 'var(--osmos-border)' : 'transparent');
+  const color = isActive ? '#fff' : (isCompleted ? 'var(--osmos-fg)' : 'var(--osmos-fg-muted)');
+  const badgeBg = isActive ? 'rgba(255,255,255,0.2)' : (isCompleted ? 'var(--osmos-brand-green)' : 'var(--osmos-border)');
+  const badgeColor = isActive ? '#fff' : (isCompleted ? '#fff' : 'var(--osmos-fg-muted)');
   return (
     <button
       onClick={onClick}
@@ -482,7 +469,7 @@ function StepButton({ step, isActive, isCompleted, onClick }) {
       style={{
         width: '100%', display: 'flex', alignItems: 'center', gap: 12,
         padding: '10px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
-        background: bg, color, textAlign: 'left', transition: 'all 0.15s', fontFamily: FONT,
+        background: bg, color, textAlign: 'left', transition: 'all 0.15s', fontFamily: "'Open Sans', sans-serif",
       }}
     >
       <div style={{
@@ -507,8 +494,8 @@ function BasicsStep({ stores, selectedStores, setSelectedStores }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       <div>
-        <h2 style={{ fontSize: 20, fontWeight: 600, color: TEXT, margin: '0 0 8px' }}>Select Store Locations</h2>
-        <p style={{ color: TEXT_MID, fontSize: 13, margin: 0 }}>
+        <h2 style={{ fontSize: 20, fontWeight: 600, color: 'var(--osmos-fg)', margin: '0 0 8px' }}>Select Store Locations</h2>
+        <p style={{ color: 'var(--osmos-fg-muted)', fontSize: 13, margin: 0 }}>
           Choose the retail locations where your in-store ads will be displayed.
         </p>
       </div>
@@ -526,24 +513,24 @@ function BasicsStep({ stores, selectedStores, setSelectedStores }) {
 
       {selectedStores.length > 0 && (
         <div style={{
-          background: BG_SUB, borderRadius: 12, padding: 16, border: `1px solid ${BORDER}`,
+          background: 'var(--osmos-bg-subtle)', borderRadius: 12, padding: 16, border: `1px solid var(--osmos-border)`,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
-              <div style={{ color: TEXT, fontWeight: 500, fontSize: 13 }}>{selectedStores.length} stores selected</div>
-              <div style={{ color: TEXT_MID, fontSize: 13 }}>
+              <div style={{ color: 'var(--osmos-fg)', fontWeight: 500, fontSize: 13 }}>{selectedStores.length} stores selected</div>
+              <div style={{ color: 'var(--osmos-fg-muted)', fontSize: 13 }}>
                 Total screens:{' '}
                 {stores.filter((s) => selectedStores.includes(s.id)).reduce((acc, s) => acc + s.screens, 0)}
               </div>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ color: TEXT, fontWeight: 500, fontSize: 13 }}>
+              <div style={{ color: 'var(--osmos-fg)', fontWeight: 500, fontSize: 13 }}>
                 {stores
                   .filter((s) => selectedStores.includes(s.id))
                   .reduce((acc, s) => acc + Number.parseInt(s.dailyFootfall.replace("K", "000")), 0)
                   .toLocaleString()}
               </div>
-              <div style={{ color: TEXT_MID, fontSize: 13 }}>Combined daily footfall</div>
+              <div style={{ color: 'var(--osmos-fg-muted)', fontSize: 13 }}>Combined daily footfall</div>
             </div>
           </div>
         </div>
@@ -561,39 +548,39 @@ function StoreCard({ store, selected, onToggle }) {
       onMouseLeave={() => setHov(false)}
       style={{
         padding: 16, borderRadius: 12, cursor: 'pointer', transition: 'all 0.15s',
-        border: selected ? `1px solid ${ACCENT}` : `1px solid ${hov ? '#c5c5c5' : BORDER}`,
-        background: selected ? ACCENT_M : BG,
+        border: selected ? `1px solid var(--osmos-brand-primary)` : `1px solid ${hov ? '#c5c5c5' : 'var(--osmos-border)'}`,
+        background: selected ? 'var(--osmos-brand-primary-muted)' : 'var(--osmos-bg)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
         <div style={{
-          width: 20, height: 20, borderRadius: 999, border: `2px solid ${selected ? ACCENT : '#c5c5c5'}`,
-          background: selected ? ACCENT : 'transparent',
+          width: 20, height: 20, borderRadius: 999, border: `2px solid ${selected ? 'var(--osmos-brand-primary)' : '#c5c5c5'}`,
+          background: selected ? 'var(--osmos-brand-primary)' : 'transparent',
           display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2,
         }}>
           {selected && <CheckIcon size={12} color="#fff" />}
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-            <StoreIcon size={16} color={ACCENT} />
-            <span style={{ fontWeight: 600, color: TEXT, fontSize: 13 }}>{store.name}</span>
+            <StoreIcon size={16} color={'var(--osmos-brand-primary)'} />
+            <span style={{ fontWeight: 600, color: 'var(--osmos-fg)', fontSize: 13 }}>{store.name}</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, color: TEXT_MID, marginBottom: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, color: 'var(--osmos-fg-muted)', marginBottom: 12 }}>
             <MapPinIcon size={12} />
             <span>{store.city}, {store.state}</span>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8, fontSize: 13 }}>
             <div>
-              <div style={{ color: TEXT_MID }}>Screens</div>
-              <div style={{ color: TEXT, fontWeight: 500 }}>{store.screens}</div>
+              <div style={{ color: 'var(--osmos-fg-muted)' }}>Screens</div>
+              <div style={{ color: 'var(--osmos-fg)', fontWeight: 500 }}>{store.screens}</div>
             </div>
             <div>
-              <div style={{ color: TEXT_MID }}>Daily Footfall</div>
-              <div style={{ color: TEXT, fontWeight: 500 }}>{store.dailyFootfall}</div>
+              <div style={{ color: 'var(--osmos-fg-muted)' }}>Daily Footfall</div>
+              <div style={{ color: 'var(--osmos-fg)', fontWeight: 500 }}>{store.dailyFootfall}</div>
             </div>
             <div>
-              <div style={{ color: TEXT_MID }}>Avg. Dwell</div>
-              <div style={{ color: TEXT, fontWeight: 500 }}>{store.avgDwellTime}</div>
+              <div style={{ color: 'var(--osmos-fg-muted)' }}>Avg. Dwell</div>
+              <div style={{ color: 'var(--osmos-fg)', fontWeight: 500 }}>{store.avgDwellTime}</div>
             </div>
           </div>
         </div>
@@ -607,15 +594,15 @@ function ProductsStep({ mode, setMode, filters, addFilter, removeFilter, updateF
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       <div>
-        <h2 style={{ fontSize: 20, fontWeight: 600, color: TEXT, margin: '0 0 8px' }}>Product Selection</h2>
-        <p style={{ color: TEXT_MID, fontSize: 13, margin: 0 }}>
+        <h2 style={{ fontSize: 20, fontWeight: 600, color: 'var(--osmos-fg)', margin: '0 0 8px' }}>Product Selection</h2>
+        <p style={{ color: 'var(--osmos-fg-muted)', fontSize: 13, margin: 0 }}>
           Choose which products to feature in your in-store ads. Products matching your criteria will be dynamically displayed.
         </p>
       </div>
 
       {/* Selection Mode */}
-      <div style={{ background: BG_SUB, borderRadius: 12, padding: 16, border: `1px solid ${BORDER}` }}>
-        <label style={{ display: 'block', color: TEXT, marginBottom: 12, fontSize: 13, fontWeight: 500 }}>
+      <div style={{ background: 'var(--osmos-bg-subtle)', borderRadius: 12, padding: 16, border: `1px solid var(--osmos-border)` }}>
+        <label style={{ display: 'block', color: 'var(--osmos-fg)', marginBottom: 12, fontSize: 13, fontWeight: 500 }}>
           Selection Method
         </label>
         <Select
@@ -631,12 +618,12 @@ function ProductsStep({ mode, setMode, filters, addFilter, removeFilter, updateF
 
       {/* Filter-based selection */}
       {mode === "filters" && (
-        <div style={{ background: BG_SUB, borderRadius: 12, padding: 20, border: `1px solid ${BORDER}` }}>
+        <div style={{ background: 'var(--osmos-bg-subtle)', borderRadius: 12, padding: 20, border: `1px solid var(--osmos-border)` }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-            <p style={{ color: TEXT_MID, fontSize: 13, margin: 0 }}>
+            <p style={{ color: 'var(--osmos-fg-muted)', fontSize: 13, margin: 0 }}>
               Products will be automatically added to campaign matching filter condition.
             </p>
-            <a href="#" style={{ color: ACCENT, fontSize: 13 }}>Guide to select a product by filters</a>
+            <a href="#" style={{ color: 'var(--osmos-brand-primary)', fontSize: 13 }}>Guide to select a product by filters</a>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -658,7 +645,7 @@ function ProductsStep({ mode, setMode, filters, addFilter, removeFilter, updateF
                   value={filter.value}
                   onChange={(e) => updateFilter(index, "value", e.target.value)}
                   placeholder="Enter value..."
-                  style={{ flex: 1, background: BG, border: `1px solid ${BORDER}`, color: TEXT }}
+                  style={{ flex: 1, background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, color: 'var(--osmos-fg)' }}
                 />
                 <RemoveButton
                   onClick={() => removeFilter(index)}
@@ -677,13 +664,13 @@ function ProductsStep({ mode, setMode, filters, addFilter, removeFilter, updateF
 
       {/* Individual product selection */}
       {(mode === "include" || mode === "exclude") && (
-        <div style={{ background: BG_SUB, borderRadius: 12, padding: 20, border: `1px solid ${BORDER}` }}>
+        <div style={{ background: 'var(--osmos-bg-subtle)', borderRadius: 12, padding: 20, border: `1px solid var(--osmos-border)` }}>
           <div style={{ textAlign: 'center', padding: '32px 0' }}>
             <ShoppingCartIcon size={48} color="#c5c5c5" style={{ display: 'block', margin: '0 auto 16px' }} />
-            <h3 style={{ color: TEXT, fontWeight: 500, margin: '0 0 8px', fontSize: 14 }}>
+            <h3 style={{ color: 'var(--osmos-fg)', fontWeight: 500, margin: '0 0 8px', fontSize: 14 }}>
               {mode === "include" ? "Select products to include" : "Select products to exclude"}
             </h3>
-            <p style={{ color: TEXT_MID, fontSize: 13, margin: '0 0 16px' }}>
+            <p style={{ color: 'var(--osmos-fg-muted)', fontSize: 13, margin: '0 0 16px' }}>
               Browse and select individual products from your catalog.
             </p>
             <Button variant="primary">Browse Product Catalog</Button>
@@ -709,8 +696,8 @@ function SchedulingStep({ schedulingType, setSchedulingType, selectedDays, setSe
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       <div>
-        <h2 style={{ fontSize: 20, fontWeight: 600, color: TEXT, margin: '0 0 8px' }}>Scheduling & Dayparting</h2>
-        <p style={{ color: TEXT_MID, fontSize: 13, margin: 0 }}>
+        <h2 style={{ fontSize: 20, fontWeight: 600, color: 'var(--osmos-fg)', margin: '0 0 8px' }}>Scheduling & Dayparting</h2>
+        <p style={{ color: 'var(--osmos-fg-muted)', fontSize: 13, margin: 0 }}>
           Choose when your ads should be displayed. You can run ads continuously or set specific schedules.
         </p>
       </div>
@@ -734,12 +721,12 @@ function SchedulingStep({ schedulingType, setSchedulingType, selectedDays, setSe
       {/* Custom Schedule */}
       {schedulingType === "custom" && (
         <div style={{
-          background: BG_SUB, borderRadius: 12, padding: 20, border: `1px solid ${BORDER}`,
+          background: 'var(--osmos-bg-subtle)', borderRadius: 12, padding: 20, border: `1px solid var(--osmos-border)`,
           display: 'flex', flexDirection: 'column', gap: 20,
         }}>
           {/* Days */}
           <div>
-            <label style={{ display: 'block', color: TEXT, marginBottom: 12, fontSize: 13, fontWeight: 500 }}>
+            <label style={{ display: 'block', color: 'var(--osmos-fg)', marginBottom: 12, fontSize: 13, fontWeight: 500 }}>
               Select Days
             </label>
             <div style={{ display: 'flex', gap: 8 }}>
@@ -756,27 +743,27 @@ function SchedulingStep({ schedulingType, setSchedulingType, selectedDays, setSe
 
           {/* Time Range */}
           <div>
-            <label style={{ display: 'block', color: TEXT, marginBottom: 12, fontSize: 13, fontWeight: 500 }}>
+            <label style={{ display: 'block', color: 'var(--osmos-fg)', marginBottom: 12, fontSize: 13, fontWeight: 500 }}>
               Time Range
             </label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', color: TEXT_MID, fontSize: 12, marginBottom: 4 }}>Start Time</label>
+                <label style={{ display: 'block', color: 'var(--osmos-fg-muted)', fontSize: 12, marginBottom: 4 }}>Start Time</label>
                 <Input
                   type="time"
                   value={timeSlots.start}
                   onChange={(e) => setTimeSlots({ ...timeSlots, start: e.target.value })}
-                  style={{ background: BG, border: `1px solid ${BORDER}`, color: TEXT }}
+                  style={{ background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, color: 'var(--osmos-fg)' }}
                 />
               </div>
-              <span style={{ color: TEXT_MID, marginTop: 20 }}>to</span>
+              <span style={{ color: 'var(--osmos-fg-muted)', marginTop: 20 }}>to</span>
               <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', color: TEXT_MID, fontSize: 12, marginBottom: 4 }}>End Time</label>
+                <label style={{ display: 'block', color: 'var(--osmos-fg-muted)', fontSize: 12, marginBottom: 4 }}>End Time</label>
                 <Input
                   type="time"
                   value={timeSlots.end}
                   onChange={(e) => setTimeSlots({ ...timeSlots, end: e.target.value })}
-                  style={{ background: BG, border: `1px solid ${BORDER}`, color: TEXT }}
+                  style={{ background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, color: 'var(--osmos-fg)' }}
                 />
               </div>
             </div>
@@ -796,21 +783,21 @@ function SchedulingOption({ active, onClick, title, description }) {
       onMouseLeave={() => setHov(false)}
       style={{
         padding: 16, borderRadius: 12, cursor: 'pointer', transition: 'all 0.15s',
-        border: active ? `1px solid ${ACCENT}` : `1px solid ${hov ? '#c5c5c5' : BORDER}`,
-        background: active ? ACCENT_M : BG,
+        border: active ? `1px solid var(--osmos-brand-primary)` : `1px solid ${hov ? '#c5c5c5' : 'var(--osmos-border)'}`,
+        background: active ? 'var(--osmos-brand-primary-muted)' : 'var(--osmos-bg)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{
-          width: 20, height: 20, borderRadius: 999, border: `2px solid ${active ? ACCENT : '#c5c5c5'}`,
-          background: active ? ACCENT : 'transparent',
+          width: 20, height: 20, borderRadius: 999, border: `2px solid ${active ? 'var(--osmos-brand-primary)' : '#c5c5c5'}`,
+          background: active ? 'var(--osmos-brand-primary)' : 'transparent',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           {active && <CheckIcon size={12} color="#fff" />}
         </div>
         <div>
-          <div style={{ fontWeight: 500, color: TEXT, fontSize: 13 }}>{title}</div>
-          <div style={{ fontSize: 13, color: TEXT_MID }}>{description}</div>
+          <div style={{ fontWeight: 500, color: 'var(--osmos-fg)', fontSize: 13 }}>{title}</div>
+          <div style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{description}</div>
         </div>
       </div>
     </div>
@@ -827,10 +814,10 @@ function DayButton({ label, active, onClick }) {
       style={{
         padding: '8px 16px', borderRadius: 8, fontSize: 13, fontWeight: 500,
         cursor: 'pointer', transition: 'all 0.15s', border: 'none',
-        background: active ? ACCENT : BG,
-        color: active ? '#fff' : hov ? TEXT : TEXT_MID,
-        boxShadow: active ? 'none' : `0 0 0 1px ${hov ? '#c5c5c5' : BORDER}`,
-        fontFamily: FONT,
+        background: active ? 'var(--osmos-brand-primary)' : 'var(--osmos-bg)',
+        color: active ? '#fff' : hov ? 'var(--osmos-fg)' : 'var(--osmos-fg-muted)',
+        boxShadow: active ? 'none' : `0 0 0 1px ${hov ? '#c5c5c5' : 'var(--osmos-border)'}`,
+        fontFamily: "'Open Sans', sans-serif",
       }}
     >
       {label}
@@ -848,15 +835,15 @@ function CreativeStep({ formats, selectedFormats, setSelectedFormats, creatives,
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       <div>
-        <h2 style={{ fontSize: 20, fontWeight: 600, color: TEXT, margin: '0 0 8px' }}>Creative Assets</h2>
-        <p style={{ color: TEXT_MID, fontSize: 13, margin: 0 }}>
+        <h2 style={{ fontSize: 20, fontWeight: 600, color: 'var(--osmos-fg)', margin: '0 0 8px' }}>Creative Assets</h2>
+        <p style={{ color: 'var(--osmos-fg-muted)', fontSize: 13, margin: 0 }}>
           Select the screen formats you want to target and upload your creative assets.
         </p>
       </div>
 
       {/* Format Selection */}
       <div>
-        <label style={{ display: 'block', color: TEXT, fontWeight: 500, marginBottom: 12, fontSize: 13 }}>
+        <label style={{ display: 'block', color: 'var(--osmos-fg)', fontWeight: 500, marginBottom: 12, fontSize: 13 }}>
           Select Screen Formats
         </label>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 12 }}>
@@ -873,19 +860,19 @@ function CreativeStep({ formats, selectedFormats, setSelectedFormats, creatives,
 
       {/* Upload Area */}
       {selectedFormats.length > 0 && (
-        <div style={{ background: BG_SUB, borderRadius: 12, padding: 20, border: `1px solid ${BORDER}` }}>
-          <label style={{ display: 'block', color: TEXT, fontWeight: 500, marginBottom: 12, fontSize: 13 }}>
+        <div style={{ background: 'var(--osmos-bg-subtle)', borderRadius: 12, padding: 20, border: `1px solid var(--osmos-border)` }}>
+          <label style={{ display: 'block', color: 'var(--osmos-fg)', fontWeight: 500, marginBottom: 12, fontSize: 13 }}>
             Upload Creatives
           </label>
           <div style={{
-            border: `2px dashed ${BORDER}`, borderRadius: 12, padding: 32,
-            textAlign: 'center', background: BG,
+            border: `2px dashed var(--osmos-border)`, borderRadius: 12, padding: 32,
+            textAlign: 'center', background: 'var(--osmos-bg)',
           }}>
             <MonitorIcon size={48} color="#c5c5c5" style={{ display: 'block', margin: '0 auto 16px' }} />
-            <h3 style={{ color: TEXT, fontWeight: 500, margin: '0 0 8px', fontSize: 14 }}>
+            <h3 style={{ color: 'var(--osmos-fg)', fontWeight: 500, margin: '0 0 8px', fontSize: 14 }}>
               Drag and drop your creative files
             </h3>
-            <p style={{ color: TEXT_MID, fontSize: 13, margin: '0 0 16px' }}>
+            <p style={{ color: 'var(--osmos-fg-muted)', fontSize: 13, margin: '0 0 16px' }}>
               Supported formats: JPG, PNG, MP4, GIF • Max file size: 50MB
             </p>
             <Button variant="outline">Browse Files</Button>
@@ -905,21 +892,21 @@ function FormatCard({ format, selected, onToggle }) {
       onMouseLeave={() => setHov(false)}
       style={{
         padding: 16, borderRadius: 12, cursor: 'pointer', transition: 'all 0.15s',
-        border: selected ? `1px solid ${ACCENT}` : `1px solid ${hov ? '#c5c5c5' : BORDER}`,
-        background: selected ? ACCENT_M : BG,
+        border: selected ? `1px solid var(--osmos-brand-primary)` : `1px solid ${hov ? '#c5c5c5' : 'var(--osmos-border)'}`,
+        background: selected ? 'var(--osmos-brand-primary-muted)' : 'var(--osmos-bg)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
         <div style={{
-          width: 20, height: 20, borderRadius: 999, border: `2px solid ${selected ? ACCENT : '#c5c5c5'}`,
-          background: selected ? ACCENT : 'transparent',
+          width: 20, height: 20, borderRadius: 999, border: `2px solid ${selected ? 'var(--osmos-brand-primary)' : '#c5c5c5'}`,
+          background: selected ? 'var(--osmos-brand-primary)' : 'transparent',
           display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2,
         }}>
           {selected && <CheckIcon size={12} color="#fff" />}
         </div>
         <div>
-          <div style={{ fontWeight: 500, color: TEXT, fontSize: 13 }}>{format.name}</div>
-          <div style={{ fontSize: 13, color: TEXT_MID }}>{format.dimensions} • {format.orientation}</div>
+          <div style={{ fontWeight: 500, color: 'var(--osmos-fg)', fontSize: 13 }}>{format.name}</div>
+          <div style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{format.dimensions} • {format.orientation}</div>
         </div>
       </div>
     </div>
@@ -931,15 +918,15 @@ function BiddingStep({ pricingModel, setPricingModel, bidAmount, setBidAmount })
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       <div>
-        <h2 style={{ fontSize: 20, fontWeight: 600, color: TEXT, margin: '0 0 8px' }}>Bidding & Pricing</h2>
-        <p style={{ color: TEXT_MID, fontSize: 13, margin: 0 }}>
+        <h2 style={{ fontSize: 20, fontWeight: 600, color: 'var(--osmos-fg)', margin: '0 0 8px' }}>Bidding & Pricing</h2>
+        <p style={{ color: 'var(--osmos-fg-muted)', fontSize: 13, margin: 0 }}>
           Set your pricing model and bid amount for this ad group.
         </p>
       </div>
 
       {/* Pricing Model */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <label style={{ color: TEXT, fontSize: 13, fontWeight: 500 }}>Pricing Model</label>
+        <label style={{ color: 'var(--osmos-fg)', fontSize: 13, fontWeight: 500 }}>Pricing Model</label>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 12 }}>
           <PricingOption
             active={pricingModel === "cpm"}
@@ -957,12 +944,12 @@ function BiddingStep({ pricingModel, setPricingModel, bidAmount, setBidAmount })
       </div>
 
       {/* Bid Amount */}
-      <div style={{ background: BG_SUB, borderRadius: 12, padding: 20, border: `1px solid ${BORDER}` }}>
-        <label style={{ display: 'block', color: TEXT, fontWeight: 500, marginBottom: 12, fontSize: 13 }}>
+      <div style={{ background: 'var(--osmos-bg-subtle)', borderRadius: 12, padding: 20, border: `1px solid var(--osmos-border)` }}>
+        <label style={{ display: 'block', color: 'var(--osmos-fg)', fontWeight: 500, marginBottom: 12, fontSize: 13 }}>
           {pricingModel === "cpm" ? "CPM Bid" : "Fixed Rate"} ($)
         </label>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ color: TEXT_MID, fontSize: 16 }}>$</span>
+          <span style={{ color: 'var(--osmos-fg-muted)', fontSize: 16 }}>$</span>
           <Input
             type="number"
             value={bidAmount}
@@ -970,24 +957,24 @@ function BiddingStep({ pricingModel, setPricingModel, bidAmount, setBidAmount })
             step="0.01"
             min="0"
             style={{
-              width: 128, background: BG, border: `1px solid ${BORDER}`,
-              color: TEXT, fontSize: 16, fontWeight: 500,
+              width: 128, background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`,
+              color: 'var(--osmos-fg)', fontSize: 16, fontWeight: 500,
             }}
           />
-          <span style={{ color: TEXT_MID, fontSize: 13 }}>
+          <span style={{ color: 'var(--osmos-fg-muted)', fontSize: 13 }}>
             {pricingModel === "cpm" ? "per 1,000 impressions" : "per slot"}
           </span>
         </div>
 
         <div style={{
-          marginTop: 16, padding: 12, background: ACCENT_M, borderRadius: 8,
-          border: `1px solid ${ACCENT}`, opacity: 0.8,
+          marginTop: 16, padding: 12, background: 'var(--osmos-brand-primary-muted)', borderRadius: 8,
+          border: `1px solid var(--osmos-brand-primary)`, opacity: 0.8,
         }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-            <InfoIcon size={16} color={ACCENT} style={{ marginTop: 2, flexShrink: 0 }} />
+            <InfoIcon size={16} color={'var(--osmos-brand-primary)'} style={{ marginTop: 2, flexShrink: 0 }} />
             <div style={{ fontSize: 13 }}>
-              <span style={{ color: TEXT, fontWeight: 500 }}>Suggested bid: $4.50 - $6.50</span>
-              <p style={{ color: TEXT_MID, margin: '4px 0 0' }}>
+              <span style={{ color: 'var(--osmos-fg)', fontWeight: 500 }}>Suggested bid: $4.50 - $6.50</span>
+              <p style={{ color: 'var(--osmos-fg-muted)', margin: '4px 0 0' }}>
                 Based on current market rates for similar in-store placements.
               </p>
             </div>
@@ -1007,21 +994,21 @@ function PricingOption({ active, onClick, title, description }) {
       onMouseLeave={() => setHov(false)}
       style={{
         padding: 16, borderRadius: 12, cursor: 'pointer', transition: 'all 0.15s',
-        border: active ? `1px solid ${ACCENT}` : `1px solid ${hov ? '#c5c5c5' : BORDER}`,
-        background: active ? ACCENT_M : BG,
+        border: active ? `1px solid var(--osmos-brand-primary)` : `1px solid ${hov ? '#c5c5c5' : 'var(--osmos-border)'}`,
+        background: active ? 'var(--osmos-brand-primary-muted)' : 'var(--osmos-bg)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{
-          width: 20, height: 20, borderRadius: 999, border: `2px solid ${active ? ACCENT : '#c5c5c5'}`,
-          background: active ? ACCENT : 'transparent',
+          width: 20, height: 20, borderRadius: 999, border: `2px solid ${active ? 'var(--osmos-brand-primary)' : '#c5c5c5'}`,
+          background: active ? 'var(--osmos-brand-primary)' : 'transparent',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           {active && <CheckIcon size={12} color="#fff" />}
         </div>
         <div>
-          <div style={{ fontWeight: 500, color: TEXT, fontSize: 13 }}>{title}</div>
-          <div style={{ fontSize: 13, color: TEXT_MID }}>{description}</div>
+          <div style={{ fontWeight: 500, color: 'var(--osmos-fg)', fontSize: 13 }}>{title}</div>
+          <div style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{description}</div>
         </div>
       </div>
     </div>
@@ -1067,21 +1054,21 @@ function ScreenSelectionStep({ selectionMode, setSelectionMode, filterRules, set
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       {/* Selection Mode Toggle */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 13, color: TEXT }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 13, color: 'var(--osmos-fg)' }}>
           <input
             type="radio"
             checked={selectionMode === "filter"}
             onChange={() => setSelectionMode("filter")}
-            style={{ width: 16, height: 16, accentColor: ACCENT }}
+            style={{ width: 16, height: 16, accentColor: 'var(--osmos-brand-primary)' }}
           />
           Select screens by filter
         </label>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 13, color: TEXT }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 13, color: 'var(--osmos-fg)' }}>
           <input
             type="radio"
             checked={selectionMode === "individual"}
             onChange={() => setSelectionMode("individual")}
-            style={{ width: 16, height: 16, accentColor: ACCENT }}
+            style={{ width: 16, height: 16, accentColor: 'var(--osmos-brand-primary)' }}
           />
           Select screens individually
         </label>
@@ -1094,19 +1081,19 @@ function ScreenSelectionStep({ selectionMode, setSelectionMode, filterRules, set
       {/* Filter Mode */}
       {selectionMode === "filter" && (
         <div style={{
-          background: BG, border: `1px solid ${BORDER}`, borderRadius: 8, padding: 16,
+          background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 8, padding: 16,
         }}>
           <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
             <Button
               variant="outline"
               onClick={handleAddFilter}
-              style={{ fontSize: 13, display: 'flex', alignItems: 'center', gap: 4, color: ACCENT, borderColor: ACCENT }}
+              style={{ fontSize: 13, display: 'flex', alignItems: 'center', gap: 4, color: 'var(--osmos-brand-primary)', borderColor: 'var(--osmos-brand-primary)' }}
             >
               <PlusIcon size={16} /> Rule
             </Button>
             <Button
               variant="outline"
-              style={{ fontSize: 13, display: 'flex', alignItems: 'center', gap: 4, color: TEXT_MID }}
+              style={{ fontSize: 13, display: 'flex', alignItems: 'center', gap: 4, color: 'var(--osmos-fg-muted)' }}
             >
               <PlusIcon size={16} /> Rule Group
             </Button>
@@ -1115,11 +1102,11 @@ function ScreenSelectionStep({ selectionMode, setSelectionMode, filterRules, set
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {filterRules.map((filter, index) => (
               <div key={index} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <div style={{ display: 'flex', alignItems: 'center', color: TEXT_MID }}>
+                <div style={{ display: 'flex', alignItems: 'center', color: 'var(--osmos-fg-muted)' }}>
                   <div style={{
                     width: 16, height: 16,
-                    borderLeft: `2px solid ${BORDER}`,
-                    borderBottom: `2px solid ${BORDER}`,
+                    borderLeft: `2px solid var(--osmos-border)`,
+                    borderBottom: `2px solid var(--osmos-border)`,
                   }} />
                 </div>
                 <Select
@@ -1150,7 +1137,7 @@ function ScreenSelectionStep({ selectionMode, setSelectionMode, filterRules, set
                 <button
                   style={{
                     background: 'none', border: 'none', cursor: 'pointer', padding: 6,
-                    color: TEXT_MID,
+                    color: 'var(--osmos-fg-muted)',
                   }}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1166,9 +1153,9 @@ function ScreenSelectionStep({ selectionMode, setSelectionMode, filterRules, set
           {/* Active Filter Tags */}
           <div style={{
             display: 'flex', alignItems: 'center', gap: 8, marginTop: 16,
-            paddingTop: 16, borderTop: `1px solid ${BORDER}`, flexWrap: 'wrap',
+            paddingTop: 16, borderTop: `1px solid var(--osmos-border)`, flexWrap: 'wrap',
           }}>
-            <span style={{ fontSize: 13, color: TEXT_MID }}>Active filters:</span>
+            <span style={{ fontSize: 13, color: 'var(--osmos-fg-muted)' }}>Active filters:</span>
             {filterRules.filter((f) => f.value).map((filter, index) => (
               <FilterTag
                 key={index}
@@ -1183,25 +1170,25 @@ function ScreenSelectionStep({ selectionMode, setSelectionMode, filterRules, set
       {/* Individual Selection Mode */}
       {selectionMode === "individual" && (
         <div style={{
-          background: BG, border: `1px solid ${BORDER}`, borderRadius: 8, padding: 16,
+          background: 'var(--osmos-bg)', border: `1px solid var(--osmos-border)`, borderRadius: 8, padding: 16,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-            <span style={{ fontSize: 13, fontWeight: 500, color: TEXT }}>
+            <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>
               {selectedScreens.length} Screens Selected
             </span>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <div style={{ position: 'relative' }}>
                 <SearchIcon
                   size={16}
-                  style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: TEXT_MID }}
+                  style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--osmos-fg-muted)' }}
                 />
                 <Input
                   placeholder="Search Screen Name"
                   value={screenSearchQuery}
                   onChange={(e) => setScreenSearchQuery(e.target.value)}
                   style={{
-                    paddingLeft: 36, width: 256, border: `1px solid ${BORDER}`,
-                    background: BG, color: TEXT,
+                    paddingLeft: 36, width: 256, border: `1px solid var(--osmos-border)`,
+                    background: 'var(--osmos-bg)', color: 'var(--osmos-fg)',
                   }}
                 />
               </div>
@@ -1212,20 +1199,20 @@ function ScreenSelectionStep({ selectionMode, setSelectionMode, filterRules, set
           </div>
 
           {/* Screens Table */}
-          <div style={{ border: `1px solid ${BORDER}`, borderRadius: 8, overflow: 'hidden' }}>
+          <div style={{ border: `1px solid var(--osmos-border)`, borderRadius: 8, overflow: 'hidden' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead style={{ background: BG_SUB }}>
-                <tr style={{ borderBottom: `1px solid ${BORDER}` }}>
+              <thead style={{ background: 'var(--osmos-bg-subtle)' }}>
+                <tr style={{ borderBottom: `1px solid var(--osmos-border)` }}>
                   <th style={{ padding: 12, textAlign: 'left' }}>
                     <input
                       type="checkbox"
                       checked={selectedScreens.length === sampleScreens.length}
                       onChange={handleSelectAllScreens}
-                      style={{ borderRadius: 4, accentColor: ACCENT }}
+                      style={{ borderRadius: 4, accentColor: 'var(--osmos-brand-primary)' }}
                     />
                   </th>
                   {["Screen Name", "Store", "City", "State", "Tag"].map((h) => (
-                    <th key={h} style={{ padding: 12, textAlign: 'left', fontSize: 13, fontWeight: 500, color: TEXT_MID }}>
+                    <th key={h} style={{ padding: 12, textAlign: 'left', fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg-muted)' }}>
                       {h}
                     </th>
                   ))}
@@ -1256,8 +1243,8 @@ function ScreenRow({ screen, selected, onToggle }) {
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        borderBottom: `1px solid ${BORDER}`,
-        background: hov ? BG_SUB : BG,
+        borderBottom: `1px solid var(--osmos-border)`,
+        background: hov ? 'var(--osmos-bg-subtle)' : 'var(--osmos-bg)',
         transition: 'background 0.1s',
       }}
     >
@@ -1266,29 +1253,29 @@ function ScreenRow({ screen, selected, onToggle }) {
           type="checkbox"
           checked={selected}
           onChange={onToggle}
-          style={{ borderRadius: 4, accentColor: ACCENT }}
+          style={{ borderRadius: 4, accentColor: 'var(--osmos-brand-primary)' }}
         />
       </td>
       <td style={{ padding: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{
-            width: 40, height: 40, background: ACCENT_M, borderRadius: 6,
+            width: 40, height: 40, background: 'var(--osmos-brand-primary-muted)', borderRadius: 6,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            <MonitorIcon size={16} color={ACCENT} />
+            <MonitorIcon size={16} color={'var(--osmos-brand-primary)'} />
           </div>
           <div>
-            <span style={{ fontSize: 13, color: TEXT, fontWeight: 500 }}>{screen.name}</span>
+            <span style={{ fontSize: 13, color: 'var(--osmos-fg)', fontWeight: 500 }}>{screen.name}</span>
             {screen.isNew && (
-              <span style={{ marginLeft: 8, fontSize: 12, color: GREEN }}>New</span>
+              <span style={{ marginLeft: 8, fontSize: 12, color: 'var(--osmos-brand-green)' }}>New</span>
             )}
           </div>
         </div>
       </td>
-      <td style={{ padding: 12, fontSize: 13, color: TEXT_MID }}>{screen.store}</td>
-      <td style={{ padding: 12, fontSize: 13, color: TEXT_MID }}>{screen.city}</td>
-      <td style={{ padding: 12, fontSize: 13, color: TEXT_MID }}>{screen.state}</td>
-      <td style={{ padding: 12, fontSize: 13, color: TEXT_MID }}>{screen.tags.join(", ")}</td>
+      <td style={{ padding: 12, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{screen.store}</td>
+      <td style={{ padding: 12, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{screen.city}</td>
+      <td style={{ padding: 12, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{screen.state}</td>
+      <td style={{ padding: 12, fontSize: 13, color: 'var(--osmos-fg-muted)' }}>{screen.tags.join(", ")}</td>
     </tr>
   );
 }
@@ -1304,7 +1291,7 @@ function RemoveButton({ onClick, disabled }) {
       onMouseLeave={() => setHov(false)}
       style={{
         background: 'none', border: 'none', cursor: disabled ? 'default' : 'pointer',
-        padding: 8, color: hov && !disabled ? '#ef4444' : TEXT_MID,
+        padding: 8, color: hov && !disabled ? '#ef4444' : 'var(--osmos-fg-muted)',
         transition: 'color 0.15s', opacity: disabled ? 0.4 : 1,
       }}
     >
@@ -1323,8 +1310,8 @@ function TextButton({ onClick, children, style }) {
       style={{
         background: 'none', border: 'none', cursor: 'pointer', padding: 0,
         display: 'flex', alignItems: 'center', gap: 8,
-        color: ACCENT, fontSize: 13, textDecoration: hov ? 'underline' : 'none',
-        fontFamily: FONT, ...style,
+        color: 'var(--osmos-brand-primary)', fontSize: 13, textDecoration: hov ? 'underline' : 'none',
+        fontFamily: "'Open Sans', sans-serif", ...style,
       }}
     >
       {children}
@@ -1336,7 +1323,7 @@ function FilterTag({ label, onRemove }) {
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 4,
-      padding: '4px 8px', background: ACCENT_M, color: ACCENT,
+      padding: '4px 8px', background: 'var(--osmos-brand-primary-muted)', color: 'var(--osmos-brand-primary)',
       fontSize: 12, borderRadius: 999,
     }}>
       {label}
