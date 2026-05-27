@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Input, Select, InfoIcon, SearchIcon, Icon } from '../../../../ui';
 import { FunnelSimulationSection } from '../../funnel-simulation-section';
+import { BudgetSimulation } from './budget-simulation';
 
 const FONT     = "'Open Sans', sans-serif";
 const TEXT     = 'var(--osmos-fg)';
@@ -149,6 +150,7 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
   const [walletSearch,      setWalletSearch]      = useState('');
   const [walletDropdownOpen,setWalletDropdownOpen]= useState(false);
   const [hovBudgetType,     setHovBudgetType]     = useState(null);
+  const [idealApplied,      setIdealApplied]      = useState(false);
 
   const isProductAds = adType === 'product';
 
@@ -168,6 +170,7 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
   };
 
   const handleFieldChange = (field, value) => {
+    if (field === 'dailyBudget') setIdealApplied(false);
     if (onFieldChange) onFieldChange(field, value);
     else updateData({ [field]: value });
   };
@@ -328,6 +331,17 @@ export function BudgetStep({ data, updateData, onFieldChange, adType = 'display'
               ))}
             </div>
           </div>
+
+          {/* 30-Day Simulation */}
+          <BudgetSimulation
+            dailyBudget={data.dailyBudget}
+            products={data.productCount || 173}
+            idealApplied={idealApplied}
+            onApplyIdeal={(ideal) => {
+              handleFieldChange('dailyBudget', ideal);
+              setIdealApplied(true);
+            }}
+          />
         </div>
       </div>
     );
