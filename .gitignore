@@ -25,11 +25,5 @@ __pycache__/
 graphify-out/
 .claude/settings.local.json
 
-# Design reference screenshots (Figma exports + implementation captures)
-designs/offsite-screenshots/*.png
-designs/offsite-screenshots/*.jpg
-designs/offsite-screenshots/*.jpeg
-designs/offsite-screenshots/*.webp
-
 # Offline team reference screenshots (not committed)
 .temp/

@@ -1,8 +1,7 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo } from 'react';
 import { Icon } from '../../../ui';
 import { MetricsCards } from '../metrics-cards';
 import { PerformanceTrend } from '../performance-trend';
-import { SofieInlinePanel } from '../sofie-inline-panel';
 
 // AlertCircle — hand-rolled (replaced lucide-react)
 const AlertCircle = ({ size = 28, color = 'currentColor' }) => (
@@ -12,16 +11,6 @@ const AlertCircle = ({ size = 28, color = 'currentColor' }) => (
     <line x1="12" y1="16" x2="12.01" y2="16" />
   </Icon>
 );
-
-function useWindowWidth() {
-  const [width, setWidth] = useState(window.innerWidth);
-  useEffect(() => {
-    const handler = () => setWidth(window.innerWidth);
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
-  }, []);
-  return width;
-}
 
 export function InteractiveDashboard({
   activeAdType = "Product Ads",
@@ -34,20 +23,6 @@ export function InteractiveDashboard({
       : ["CTR", "Ad Clicks"],
   );
   const [animatingMetric, setAnimatingMetric] = useState(null);
-  const windowWidth = useWindowWidth();
-  const showSofie = windowWidth >= 900;
-
-  // Measure chart card height so Sofie panel can match it exactly
-  const chartRef = useRef(null);
-  const [chartHeight, setChartHeight] = useState(null);
-  useEffect(() => {
-    if (!chartRef.current) return;
-    const ro = new ResizeObserver(([entry]) => {
-      setChartHeight(Math.round(entry.contentRect.height));
-    });
-    ro.observe(chartRef.current);
-    return () => ro.disconnect();
-  }, []);
 
   // Track if any metrics are selected
   const hasSelectedMetrics = selectedMetrics.length > 0;
@@ -107,35 +82,51 @@ export function InteractiveDashboard({
         />
       </div>
 
-      {/* Performance Trend + Sofie panel — separate sibling cards */}
-      <div style={{
-        display: 'flex',
-        gap: 12,
-        alignItems: 'stretch',
-        opacity: hasSelectedMetrics ? 1 : 0.5,
-        transition: 'opacity 0.3s',
-        pointerEvents: hasSelectedMetrics ? 'auto' : 'none',
-      }}>
-        {/* Chart card — ref used to sync Sofie panel height */}
-        <div ref={chartRef} style={{ flex: 1, minWidth: 0 }}>
-          {hasSelectedMetrics ? (
-            <div key={`trend-${selectedMetrics.join("-")}`} style={{ animation: 'fadeIn 0.5s ease' }}>
-              <PerformanceTrend
-                activeAdType={activeAdType}
-                selectedMetrics={selectedMetrics}
-              />
-            </div>
-          ) : (
-            <EmptyChartState />
-          )}
-        </div>
-
-        {/* Sofie panel — height locked to chart height */}
-        {showSofie && (
-          <SofieInlinePanel windowWidth={windowWidth} chartHeight={chartHeight} />
+      {/* Performance Trend Chart - Conditional Rendering */}
+      <div
+        style={{
+          overflow: 'hidden',
+          transition: 'all 0.5s',
+          opacity: hasSelectedMetrics ? 1 : 0.5,
+          maxHeight: hasSelectedMetrics ? '500px' : '0px',
+          pointerEvents: hasSelectedMetrics ? 'auto' : 'none',
+        }}
+      >
+        {hasSelectedMetrics ? (
+          <div
+            style={{ animation: 'fadeIn 0.5s ease' }}
+            key={`trend-${selectedMetrics.join("-")}`}
+          >
+            <PerformanceTrend
+              activeAdType={activeAdType}
+              selectedMetrics={selectedMetrics}
+            />
+          </div>
+        ) : (
+          <EmptyChartState />
         )}
       </div>
 
+      {/* Metrics Summary Info */}
+      {hasSelectedMetrics && (
+        <div
+          style={{
+            borderRadius: 8,
+            border: '1px solid var(--osmos-border)',
+            padding: 16,
+            backgroundColor: 'var(--osmos-bg-subtle)',
+            animation: 'fadeIn 0.5s ease',
+          }}
+        >
+          <p style={{ fontSize: 12, margin: 0, color: 'var(--osmos-fg-muted)' }}>
+            <span style={{ color: 'var(--osmos-fg)', fontWeight: 500 }}>
+              Displaying {selectedMetrics.length}
+            </span>{" "}
+            metric{selectedMetrics.length !== 1 ? "s" : ""}:{" "}
+            {selectedMetrics.join(", ")}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

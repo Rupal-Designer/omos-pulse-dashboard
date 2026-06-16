@@ -64,6 +64,13 @@ const ICON_LINK = <>
   <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
 </>;
 
+const ICON_USERS = <>
+  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+  <circle cx="9" cy="7" r="4" />
+  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+</>;
+
 // ── Sub-item icon constants ───────────────────────────────────────────────────
 const CAMPAIGN_SUB_ITEMS = [
   { icon: ICON_CART,         label: 'Product Ads' },
@@ -111,6 +118,12 @@ export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNaviga
       badge: 'Beta',
       active: currentRoute === '/byot',
     },
+    {
+      id: 'audience-marketplace',
+      label: 'Audience Marketplace',
+      icon: ICON_USERS,
+      active: currentRoute === '/audience-marketplace',
+    },
     { id: 'packages',        label: 'Packages',        icon: ICON_LAYOUT_GRID, hasSub: true, badge: 'Alpha' },
     {
       id: 'finance',
@@ -141,9 +154,11 @@ export function Sidebar({ onAdTypeChange, activeAdType = 'Product Ads', onNaviga
 
   function handleSelect(id) {
     if (id === 'byot') navigate('/byot');
+    if (id === 'audience-marketplace') navigate('/audience-marketplace');
   }
 
   const activeId = currentRoute === '/byot' ? 'byot'
+    : currentRoute === '/audience-marketplace' ? 'audience-marketplace'
     : currentRoute.startsWith('/finance') ? 'finance'
     : currentRoute === '/offsite' ? 'campaigns'
     : 'campaigns';

@@ -5,11 +5,10 @@ import HomePage from './pages/HomePage';
 import DesignSystemPage from './pages/DesignSystemPage';
 import BYOTDashboardPage from './pages/BYOTDashboardPage';
 import BYOTCampaignDetailPage from './pages/BYOTCampaignDetailPage';
-import CPCControlsPage from './pages/CPCControlsPage';
-import CPMControlsPage from './pages/CPMControlsPage';
-import OffsiteDashboardPage from './pages/OffsiteDashboardPage';
+import OffsiteAdsPage from './pages/OffsiteAdsPage';
 import ManageBillingPage from './pages/ManageBillingPage';
 import TransactionLogPage from './pages/TransactionLogPage';
+import AudienceMarketplacePage from './pages/AudienceMarketplacePage';
 import { Sidebar } from './components/sidebar';
 import { Header } from './components/header';
 
@@ -84,19 +83,16 @@ export default function App() {
         return <DashboardPage activeAdType={activeAdType} onAdTypeChange={setActiveAdType} />;
       case '/home':
         return <HomePage />;
-      case '/yield-control/cpc':
-        return <CPCControlsPage />;
-      case '/yield-control/cpm':
-        return <CPMControlsPage />;
-
       case '/design-system':
         return <DesignSystemPage />;
       case '/offsite':
-        return <OffsiteDashboardPage />;
+        return <OffsiteAdsPage />;
       case '/finance/manage-billing':
         return <ManageBillingPage />;
       case '/finance/transaction-log':
         return <TransactionLogPage />;
+      case '/audience-marketplace':
+        return <AudienceMarketplacePage />;
       default:
         return <DashboardPage activeAdType={activeAdType} onAdTypeChange={setActiveAdType} />;
     }
