@@ -2122,6 +2122,163 @@ function EditCohortDrawer({ cohort, onClose, onSave }) {
   );
 }
 
+/* ─── Pie / Donut chart for channel spend distribution ─────────── */
+/*
+ * SCALABILITY:
+ * - Channels below THRESHOLD_PCT (5%) are auto-grouped into "Others"
+ * - Maximum MAX_SLICES (5) top channels shown; rest folded into Others
+ * - Colors: brand hex from existing data (Meta, Google) + Osmos --chart-*
+ *   tokens for new channels; Others always uses --chart-slategrey
+ * - Hover: dims non-hovered slices + shows % + name in donut center
+ *   + floating tooltip with name / % / amount
+ */
+const PIE_CHART_COLORS = [
+  'var(--chart-royalblue)',
+  'var(--chart-mintgreen)',
+  'var(--chart-yellow)',
+  'var(--chart-crimsonred)',
+  'var(--chart-deeppurple)',
+  'var(--chart-teal)',
+  'var(--chart-bruntorange)',
+  'var(--chart-indigo)',
+  'var(--chart-olivegreen)',
+  'var(--chart-raspberry)',
+];
+const PIE_OTHERS_COLOR   = 'var(--chart-slategrey)';
+const PIE_MAX_SLICES     = 5;
+const PIE_THRESHOLD_PCT  = 5;
+
+function SpendPieChart({ channels }) {
+  const [hovered, setHovered] = useState(null);
+
+  /* Build display slices: top MAX_SLICES above threshold, rest → Others */
+  const sorted = [...channels].sort((a, b) => b.pct - a.pct);
+  const displaySlices = [];
+  const othersItems   = [];
+
+  sorted.forEach((ch, i) => {
+    if (i < PIE_MAX_SLICES && ch.pct >= PIE_THRESHOLD_PCT) {
+      /* Use brand color from data if present, else rotate chart palette */
+      displaySlices.push({ ...ch, resolvedColor: ch.color || PIE_CHART_COLORS[i % PIE_CHART_COLORS.length] });
+    } else {
+      othersItems.push(ch);
+    }
+  });
+
+  if (othersItems.length > 0) {
+    const othersPct = othersItems.reduce((s, x) => s + x.pct, 0);
+    const othersAmt = othersItems.map(x => x.amount).filter(Boolean).join(', ');
+    displaySlices.push({ ch:'Others', label:'Others', pct: othersPct, amount: othersAmt, resolvedColor: PIE_OTHERS_COLOR, items: othersItems });
+  }
+
+  /* SVG donut geometry */
+  const SIZE = 168, cx = SIZE / 2, cy = SIZE / 2;
+  const outerR = 70, innerR = 44;
+  const GAP_DEG = 1.5; // degree gap between slices
+
+  let angle = -90 * (Math.PI / 180); // start at 12 o'clock
+  const slicePaths = displaySlices.map(slice => {
+    const sweep     = (slice.pct / 100) * 2 * Math.PI;
+    const gapRad    = (GAP_DEG * Math.PI / 180);
+    const startA    = angle + gapRad / 2;
+    const endA      = angle + sweep - gapRad / 2;
+    const large     = sweep - gapRad > Math.PI ? 1 : 0;
+    const midAngle  = angle + sweep / 2;
+
+    const x1o = cx + outerR * Math.cos(startA), y1o = cy + outerR * Math.sin(startA);
+    const x2o = cx + outerR * Math.cos(endA),   y2o = cy + outerR * Math.sin(endA);
+    const x1i = cx + innerR * Math.cos(endA),   y1i = cy + innerR * Math.sin(endA);
+    const x2i = cx + innerR * Math.cos(startA), y2i = cy + innerR * Math.sin(startA);
+
+    const d = `M ${x1o} ${y1o} A ${outerR} ${outerR} 0 ${large} 1 ${x2o} ${y2o} L ${x1i} ${y1i} A ${innerR} ${innerR} 0 ${large} 0 ${x2i} ${y2i} Z`;
+
+    angle += sweep;
+    return { ...slice, d, midAngle };
+  });
+
+  const isHov = slice => hovered && hovered.ch === slice.ch;
+
+  return (
+    <div style={{ display:'flex', alignItems:'center', gap:24 }}>
+
+      {/* Donut SVG */}
+      <div style={{ position:'relative', flexShrink:0 }}>
+        <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} style={{ display:'block' }}>
+          {slicePaths.map(s => (
+            <path
+              key={s.ch}
+              d={s.d}
+              fill={s.resolvedColor}
+              stroke="var(--bg-screen)"
+              strokeWidth="1"
+              onMouseEnter={() => setHovered(s)}
+              onMouseLeave={() => setHovered(null)}
+              style={{
+                cursor:'pointer',
+                opacity: hovered && !isHov(s) ? 0.45 : 1,
+                transform: isHov(s) ? `translate(${Math.cos(s.midAngle)*4}px, ${Math.sin(s.midAngle)*4}px)` : 'translate(0,0)',
+                transition:'opacity 0.15s, transform 0.15s',
+              }}
+            />
+          ))}
+
+          {/* Center: show hovered details or channel count */}
+          {hovered ? (
+            <>
+              <text x={cx} y={cy-6} textAnchor="middle" fontSize={14} fontWeight={700} fill="var(--text-strong)">{hovered.pct}%</text>
+              <text x={cx} y={cy+9} textAnchor="middle" fontSize={9} fill="var(--text-muted)" style={{ maxWidth:60 }}>{hovered.ch}</text>
+              {hovered.amount && <text x={cx} y={cy+21} textAnchor="middle" fontSize={9} fontWeight={600} fill="var(--alert-success-primary)">{hovered.amount}</text>}
+            </>
+          ) : (
+            <>
+              <text x={cx} y={cy-4} textAnchor="middle" fontSize={16} fontWeight={700} fill="var(--text-strong)">{channels.length}</text>
+              <text x={cx} y={cy+11} textAnchor="middle" fontSize={9} fill="var(--text-muted)">Channels</text>
+            </>
+          )}
+        </svg>
+      </div>
+
+      {/* Legend */}
+      <div style={{ flex:1, display:'flex', flexDirection:'column', gap:10 }}>
+        {slicePaths.map(s => (
+          <div
+            key={s.ch}
+            onMouseEnter={() => setHovered(s)}
+            onMouseLeave={() => setHovered(null)}
+            style={{ display:'flex', alignItems:'center', gap:10, cursor:'pointer', opacity: hovered && !isHov(s) ? 0.45 : 1, transition:'opacity 0.15s' }}
+          >
+            {/* Color swatch */}
+            <span style={{ width:10, height:10, borderRadius:2, background:s.resolvedColor, flexShrink:0, boxShadow: isHov(s) ? `0 0 0 2px ${s.resolvedColor}40` : 'none', transition:'box-shadow 0.15s' }} />
+            {/* Channel icon + name */}
+            <div style={{ flex:1, display:'flex', alignItems:'center', gap:6 }}>
+              {CHANNEL_ICONS[s.ch] && <span style={{ flexShrink:0, lineHeight:0 }}>{CHANNEL_ICONS[s.ch]}</span>}
+              <span style={{ fontSize:12, fontWeight:500, color:'var(--text)' }}>{s.ch}</span>
+            </div>
+            {/* Pct + Amount */}
+            <div style={{ textAlign:'right' }}>
+              <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)', marginRight:6 }}>{s.pct}%</span>
+              {s.amount && <span style={{ fontSize:11, fontWeight:600, color:'var(--alert-success-primary)' }}>{s.amount}</span>}
+            </div>
+          </div>
+        ))}
+
+        {/* Others tooltip — expand on hover */}
+        {hovered?.items && (
+          <div style={{ padding:'8px 10px', borderRadius:'var(--radius-sm)', background:'var(--surface-2)', border:'1px solid var(--border)', marginTop:2 }}>
+            <div style={{ fontSize:10, fontWeight:600, color:'var(--text-muted)', marginBottom:4 }}>Included in Others:</div>
+            {hovered.items.map(x => (
+              <div key={x.ch} style={{ display:'flex', justifyContent:'space-between', fontSize:10, color:'var(--text)', lineHeight:1.8 }}>
+                <span>{x.ch}</span><span style={{ fontWeight:600 }}>{x.pct}%{x.amount ? ` · ${x.amount}` : ''}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+    </div>
+  );
+}
+
 /* ─── Cohort Analytics Drawer (Option 2) ─────────────────────────── */
 /* ─── Analytics metric definitions (labels + keys only) ─────────── */
 const ANALYTICS_METRIC_DEFS = [
@@ -2534,65 +2691,155 @@ function CohortAnalyticsDrawer({ cohort, onClose }) {
 
               {/* OVERVIEW */}
               {activeTab === 'overview' && (
-                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
-                  {/* Spend by Channel */}
-                  <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'16px 18px', background:'var(--bg-screen)' }}>
-                    <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
-                      <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Spend by Channel</span>
-                      <span style={{ fontSize:12, fontWeight:700, color:'var(--alert-success-primary)' }}>{cohort.spend30d}</span>
+                <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
+
+                  {/* ── Section A: Key Metrics vertical list ── */}
+                  <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
+                    <div style={{ padding:'12px 18px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                      <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Key Metrics</span>
+                      <span style={{ fontSize:11, color:'var(--text-muted)' }}>Last 30 days</span>
                     </div>
-                    <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
-                      {(cohort.spendByChannel || []).map(s => (
-                        <div key={s.ch}>
-                          <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:5 }}>
-                            <span style={{ flexShrink:0 }}>{CHANNEL_ICONS[s.ch]}</span>
-                            <span style={{ fontSize:12, fontWeight:500, flex:1, color:'var(--text)' }}>{s.ch}</span>
-                            <span style={{ fontSize:12, fontWeight:700, color:'var(--alert-success-primary)' }}>{s.amount}</span>
-                            <span style={{ fontSize:11, color:'var(--text-muted)', minWidth:28, textAlign:'right' }}>{s.pct}%</span>
+                    <div style={{ display:'flex', flexDirection:'column' }}>
+                      {ANALYTICS_METRIC_DEFS.map((def, i) => {
+                        const mv = metricValues[def.key];
+                        const isLast = i === ANALYTICS_METRIC_DEFS.length - 1;
+                        return (
+                          <div
+                            key={def.key}
+                            style={{
+                              display:'flex', alignItems:'center', justifyContent:'space-between',
+                              padding:'13px 18px',
+                              borderBottom: isLast ? 'none' : '1px solid var(--border)',
+                              background: selectedMetrics.includes(def.key) ? 'var(--primary-bg)' : 'transparent',
+                              transition:'background 0.15s',
+                            }}
+                          >
+                            <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                              {selectedMetrics.includes(def.key) && (
+                                <span style={{
+                                  width:3, height:16, borderRadius:2, flexShrink:0,
+                                  background: METRIC_SLOT_COLOR[selectedMetrics.indexOf(def.key)],
+                                }} />
+                              )}
+                              <span style={{ fontSize:12, color:'var(--text-muted)', fontWeight:500 }}>{def.label}</span>
+                            </div>
+                            <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                              <span style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)' }}>{mv?.value ?? '—'}</span>
+                              <span style={{
+                                fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:10,
+                                background: mv?.up ? 'var(--alert-success-bg)' : 'var(--surface-2)',
+                                color:      mv?.up ? 'var(--alert-success-darker)' : 'var(--text-muted)',
+                              }}>
+                                {mv?.up ? '↑' : '↓'} {mv?.up ? '+8%' : '−3%'}
+                              </span>
+                            </div>
                           </div>
-                          <div style={{ height:6, borderRadius:3, background:'var(--surface-2)' }}>
-                            <div style={{ width:`${s.pct}%`, height:'100%', borderRadius:3, background:s.color, transition:'width 0.4s ease' }} />
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
 
-                  {/* Audience activation summary */}
-                  <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'16px 18px', background:'var(--bg-screen)', display:'flex', flexDirection:'column', gap:16 }}>
-                    {/* Channel distribution stacked bar */}
-                    <div>
-                      <div style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)', marginBottom:10 }}>Channel Distribution</div>
-                      <div style={{ display:'flex', height:18, borderRadius:6, overflow:'hidden', marginBottom:10 }}>
-                        {(cohort.spendByChannel || []).map(s => (
-                          <div key={s.ch} title={`${s.ch}: ${s.pct}%`} style={{ width:`${s.pct}%`, background:s.color, height:'100%' }} />
-                        ))}
+                  {/* ── Section B: Spend by Channel + Pie Chart ── */}
+                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
+                    {/* Spend bars */}
+                    <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'16px 18px', background:'var(--bg-screen)' }}>
+                      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
+                        <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Spend by Channel</span>
+                        <span style={{ fontSize:12, fontWeight:700, color:'var(--alert-success-primary)' }}>{cohort.spend30d}</span>
                       </div>
-                      <div style={{ display:'flex', flexWrap:'wrap', gap:10 }}>
+                      <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
                         {(cohort.spendByChannel || []).map(s => (
-                          <div key={s.ch} style={{ display:'flex', alignItems:'center', gap:5, fontSize:11 }}>
-                            <span style={{ width:8, height:8, borderRadius:2, background:s.color, display:'inline-block', flexShrink:0 }} />
-                            <span style={{ fontWeight:500, color:'var(--text)' }}>{s.ch}</span>
-                            <span style={{ color:'var(--text-muted)' }}>{s.pct}%</span>
+                          <div key={s.ch}>
+                            <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:5 }}>
+                              <span style={{ flexShrink:0 }}>{CHANNEL_ICONS[s.ch]}</span>
+                              <span style={{ fontSize:12, fontWeight:500, flex:1, color:'var(--text)' }}>{s.ch}</span>
+                              <span style={{ fontSize:12, fontWeight:700, color:'var(--alert-success-primary)' }}>{s.amount}</span>
+                              <span style={{ fontSize:11, color:'var(--text-muted)', minWidth:28, textAlign:'right' }}>{s.pct}%</span>
+                            </div>
+                            <div style={{ height:6, borderRadius:3, background:'var(--surface-2)' }}>
+                              <div style={{ width:`${s.pct}%`, height:'100%', borderRadius:3, background:s.color, transition:'width 0.4s ease' }} />
+                            </div>
                           </div>
                         ))}
+                        {(cohort.spendByChannel || []).length === 0 && (
+                          <div style={{ textAlign:'center', padding:'24px 0', color:'var(--text-muted)', fontSize:12 }}>No channel data</div>
+                        )}
                       </div>
                     </div>
-                    {/* Activation KPIs */}
-                    <div style={{ borderTop:'1px solid var(--border)', paddingTop:14, display:'flex', flexDirection:'column', gap:10 }}>
-                      {[
-                        { label:'Activated Advertisers', value:`${cohort.activatedAdvertisers} of ${cohort.advertisers}` },
-                        { label:'Active Channels',       value:String(cohort.activatedChannels || 0) },
-                        { label:'Running Campaigns',     value:String(cohort.campaignCount || 0) },
-                        { label:'Audience Size',         value:cohort.size },
-                      ].map(row => (
-                        <div key={row.label} style={{ display:'flex', justifyContent:'space-between', fontSize:11 }}>
-                          <span style={{ color:'var(--text-muted)' }}>{row.label}</span>
-                          <span style={{ fontWeight:700, color:'var(--text)' }}>{row.value}</span>
-                        </div>
-                      ))}
+
+                    {/* Donut pie chart */}
+                    <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'16px 18px', background:'var(--bg-screen)' }}>
+                      <div style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)', marginBottom:14 }}>Channel Distribution</div>
+                      <SpendPieChart channels={cohort.spendByChannel || []} />
                     </div>
                   </div>
+
+                  {/* ── Section C: Campaign Preview ── */}
+                  {(() => {
+                    const campaigns = (cohort.campaignDetails || []).slice(0, 3);
+                    return (
+                      <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
+                        <div style={{ padding:'12px 18px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                          <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Recent Campaigns</span>
+                          {(cohort.campaignDetails || []).length > 0 && (
+                            <button
+                              onClick={() => setActiveTab('campaigns')}
+                              style={{ background:'none', border:'none', fontSize:11, fontWeight:600, color:'var(--primary)', cursor:'pointer', padding:0 }}
+                            >
+                              See all {(cohort.campaignDetails || []).length} →
+                            </button>
+                          )}
+                        </div>
+                        {campaigns.length === 0 ? (
+                          <div style={{ textAlign:'center', padding:'32px 24px' }}>
+                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ margin:'0 auto 10px', display:'block' }}>
+                              <circle cx="16" cy="16" r="15" stroke="var(--border)" strokeWidth="1.5"/>
+                              <path d="M10 22l3-7 3 4 2.5-4 3.5 7" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                            <div style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)', marginBottom:4 }}>No campaigns yet</div>
+                            <div style={{ fontSize:11, color:'var(--text-muted)' }}>Share this cohort to start seeing campaign activity.</div>
+                          </div>
+                        ) : (
+                          <table style={{ width:'100%', borderCollapse:'collapse', fontSize:11 }}>
+                            <thead>
+                              <tr style={{ background:'var(--surface-1)' }}>
+                                {['STATUS','CAMPAIGN','ADVERTISER','CHANNEL','SPEND · 30D'].map(h => (
+                                  <th key={h} style={{ padding:'9px 14px', textAlign:'left', fontSize:9, fontWeight:700, color:'var(--text-info)', letterSpacing:'0.06em', textTransform:'uppercase', borderBottom:'1px solid var(--border)' }}>{h}</th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {campaigns.map((c, i) => (
+                                <tr key={c.name} style={{ borderBottom: i < campaigns.length-1 ? '1px solid var(--border)' : 'none' }}>
+                                  <td style={{ padding:'11px 14px' }}>
+                                    <span style={{ display:'inline-flex', alignItems:'center', gap:5 }}>
+                                      <span style={{ width:6, height:6, borderRadius:'50%', background:c.status==='Active'?'var(--alert-success-primary)':'var(--text-info)', flexShrink:0 }} />
+                                      <span style={{ fontSize:11, color:c.status==='Active'?'var(--alert-success-darker)':'var(--text-muted)' }}>{c.status}</span>
+                                    </span>
+                                  </td>
+                                  <td style={{ padding:'11px 14px', fontWeight:600, color:'var(--text)', maxWidth:160, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.name}</td>
+                                  <td style={{ padding:'11px 14px' }}>
+                                    <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}>
+                                      <span style={{ width:20, height:20, borderRadius:'50%', background:c.color, display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:8, fontWeight:700, color:'#fff', flexShrink:0 }}>{c.initials}</span>
+                                      <span style={{ color:'var(--text-muted)' }}>{c.advertiser}</span>
+                                    </span>
+                                  </td>
+                                  <td style={{ padding:'11px 14px' }}>
+                                    <span style={{ display:'inline-flex', alignItems:'center', gap:4 }}>
+                                      {CHANNEL_ICONS[c.channel] || null}
+                                      <span style={{ color:'var(--text-muted)' }}>{c.channel}</span>
+                                    </span>
+                                  </td>
+                                  <td style={{ padding:'11px 14px', fontWeight:700, color:'var(--alert-success-primary)' }}>{c.spend}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        )}
+                      </div>
+                    );
+                  })()}
+
                 </div>
               )}
 
