@@ -7,6 +7,7 @@ import {
 } from '../../ui';
 import { AISuggestionsPanel } from './ai-suggestions-panel';
 import { SofieChatPanel } from './sofie-chat-panel';
+import { AccountSelector, AccountSelectorV2 } from './account-selector';
 
 // ── Hand-rolled icons (Lucide paths) ─────────────────────────────────────────
 const SparklesIcon = ({ size = 16, color = '#8b5cf6' }) => (
@@ -74,17 +75,14 @@ export function Header({ activeAdType = 'Product Ads' }) {
       }}>
         {/* Left — advertiser picker + breadcrumb */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          {/* Advertiser selector pill */}
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 8,
-            padding: '8px 12px',
-            border: `1px solid var(--osmos-border)`, borderRadius: 8,
-          }}>
-            <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--osmos-fg)' }}>
-              Whitakers (Whitakers)
-            </span>
-            <ChevronDownIcon size={16} color="var(--osmos-fg-muted)" />
-          </div>
+          {/* Variant 1 — DS-style accordion hierarchy */}
+          <AccountSelector />
+
+          {/* Divider */}
+          <span style={{ width: 1, height: 20, background: 'var(--osmos-border, #e5e7eb)', flexShrink: 0 }} />
+
+          {/* Variant 2 — Multi-select breadcrumb pills */}
+          <AccountSelectorV2 />
 
           {/* Breadcrumb */}
           <nav style={{ display: 'flex', alignItems: 'center', gap: 8 }} aria-label="Breadcrumb">

@@ -12,6 +12,8 @@
   /* Brand — maps to Figma BrandColours */
   --osmos-brand-primary:        var(--brand-primary);           /* #636cff */
   --osmos-brand-primary-muted:  rgba(99, 108, 255, 0.12);       /* no Figma token yet — keep custom */
+  --osmos-brand-primary-bg:     #3877CB;                        /* primary button selected/bg state */
+  --osmos-brand-primary-bg-fg:  #ffffff;                        /* text on primary-bg */
   --osmos-brand-green:          var(--chart-mintgreen);          /* #1ca678 */
   --osmos-brand-green-muted:    var(--alert-success-bg);         /* #eaf2eb */
   --osmos-brand-amber:          var(--chart-yellow);             /* #f9a825 */
@@ -23,6 +25,7 @@
 
   /* Surfaces & backgrounds */
   --osmos-bg:                   var(--bg-screen);               /* #ffffff */
+  --osmos-bg-surface-1:         var(--surface-1);               /* #fafafa — Greyscale / Grey Surface 1 */
   --osmos-bg-muted:             var(--surface-2);               /* #efefef */
   --osmos-bg-subtle:            var(--bg-screen-2);             /* #edf0f5 */
 

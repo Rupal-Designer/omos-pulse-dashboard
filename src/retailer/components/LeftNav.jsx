@@ -73,11 +73,6 @@ const NAV_SECTIONS = [
       { id: 'persona-config',                label: 'Persona Configuration',                    group: 'Advertiser Management' },
       // ── Product Catalog Management (top-level direct link, no group)
       { id: 'product-catalog',               label: 'Product Catalog Management' },
-      // ── Audience Manager
-      { id: 'manage-segments',               label: 'Manage Segments',                         group: 'Audience Manager' },
-      { id: 'manage-attributes',             label: 'Manage Attributes',                        group: 'Audience Manager' },
-      { id: 'attribute-targeting',           label: 'Manage Activity Targeting',                group: 'Audience Manager' },
-      { id: 'manage-cpm-rules',              label: 'Manage CPM/CPC Rules',                     group: 'Audience Manager' },
       // ── User Access Management
       { id: 'super-admin',                   label: 'Super Admin users',                        group: 'User Access Management' },
       { id: 'ops-users',                     label: 'Ops User',                                 group: 'User Access Management' },
@@ -131,6 +126,22 @@ const NAV_SECTIONS = [
       { id: 'product-ads-yield-cpm',    label: 'CPM Yield Control',       group: 'Campaign Management' },
       { id: 'product-ads-keyword',      label: 'Keyword Bid Settings',    group: 'Campaign Management' },
       { id: 'product-ads-bulk',         label: 'Campaign Bulk Actions',   group: 'Campaign Management' },
+    ],
+  },
+  {
+    id: 'audience-manager',
+    label: 'Audience Manager',
+    icon: (
+      <>
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </>
+    ),
+    subnav: [
+      { id: 'audience-catalog',    label: 'Catalog Mapping', group: 'Cohort Management' },
+      { id: 'audience-analytics',  label: 'Analytics',       group: 'Analytics' },
     ],
   },
   {

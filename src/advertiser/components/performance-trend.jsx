@@ -4,8 +4,21 @@ import {
   ResponsiveContainer, CartesianGrid,
 } from 'recharts';
 
+// ── Design tokens ────────────────────────────────────────────────────────────
+const FONT       = "'Open Sans', sans-serif";
+const BG         = 'var(--osmos-bg)';
+const BG_SUBTLE  = 'var(--osmos-bg-subtle)';
+const BORDER     = 'var(--osmos-border)';
+const TEXT       = 'var(--osmos-fg)';
+const TEXT_MID   = 'var(--osmos-fg-muted)';
+const ACCENT     = 'var(--osmos-brand-primary)';
+const GREEN      = 'var(--osmos-brand-green)';
+const AMBER      = 'var(--osmos-brand-amber)';
+const AI_COLOR   = '#8b5cf6';
+const AI_BG      = 'var(--osmos-brand-violet-muted)';
+
 // ── Hand-rolled Sparkles icon ─────────────────────────────────────────────────
-const SparklesIcon = ({ size = 14, color = '#8b5cf6' }) => (
+const SparklesIcon = ({ size = 14, color = AI_COLOR }) => (
   <Icon size={size} color={color}>
     <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3z" />
     <path d="M5 3v4" /><path d="M19 17v4" />
@@ -53,20 +66,20 @@ const performanceData = {
   },
   'Offsite Ads': {
     chartData: [
-      { date: '05/08', clicks: 6,    adImpressions: 120, adRevenue: 18.5, adSpend: 2100, roas: 8.5  },
-      { date: '05/09', clicks: 7.5,  adImpressions: 145, adRevenue: 22.4, adSpend: 2450, roas: 10.2 },
-      { date: '05/10', clicks: 8.2,  adImpressions: 168, adRevenue: 26.8, adSpend: 2850, roas: 12.1 },
-      { date: '05/11', clicks: 9.5,  adImpressions: 192, adRevenue: 31.2, adSpend: 3250, roas: 14.8 },
-      { date: '05/12', clicks: 10.2, adImpressions: 185, adRevenue: 29.5, adSpend: 3100, roas: 13.9 },
-      { date: '05/13', clicks: 8.8,  adImpressions: 172, adRevenue: 27.1, adSpend: 2900, roas: 12.5 },
-      { date: '05/14', clicks: 7.9,  adImpressions: 155, adRevenue: 23.7, adSpend: 2650, roas: 11.2 },
+      { date: '05/08', ctr: 12, clicks: 6,    impressions: 120, conversions: 8.5,  spend: 2100 },
+      { date: '05/08', ctr: 15, clicks: 7.5,  impressions: 145, conversions: 10.2, spend: 2450 },
+      { date: '05/08', ctr: 18, clicks: 8.2,  impressions: 168, conversions: 12.1, spend: 2850 },
+      { date: '05/08', ctr: 22, clicks: 9.5,  impressions: 192, conversions: 14.8, spend: 3250 },
+      { date: '05/08', ctr: 20, clicks: 10.2, impressions: 185, conversions: 13.9, spend: 3100 },
+      { date: '05/08', ctr: 19, clicks: 8.8,  impressions: 172, conversions: 12.5, spend: 2900 },
+      { date: '05/08', ctr: 17, clicks: 7.9,  impressions: 155, conversions: 11.2, spend: 2650 },
     ],
     metrics: {
-      'Ad Clicks':     { value: '129 M',   color: '#ef6c00' },
-      'Ad Impression': { value: '7.9 B',   color: '#1976d2' },
-      'Ad Revenue':    { value: '$23.7 M', color: '#1970E1' },
-      'Ad Spend':      { value: '0.28%',   color: '#4bae4f' },
-      'ROAS':          { value: '12.73',   color: 'var(--osmos-brand-violet)' },
+      CTR:         { value: '19.7%',    color: '#4bae4f' },
+      'Ad Clicks': { value: '8.9 M',    color: '#ef6c00' },
+      Impressions: { value: '18.5 M',   color: '#1976d2' },
+      Conversions: { value: '125.8 K',  color: 'var(--osmos-brand-violet)' },
+      Spend:       { value: '$28,300',  color: '#d32f2f' },
     },
   },
 };
@@ -75,21 +88,10 @@ const performanceData = {
 const metricKeyMap = {
   CTR: 'ctr', 'Ad Clicks': 'clicks', Impressions: 'impressions',
   Conversions: 'conversions', Spend: 'spend',
-  // Offsite Ads specific metrics
-  'Ad Clicks':     'clicks',
-  'Ad Impression': 'adImpressions',
-  'Ad Revenue':    'adRevenue',
-  'Ad Spend':      'adSpend',
-  'ROAS':          'roas',
 };
 const metricColors = {
   CTR: '#4bae4f', 'Ad Clicks': '#ef6c00', Impressions: '#1976d2',
   Conversions: 'var(--osmos-brand-violet)', Spend: '#d32f2f',
-  // Offsite Ads specific
-  'Ad Impression': '#1976d2',
-  'Ad Revenue':    '#1970E1',
-  'Ad Spend':      '#4bae4f',
-  'ROAS':          'var(--osmos-brand-violet)',
 };
 
 // ── PerformanceTrend ──────────────────────────────────────────────────────────
@@ -145,9 +147,9 @@ export function PerformanceTrend({
 
   return (
     <div style={{
-      borderRadius: 8, border: `1px solid var(--osmos-border)`, padding: 16,
+      borderRadius: 8, border: `1px solid ${BORDER}`, padding: 16,
       position: 'relative', transition: 'all 0.3s',
-      backgroundColor: 'var(--osmos-bg)', fontFamily: "'Open Sans', sans-serif",
+      backgroundColor: BG, fontFamily: FONT,
     }}>
       {/* ── Header ── */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -156,19 +158,19 @@ export function PerformanceTrend({
           <div style={{
             width: 24, height: 24, borderRadius: 4,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            backgroundColor: 'var(--osmos-brand-violet-muted)',
+            backgroundColor: AI_BG,
           }}>
-            <SparklesIcon size={14} color="#8b5cf6" />
+            <SparklesIcon size={14} color={AI_COLOR} />
           </div>
-          <span style={{ fontWeight: 500, color: 'var(--osmos-fg)' }}>Performance Trend</span>
-          <InfoIcon size={14} color="var(--osmos-fg-muted)" />
+          <span style={{ fontWeight: 500, color: TEXT }}>Performance Trend</span>
+          <InfoIcon size={14} color={TEXT_MID} />
         </div>
 
         {/* Right controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {/* D/W/M granularity toggle */}
           <div style={{
-            display: 'flex', border: `1px solid var(--osmos-border)`,
+            display: 'flex', border: `1px solid ${BORDER}`,
             borderRadius: 8, overflow: 'hidden',
           }}>
             {['D', 'W', 'M'].map((period, i) => (
@@ -176,9 +178,9 @@ export function PerformanceTrend({
                 key={period}
                 style={{
                   padding: '6px 12px', border: 'none', cursor: 'pointer',
-                  fontSize: 12, fontWeight: i === 0 ? 500 : 400, fontFamily: "'Open Sans', sans-serif",
-                  backgroundColor: i === 0 ? 'var(--osmos-bg-subtle)' : 'transparent',
-                  color: i === 0 ? 'var(--osmos-fg)' : 'var(--osmos-fg-muted)',
+                  fontSize: 12, fontWeight: i === 0 ? 500 : 400, fontFamily: FONT,
+                  backgroundColor: i === 0 ? BG_SUBTLE : 'transparent',
+                  color: i === 0 ? TEXT : TEXT_MID,
                   transition: 'all 0.15s',
                 }}
                 onMouseEnter={(e) => { if (i !== 0) e.currentTarget.style.opacity = '0.8'; }}
@@ -193,10 +195,10 @@ export function PerformanceTrend({
           <button style={{
             width: 32, height: 32,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            border: `1px solid var(--osmos-border)`, borderRadius: 8,
+            border: `1px solid ${BORDER}`, borderRadius: 8,
             background: 'transparent', cursor: 'pointer',
           }}>
-            <DownloadIcon size={14} color="var(--osmos-fg-muted)" />
+            <DownloadIcon size={14} color={TEXT_MID} />
           </button>
         </div>
       </div>
@@ -205,9 +207,9 @@ export function PerformanceTrend({
       <div style={{
         transition: 'all 0.3s', overflow: 'hidden',
         opacity: hasMetrics ? 1 : 0,
-        maxHeight: hasMetrics ? 480 : 0,
+        maxHeight: hasMetrics ? 300 : 0,
       }}>
-        <div style={{ height: 380 }}>
+        <div style={{ height: 200 }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#efefef" />
@@ -252,8 +254,8 @@ export function PerformanceTrend({
                 width: 12, height: 12, borderRadius: 2,
                 backgroundColor: metricColors[metric],
               }} />
-              <span style={{ fontSize: 12, color: 'var(--osmos-fg-muted)' }}>{metric}</span>
-              <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--osmos-fg)' }}>
+              <span style={{ fontSize: 12, color: TEXT_MID }}>{metric}</span>
+              <span style={{ fontSize: 12, fontWeight: 500, color: TEXT }}>
                 {metrics[metric]?.value || '-'}
               </span>
             </div>

@@ -63,6 +63,7 @@ import DisplayAdsInventoryMgmtPage from './components/DisplayAdsInventoryMgmtPag
 import DevelopSettingsPage from './components/DevelopSettingsPage';
 import SetupDetailsPage from './components/SetupDetailsPage';
 import BYOTAdminConfigPage from './components/BYOTAdminConfigPage';
+import AudienceManagerCatalogPage from './components/AudienceManagerCatalogPage';
 
 /* ── Analytics dashboard (the original page) ─────────────────── */
 function AnalyticsDashboard({ bare = false }) {
@@ -589,6 +590,15 @@ export default function App() {
             <TopBar section="Sponsored Ads" page="Inventory Setup" onNavigate={setActivePage} />
             <main style={{ flex: 1, overflowY: 'auto', background: 'var(--osmos-bg-subtle)' }}>
               <SponsoredAdsInventoryPage />
+            </main>
+          </>
+        );
+      case 'audience-catalog':
+        return (
+          <>
+            <TopBar section="Audience Manager" page="Catalog Mapping" onNavigate={setActivePage} />
+            <main style={{ flex: 1, overflowY: 'auto', background: 'var(--osmos-bg)' }}>
+              <AudienceManagerCatalogPage />
             </main>
           </>
         );
