@@ -2839,7 +2839,7 @@ export default function AudienceManagerCatalogPage() {
   }
 
   /* grid: checkbox | status | cohort-name | size | source | type | visibility | channels | active-adv | campaigns | cpm | cpe | spend | analytics | actions */
-  const TABLE_COLS = '36px 70px 1fr 60px 90px 110px 90px 130px 100px 95px 60px 60px 70px 40px 44px';
+  const TABLE_COLS = '36px 70px 200px 60px 90px 110px 90px 130px 100px 95px 60px 60px 70px 40px 44px';
   const hasActiveFilters = filters.source !== 'All' || filters.vis !== 'All' || filters.q !== '';
 
   /* ── Filter dropdown ── */
@@ -3004,7 +3004,7 @@ export default function AudienceManagerCatalogPage() {
           )}
 
           {/* ── Table ── */}
-          <div ref={tableRef} style={{ borderRadius:'var(--radius-lg)', border:'1px solid var(--border)', background:'var(--surface-3)', overflow:'hidden' }}>
+          <div ref={tableRef} style={{ borderRadius:'var(--radius-lg)', border:'1px solid var(--border)', background:'var(--surface-3)', overflowX:'auto', overflowY:'hidden' }}>
 
             {/* Table header */}
             <div style={{ display:'grid', gridTemplateColumns:TABLE_COLS, borderBottom:'1px solid var(--border)', background:'var(--surface-1)' }}>
