@@ -1842,6 +1842,481 @@ function CreateCohortDrawer({ onClose, onCreate }) {
   );
 }
 
+/* ─── Edit Cohort Drawer (Option 2 — read-only except Pricing) ──── */
+function EditCohortDrawer({ cohort, onClose, onSave }) {
+  const [step, setStep] = useState(1);
+  const [localCpm, setLocalCpm] = useState(cohort.cpm);
+  const [localCpe, setLocalCpe] = useState(cohort.cpe);
+
+  /* Manage Access state */
+  const [vis,           setVis]           = useState(cohort.visibility);
+  const [selChannels,   setSelChannels]   = useState(new Set(cohort.availableChannels));
+  const [selAdvs,       setSelAdvs]       = useState(new Set(cohort.sharingAdvertisers));
+  const [visConfirm,    setVisConfirm]    = useState(null);
+  const [advOverrides,  setAdvOverrides]  = useState({});
+  const setOverride = (name, field, val) =>
+    setAdvOverrides(prev => ({ ...prev, [name]: { ...prev[name], [field]: val } }));
+
+  function toggleChannel(ch) { setSelChannels(s => { const n = new Set(s); n.has(ch) ? n.delete(ch) : n.add(ch); return n; }); }
+  function toggleAdv(adv)    { setSelAdvs(s => { const n = new Set(s); n.has(adv) ? n.delete(adv) : n.add(adv); return n; }); }
+
+  /* ── VisCard ── */
+  function VisCard({ id, label, desc }) {
+    const active = vis === id;
+    return (
+      <button onClick={() => { if (!active) setVisConfirm(id); }}
+        style={{ flex:1, display:'flex', alignItems:'center', gap:10, padding:'12px 14px', borderRadius:8, border:`1.5px solid ${active?'var(--primary)':'var(--border)'}`, background:active?'var(--primary-bg)':'var(--bg-screen)', cursor:'pointer', textAlign:'left', transition:'all 0.15s', minWidth:0 }}>
+        <span style={{ width:16, height:16, borderRadius:'50%', border:`2px solid ${active?'var(--primary)':'var(--border-strong)'}`, background:active?'var(--primary)':'transparent', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+          {active && <span style={{ width:5, height:5, borderRadius:'50%', background:'#fff', display:'block' }} />}
+        </span>
+        <div style={{ flex:1, minWidth:0 }}>
+          <div style={{ fontSize:13, fontWeight:600, color:active?'var(--primary)':'var(--text)', marginBottom:2 }}>{label}</div>
+          <div style={{ fontSize:12, color:'var(--text-muted)' }}>{desc}</div>
+        </div>
+      </button>
+    );
+  }
+
+  /* ── ChannelCard ── */
+  function ChannelCard({ ch }) {
+    const active = selChannels.has(ch);
+    return (
+      <button onClick={() => toggleChannel(ch)}
+        style={{ display:'flex', alignItems:'center', gap:10, padding:'13px 16px', borderRadius:8, border:`1.5px solid ${active?'var(--osmos-brand-primary-bg)':'var(--border)'}`, background:active?'var(--primary-bg)':'var(--bg-screen)', cursor:'pointer', textAlign:'left', transition:'all 0.15s' }}>
+        <span style={{ width:18, height:18, borderRadius:4, border:`2px solid ${active?'var(--osmos-brand-primary-bg)':'var(--border-strong)'}`, background:active?'var(--osmos-brand-primary-bg)':'transparent', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+          {active && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.5"><polyline points="20 6 9 17 4 12"/></svg>}
+        </span>
+        <span style={{ flexShrink:0 }}>{CHANNEL_ICONS[ch]||null}</span>
+        <span style={{ fontSize:13, fontWeight:500, color:'var(--text)' }}>{ch}</span>
+      </button>
+    );
+  }
+
+  /* ── VisConfirmDialog ── */
+  function VisConfirmDialog() {
+    if (!visConfirm) return null;
+    const dialogContent = {
+      Private: { title:'Make Cohort Private?', body:<span>Making it private will remove all advertiser access.</span>, confirmLabel:'Yes, Make Private', confirmBg:'var(--osmos-brand-primary-bg)' },
+      Shared:  { title:'Change to Shared?',    body:'This cohort will be visible only to the advertisers you assign below.', confirmLabel:'Yes, Make Shared', confirmBg:'var(--osmos-brand-primary-bg)' },
+      Public:  { title:'Make Cohort Public?',  body:'All advertisers on the platform will be able to see and use this cohort.', confirmLabel:'Yes, Make Public', confirmBg:'var(--osmos-brand-primary-bg)' },
+    };
+    const d = dialogContent[visConfirm];
+    return (
+      <>
+        <div style={{ position:'fixed', inset:0, zIndex:1060, background:'rgba(0,0,0,0.35)' }} onClick={() => setVisConfirm(null)} />
+        <div style={{ position:'fixed', top:'50%', left:'50%', transform:'translate(-50%,-50%)', zIndex:1061, width:420, background:'var(--bg-screen)', borderRadius:8, border:'1px solid var(--border)', boxShadow:'var(--shadow-card)', overflow:'hidden', display:'flex', flexDirection:'column' }}>
+          <div style={{ background:'var(--primary-bg)', padding:'14px 20px', display:'flex', alignItems:'center', justifyContent:'space-between', borderBottom:'1px solid var(--border)' }}>
+            <span style={{ fontSize:15, fontWeight:700, color:'var(--text-strong)' }}>{d.title}</span>
+            <button onClick={() => setVisConfirm(null)} style={{ border:'none', background:'none', cursor:'pointer', color:'var(--text-muted)', fontSize:18, lineHeight:1, padding:'2px 4px' }}>×</button>
+          </div>
+          <div style={{ padding:'20px 20px 16px', fontSize:13, color:'var(--text-muted)', lineHeight:1.7 }}>{d.body}</div>
+          <div style={{ padding:'12px 20px 16px', display:'flex', gap:10, justifyContent:'center' }}>
+            <button onClick={() => setVisConfirm(null)} style={{ padding:'9px 24px', borderRadius:6, border:'1px solid var(--border)', background:'var(--bg-screen)', fontSize:13, fontWeight:500, cursor:'pointer', color:'var(--text)' }} onMouseEnter={e => e.currentTarget.style.background='var(--surface-1)'} onMouseLeave={e => e.currentTarget.style.background='var(--bg-screen)'}>Cancel</button>
+            <button onClick={() => { setVis(visConfirm); setVisConfirm(null); }} style={{ padding:'9px 24px', borderRadius:6, border:'none', background:d.confirmBg, color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer', boxShadow:'var(--shadow-button)' }} onMouseEnter={e => e.currentTarget.style.opacity='0.88'} onMouseLeave={e => e.currentTarget.style.opacity='1'}>{d.confirmLabel}</button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div onClick={onClose} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.3)', zIndex:999 }} />
+      <div style={{ position:'fixed', top:0, right:0, height:'100vh', width:'var(--drawer-sm)', background:'var(--surface-3)', boxShadow:'var(--shadow-card)', zIndex:1000, display:'flex', flexDirection:'column', fontFamily:"'Open Sans',sans-serif" }} role="dialog" aria-label="Edit cohort">
+
+        {/* Header */}
+        <div style={{ padding:'20px 28px', borderBottom:'1px solid var(--border)', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'space-between', background:'var(--primary-bg)' }}>
+          <h2 style={{ margin:0, fontSize:17, fontWeight:700, color:'var(--text)' }}>Edit Cohort</h2>
+          <button onClick={onClose} aria-label="Close" style={{ width:30, height:30, borderRadius:'var(--radius-md)', border:'1px solid var(--border)', background:'var(--surface-3)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'var(--text-muted)', flexShrink:0 }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <CCStepBar current={step} />
+
+        {/* Scrollable body */}
+        <div style={{ flex:1, overflowY:'auto', padding:'24px 28px' }}>
+
+          {/* ── STEP 1: Read-only Cohort Details + editable Pricing ── */}
+          {step === 1 && (
+            <>
+              {/* Info banner */}
+              <div style={{ display:'flex', alignItems:'center', gap:8, background:'var(--primary-bg)', border:'1px solid var(--primary-tint-1)', borderRadius:'var(--radius-md)', padding:'10px 14px', marginBottom:24, fontSize:12, color:'var(--primary)' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                ℹ️ Cohort configuration is read-only. Only pricing can be updated.
+              </div>
+
+              {/* Cohort Type — read-only card */}
+              <div style={{ marginBottom:20 }}>
+                <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:8 }}>Cohort Type</label>
+                <div style={{ position:'relative', display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+                  <div style={{ padding:'16px 16px 16px 44px', borderRadius:'var(--radius-lg)', border:'1.5px solid var(--primary)', background:'var(--primary-bg)', opacity:0.7, cursor:'not-allowed', userSelect:'none' }}>
+                    <div style={{ fontSize:13, fontWeight:600, color:'var(--primary)', marginBottom:4 }}>{cohort.type === 'My Cohort' ? 'My Cohort' : 'Import by ID'}</div>
+                    <div style={{ fontSize:11, color:'var(--text-muted)' }}>{cohort.type === 'My Cohort' ? 'Created natively in Pulse' : 'Imported via external platform'}</div>
+                  </div>
+                  {/* Lock overlay */}
+                  <div style={{ position:'absolute', top:8, right:8, fontSize:14, pointerEvents:'none' }}>🔒</div>
+                </div>
+              </div>
+
+              {/* Cohort Name — disabled */}
+              <div style={{ marginBottom:20 }}>
+                <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:8 }}>Cohort Name</label>
+                <input disabled value={cohort.name}
+                  style={{ width:316, height:40, padding:'0 12px', borderRadius:'var(--radius-md)', border:'1px solid var(--border)', background:'var(--surface-1)', fontSize:13, color:'var(--text)', opacity:0.6, cursor:'not-allowed', boxSizing:'border-box' }} />
+              </div>
+
+              {/* Description — disabled */}
+              <div style={{ marginBottom:20 }}>
+                <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:8 }}>Description</label>
+                <textarea disabled value={cohort.description} rows={3}
+                  style={{ width:316, padding:'10px 12px', borderRadius:'var(--radius-md)', border:'1px solid var(--border)', background:'var(--surface-1)', fontSize:13, color:'var(--text)', opacity:0.6, cursor:'not-allowed', resize:'none', boxSizing:'border-box', lineHeight:1.5, fontFamily:'inherit' }} />
+              </div>
+
+              {/* Audience Source — read-only card */}
+              <div style={{ marginBottom:20 }}>
+                <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:8 }}>Audience Source</label>
+                <div style={{ position:'relative', display:'inline-block', width:316 }}>
+                  <div style={{ padding:'12px 14px', borderRadius:'var(--radius-md)', border:'1px solid var(--border)', background:'var(--surface-1)', opacity:0.7, cursor:'not-allowed', userSelect:'none', display:'flex', alignItems:'center', gap:8 }}>
+                    <SourceBadge source={cohort.source === 'API' ? 'API' : cohort.source} />
+                    <span style={{ fontSize:12, color:'var(--text-muted)' }}>{cohort.sourceNote}</span>
+                  </div>
+                  <div style={{ position:'absolute', top:8, right:8, fontSize:12, pointerEvents:'none' }}>🔒</div>
+                </div>
+              </div>
+
+              {/* Audience ID — read-only */}
+              <div style={{ marginBottom:28 }}>
+                <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:8 }}>Audience ID</label>
+                <input disabled value={cohort.audienceId}
+                  style={{ width:316, height:40, padding:'0 12px', borderRadius:'var(--radius-md)', border:'1px solid var(--border)', background:'var(--surface-1)', fontSize:13, color:'var(--text)', opacity:0.6, cursor:'not-allowed', boxSizing:'border-box', fontFamily:'monospace' }} />
+              </div>
+
+              {/* Pricing — EDITABLE */}
+              <div style={{ marginBottom:28 }}>
+                <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:4 }}>Pricing</label>
+                <p style={{ margin:'0 0 12px', fontSize:11, color:'var(--text-muted)' }}>Update CPM and CPE rates for this cohort.</p>
+                <PricingEditor cpm={localCpm} cpe={localCpe} onSave={(c,e) => { setLocalCpm(c); setLocalCpe(e); }} />
+              </div>
+            </>
+          )}
+
+          {/* ── STEP 2: Manage Access (same as CohortReviewModal TabManageAccess) ── */}
+          {step === 2 && (
+            <div>
+              {/* Visibility */}
+              <div style={{ marginBottom:28 }}>
+                <div style={{ fontSize:13, fontWeight:600, color:'var(--text-strong)', marginBottom:3 }}>Visibility <span style={{ color:'var(--alert-error-primary)' }}>*</span></div>
+                <div style={{ fontSize:13, color:'var(--text-muted)', marginBottom:14 }}>Control who can see and use this cohort.</div>
+                <div style={{ display:'flex', gap:12 }}>
+                  <VisCard id="Private" label="Private" desc="Only you can use this cohort" />
+                  <VisCard id="Shared"  label="Shared"  desc="Selected advertisers can use this" />
+                  <VisCard id="Public"  label="Public"  desc="All advertisers on the platform" />
+                </div>
+              </div>
+
+              {/* Available Channels */}
+              {vis !== 'Private' && (
+                <div style={{ marginBottom:28 }}>
+                  <div style={{ fontSize:13, fontWeight:600, color:'var(--text-strong)', marginBottom:3 }}>Available Channels <span style={{ color:'var(--alert-error-primary)' }}>*</span></div>
+                  <div style={{ fontSize:13, color:'var(--text-muted)', marginBottom:14 }}>Select channels where this cohort will be available.</div>
+                  <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10 }}>
+                    {ALL_CHANNELS.map(ch => <ChannelCard key={ch} ch={ch} />)}
+                  </div>
+                </div>
+              )}
+
+              {/* Assign Advertisers — only when Shared */}
+              {vis === 'Shared' && (
+                <div>
+                  <div style={{ fontSize:13, fontWeight:600, color:'var(--text-strong)', marginBottom:3 }}>Assign Advertisers <span style={{ color:'var(--alert-error-primary)' }}>*</span></div>
+                  <div style={{ fontSize:13, color:'var(--text-muted)', marginBottom:14 }}>Select advertisers who can access this audience cohort.</div>
+                  <div style={{ borderRadius:8, border:'1px solid var(--border-table)', overflow:'hidden' }}>
+                    <div style={{ display:'grid', gridTemplateColumns:'44px 1fr 160px 130px 130px', background:'var(--surface-1)', borderBottom:'1px solid var(--border-table)', padding:'10px 16px', alignItems:'center' }}>
+                      <div><input type="checkbox" checked={ALL_ADVERTISERS.every(a => selAdvs.has(a.name))} onChange={e => setSelAdvs(e.target.checked ? new Set(ALL_ADVERTISERS.map(a=>a.name)) : new Set())} style={{ cursor:'pointer', accentColor:'var(--osmos-brand-primary-bg)' }} /></div>
+                      <div style={{ fontSize:12, fontWeight:600, color:'var(--text-muted)' }}>Advertiser</div>
+                      <div style={{ fontSize:12, fontWeight:600, color:'var(--text-muted)' }}>Category</div>
+                      <div style={{ fontSize:12, fontWeight:600, color:'var(--text-muted)' }}>CPM Override<div style={{ fontSize:10, fontWeight:400, marginTop:1 }}>per 1K impressions</div></div>
+                      <div style={{ fontSize:12, fontWeight:600, color:'var(--text-muted)' }}>CPE Override<div style={{ fontSize:10, fontWeight:400, marginTop:1 }}>cost per 1000 entries</div></div>
+                    </div>
+                    {[...ALL_ADVERTISERS].sort((a,b) => { const ac=selAdvs.has(a.name), bc=selAdvs.has(b.name); return ac===bc?0:ac?-1:1; }).map((adv,i,arr) => {
+                      const chk = selAdvs.has(adv.name);
+                      const ov  = advOverrides[adv.name] || {};
+                      return (
+                        <div key={adv.name} style={{ display:'grid', gridTemplateColumns:'44px 1fr 160px 130px 130px', padding:'10px 16px', borderBottom:i<arr.length-1?'1px solid var(--border-table)':'none', background:chk?'var(--primary-bg)':'var(--bg-screen)', alignItems:'center' }}
+                          onMouseEnter={e => { if (!chk) e.currentTarget.style.background='var(--surface-1)'; }}
+                          onMouseLeave={e => { if (!chk) e.currentTarget.style.background='var(--bg-screen)'; }}>
+                          <div onClick={e => e.stopPropagation()}><input type="checkbox" checked={chk} onChange={() => toggleAdv(adv.name)} style={{ cursor:'pointer', accentColor:'var(--osmos-brand-primary-bg)' }} /></div>
+                          <div onClick={() => toggleAdv(adv.name)} style={{ fontSize:13, color:'var(--text)', fontWeight:chk?600:400, cursor:'pointer' }}>{adv.name}</div>
+                          <div onClick={() => toggleAdv(adv.name)} style={{ fontSize:13, color:'var(--text-muted)', cursor:'pointer' }}>{adv.category}</div>
+                          <div onClick={e => e.stopPropagation()}><div style={{ position:'relative', display:'flex', alignItems:'center' }}><span style={{ position:'absolute', left:8, fontSize:12, color:'var(--text-muted)', pointerEvents:'none' }}>$</span><input type="number" min="0" step="0.01" value={ov.cpm??''} onChange={e => setOverride(adv.name,'cpm',e.target.value)} placeholder={adv.defaultCpm} disabled={!chk} style={{ width:'100%', padding:'5px 8px 5px 18px', fontSize:13, borderRadius:6, border:'1px solid var(--border)', background:chk?'var(--bg-screen)':'var(--surface-1)', color:'var(--text)', outline:'none', opacity:chk?1:0.45, cursor:chk?'text':'not-allowed' }} onFocus={e => e.target.style.borderColor='var(--osmos-brand-primary-bg)'} onBlur={e => e.target.style.borderColor='var(--border)'} /></div></div>
+                          <div onClick={e => e.stopPropagation()}><div style={{ position:'relative', display:'flex', alignItems:'center' }}><span style={{ position:'absolute', left:8, fontSize:12, color:'var(--text-muted)', pointerEvents:'none' }}>$</span><input type="number" min="0" step="0.01" value={ov.cpe??''} onChange={e => setOverride(adv.name,'cpe',e.target.value)} placeholder={adv.defaultCpe} disabled={!chk} style={{ width:'100%', padding:'5px 8px 5px 18px', fontSize:13, borderRadius:6, border:'1px solid var(--border)', background:chk?'var(--bg-screen)':'var(--surface-1)', color:'var(--text)', outline:'none', opacity:chk?1:0.45, cursor:chk?'text':'not-allowed' }} onFocus={e => e.target.style.borderColor='var(--osmos-brand-primary-bg)'} onBlur={e => e.target.style.borderColor='var(--border)'} /></div></div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div style={{ padding:'16px 28px', borderTop:'1px solid var(--border)', display:'flex', gap:10, justifyContent:'center', alignItems:'center', flexShrink:0, background:'var(--primary-bg)' }}>
+          {step === 2 && <button type="button" onClick={() => setStep(1)} style={{ height:36, padding:'0 18px', borderRadius:'var(--radius-md)', border:'1px solid var(--border)', background:'var(--surface-3)', cursor:'pointer', fontSize:12, fontWeight:600, color:'var(--text)' }}>Back</button>}
+          {step === 1
+            ? <button type="button" onClick={() => setStep(2)} style={{ height:36, padding:'0 20px', borderRadius:'var(--radius-md)', border:'none', background:'var(--primary)', cursor:'pointer', fontSize:12, fontWeight:600, color:'var(--surface-3)' }}>Next →</button>
+            : <button type="button" onClick={() => { onSave(cohort.name); onClose(); }} style={{ height:36, padding:'0 20px', borderRadius:'var(--radius-md)', border:'none', background:'var(--primary)', cursor:'pointer', fontSize:12, fontWeight:600, color:'var(--surface-3)' }}>Save Changes</button>
+          }
+        </div>
+      </div>
+
+      <VisConfirmDialog />
+    </>
+  );
+}
+
+/* ─── Cohort Analytics Drawer (Option 2) ─────────────────────────── */
+function CohortAnalyticsDrawer({ cohort, onClose }) {
+  const [tooltip, setTooltip] = useState(null);
+
+  const trendData = [3.1,3.4,3.8,3.2,4.1,4.5,3.9,4.8,4.2,5.1,4.6,5.4,5.0,5.8];
+  const trendMin  = Math.min(...trendData);
+  const trendMax  = Math.max(...trendData);
+  const svgW = 560, svgH = 120, padLeft = 30, padRight = 10, padTop = 12, padBottom = 30;
+  const chartW = svgW - padLeft - padRight;
+  const chartH = svgH - padTop - padBottom;
+
+  function xAt(i) { return padLeft + (i / (trendData.length - 1)) * chartW; }
+  function yAt(v) { return padTop + chartH - ((v - trendMin) / (trendMax - trendMin || 1)) * chartH; }
+
+  const polyPoints = trendData.map((v, i) => `${xAt(i)},${yAt(v)}`).join(' ');
+  const areaPoints = `${xAt(0)},${padTop+chartH} ${polyPoints} ${xAt(trendData.length-1)},${padTop+chartH}`;
+
+  const dayLabels = trendData.map((_, i) => i === trendData.length - 1 ? 'Today' : `D-${trendData.length-1-i}`);
+
+  /* Sparkline for activity timeline */
+  function Sparkline({ values }) {
+    const mn = Math.min(...values); const mx = Math.max(...values, mn+0.01);
+    const pts = values.map((v,i) => `${(i/(values.length-1))*76},${18-((v-mn)/(mx-mn))*16}`).join(' ');
+    return (
+      <svg width="80" height="24" viewBox="0 0 80 24" style={{ overflow:'visible' }}>
+        <polyline points={pts} fill="none" stroke="var(--primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        {values.map((v,i) => <circle key={i} cx={(i/(values.length-1))*76} cy={18-((v-mn)/(mx-mn))*16} r="2" fill="var(--primary)" />)}
+      </svg>
+    );
+  }
+
+  return (
+    <>
+      <div onClick={onClose} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.35)', zIndex:48 }} />
+      <div style={{ position:'fixed', top:0, right:0, bottom:0, width:900, background:'var(--bg-screen)', boxShadow:'-6px 0 40px rgba(0,0,0,0.15)', zIndex:50, display:'flex', flexDirection:'column' }} role="dialog" aria-label={`${cohort.name} Analytics`}>
+
+        {/* Header */}
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 28px', borderBottom:'1px solid var(--border)', flexShrink:0, background:'var(--primary-bg)' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+            <h2 style={{ margin:0, fontSize:17, fontWeight:700, color:'var(--text-strong)' }}>{cohort.name}</h2>
+            <span style={{ fontSize:12, color:'var(--text-muted)', background:'var(--surface-2)', padding:'2px 10px', borderRadius:'var(--radius-md)', fontWeight:500 }}>Analytics</span>
+          </div>
+          <button onClick={onClose} aria-label="Close" style={{ width:32, height:32, borderRadius:8, border:'none', background:'transparent', cursor:'pointer', color:'var(--text-muted)', fontSize:22, display:'flex', alignItems:'center', justifyContent:'center', lineHeight:1 }}>×</button>
+        </div>
+
+        {/* Scrollable body */}
+        <div style={{ flex:1, overflowY:'auto', padding:'24px 28px', display:'flex', flexDirection:'column', gap:24 }}>
+
+          {/* Section A — Performance Summary */}
+          <div>
+            <div style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)', marginBottom:14, textTransform:'uppercase', letterSpacing:'0.04em', fontSize:11 }}>Performance Summary</div>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12 }}>
+              {[
+                { label:'Total Impressions',     value:'48.2M',                       sub:'Last 30 days',                          green:false },
+                { label:'Unique Reach',           value:'12.4M',                       sub:'32% of audience',                       green:false },
+                { label:'Inventory Utilization',  value:'74%',                         sub:'of available capacity',                 green:false, progress:74 },
+                { label:'Active Advertisers',     value:String(cohort.activatedAdvertisers), sub:`of ${cohort.advertisers} with access`,  green:false },
+                { label:'Active Campaigns',       value:String(cohort.campaignCount),  sub:`across ${cohort.activatedChannels} channels`, green:false },
+                { label:'Total Spend 30D',        value:cohort.spend30d,               sub:'across all channels',                   green:true  },
+              ].map(m => (
+                <div key={m.label} style={{ border:'1px solid var(--border)', borderRadius:10, padding:'14px 16px', background:'var(--bg-screen)' }}>
+                  <div style={{ fontSize:11, color:'var(--text-muted)', marginBottom:6, fontWeight:500 }}>{m.label}</div>
+                  <div style={{ fontSize:22, fontWeight:700, color:m.green?'var(--alert-success-primary)':'var(--text)', lineHeight:1, marginBottom:4 }}>{m.value}</div>
+                  <div style={{ fontSize:11, color:'var(--text-muted)' }}>{m.sub}</div>
+                  {m.progress !== undefined && (
+                    <div style={{ marginTop:8, height:4, borderRadius:4, background:'var(--border)' }}>
+                      <div style={{ width:`${m.progress}%`, height:'100%', borderRadius:4, background:'var(--primary)', transition:'width 0.5s ease' }} />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Section B — Impressions Trend SVG */}
+          <div style={{ border:'1px solid var(--border)', borderRadius:10, padding:'18px 20px', background:'var(--bg-screen)' }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
+              <div style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)' }}>Impressions Trend</div>
+              <span style={{ fontSize:11, color:'var(--text-muted)', background:'var(--surface-2)', padding:'3px 10px', borderRadius:10 }}>Last 14 days</span>
+            </div>
+            <div style={{ position:'relative' }}>
+              <svg viewBox={`0 0 ${svgW} ${svgH}`} width="100%" height={svgH} style={{ overflow:'visible' }}>
+                <defs>
+                  <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.15" />
+                    <stop offset="100%" stopColor="var(--primary)" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                {/* Grid lines */}
+                {[0,0.5,1].map((t,i) => {
+                  const y = padTop + chartH * (1-t);
+                  return <line key={i} x1={padLeft} y1={y} x2={svgW-padRight} y2={y} stroke="var(--border)" strokeWidth="0.8" strokeDasharray="4 4" />;
+                })}
+                {/* Area fill */}
+                <polygon points={areaPoints} fill="url(#trendGrad)" />
+                {/* Line */}
+                <polyline points={polyPoints} fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                {/* Dots */}
+                {trendData.map((v, i) => (
+                  <circle key={i} cx={xAt(i)} cy={yAt(v)} r="3" fill="var(--primary)"
+                    style={{ cursor:'pointer' }}
+                    onMouseEnter={e => setTooltip({ i, v, x: xAt(i), y: yAt(v) })}
+                    onMouseLeave={() => setTooltip(null)}
+                  />
+                ))}
+                {/* Tooltip */}
+                {tooltip && (
+                  <g>
+                    <rect x={tooltip.x - 36} y={tooltip.y - 28} width={72} height={22} rx={4} fill="var(--text-strong)" opacity={0.9} />
+                    <text x={tooltip.x} y={tooltip.y - 14} textAnchor="middle" fontSize={10} fill="#fff" fontWeight="600">{dayLabels[tooltip.i]}: {tooltip.v}M</text>
+                  </g>
+                )}
+                {/* X-axis labels — every other */}
+                {trendData.map((_, i) => i % 2 === 0 ? (
+                  <text key={i} x={xAt(i)} y={svgH - 6} textAnchor="middle" fontSize={9} fill="var(--text-muted)">{dayLabels[i]}</text>
+                ) : null)}
+              </svg>
+            </div>
+          </div>
+
+          {/* Section C — Channel Performance */}
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
+            {/* Left: Spend by Channel */}
+            <div style={{ border:'1px solid var(--border)', borderRadius:10, padding:'16px 18px', background:'var(--bg-screen)' }}>
+              <div style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)', marginBottom:14, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                Spend by Channel
+                <span style={{ fontSize:12, fontWeight:700, color:'var(--alert-success-primary)' }}>{cohort.spend30d}</span>
+              </div>
+              <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+                {cohort.spendByChannel.map(s => (
+                  <div key={s.ch}>
+                    <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:6 }}>
+                      <span style={{ flexShrink:0 }}>{CHANNEL_ICONS[s.ch]}</span>
+                      <span style={{ fontSize:13, fontWeight:500, flex:1 }}>{s.ch}</span>
+                      <span style={{ fontSize:13, fontWeight:700, color:'var(--alert-success-primary)' }}>{s.amount}</span>
+                      <span style={{ fontSize:11, color:'var(--text-muted)', minWidth:30, textAlign:'right' }}>{s.pct}%</span>
+                    </div>
+                    <div style={{ height:8, borderRadius:4, background:'var(--border)' }}>
+                      <div style={{ width:`${s.pct}%`, height:'100%', borderRadius:4, background:s.color, transition:'width 0.5s ease' }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Activity Timeline */}
+            <div style={{ border:'1px solid var(--border)', borderRadius:10, padding:'16px 18px', background:'var(--bg-screen)' }}>
+              <div style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)', marginBottom:14 }}>Activity Timeline</div>
+              <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
+                {Object.entries(cohort.heatmap).map(([ch, vals]) => {
+                  const peak = Math.max(...vals);
+                  const avg  = (vals.reduce((a,b) => a+b, 0) / vals.length).toFixed(1);
+                  return (
+                    <div key={ch} style={{ display:'flex', alignItems:'center', gap:12 }}>
+                      <span style={{ flexShrink:0 }}>{CHANNEL_ICONS[ch] || null}</span>
+                      <span style={{ fontSize:12, fontWeight:500, color:'var(--text)', width:60, flexShrink:0 }}>{ch}</span>
+                      <Sparkline values={vals} />
+                      <div style={{ fontSize:11, color:'var(--text-muted)', whiteSpace:'nowrap' }}>
+                        <span style={{ fontWeight:600, color:'var(--text)', background:'var(--surface-2)', padding:'1px 6px', borderRadius:4, marginRight:4 }}>Peak: {peak}</span>
+                        Avg: {avg}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Section D — Channel Distribution */}
+          <div style={{ border:'1px solid var(--border)', borderRadius:10, padding:'16px 18px', background:'var(--bg-screen)' }}>
+            <div style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)', marginBottom:14 }}>Channel Distribution</div>
+            {/* Stacked bar */}
+            <div style={{ display:'flex', height:24, borderRadius:6, overflow:'hidden', marginBottom:14 }}>
+              {cohort.spendByChannel.map(s => (
+                <div key={s.ch} title={`${s.ch}: ${s.pct}%`} style={{ width:`${s.pct}%`, background:s.color, height:'100%', transition:'width 0.5s ease' }} />
+              ))}
+            </div>
+            {/* Legend */}
+            <div style={{ display:'flex', flexWrap:'wrap', gap:14 }}>
+              {cohort.spendByChannel.map(s => (
+                <div key={s.ch} style={{ display:'flex', alignItems:'center', gap:6, fontSize:12, color:'var(--text-muted)' }}>
+                  <span style={{ width:10, height:10, borderRadius:2, background:s.color, display:'inline-block', flexShrink:0 }} />
+                  <span style={{ fontWeight:500, color:'var(--text)' }}>{s.ch}</span>
+                  <span>{s.pct}%</span>
+                  <span style={{ fontWeight:600, color:'var(--alert-success-primary)' }}>{s.amount}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Section E — Campaigns */}
+          <div style={{ border:'1px solid var(--border)', borderRadius:10, padding:'16px 18px', background:'var(--bg-screen)' }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
+              <div style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)' }}>Campaigns activating this audience</div>
+              <span style={{ fontSize:11, color:'var(--text-muted)' }}>{cohort.campaignDetails?.length || 0} campaigns</span>
+            </div>
+            <div style={{ borderRadius:8, border:'1px solid var(--border-table)', overflow:'hidden' }}>
+              <table style={{ width:'100%', borderCollapse:'collapse', fontSize:11 }}>
+                <thead>
+                  <tr style={{ background:'var(--surface-1)' }}>
+                    {['STATUS','CAMPAIGN','ADVERTISER','CHANNEL','SPEND · 30D'].map(h => (
+                      <th key={h} style={{ padding:'8px 10px', textAlign:'left', fontSize:9, fontWeight:700, color:'var(--text-info)', letterSpacing:'0.06em', textTransform:'uppercase', borderBottom:'1px solid var(--border)' }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {(cohort.campaignDetails || []).map((c, i) => (
+                    <tr key={c.name} style={{ borderBottom: i < (cohort.campaignDetails.length-1) ? '1px solid var(--border)' : 'none' }}>
+                      <td style={{ padding:'10px' }}>
+                        <span style={{ display:'inline-flex', alignItems:'center', gap:4 }}>
+                          <span style={{ width:6, height:6, borderRadius:'50%', background:c.status==='Active'?'var(--alert-success-primary)':'var(--text-info)' }} />
+                          <span style={{ fontSize:11, color:c.status==='Active'?'var(--alert-success-darker)':'var(--text-muted)' }}>{c.status}</span>
+                        </span>
+                      </td>
+                      <td style={{ padding:'10px', fontWeight:500, color:'var(--text)', fontSize:12 }}>{c.name}</td>
+                      <td style={{ padding:'10px' }}>
+                        <span style={{ display:'inline-flex', alignItems:'center', gap:5 }}>
+                          <span style={{ width:20, height:20, borderRadius:'50%', background:c.color, display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:8, fontWeight:700, color:'#fff', flexShrink:0 }}>{c.initials}</span>
+                          <span style={{ fontSize:11, color:'var(--text-muted)' }}>{c.advertiser}</span>
+                        </span>
+                      </td>
+                      <td style={{ padding:'10px' }}>
+                        <span style={{ display:'inline-flex', alignItems:'center', gap:4 }}>
+                          <span style={{ flexShrink:0 }}>{CHANNEL_ICONS[c.channel]||null}</span>
+                          <span style={{ fontSize:11, color:'var(--text-muted)' }}>{c.channel}</span>
+                        </span>
+                      </td>
+                      <td style={{ padding:'10px', fontWeight:600, color:'var(--alert-success-primary)', fontSize:12 }}>{c.spend}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>{/* /scrollable body */}
+      </div>
+    </>
+  );
+}
+
 /* ─── Channel icon cluster with tooltip ────────────────────────── */
 function ChannelCluster({ channels }) {
   const [hovered, setHovered] = useState(null);
@@ -1883,6 +2358,8 @@ export default function AudienceManagerCatalogPage() {
   const [cohorts,        setCohorts]        = useState(COHORTS);
   const [selectedCohort, setSelectedCohort] = useState(null);
   const [selectedReview, setSelectedReview] = useState(null);
+  const [editTarget,     setEditTarget]     = useState(null);   // Option 2 — EditCohortDrawer
+  const [analyticsTarget,setAnalyticsTarget]= useState(null);   // Option 2 — CohortAnalyticsDrawer
   const [showCreate,     setShowCreate]     = useState(false);
   const [toast,          setToast]          = useState(null);
   const [highlightId,    setHighlightId]    = useState(null);
@@ -1959,8 +2436,8 @@ export default function AudienceManagerCatalogPage() {
     );
   }
 
-  /* grid: checkbox | status | cohort-name | size | source | type | visibility | channels | active-adv | campaigns | cpm | cpe | spend | actions */
-  const TABLE_COLS = '36px 70px 1fr 60px 90px 110px 90px 130px 100px 95px 60px 60px 70px 44px';
+  /* grid: checkbox | status | cohort-name | size | source | type | visibility | channels | active-adv | campaigns | cpm | cpe | spend | analytics | actions */
+  const TABLE_COLS = '36px 70px 1fr 60px 90px 110px 90px 130px 100px 95px 60px 60px 70px 40px 44px';
   const hasActiveFilters = filters.source !== 'All' || filters.vis !== 'All' || filters.q !== '';
 
   /* ── Filter dropdown ── */
@@ -2136,6 +2613,7 @@ export default function AudienceManagerCatalogPage() {
                 { label:'CPE',             align:'right'  },
                 { label:'Spend',           align:'right'  },
                 { label:'',               align:'center' },
+                { label:'',               align:'center' },
               ].map((h, idx) => (
                 <div key={idx} style={{ padding:'10px 12px', fontSize:11, fontWeight:600, letterSpacing:'0.02em', color:'var(--text)', textAlign:h.align, borderBottom:0, whiteSpace:'nowrap' }}>
                   {h.label}
@@ -2152,12 +2630,12 @@ export default function AudienceManagerCatalogPage() {
                 <button onClick={clearFilters} style={{ padding:'8px 18px', borderRadius:'var(--radius-md)', border:'1px solid var(--primary)', background:'transparent', color:'var(--primary)', fontSize:13, fontWeight:600, cursor:'pointer' }}>Clear filters</button>
               </div>
             ) : filtered.map((cohort, i) => {
-              const isSelected = selectedReview?.id === cohort.id;
+              const isSelected = editTarget?.id === cohort.id;
               const isBulkSelected = selectedIds.has(cohort.id);
               return (
                 <div
                   key={cohort.id}
-                  onClick={() => { setSelectedReview(cohort); setMenuOpenId(null); }}
+                  onClick={() => { setEditTarget(cohort); setMenuOpenId(null); }}
                   style={{
                     display:'grid', gridTemplateColumns:TABLE_COLS,
                     borderBottom: i < filtered.length-1 ? '1px solid var(--border)' : 'none',
@@ -2239,6 +2717,21 @@ export default function AudienceManagerCatalogPage() {
                     <span style={{ fontSize:12, fontWeight:600, color:'var(--text)' }}>{cohort.spend30d}</span>
                   </div>
 
+                  {/* Analytics icon */}
+                  <div style={{ padding:'12px 4px', display:'flex', alignItems:'center', justifyContent:'center' }} onClick={e => e.stopPropagation()}>
+                    <button
+                      onClick={e => { e.stopPropagation(); setAnalyticsTarget(cohort); }}
+                      title="View Analytics"
+                      style={{ width:28, height:28, borderRadius:'var(--radius-md)', display:'inline-flex', alignItems:'center', justifyContent:'center', background:'transparent', border:'none', cursor:'pointer', color:'var(--text-muted)' }}
+                      onMouseEnter={e => e.currentTarget.style.background='var(--surface-1)'}
+                      onMouseLeave={e => e.currentTarget.style.background='transparent'}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+                      </svg>
+                    </button>
+                  </div>
+
                   {/* 3-dot menu */}
                   <div style={{ padding:'12px 8px', position:'relative', display:'flex', alignItems:'center', justifyContent:'center' }} onClick={e => e.stopPropagation()}>
                     <button
@@ -2288,9 +2781,19 @@ export default function AudienceManagerCatalogPage() {
         <CohortDrawer cohort={selectedCohort} onClose={() => setSelectedCohort(null)} onDeactivated={handleDeactivated} />
       )}
 
-      {/* Full Review modal (v2) */}
-      {selectedReview && (
+      {/* Full Review modal (Option 1 — preserved but row click now opens Option 2) */}
+      {/* {selectedReview && (
         <CohortReviewModal cohort={selectedReview} onClose={() => setSelectedReview(null)} onDeactivated={handleDeactivated} onSaved={(msg) => setToast({ msg, type:'success' })} />
+      )} */}
+
+      {/* Option 2 — Edit Cohort drawer */}
+      {editTarget && (
+        <EditCohortDrawer cohort={editTarget} onClose={() => setEditTarget(null)} onSave={(name) => { setToast({ msg: `"${name}" saved successfully`, type:'success' }); }} />
+      )}
+
+      {/* Option 2 — Analytics drawer */}
+      {analyticsTarget && (
+        <CohortAnalyticsDrawer cohort={analyticsTarget} onClose={() => setAnalyticsTarget(null)} />
       )}
 
       {/* Create cohort drawer */}
