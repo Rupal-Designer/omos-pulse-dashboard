@@ -2710,15 +2710,15 @@ function CohortAnalyticsDrawer({ cohort, onClose }) {
                               display:'flex', alignItems:'center', justifyContent:'space-between',
                               padding:'13px 18px',
                               borderBottom: isLast ? 'none' : '1px solid var(--border)',
-                              background: selectedMetrics.includes(def.key) ? 'var(--primary-bg)' : 'transparent',
+                              background: sel.includes(def.key) ? 'var(--primary-bg)' : 'transparent',
                               transition:'background 0.15s',
                             }}
                           >
                             <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                              {selectedMetrics.includes(def.key) && (
+                              {sel.includes(def.key) && (
                                 <span style={{
                                   width:3, height:16, borderRadius:2, flexShrink:0,
-                                  background: METRIC_SLOT_COLOR[selectedMetrics.indexOf(def.key)],
+                                  background: METRIC_SLOT_COLOR[sel.indexOf(def.key)],
                                 }} />
                               )}
                               <span style={{ fontSize:12, color:'var(--text-muted)', fontWeight:500 }}>{def.label}</span>
