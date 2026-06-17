@@ -2653,10 +2653,10 @@ function CohortAnalyticsDrawer({ cohort, onClose }) {
             </div>
           </div>
 
-          {/* ── Bottom Tabs ── */}
-          <div style={{ flex:1 }}>
+          {/* ── Sections (no tabs — all stacked) ── */}
+          <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
             {/* Tab strip — ARIA tablist */}
-            <div role="tablist" aria-label="Cohort analytics sections" style={{ display:'flex', borderBottom:'2px solid var(--border)', marginBottom:16, gap:2 }}>
+            <div role="tablist" aria-label="Cohort analytics sections" style={{ display:'none', borderBottom:'2px solid var(--border)', marginBottom:16, gap:2 }}>
               {TABS.map(t => (
                 <button
                   key={t.key}
@@ -2686,278 +2686,229 @@ function CohortAnalyticsDrawer({ cohort, onClose }) {
               ))}
             </div>
 
-            {/* Tab content */}
-            <div role="tabpanel" style={{ paddingBottom:32 }}>
-
-              {/* OVERVIEW */}
-              {activeTab === 'overview' && (
-                <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
-
-                  {/* ── Section A: Key Metrics vertical list ── */}
-                  <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
-                    <div style={{ padding:'12px 18px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                      <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Key Metrics</span>
-                      <span style={{ fontSize:11, color:'var(--text-muted)' }}>Last 30 days</span>
-                    </div>
-                    <div style={{ display:'flex', flexDirection:'column' }}>
-                      {ANALYTICS_METRIC_DEFS.map((def, i) => {
-                        const mv = metricValues[def.key];
-                        const isLast = i === ANALYTICS_METRIC_DEFS.length - 1;
-                        return (
-                          <div
-                            key={def.key}
-                            style={{
-                              display:'flex', alignItems:'center', justifyContent:'space-between',
-                              padding:'13px 18px',
-                              borderBottom: isLast ? 'none' : '1px solid var(--border)',
-                              background: sel.includes(def.key) ? 'var(--primary-bg)' : 'transparent',
-                              transition:'background 0.15s',
-                            }}
-                          >
-                            <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                              {sel.includes(def.key) && (
-                                <span style={{
-                                  width:3, height:16, borderRadius:2, flexShrink:0,
-                                  background: METRIC_SLOT_COLOR[sel.indexOf(def.key)],
-                                }} />
-                              )}
-                              <span style={{ fontSize:12, color:'var(--text-muted)', fontWeight:500 }}>{def.label}</span>
-                            </div>
-                            <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                              <span style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)' }}>{mv?.value ?? '—'}</span>
-                              <span style={{
-                                fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:10,
-                                background: mv?.up ? 'var(--alert-success-bg)' : 'var(--surface-2)',
-                                color:      mv?.up ? 'var(--alert-success-darker)' : 'var(--text-muted)',
-                              }}>
-                                {mv?.up ? '↑' : '↓'} {mv?.up ? '+8%' : '−3%'}
-                              </span>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* ── Section B: Spend by Channel + Pie Chart ── */}
-                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
-                    {/* Spend bars */}
-                    <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'16px 18px', background:'var(--bg-screen)' }}>
-                      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
-                        <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Spend by Channel</span>
-                        <span style={{ fontSize:12, fontWeight:700, color:'var(--alert-success-primary)' }}>{cohort.spend30d}</span>
-                      </div>
-                      <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
-                        {(cohort.spendByChannel || []).map(s => (
-                          <div key={s.ch}>
-                            <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:5 }}>
-                              <span style={{ flexShrink:0 }}>{CHANNEL_ICONS[s.ch]}</span>
-                              <span style={{ fontSize:12, fontWeight:500, flex:1, color:'var(--text)' }}>{s.ch}</span>
-                              <span style={{ fontSize:12, fontWeight:700, color:'var(--alert-success-primary)' }}>{s.amount}</span>
-                              <span style={{ fontSize:11, color:'var(--text-muted)', minWidth:28, textAlign:'right' }}>{s.pct}%</span>
-                            </div>
-                            <div style={{ height:6, borderRadius:3, background:'var(--surface-2)' }}>
-                              <div style={{ width:`${s.pct}%`, height:'100%', borderRadius:3, background:s.color, transition:'width 0.4s ease' }} />
-                            </div>
-                          </div>
-                        ))}
-                        {(cohort.spendByChannel || []).length === 0 && (
-                          <div style={{ textAlign:'center', padding:'24px 0', color:'var(--text-muted)', fontSize:12 }}>No channel data</div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Donut pie chart */}
-                    <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'16px 18px', background:'var(--bg-screen)' }}>
-                      <div style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)', marginBottom:14 }}>Channel Distribution</div>
-                      <SpendPieChart channels={cohort.spendByChannel || []} />
-                    </div>
-                  </div>
-
-                  {/* ── Section C: Campaign Preview ── */}
-                  {(() => {
-                    const campaigns = (cohort.campaignDetails || []).slice(0, 3);
-                    return (
-                      <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
-                        <div style={{ padding:'12px 18px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                          <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Recent Campaigns</span>
-                          {(cohort.campaignDetails || []).length > 0 && (
-                            <button
-                              onClick={() => setActiveTab('campaigns')}
-                              style={{ background:'none', border:'none', fontSize:11, fontWeight:600, color:'var(--primary)', cursor:'pointer', padding:0 }}
-                            >
-                              See all {(cohort.campaignDetails || []).length} →
-                            </button>
-                          )}
-                        </div>
-                        {campaigns.length === 0 ? (
-                          <div style={{ textAlign:'center', padding:'32px 24px' }}>
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ margin:'0 auto 10px', display:'block' }}>
-                              <circle cx="16" cy="16" r="15" stroke="var(--border)" strokeWidth="1.5"/>
-                              <path d="M10 22l3-7 3 4 2.5-4 3.5 7" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                            <div style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)', marginBottom:4 }}>No campaigns yet</div>
-                            <div style={{ fontSize:11, color:'var(--text-muted)' }}>Share this cohort to start seeing campaign activity.</div>
-                          </div>
-                        ) : (
-                          <table style={{ width:'100%', borderCollapse:'collapse', fontSize:11 }}>
-                            <thead>
-                              <tr style={{ background:'var(--surface-1)' }}>
-                                {['STATUS','CAMPAIGN','ADVERTISER','CHANNEL','SPEND · 30D'].map(h => (
-                                  <th key={h} style={{ padding:'9px 14px', textAlign:'left', fontSize:9, fontWeight:700, color:'var(--text-info)', letterSpacing:'0.06em', textTransform:'uppercase', borderBottom:'1px solid var(--border)' }}>{h}</th>
-                                ))}
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {campaigns.map((c, i) => (
-                                <tr key={c.name} style={{ borderBottom: i < campaigns.length-1 ? '1px solid var(--border)' : 'none' }}>
-                                  <td style={{ padding:'11px 14px' }}>
-                                    <span style={{ display:'inline-flex', alignItems:'center', gap:5 }}>
-                                      <span style={{ width:6, height:6, borderRadius:'50%', background:c.status==='Active'?'var(--alert-success-primary)':'var(--text-info)', flexShrink:0 }} />
-                                      <span style={{ fontSize:11, color:c.status==='Active'?'var(--alert-success-darker)':'var(--text-muted)' }}>{c.status}</span>
-                                    </span>
-                                  </td>
-                                  <td style={{ padding:'11px 14px', fontWeight:600, color:'var(--text)', maxWidth:160, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.name}</td>
-                                  <td style={{ padding:'11px 14px' }}>
-                                    <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}>
-                                      <span style={{ width:20, height:20, borderRadius:'50%', background:c.color, display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:8, fontWeight:700, color:'#fff', flexShrink:0 }}>{c.initials}</span>
-                                      <span style={{ color:'var(--text-muted)' }}>{c.advertiser}</span>
-                                    </span>
-                                  </td>
-                                  <td style={{ padding:'11px 14px' }}>
-                                    <span style={{ display:'inline-flex', alignItems:'center', gap:4 }}>
-                                      {CHANNEL_ICONS[c.channel] || null}
-                                      <span style={{ color:'var(--text-muted)' }}>{c.channel}</span>
-                                    </span>
-                                  </td>
-                                  <td style={{ padding:'11px 14px', fontWeight:700, color:'var(--alert-success-primary)' }}>{c.spend}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        )}
-                      </div>
-                    );
-                  })()}
-
-                </div>
-              )}
-
-              {/* CAMPAIGNS */}
-              {activeTab === 'campaigns' && (() => {
-                const campaigns = cohort.campaignDetails || [];
-                if (campaigns.length === 0) return (
-                  <div style={{ textAlign:'center', padding:'48px 24px', border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)' }}>
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style={{ margin:'0 auto 12px' }}>
-                      <circle cx="20" cy="20" r="19" stroke="var(--border)" strokeWidth="1.5"/>
-                      <path d="M13 27l4-8 4 5 3-5 4 8" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    <div style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)', marginBottom:6 }}>No campaigns yet</div>
-                    <div style={{ fontSize:12, color:'var(--text-muted)', maxWidth:280, margin:'0 auto 16px' }}>
-                      Share this cohort with advertisers to start seeing campaign activity here.
-                    </div>
-                    <button
-                      onClick={() => {}} // TODO: open Sharing tab
-                      style={{ padding:'8px 18px', background:'var(--primary)', color:'#fff', border:'none', borderRadius:'var(--radius-md)', fontSize:12, fontWeight:600, cursor:'pointer' }}
+            {/* ── Section A: Key Metrics 2×3 grid ── */}
+            <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
+              <div style={{ padding:'12px 18px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Key Metrics</span>
+                <span style={{ fontSize:11, color:'var(--text-muted)' }}>Last 30 days</span>
+              </div>
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', borderTop:'none' }}>
+                {ANALYTICS_METRIC_DEFS.map((def, i) => {
+                  const mv = metricValues[def.key];
+                  const isSelected = sel.includes(def.key);
+                  const col = i % 3;
+                  const row = Math.floor(i / 3);
+                  const isLastRow = row === 1;
+                  const isLastCol = col === 2;
+                  return (
+                    <div
+                      key={def.key}
+                      style={{
+                        padding:'16px 20px',
+                        borderBottom: isLastRow ? 'none' : '1px solid var(--border)',
+                        borderRight: isLastCol ? 'none' : '1px solid var(--border)',
+                        background: isSelected ? 'var(--primary-bg)' : 'var(--bg-screen)',
+                        transition:'background 0.15s',
+                      }}
                     >
-                      Manage Access
-                    </button>
-                  </div>
-                );
-                return (
-                  <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', overflow:'hidden' }}>
-                    <table style={{ width:'100%', borderCollapse:'collapse', fontSize:11 }}>
-                      <thead>
-                        <tr style={{ background:'var(--surface-1)' }}>
-                          {['STATUS','CAMPAIGN','ADVERTISER','CHANNEL','SPEND · 30D'].map(h => (
-                            <th key={h} style={{ padding:'10px 12px', textAlign:'left', fontSize:9, fontWeight:700, color:'var(--text-info)', letterSpacing:'0.06em', textTransform:'uppercase', borderBottom:'1px solid var(--border)' }}>{h}</th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {campaigns.map((c, i) => (
-                          <tr key={c.name} style={{ borderBottom: i < campaigns.length-1 ? '1px solid var(--border)' : 'none' }}>
-                            <td style={{ padding:'11px 12px' }}>
-                              <span style={{ display:'inline-flex', alignItems:'center', gap:5 }}>
-                                <span style={{ width:6, height:6, borderRadius:'50%', background:c.status==='Active'?'var(--alert-success-primary)':'var(--text-info)', flexShrink:0 }} />
-                                <span style={{ fontSize:11, color:c.status==='Active'?'var(--alert-success-darker)':'var(--text-muted)' }}>{c.status}</span>
-                              </span>
-                            </td>
-                            <td style={{ padding:'11px 12px', fontWeight:600, color:'var(--text)', fontSize:12 }}>{c.name}</td>
-                            <td style={{ padding:'11px 12px' }}>
-                              <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}>
-                                <span style={{ width:22, height:22, borderRadius:'50%', background:c.color, display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:8, fontWeight:700, color:'#fff', flexShrink:0 }}>{c.initials}</span>
-                                <span style={{ fontSize:11, color:'var(--text-muted)' }}>{c.advertiser}</span>
-                              </span>
-                            </td>
-                            <td style={{ padding:'11px 12px' }}>
-                              <span style={{ display:'inline-flex', alignItems:'center', gap:4 }}>
-                                {CHANNEL_ICONS[c.channel] || null}
-                                <span style={{ fontSize:11, color:'var(--text-muted)' }}>{c.channel}</span>
-                              </span>
-                            </td>
-                            <td style={{ padding:'11px 12px', fontWeight:700, color:'var(--alert-success-primary)', fontSize:12 }}>{c.spend}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                );
-              })()}
+                      <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:8 }}>
+                        {isSelected && (
+                          <span style={{ width:3, height:12, borderRadius:2, background: METRIC_SLOT_COLOR[sel.indexOf(def.key)], flexShrink:0 }} />
+                        )}
+                        <span style={{ fontSize:11, fontWeight:600, color: isSelected ? METRIC_SLOT_COLOR[sel.indexOf(def.key)] : 'var(--text-muted)', letterSpacing:'0.02em' }}>{def.label}</span>
+                      </div>
+                      <div style={{ display:'flex', alignItems:'baseline', gap:10 }}>
+                        <span style={{ fontSize:18, fontWeight:700, color:'var(--text-strong)', lineHeight:1 }}>{mv?.value ?? '—'}</span>
+                        <span style={{
+                          fontSize:10, fontWeight:700, padding:'2px 6px', borderRadius:10, flexShrink:0,
+                          background: mv?.up ? 'var(--alert-success-bg)' : 'var(--surface-2)',
+                          color:      mv?.up ? 'var(--alert-success-darker)' : 'var(--text-muted)',
+                        }}>
+                          {mv?.up ? '↑ +8%' : '↓ −3%'}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
-              {/* CHANNELS */}
-              {activeTab === 'channels' && (
+            {/* ── Section B: Spend by Channel + Donut ── */}
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
+              <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'16px 18px', background:'var(--bg-screen)' }}>
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
+                  <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Spend by Channel</span>
+                  <span style={{ fontSize:12, fontWeight:700, color:'var(--alert-success-primary)' }}>{cohort.spend30d}</span>
+                </div>
                 <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
                   {(cohort.spendByChannel || []).map(s => (
-                    <div key={s.ch} style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'14px 18px', background:'var(--bg-screen)', display:'grid', gridTemplateColumns:'auto 1fr auto', gap:16, alignItems:'center' }}>
-                      <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                        <span style={{ width:36, height:36, borderRadius:'50%', background:'var(--surface-2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18 }}>{CHANNEL_ICONS[s.ch]}</span>
-                        <div>
-                          <div style={{ fontSize:12, fontWeight:700, color:'var(--text)' }}>{s.ch}</div>
-                          <div style={{ fontSize:11, color:'var(--text-muted)' }}>{s.pct}% of spend</div>
-                        </div>
+                    <div key={s.ch}>
+                      <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:5 }}>
+                        <span style={{ flexShrink:0 }}>{CHANNEL_ICONS[s.ch]}</span>
+                        <span style={{ fontSize:12, fontWeight:500, flex:1, color:'var(--text)' }}>{s.ch}</span>
+                        <span style={{ fontSize:12, fontWeight:700, color:'var(--alert-success-primary)' }}>{s.amount}</span>
+                        <span style={{ fontSize:11, color:'var(--text-muted)', minWidth:28, textAlign:'right' }}>{s.pct}%</span>
                       </div>
-                      <div style={{ height:7, borderRadius:4, background:'var(--surface-2)' }}>
-                        <div style={{ width:`${s.pct}%`, height:'100%', borderRadius:4, background:s.color, transition:'width 0.4s ease' }} />
-                      </div>
-                      <div style={{ textAlign:'right', minWidth:80 }}>
-                        <div style={{ fontSize:15, fontWeight:700, color:'var(--alert-success-primary)' }}>{s.amount}</div>
-                        <div style={{ fontSize:10, color:'var(--text-muted)' }}>30-day spend</div>
+                      <div style={{ height:6, borderRadius:3, background:'var(--surface-2)' }}>
+                        <div style={{ width:`${s.pct}%`, height:'100%', borderRadius:3, background:s.color, transition:'width 0.4s ease' }} />
                       </div>
                     </div>
                   ))}
+                  {(cohort.spendByChannel || []).length === 0 && (
+                    <div style={{ textAlign:'center', padding:'24px 0', color:'var(--text-muted)', fontSize:12 }}>No channel data</div>
+                  )}
                 </div>
-              )}
-
-              {/* ADVERTISERS */}
-              {activeTab === 'advertisers' && (() => {
-                const advs = cohort.sharingAdvertisers || [];
-                if (advs.length === 0) return (
-                  <div style={{ textAlign:'center', padding:'48px 24px', border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)' }}>
-                    <div style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)', marginBottom:6 }}>No advertisers with access</div>
-                    <div style={{ fontSize:12, color:'var(--text-muted)', maxWidth:280, margin:'0 auto' }}>Add advertisers in the Sharing tab to grant cohort access.</div>
-                  </div>
-                );
-                return (
-                  <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-                    {advs.map((adv, i) => (
-                      <div key={adv} style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'12px 18px', background:'var(--bg-screen)', display:'flex', alignItems:'center', gap:12, justifyContent:'space-between' }}>
-                        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                          <span style={{ width:32, height:32, borderRadius:'50%', background:`hsl(${i*80+200},50%,55%)`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#fff', flexShrink:0 }}>{adv.slice(0,2).toUpperCase()}</span>
-                          <div>
-                            <div style={{ fontSize:12, fontWeight:600, color:'var(--text)' }}>{adv}</div>
-                            <div style={{ fontSize:10, color:'var(--text-muted)' }}>Has access · Active</div>
-                          </div>
-                        </div>
-                        <span style={{ fontSize:10, fontWeight:600, background:'var(--alert-success-bg)', color:'var(--alert-success-darker)', padding:'3px 10px', borderRadius:'var(--radius-sm)', flexShrink:0 }}>Active</span>
-                      </div>
-                    ))}
-                  </div>
-                );
-              })()}
-
+              </div>
+              <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'16px 18px', background:'var(--bg-screen)' }}>
+                <div style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)', marginBottom:14 }}>Channel Distribution</div>
+                <SpendPieChart channels={cohort.spendByChannel || []} />
+              </div>
             </div>
-          </div>
+
+            {/* ── Section C: Campaigns table ── */}
+            <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
+              <div style={{ padding:'12px 18px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Campaigns</span>
+                <span style={{ fontSize:11, color:'var(--text-muted)' }}>{(cohort.campaignDetails || []).length} total</span>
+              </div>
+              {(cohort.campaignDetails || []).length === 0 ? (
+                <div style={{ textAlign:'center', padding:'40px 24px' }}>
+                  <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style={{ margin:'0 auto 12px', display:'block' }}>
+                    <circle cx="18" cy="18" r="17" stroke="var(--border)" strokeWidth="1.5"/>
+                    <path d="M11 25l3.5-8 3.5 5 3-5 4 8" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <div style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)', marginBottom:4 }}>No campaigns yet</div>
+                  <div style={{ fontSize:11, color:'var(--text-muted)', maxWidth:260, margin:'0 auto' }}>Share this cohort with advertisers to see campaign activity.</div>
+                </div>
+              ) : (
+                <table style={{ width:'100%', borderCollapse:'collapse' }}>
+                  <thead>
+                    <tr style={{ background:'var(--surface-1)' }}>
+                      {['STATUS','CAMPAIGN','ADVERTISER','CHANNEL','SPEND · 30D'].map(h => (
+                        <th key={h} style={{ padding:'10px 16px', textAlign:'left', fontSize:10, fontWeight:700, color:'var(--text-info)', letterSpacing:'0.06em', textTransform:'uppercase', borderBottom:'1px solid var(--border-table)' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(cohort.campaignDetails || []).map((c, i) => (
+                      <tr key={c.name} style={{ borderBottom:'1px solid var(--border-table)', transition:'background 0.1s' }}
+                        onMouseEnter={e => e.currentTarget.style.background='var(--surface-1)'}
+                        onMouseLeave={e => e.currentTarget.style.background=''}
+                      >
+                        <td style={{ padding:'12px 16px' }}>
+                          <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}>
+                            <span style={{ width:7, height:7, borderRadius:'50%', background:c.status==='Active'?'var(--alert-success-primary)':'var(--text-info)', flexShrink:0 }} />
+                            <span style={{ fontSize:11, fontWeight:600, color:c.status==='Active'?'var(--alert-success-darker)':'var(--text-muted)' }}>{c.status}</span>
+                          </span>
+                        </td>
+                        <td style={{ padding:'12px 16px', fontWeight:600, color:'var(--text)', fontSize:12 }}>{c.name}</td>
+                        <td style={{ padding:'12px 16px' }}>
+                          <span style={{ display:'inline-flex', alignItems:'center', gap:8 }}>
+                            <span style={{ width:24, height:24, borderRadius:'50%', background:c.color, display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:9, fontWeight:700, color:'#fff', flexShrink:0 }}>{c.initials}</span>
+                            <span style={{ fontSize:11, color:'var(--text-muted)' }}>{c.advertiser}</span>
+                          </span>
+                        </td>
+                        <td style={{ padding:'12px 16px' }}>
+                          <span style={{ display:'inline-flex', alignItems:'center', gap:5 }}>
+                            {CHANNEL_ICONS[c.channel] || null}
+                            <span style={{ fontSize:11, color:'var(--text-muted)' }}>{c.channel}</span>
+                          </span>
+                        </td>
+                        <td style={{ padding:'12px 16px', fontWeight:700, color:'var(--alert-success-primary)', fontSize:12 }}>{c.spend}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+
+            {/* ── Section D: Channels ── */}
+            <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
+              <div style={{ padding:'12px 18px', borderBottom:'1px solid var(--border)' }}>
+                <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Channels</span>
+              </div>
+              {(cohort.spendByChannel || []).length === 0 ? (
+                <div style={{ padding:'32px 24px', textAlign:'center', color:'var(--text-muted)', fontSize:12 }}>No channels active</div>
+              ) : (
+                <table style={{ width:'100%', borderCollapse:'collapse' }}>
+                  <thead>
+                    <tr style={{ background:'var(--surface-1)' }}>
+                      {['CHANNEL','SPEND SHARE','SPEND · 30D'].map(h => (
+                        <th key={h} style={{ padding:'10px 16px', textAlign:'left', fontSize:10, fontWeight:700, color:'var(--text-info)', letterSpacing:'0.06em', textTransform:'uppercase', borderBottom:'1px solid var(--border-table)' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(cohort.spendByChannel || []).map((s, i) => (
+                      <tr key={s.ch} style={{ borderBottom: i < (cohort.spendByChannel||[]).length-1 ? '1px solid var(--border-table)' : 'none', transition:'background 0.1s' }}
+                        onMouseEnter={e => e.currentTarget.style.background='var(--surface-1)'}
+                        onMouseLeave={e => e.currentTarget.style.background=''}
+                      >
+                        <td style={{ padding:'12px 16px' }}>
+                          <span style={{ display:'inline-flex', alignItems:'center', gap:10 }}>
+                            <span style={{ width:32, height:32, borderRadius:'50%', background:'var(--surface-2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, flexShrink:0 }}>{CHANNEL_ICONS[s.ch]}</span>
+                            <span style={{ fontSize:12, fontWeight:600, color:'var(--text)' }}>{s.ch}</span>
+                          </span>
+                        </td>
+                        <td style={{ padding:'12px 16px', minWidth:180 }}>
+                          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                            <div style={{ flex:1, height:7, borderRadius:4, background:'var(--surface-2)' }}>
+                              <div style={{ width:`${s.pct}%`, height:'100%', borderRadius:4, background:s.color, transition:'width 0.4s ease' }} />
+                            </div>
+                            <span style={{ fontSize:11, fontWeight:700, color:'var(--text)', minWidth:30, textAlign:'right' }}>{s.pct}%</span>
+                          </div>
+                        </td>
+                        <td style={{ padding:'12px 16px', fontWeight:700, color:'var(--alert-success-primary)', fontSize:12 }}>{s.amount}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+
+            {/* ── Section E: Advertisers ── */}
+            <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
+              <div style={{ padding:'12px 18px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Advertisers with Access</span>
+                <span style={{ fontSize:11, color:'var(--text-muted)' }}>{(cohort.sharingAdvertisers || []).length} advertisers</span>
+              </div>
+              {(cohort.sharingAdvertisers || []).length === 0 ? (
+                <div style={{ padding:'36px 24px', textAlign:'center' }}>
+                  <div style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)', marginBottom:4 }}>No advertisers with access</div>
+                  <div style={{ fontSize:11, color:'var(--text-muted)' }}>Add advertisers in the Sharing tab to grant cohort access.</div>
+                </div>
+              ) : (
+                <table style={{ width:'100%', borderCollapse:'collapse' }}>
+                  <thead>
+                    <tr style={{ background:'var(--surface-1)' }}>
+                      {['ADVERTISER','STATUS'].map(h => (
+                        <th key={h} style={{ padding:'10px 16px', textAlign:'left', fontSize:10, fontWeight:700, color:'var(--text-info)', letterSpacing:'0.06em', textTransform:'uppercase', borderBottom:'1px solid var(--border-table)' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(cohort.sharingAdvertisers || []).map((adv, i) => (
+                      <tr key={adv} style={{ borderBottom: i < (cohort.sharingAdvertisers||[]).length-1 ? '1px solid var(--border-table)' : 'none', transition:'background 0.1s' }}
+                        onMouseEnter={e => e.currentTarget.style.background='var(--surface-1)'}
+                        onMouseLeave={e => e.currentTarget.style.background=''}
+                      >
+                        <td style={{ padding:'12px 16px' }}>
+                          <span style={{ display:'inline-flex', alignItems:'center', gap:10 }}>
+                            <span style={{ width:32, height:32, borderRadius:'50%', background:`hsl(${i*80+200},50%,55%)`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#fff', flexShrink:0 }}>{adv.slice(0,2).toUpperCase()}</span>
+                            <span style={{ fontSize:12, fontWeight:600, color:'var(--text)' }}>{adv}</span>
+                          </span>
+                        </td>
+                        <td style={{ padding:'12px 16px' }}>
+                          <span style={{ fontSize:10, fontWeight:600, background:'var(--alert-success-bg)', color:'var(--alert-success-darker)', padding:'3px 10px', borderRadius:'var(--radius-sm)' }}>Active</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+
+          </div>{/* /sections */}
 
         </div>{/* /scrollable body */}
       </div>
