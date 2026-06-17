@@ -1938,68 +1938,114 @@ function EditCohortDrawer({ cohort, onClose, onSave }) {
         <div style={{ flex:1, overflowY:'auto', padding:'24px 28px' }}>
 
           {/* ── STEP 1: Read-only Cohort Details + editable Pricing ── */}
-          {step === 1 && (
-            <>
-              {/* Info banner */}
-              <div style={{ display:'flex', alignItems:'center', gap:8, background:'var(--primary-bg)', border:'1px solid var(--primary-tint-1)', borderRadius:'var(--radius-md)', padding:'10px 14px', marginBottom:24, fontSize:12, color:'var(--primary)' }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                ℹ️ Cohort configuration is read-only. Only pricing can be updated.
-              </div>
+          {step === 1 && (() => {
+            /* Map cohort data to Create-style field values */
+            const editType  = cohort.type === 'My Cohort' ? 'my-cohort' : 'import-by-id';
+            const editSrc   = cohort.source === 'CSV' ? 'upload-csv' : cohort.source === 'New' ? 'create-new' : 'pre-created';
 
-              {/* Cohort Type — read-only card */}
-              <div style={{ marginBottom:20 }}>
-                <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:8 }}>Cohort Type</label>
-                <div style={{ position:'relative', display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
-                  <div style={{ padding:'16px 16px 16px 44px', borderRadius:'var(--radius-lg)', border:'1.5px solid var(--primary)', background:'var(--primary-bg)', opacity:0.7, cursor:'not-allowed', userSelect:'none' }}>
-                    <div style={{ fontSize:13, fontWeight:600, color:'var(--primary)', marginBottom:4 }}>{cohort.type === 'My Cohort' ? 'My Cohort' : 'Import by ID'}</div>
-                    <div style={{ fontSize:11, color:'var(--text-muted)' }}>{cohort.type === 'My Cohort' ? 'Created natively in Pulse' : 'Imported via external platform'}</div>
+            return (
+              <>
+                {/* ── Info banner ── clean, no emoji */}
+                <div style={{ display:'flex', alignItems:'flex-start', gap:10, background:'var(--primary-bg)', border:'1px solid var(--primary-tint-1)', borderRadius:'var(--radius-md)', padding:'12px 14px', marginBottom:24 }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" style={{ flexShrink:0, marginTop:1 }}>
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  <div>
+                    <div style={{ fontSize:12, fontWeight:700, color:'var(--primary)', marginBottom:2 }}>Read-only configuration</div>
+                    <div style={{ fontSize:11, color:'var(--text-muted)', lineHeight:1.5 }}>Cohort settings are locked after creation. Only pricing can be updated.</div>
                   </div>
-                  {/* Lock overlay */}
-                  <div style={{ position:'absolute', top:8, right:8, fontSize:14, pointerEvents:'none' }}>🔒</div>
                 </div>
-              </div>
 
-              {/* Cohort Name — disabled */}
-              <div style={{ marginBottom:20 }}>
-                <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:8 }}>Cohort Name</label>
-                <input disabled value={cohort.name}
-                  style={{ width:316, height:40, padding:'0 12px', borderRadius:'var(--radius-md)', border:'1px solid var(--border)', background:'var(--surface-1)', fontSize:13, color:'var(--text)', opacity:0.6, cursor:'not-allowed', boxSizing:'border-box' }} />
-              </div>
-
-              {/* Description — disabled */}
-              <div style={{ marginBottom:20 }}>
-                <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:8 }}>Description</label>
-                <textarea disabled value={cohort.description} rows={3}
-                  style={{ width:316, padding:'10px 12px', borderRadius:'var(--radius-md)', border:'1px solid var(--border)', background:'var(--surface-1)', fontSize:13, color:'var(--text)', opacity:0.6, cursor:'not-allowed', resize:'none', boxSizing:'border-box', lineHeight:1.5, fontFamily:'inherit' }} />
-              </div>
-
-              {/* Audience Source — read-only card */}
-              <div style={{ marginBottom:20 }}>
-                <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:8 }}>Audience Source</label>
-                <div style={{ position:'relative', display:'inline-block', width:316 }}>
-                  <div style={{ padding:'12px 14px', borderRadius:'var(--radius-md)', border:'1px solid var(--border)', background:'var(--surface-1)', opacity:0.7, cursor:'not-allowed', userSelect:'none', display:'flex', alignItems:'center', gap:8 }}>
-                    <SourceBadge source={cohort.source === 'API' ? 'API' : cohort.source} />
-                    <span style={{ fontSize:12, color:'var(--text-muted)' }}>{cohort.sourceNote}</span>
+                {/* ── Cohort Type — exact same CCOptionCard layout as Create, non-interactive ── */}
+                <div style={{ marginBottom:28, pointerEvents:'none' }}>
+                  <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:4 }}>Cohort Type</label>
+                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+                    <CCOptionCard
+                      active={editType === 'my-cohort'}
+                      label="My Cohort"
+                      desc="Create by Pre-created audience, CSV upload or by New Audience"
+                      icon={<><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>}
+                      onClick={() => {}}
+                    />
+                    <CCOptionCard
+                      active={editType === 'import-by-id'}
+                      label="Import by ID"
+                      desc="Import existing audience from Meta, Google etc."
+                      icon={<><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></>}
+                      onClick={() => {}}
+                    />
                   </div>
-                  <div style={{ position:'absolute', top:8, right:8, fontSize:12, pointerEvents:'none' }}>🔒</div>
                 </div>
-              </div>
 
-              {/* Audience ID — read-only */}
-              <div style={{ marginBottom:28 }}>
-                <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:8 }}>Audience ID</label>
-                <input disabled value={cohort.audienceId}
-                  style={{ width:316, height:40, padding:'0 12px', borderRadius:'var(--radius-md)', border:'1px solid var(--border)', background:'var(--surface-1)', fontSize:13, color:'var(--text)', opacity:0.6, cursor:'not-allowed', boxSizing:'border-box', fontFamily:'monospace' }} />
-              </div>
+                {/* ── Cohort Name — same style as Create, readOnly ── */}
+                <div style={{ marginBottom:20 }}>
+                  <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:8 }}>Cohort Name</label>
+                  <input
+                    readOnly
+                    value={cohort.name}
+                    style={{ width:316, height:40, padding:'0 12px', borderRadius:'var(--radius-md)', border:'1px solid var(--border)', background:'var(--surface-3)', fontSize:13, color:'var(--text)', cursor:'default', boxSizing:'border-box', outline:'none' }}
+                  />
+                </div>
 
-              {/* Pricing — EDITABLE */}
-              <div style={{ marginBottom:28 }}>
-                <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:4 }}>Pricing</label>
-                <p style={{ margin:'0 0 12px', fontSize:11, color:'var(--text-muted)' }}>Update CPM and CPE rates for this cohort.</p>
-                <PricingEditor cpm={localCpm} cpe={localCpe} onSave={(c,e) => { setLocalCpm(c); setLocalCpe(e); }} />
-              </div>
-            </>
-          )}
+                {/* ── Description — same style as Create, readOnly ── */}
+                <div style={{ marginBottom:28 }}>
+                  <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:8 }}>Description</label>
+                  <textarea
+                    readOnly
+                    value={cohort.description}
+                    rows={3}
+                    style={{ width:316, padding:'10px 12px', borderRadius:'var(--radius-md)', border:'1px solid var(--border)', background:'var(--surface-3)', fontSize:13, color:'var(--text)', cursor:'default', resize:'none', boxSizing:'border-box', lineHeight:1.5, fontFamily:'inherit', outline:'none' }}
+                  />
+                </div>
+
+                {/* ── Audience Source — same 3-card grid as Create, non-interactive ── */}
+                {editType === 'my-cohort' && (
+                  <div style={{ marginBottom:24, pointerEvents:'none' }}>
+                    <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:4 }}>Audience Source</label>
+                    <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:10 }}>
+                      <CCOptionCard compact active={editSrc === 'pre-created'} label="Pre-created Audience" desc="Select from existing segments"
+                        icon={<><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></>}
+                        onClick={() => {}} />
+                      <CCOptionCard compact active={editSrc === 'upload-csv'} label="Upload CSV" desc="Audience IDs via file"
+                        icon={<><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></>}
+                        onClick={() => {}} />
+                      <CCOptionCard compact active={editSrc === 'create-new'} label="Create New Audience" desc="Build from scratch"
+                        icon={<><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></>}
+                        onClick={() => {}} />
+                    </div>
+                    {/* Audience list chip — shows the linked audience name */}
+                    {editSrc === 'pre-created' && cohort.sourceNote && (
+                      <div style={{ marginTop:12, display:'inline-flex', alignItems:'center', gap:8, padding:'8px 12px', borderRadius:'var(--radius-md)', border:'1px solid var(--border)', background:'var(--surface-1)', fontSize:12, color:'var(--text-muted)' }}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span style={{ fontWeight:500, color:'var(--text)' }}>{cohort.sourceNote}</span>
+                        <span style={{ color:'var(--text-info)', fontSize:11 }}>· {cohort.size}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* ── Audience ID — readOnly input ── */}
+                <div style={{ marginBottom:32 }}>
+                  <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:8 }}>Audience ID</label>
+                  <input
+                    readOnly
+                    value={cohort.audienceId}
+                    style={{ width:316, height:40, padding:'0 12px', borderRadius:'var(--radius-md)', border:'1px solid var(--border)', background:'var(--surface-3)', fontSize:13, color:'var(--text)', cursor:'default', boxSizing:'border-box', fontFamily:'monospace', outline:'none', letterSpacing:'0.02em' }}
+                  />
+                </div>
+
+                {/* ── Divider before pricing ── */}
+                <div style={{ borderTop:'1px solid var(--border)', marginBottom:24 }} />
+
+                {/* ── Pricing — FULLY EDITABLE (same Audience Fee section as Create) ── */}
+                <div style={{ marginBottom:28 }}>
+                  <label style={{ fontSize:13, fontWeight:700, color:'var(--text)', display:'block', marginBottom:4 }}>Audience Fee</label>
+                  <p style={{ margin:'0 0 14px', fontSize:11, color:'var(--text-muted)' }}>Update CPM and CPE rates for this cohort.</p>
+                  <PricingEditor cpm={localCpm} cpe={localCpe} onSave={(c, e) => { setLocalCpm(c); setLocalCpe(e); }} />
+                </div>
+              </>
+            );
+          })()}
 
           {/* ── STEP 2: Manage Access (same as CohortReviewModal TabManageAccess) ── */}
           {step === 2 && (
