@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 
 /* ─── mock data ─────────────────────────────────────────────────── */
 const COHORTS = [
@@ -2077,335 +2077,426 @@ function EditCohortDrawer({ cohort, onClose, onSave }) {
 }
 
 /* ─── Cohort Analytics Drawer (Option 2) ─────────────────────────── */
-/* ─── Analytics metric definitions ──────────────────────────────── */
-const ANALYTICS_METRICS = [
-  { key:'spend',       label:'Ad Spend',       value:'₹4.6L',  delta:'+12%', subLabel:'vs prev period' },
-  { key:'impressions', label:'Ad Impressions',  value:'48.2M',  delta:'+8%',  subLabel:'vs prev period' },
-  { key:'clicks',      label:'Ad Clicks',       value:'2.1M',   delta:'+5%',  subLabel:'vs prev period' },
-  { key:'ctr',         label:'CTR',             value:'4.35%',  delta:'+3%',  subLabel:'vs prev period' },
-  { key:'cpm',         label:'CPM',             value:'₹9.50',  delta:'-2%',  subLabel:'vs prev period' },
-  { key:'cpe',         label:'CPE',             value:'₹2.19',  delta:'-1%',  subLabel:'vs prev period' },
+/* ─── Analytics metric definitions (labels + keys only) ─────────── */
+const ANALYTICS_METRIC_DEFS = [
+  { key:'spend',       label:'Ad Spend'      },
+  { key:'impressions', label:'Ad Impressions' },
+  { key:'clicks',      label:'Ad Clicks'      },
+  { key:'ctr',         label:'CTR'            },
+  { key:'cpm',         label:'CPM'            },
+  { key:'cpe',         label:'CPE'            },
 ];
 
-/* Colour assigned to each selected slot — slot 0 = primary purple, slot 1 = orange */
+/* Slot 0 = primary purple, Slot 1 = orange */
 const METRIC_SLOT_COLOR = ['var(--primary)', 'var(--chart-bruntorange)'];
+const METRIC_SLOT_BG    = ['var(--primary-bg)', 'var(--alert-warning-bg)'];
 
-/* 7 date labels for the chart x-axis */
-const CHART_DATES = ['08 Jun','09 Jun','10 Jun','11 Jun','12 Jun','13 Jun','14 Jun'];
+/* Derive last-7-day date labels dynamically */
+function getLast7Dates() {
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short' });
+  });
+}
 
-/* Per-metric synthetic series (7 points each) */
-const METRIC_SERIES = {
-  spend:       [3.8,4.1,3.6,4.5,4.2,4.8,4.6],
-  impressions: [40,43,38,46,44,50,48],
-  clicks:      [1.7,1.8,1.6,2.0,1.9,2.2,2.1],
-  ctr:         [4.1,4.2,4.0,4.5,4.3,4.6,4.4],
-  cpm:         [9.8,9.6,9.9,9.4,9.5,9.3,9.5],
-  cpe:         [2.3,2.2,2.4,2.1,2.2,2.2,2.2],
-};
+/* Scale a 7-point array so its max equals `target` */
+function scaleToTarget(arr, target) {
+  const mx = Math.max(...arr, 0.01);
+  return arr.map(v => parseFloat((v / mx * target).toFixed(2)));
+}
 
 function CohortAnalyticsDrawer({ cohort, onClose }) {
-  /* Which two metrics are selected (by key) */
-  const [sel, setSel] = useState(['spend','impressions']);
-  /* D / W / M granularity */
-  const [gran, setGran] = useState('D');
-  /* Bottom tab */
+  const [sel, setSel]           = useState(['spend','impressions']);
+  const [gran, setGran]         = useState('D');
   const [activeTab, setActiveTab] = useState('overview');
-  /* Chart hover */
   const [hoverIdx, setHoverIdx] = useState(null);
 
-  /* Toggle a metric: clicking an unselected card replaces the SECOND slot */
+  /* ── Derive metric card values from cohort ── */
+  const metricValues = useMemo(() => {
+    const imprM  = parseFloat(((cohort.sizeNum || 1200000) * 0.04 / 1e6).toFixed(1));
+    const clicksM = parseFloat((imprM * 0.0435).toFixed(1));
+    return {
+      spend:       { value: cohort.spend30d || '—',    up: true  },
+      impressions: { value: `${imprM}M`,               up: true  },
+      clicks:      { value: `${clicksM}M`,             up: true  },
+      ctr:         { value: '4.35%',                   up: true  },
+      cpm:         { value: cohort.cpm || '₹9.50',     up: false },
+      cpe:         { value: cohort.cpe || '₹2.19',     up: false },
+    };
+  }, [cohort.id, cohort.sizeNum, cohort.spend30d, cohort.cpm, cohort.cpe]);
+
+  /* ── Derive chart series from heatmap (last 7 of 14 days) ── */
+  const { metricSeries, chartDates } = useMemo(() => {
+    const heatChans = Object.values(cohort.heatmap || {});
+    const n = heatChans[0]?.length || 14;
+    const heatSum = Array.from({ length: 7 }, (_, i) =>
+      heatChans.reduce((s, arr) => s + (arr[n - 7 + i] ?? arr[i] ?? 2), 0)
+    );
+    const spendNum = parseFloat((cohort.spend30d || '4.6').replace(/[^0-9.]/g,'')) || 4.6;
+    const imprM    = (cohort.sizeNum || 1200000) * 0.04 / 1e6;
+    return {
+      metricSeries: {
+        spend:       scaleToTarget(heatSum, spendNum * 0.92),
+        impressions: scaleToTarget(heatSum, imprM * 1.05),
+        clicks:      scaleToTarget(heatSum, imprM * 1.05 * 0.0435),
+        ctr:         [4.1,4.3,4.0,4.5,4.2,4.6,4.4],
+        cpm:         [9.5,9.3,9.8,9.2,9.4,9.1,9.5],
+        cpe:         [2.2,2.1,2.3,2.0,2.1,2.2,2.1],
+      },
+      chartDates: getLast7Dates(),
+    };
+  }, [cohort.id, cohort.heatmap, cohort.spend30d, cohort.sizeNum]);
+
+  /* ── Toggle selected metric (slot 1 is swappable, slot 0 is pinned) ── */
   function toggleMetric(key) {
     setSel(prev => {
-      if (prev[0] === key) return prev; // first slot — don't toggle off (always need 2)
-      if (prev[1] === key) {
-        // deselect second → shift: make prev[0] stay, pick next unselected
-        const next = ANALYTICS_METRICS.find(m => m.key !== prev[0] && m.key !== key);
-        return [prev[0], next ? next.key : prev[0]];
+      if (prev[0] === key) {
+        // Clicking the pinned slot cycles it to the next metric
+        const next = ANALYTICS_METRIC_DEFS.find(m => m.key !== key && m.key !== prev[1]);
+        return next ? [next.key, prev[1]] : prev;
       }
-      return [prev[0], key]; // select as second
+      if (prev[1] === key) return prev; // already in slot 1, no-op
+      return [prev[0], key];
     });
   }
 
-  /* Chart geometry */
+  /* ── Chart geometry ── */
   const svgW = 820, svgH = 180;
-  const padL = 52, padR = 52, padT = 16, padB = 36;
+  const padL = 48, padR = 48, padT = 16, padB = 36;
   const cW = svgW - padL - padR;
   const cH = svgH - padT - padB;
-  const n = CHART_DATES.length;
+  const n  = chartDates.length;
 
   function xAt(i) { return padL + (i / (n - 1)) * cW; }
 
-  function yAxis(key) {
-    const vals = METRIC_SERIES[key];
+  function makeAxis(key) {
+    const vals = metricSeries[key] || [0,1];
     const mn = Math.min(...vals), mx = Math.max(...vals);
     const range = mx - mn || 1;
-    return {
-      mn, mx, range,
-      yAt: v => padT + cH - ((v - mn) / range) * cH,
-    };
+    return { mn, mx, range, yAt: v => padT + cH - ((v - mn) / range) * cH };
   }
 
-  const ax0 = yAxis(sel[0]);
-  const ax1 = yAxis(sel[1]);
+  const ax0 = makeAxis(sel[0]);
+  const ax1 = makeAxis(sel[1]);
 
-  function polyline(key, ax) {
-    return METRIC_SERIES[key].map((v, i) => `${xAt(i)},${ax.yAt(v)}`).join(' ');
+  function pts(key, ax) {
+    return (metricSeries[key] || []).map((v, i) => `${xAt(i)},${ax.yAt(v)}`).join(' ');
+  }
+  function area(key, ax) {
+    const inner = (metricSeries[key] || []).map((v, i) => `${xAt(i)},${ax.yAt(v)}`).join(' ');
+    return `${xAt(0)},${padT + cH} ${inner} ${xAt(n-1)},${padT + cH}`;
   }
 
-  function areaPath(key, ax) {
-    const pts = METRIC_SERIES[key].map((v, i) => `${xAt(i)},${ax.yAt(v)}`).join(' ');
-    return `${xAt(0)},${padT + cH} ${pts} ${xAt(n-1)},${padT + cH}`;
-  }
+  /* Y-axis tick labels (5 ticks, text outside SVG to avoid blurry rotated text) */
+  const leftTicks  = [0,0.25,0.5,0.75,1].map(t => {
+    const v = ax0.mn + t * ax0.range;
+    const label = v >= 1e6 ? `${(v/1e6).toFixed(1)}M` : v >= 1000 ? `${(v/1000).toFixed(0)}K` : v % 1 ? v.toFixed(1) : String(Math.round(v));
+    return { y: ax0.yAt(v), label };
+  });
+  const rightTicks = [0,0.25,0.5,0.75,1].map(t => {
+    const v = ax1.mn + t * ax1.range;
+    const label = v >= 1e6 ? `${(v/1e6).toFixed(1)}M` : v >= 1000 ? `${(v/1000).toFixed(0)}K` : v % 1 ? v.toFixed(1) : String(Math.round(v));
+    return { y: ax1.yAt(v), label };
+  });
 
-  /* Y-axis tick labels */
-  function yTicks(ax, side) {
-    const ticks = [0, 0.25, 0.5, 0.75, 1].map(t => ax.mn + t * ax.range);
-    return ticks.map((v, i) => {
-      const y = ax.yAt(v);
-      const label = v >= 1000000 ? `${(v/1000000).toFixed(1)}M` : v >= 1000 ? `${(v/1000).toFixed(0)}K` : v % 1 !== 0 ? v.toFixed(1) : String(Math.round(v));
-      return { y, label, side };
-    });
-  }
-
-  const leftTicks  = yTicks(ax0, 'left');
-  const rightTicks = yTicks(ax1, 'right');
-
-  /* Bottom tabs config */
   const TABS = [
-    { key:'overview',    label:'OVERVIEW' },
-    { key:'campaigns',   label:'CAMPAIGNS' },
-    { key:'channels',    label:'CHANNELS' },
-    { key:'advertisers', label:'ADVERTISERS' },
+    { key:'overview',    label:'Overview',    count: null },
+    { key:'campaigns',   label:'Campaigns',   count: cohort.campaignDetails?.length ?? 0 },
+    { key:'channels',    label:'Channels',    count: cohort.spendByChannel?.length ?? 0 },
+    { key:'advertisers', label:'Advertisers', count: cohort.sharingAdvertisers?.length ?? 0 },
   ];
+
+  /* Date range display */
+  const dateRange = chartDates.length >= 2
+    ? `${chartDates[0]} – ${chartDates[chartDates.length-1]}`
+    : '';
 
   return (
     <>
       <div onClick={onClose} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.35)', zIndex:48 }} />
-      <div style={{ position:'fixed', top:0, right:0, bottom:0, width:920, background:'var(--bg-screen)', boxShadow:'-6px 0 40px rgba(0,0,0,0.18)', zIndex:50, display:'flex', flexDirection:'column' }} role="dialog" aria-label={`${cohort.name} Analytics`}>
 
-        {/* ── Drawer Header ── */}
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 24px', borderBottom:'1px solid var(--border)', flexShrink:0, background:'var(--primary-bg)' }}>
-          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-            <h2 style={{ margin:0, fontSize:16, fontWeight:700, color:'var(--text-strong)' }}>{cohort.name}</h2>
-            <span style={{ fontSize:11, color:'var(--text-muted)', background:'var(--surface-2)', padding:'2px 10px', borderRadius:'var(--radius-md)', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.04em' }}>Analytics</span>
+      <div
+        role="dialog"
+        aria-label={`${cohort.name} — Analytics`}
+        style={{ position:'fixed', top:0, right:0, bottom:0, width:920, background:'var(--surface-1)', boxShadow:'-8px 0 48px rgba(0,0,0,0.16)', zIndex:50, display:'flex', flexDirection:'column' }}
+      >
+
+        {/* ── Header ── */}
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 24px', borderBottom:'1px solid var(--border)', flexShrink:0, background:'var(--primary-bg)' }}>
+          <div>
+            <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+              <h2 style={{ margin:0, fontSize:16, fontWeight:700, color:'var(--text-strong)', lineHeight:1.2 }}>{cohort.name}</h2>
+              <span style={{ fontSize:10, fontWeight:700, color:'var(--primary)', background:'var(--primary-tint-1)', padding:'2px 8px', borderRadius:'var(--radius-sm)', textTransform:'uppercase', letterSpacing:'0.06em' }}>Analytics</span>
+            </div>
+            <p style={{ margin:'4px 0 0', fontSize:11, color:'var(--text-muted)' }}>
+              {cohort.source} · {cohort.size} profiles · Last refreshed {cohort.lastRefresh}
+            </p>
           </div>
-          <button onClick={onClose} aria-label="Close" style={{ width:32, height:32, borderRadius:8, border:'none', background:'transparent', cursor:'pointer', color:'var(--text-muted)', fontSize:22, display:'flex', alignItems:'center', justifyContent:'center' }}>×</button>
+          <button
+            onClick={onClose}
+            aria-label="Close analytics drawer"
+            style={{ width:36, height:36, borderRadius:'var(--radius-md)', border:'1px solid var(--border)', background:'var(--bg-screen)', cursor:'pointer', color:'var(--text-muted)', fontSize:20, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}
+          >×</button>
         </div>
 
-        {/* ── Scrollable Body ── */}
-        <div style={{ flex:1, overflowY:'auto', display:'flex', flexDirection:'column' }}>
+        {/* ── Scrollable body ── */}
+        <div style={{ flex:1, overflowY:'auto', padding:'20px 24px', display:'flex', flexDirection:'column', gap:20 }}>
 
-          {/* ─ Metric Selector Cards ─ */}
-          <div style={{ padding:'20px 24px 0', display:'flex', flexDirection:'column', gap:14 }}>
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:10 }}>
-              {ANALYTICS_METRICS.map((m, idx) => {
-                const slotIdx = sel.indexOf(m.key);
-                const isSelected = slotIdx !== -1;
-                const slotColor = isSelected ? METRIC_SLOT_COLOR[slotIdx] : null;
-                return (
-                  <button key={m.key} onClick={() => toggleMetric(m.key)}
-                    style={{
-                      textAlign:'left', cursor:'pointer', padding:'12px 14px',
-                      borderRadius:'var(--radius-md)',
-                      border: isSelected ? `1.5px solid ${slotColor}` : '1px solid var(--border)',
-                      borderLeft: isSelected ? `4px solid ${slotColor}` : '1px solid var(--border)',
-                      background: isSelected ? 'var(--bg-screen)' : 'var(--bg-screen)',
-                      boxShadow: isSelected ? 'var(--shadow-card)' : 'none',
-                      transition:'all 0.15s',
-                      position:'relative',
-                    }}>
-                    {/* Row: label + icons */}
-                    <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:8 }}>
-                      <span style={{ fontSize:10, fontWeight:600, color: isSelected ? slotColor : 'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.04em' }}>{m.label}</span>
-                      <div style={{ display:'flex', gap:4, alignItems:'center' }}>
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ flexShrink:0, opacity:0.45 }}>
-                          <circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1.2"/>
-                          <text x="6" y="9" textAnchor="middle" fontSize="7" fill="currentColor" fontWeight="600">i</text>
-                        </svg>
-                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity:0.4 }}>
-                          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </div>
+          {/* ── Metric Selector Cards ── */}
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:8 }}>
+            {ANALYTICS_METRIC_DEFS.map(m => {
+              const slotIdx   = sel.indexOf(m.key);
+              const isSelected = slotIdx !== -1;
+              const slotColor  = isSelected ? METRIC_SLOT_COLOR[slotIdx] : null;
+              const slotBg     = isSelected ? METRIC_SLOT_BG[slotIdx]    : 'var(--bg-screen)';
+              const mv         = metricValues[m.key];
+              return (
+                <button
+                  key={m.key}
+                  onClick={() => toggleMetric(m.key)}
+                  aria-pressed={isSelected}
+                  style={{
+                    textAlign:'left', cursor:'pointer',
+                    padding:'12px 13px',
+                    borderRadius:'var(--radius-md)',
+                    border:`1px solid ${isSelected ? slotColor : 'var(--border)'}`,
+                    borderLeft:`${isSelected ? 4 : 1}px solid ${isSelected ? slotColor : 'var(--border)'}`,
+                    background: slotBg,
+                    boxShadow: isSelected ? 'var(--shadow-card)' : 'none',
+                    transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
+                  }}
+                >
+                  {/* Label row */}
+                  <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:7 }}>
+                    <span style={{ fontSize:10, fontWeight:600, color: isSelected ? slotColor : 'var(--text-muted)', letterSpacing:'0.03em' }}>{m.label}</span>
+                    <div style={{ display:'flex', gap:3, alignItems:'center', opacity:0.5 }}>
+                      {/* ⓘ icon */}
+                      <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                        <circle cx="5.5" cy="5.5" r="4.5" stroke="currentColor" strokeWidth="1.1"/>
+                        <path d="M5.5 5v3M5.5 3.5v.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+                      </svg>
+                      {/* ▾ chevron */}
+                      <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                        <path d="M2 3.2L4.5 5.8L7 3.2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
                     </div>
-                    {/* Value */}
-                    <div style={{ fontSize:18, fontWeight:700, color: isSelected ? slotColor : 'var(--text-strong)', lineHeight:1, marginBottom:4 }}>{m.value}</div>
-                    {/* Delta + sub */}
-                    <div style={{ display:'flex', alignItems:'center', gap:4 }}>
-                      <span style={{ fontSize:10, fontWeight:600, color: m.delta.startsWith('+') ? 'var(--alert-success-darker)' : 'var(--alert-error-primary)', background: m.delta.startsWith('+') ? 'var(--alert-success-bg)' : 'var(--alert-error-bg)', padding:'1px 5px', borderRadius:4 }}>{m.delta}</span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+                  </div>
+                  {/* Value */}
+                  <div style={{ fontSize:17, fontWeight:700, color: isSelected ? slotColor : 'var(--text-strong)', lineHeight:1, marginBottom:6 }}>
+                    {mv?.value ?? '—'}
+                  </div>
+                  {/* Delta badge — green tint for up, neutral gray for down (not alert-error) */}
+                  <span style={{
+                    fontSize:10, fontWeight:600,
+                    padding:'2px 6px', borderRadius:'var(--radius-sm)',
+                    background: mv?.up ? 'var(--alert-success-bg)' : 'var(--surface-2)',
+                    color:       mv?.up ? 'var(--alert-success-darker)' : 'var(--text-muted)',
+                  }}>
+                    {mv?.up ? '▲' : '▼'} vs prev period
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
-          {/* ─ Performance Summary Chart ─ */}
-          <div style={{ margin:'16px 24px 0', border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
-            {/* Chart toolbar */}
+          {/* ── Performance Summary Chart ── */}
+          <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
+
+            {/* Toolbar: title (left) | controls (right) */}
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'12px 18px', borderBottom:'1px solid var(--border)' }}>
               <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <polyline points="1,13 5,7 8,10 11,4 15,8" stroke="var(--primary)" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+                  <polyline points="1,12 4,7 7,9 10,4 14,7" stroke="var(--primary)" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                 <span style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)' }}>Performance Summary</span>
+                {/* Legend inline with title */}
+                <div style={{ display:'flex', gap:14, marginLeft:8 }}>
+                  {sel.map((key, si) => (
+                    <div key={key} style={{ display:'flex', alignItems:'center', gap:5 }}>
+                      <span style={{ display:'inline-block', width:20, height:2.5, borderRadius:2, background: METRIC_SLOT_COLOR[si] }} />
+                      <span style={{ fontSize:11, color:'var(--text-muted)' }}>{ANALYTICS_METRIC_DEFS.find(x=>x.key===key)?.label}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                {/* Granularity toggle */}
-                <div style={{ display:'flex', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', overflow:'hidden' }}>
-                  {['D','W','M'].map(g => (
+
+              {/* Controls group */}
+              <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                {/* D / W / M granularity */}
+                <div role="group" aria-label="Chart granularity" style={{ display:'flex', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', overflow:'hidden' }}>
+                  {['D','W','M'].map((g, gi) => (
                     <button key={g} onClick={() => setGran(g)}
-                      style={{ padding:'4px 10px', fontSize:11, fontWeight:600, border:'none', cursor:'pointer', background: gran===g ? 'var(--primary-bg)' : 'transparent', color: gran===g ? 'var(--primary)' : 'var(--text-muted)', borderRight: g !== 'M' ? '1px solid var(--border)' : 'none', transition:'all 0.12s' }}>
+                      aria-pressed={gran === g}
+                      title={g === 'D' ? 'Daily' : g === 'W' ? 'Weekly' : 'Monthly'}
+                      style={{ padding:'5px 11px', fontSize:11, fontWeight:600, border:'none', cursor:'pointer', background: gran===g ? 'var(--primary-bg)' : 'transparent', color: gran===g ? 'var(--primary)' : 'var(--text-muted)', borderRight: gi < 2 ? '1px solid var(--border)' : 'none', transition:'background 0.12s, color 0.12s' }}>
                       {g}
                     </button>
                   ))}
                 </div>
                 {/* Date range */}
-                <button style={{ display:'flex', alignItems:'center', gap:6, padding:'4px 10px', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', background:'transparent', cursor:'pointer', fontSize:11, fontWeight:500, color:'var(--text-muted)' }}>
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <rect x="1" y="2" width="10" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.2"/>
-                    <line x1="1" y1="5" x2="11" y2="5" stroke="currentColor" strokeWidth="1.2"/>
-                    <line x1="4" y1="1" x2="4" y2="3.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-                    <line x1="8" y1="1" x2="8" y2="3.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+                <button style={{ display:'flex', alignItems:'center', gap:6, padding:'5px 10px', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', background:'transparent', cursor:'pointer', fontSize:11, fontWeight:500, color:'var(--text-muted)', whiteSpace:'nowrap' }}>
+                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                    <rect x="0.5" y="1.5" width="10" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.1"/>
+                    <line x1="0.5" y1="4.5" x2="10.5" y2="4.5" stroke="currentColor" strokeWidth="1.1"/>
+                    <line x1="3.5" y1="0.5" x2="3.5" y2="3" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round"/>
+                    <line x1="7.5" y1="0.5" x2="7.5" y2="3" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round"/>
                   </svg>
-                  08 Jun 26 – 14 Jun 26
+                  {dateRange}
                 </button>
                 {/* Download */}
-                <button style={{ width:28, height:28, border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', background:'transparent', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'var(--text-muted)' }}>
-                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                    <path d="M6.5 1v7M3.5 5.5l3 3 3-3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M1.5 10.5h10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                <button
+                  aria-label="Download chart data"
+                  style={{ width:30, height:30, border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', background:'transparent', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'var(--text-muted)', flexShrink:0 }}
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M6 1.5v6M3.5 5.5l2.5 2.5 2.5-2.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M1.5 10h9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
                   </svg>
                 </button>
               </div>
             </div>
 
-            {/* Legend */}
-            <div style={{ display:'flex', alignItems:'center', gap:20, padding:'10px 18px 0' }}>
-              {sel.map((key, si) => {
-                const m = ANALYTICS_METRICS.find(x => x.key === key);
-                return (
-                  <div key={key} style={{ display:'flex', alignItems:'center', gap:6 }}>
-                    <span style={{ display:'inline-block', width:24, height:3, borderRadius:2, background: METRIC_SLOT_COLOR[si] }} />
-                    <span style={{ fontSize:11, fontWeight:600, color:'var(--text-muted)' }}>{m?.label}</span>
-                  </div>
-                );
-              })}
-            </div>
+            {/* Dual-axis SVG chart with HTML y-axis labels (avoids rotated SVG text blurriness) */}
+            <div style={{ padding:'12px 18px 12px', position:'relative' }} onMouseLeave={() => setHoverIdx(null)}>
 
-            {/* SVG dual-axis chart */}
-            <div style={{ padding:'6px 18px 12px', position:'relative' }}
-              onMouseLeave={() => setHoverIdx(null)}>
+              {/* Y-axis labels rendered in HTML (crisp on retina) */}
+              <div style={{ position:'absolute', left:0, top:12, bottom:36, width:18+padL, pointerEvents:'none' }}>
+                {leftTicks.map((t, i) => (
+                  <div key={i} style={{ position:'absolute', right:padL - 40 + 18, top: t.y - 6, fontSize:9, color:'var(--text-muted)', fontWeight:500, whiteSpace:'nowrap', textAlign:'right' }}>{t.label}</div>
+                ))}
+              </div>
+              <div style={{ position:'absolute', right:0, top:12, bottom:36, width:padR+14, pointerEvents:'none' }}>
+                {rightTicks.map((t, i) => (
+                  <div key={i} style={{ position:'absolute', left:4, top: t.y - 6, fontSize:9, color:'var(--chart-bruntorange)', fontWeight:500, whiteSpace:'nowrap' }}>{t.label}</div>
+                ))}
+              </div>
+
               <svg viewBox={`0 0 ${svgW} ${svgH}`} width="100%" height={svgH} style={{ overflow:'visible', display:'block' }}>
                 <defs>
-                  <linearGradient id="grad0" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.12"/>
+                  <linearGradient id="cadGrad0" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.14"/>
                     <stop offset="100%" stopColor="var(--primary)" stopOpacity="0"/>
                   </linearGradient>
-                  <linearGradient id="grad1" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--chart-bruntorange)" stopOpacity="0.10"/>
+                  <linearGradient id="cadGrad1" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="var(--chart-bruntorange)" stopOpacity="0.11"/>
                     <stop offset="100%" stopColor="var(--chart-bruntorange)" stopOpacity="0"/>
                   </linearGradient>
                 </defs>
 
                 {/* Gridlines */}
-                {[0,0.25,0.5,0.75,1].map((t,i) => {
-                  const y = padT + cH * (1 - t);
-                  return <line key={i} x1={padL} y1={y} x2={svgW-padR} y2={y} stroke="var(--border)" strokeWidth="0.8" strokeDasharray="4 3"/>;
-                })}
-
-                {/* Left Y-axis ticks */}
-                {leftTicks.map((t, i) => (
-                  <text key={i} x={padL - 6} y={t.y + 4} textAnchor="end" fontSize={9} fill="var(--text-muted)">{t.label}</text>
+                {[0,0.25,0.5,0.75,1].map((t,i) => (
+                  <line key={i} x1={padL} y1={padT + cH*(1-t)} x2={svgW-padR} y2={padT + cH*(1-t)} stroke="var(--border)" strokeWidth="0.7" strokeDasharray="4 3"/>
                 ))}
-
-                {/* Right Y-axis ticks */}
-                {rightTicks.map((t, i) => (
-                  <text key={i} x={svgW - padR + 6} y={t.y + 4} textAnchor="start" fontSize={9} fill="var(--chart-bruntorange)">{t.label}</text>
-                ))}
-
-                {/* Left Y-axis label */}
-                <text x={10} y={padT + cH/2} textAnchor="middle" fontSize={9} fill="var(--primary)" fontWeight="600" transform={`rotate(-90,10,${padT + cH/2})`}>{ANALYTICS_METRICS.find(m=>m.key===sel[0])?.label}</text>
-
-                {/* Right Y-axis label */}
-                <text x={svgW-8} y={padT + cH/2} textAnchor="middle" fontSize={9} fill="var(--chart-bruntorange)" fontWeight="600" transform={`rotate(90,${svgW-8},${padT + cH/2})`}>{ANALYTICS_METRICS.find(m=>m.key===sel[1])?.label}</text>
 
                 {/* Area fills */}
-                <polygon points={areaPath(sel[0], ax0)} fill="url(#grad0)"/>
-                <polygon points={areaPath(sel[1], ax1)} fill="url(#grad1)"/>
+                <polygon points={area(sel[0], ax0)} fill="url(#cadGrad0)"/>
+                <polygon points={area(sel[1], ax1)} fill="url(#cadGrad1)"/>
 
                 {/* Lines */}
-                <polyline points={polyline(sel[0], ax0)} fill="none" stroke="var(--primary)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                <polyline points={polyline(sel[1], ax1)} fill="none" stroke="var(--chart-bruntorange)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                <polyline points={pts(sel[0], ax0)} fill="none" stroke="var(--primary)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                <polyline points={pts(sel[1], ax1)} fill="none" stroke="var(--chart-bruntorange)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
 
-                {/* Hover vertical rule */}
+                {/* Hover rule */}
                 {hoverIdx !== null && (
-                  <line x1={xAt(hoverIdx)} y1={padT} x2={xAt(hoverIdx)} y2={padT+cH} stroke="var(--border-strong)" strokeWidth="1" strokeDasharray="4 3"/>
+                  <line x1={xAt(hoverIdx)} y1={padT} x2={xAt(hoverIdx)} y2={padT+cH} stroke="var(--border-strong)" strokeWidth="1" strokeDasharray="3 3"/>
                 )}
 
-                {/* Dots */}
-                {CHART_DATES.map((_, i) => (
-                  <g key={i}>
-                    <rect x={xAt(i)-14} y={padT} width={28} height={cH} fill="transparent"
-                      onMouseEnter={() => setHoverIdx(i)} style={{ cursor:'crosshair' }}/>
-                    <circle cx={xAt(i)} cy={ax0.yAt(METRIC_SERIES[sel[0]][i])} r={hoverIdx===i?5:3} fill="var(--primary)" stroke="var(--bg-screen)" strokeWidth="1.5"/>
-                    <circle cx={xAt(i)} cy={ax1.yAt(METRIC_SERIES[sel[1]][i])} r={hoverIdx===i?5:3} fill="var(--chart-bruntorange)" stroke="var(--bg-screen)" strokeWidth="1.5"/>
-                  </g>
-                ))}
+                {/* Invisible hit-targets + dots */}
+                {chartDates.map((_, i) => {
+                  const v0 = (metricSeries[sel[0]] || [])[i];
+                  const v1 = (metricSeries[sel[1]] || [])[i];
+                  return (
+                    <g key={i}>
+                      <rect x={xAt(i)-14} y={padT} width={28} height={cH} fill="transparent" onMouseEnter={() => setHoverIdx(i)} style={{ cursor:'crosshair' }}/>
+                      {v0 != null && <circle cx={xAt(i)} cy={ax0.yAt(v0)} r={hoverIdx===i?5:3.5} fill="var(--primary)" stroke="var(--bg-screen)" strokeWidth="1.5"/>}
+                      {v1 != null && <circle cx={xAt(i)} cy={ax1.yAt(v1)} r={hoverIdx===i?5:3.5} fill="var(--chart-bruntorange)" stroke="var(--bg-screen)" strokeWidth="1.5"/>}
+                    </g>
+                  );
+                })}
 
-                {/* Hover tooltip */}
+                {/* Tooltip — clamped so it never clips either edge */}
                 {hoverIdx !== null && (() => {
-                  const tx = xAt(hoverIdx);
-                  const tooltipW = 140, tooltipH = 52;
-                  const tx2 = tx + tooltipW + 6 > svgW - padR ? tx - tooltipW - 6 : tx + 6;
-                  const ty2 = padT + 4;
-                  const m0 = ANALYTICS_METRICS.find(m=>m.key===sel[0]);
-                  const m1 = ANALYTICS_METRICS.find(m=>m.key===sel[1]);
+                  const tx     = xAt(hoverIdx);
+                  const tw     = 148, th = 54;
+                  const margin = 8;
+                  const tx2    = Math.min(Math.max(tx - tw/2, padL), svgW - padR - tw);
+                  const ty2    = padT + 4;
+                  const v0     = (metricSeries[sel[0]] || [])[hoverIdx];
+                  const v1     = (metricSeries[sel[1]] || [])[hoverIdx];
+                  const lab0   = ANALYTICS_METRIC_DEFS.find(x=>x.key===sel[0])?.label;
+                  const lab1   = ANALYTICS_METRIC_DEFS.find(x=>x.key===sel[1])?.label;
                   return (
                     <g style={{ pointerEvents:'none' }}>
-                      <rect x={tx2} y={ty2} width={tooltipW} height={tooltipH} rx={6} fill="var(--surface-1)" stroke="var(--border)" strokeWidth="1"/>
-                      <text x={tx2+10} y={ty2+14} fontSize={9} fontWeight="600" fill="var(--text-muted)">{CHART_DATES[hoverIdx]}</text>
-                      <circle cx={tx2+10} cy={ty2+25} r={3.5} fill="var(--primary)"/>
-                      <text x={tx2+18} y={ty2+29} fontSize={9} fontWeight="600" fill="var(--text)">{m0?.label}: {METRIC_SERIES[sel[0]][hoverIdx]}</text>
-                      <circle cx={tx2+10} cy={ty2+40} r={3.5} fill="var(--chart-bruntorange)"/>
-                      <text x={tx2+18} y={ty2+44} fontSize={9} fontWeight="600" fill="var(--text)">{m1?.label}: {METRIC_SERIES[sel[1]][hoverIdx]}</text>
+                      <rect x={tx2} y={ty2} width={tw} height={th} rx={6} fill="var(--surface-1)" stroke="var(--border)" strokeWidth="1"/>
+                      <text x={tx2+10} y={ty2+14} fontSize={9} fontWeight={700} fill="var(--text-muted)">{chartDates[hoverIdx]}</text>
+                      {v0 != null && <>
+                        <circle cx={tx2+10} cy={ty2+27} r={3.5} fill="var(--primary)"/>
+                        <text x={tx2+20} y={ty2+31} fontSize={9} fontWeight={600} fill="var(--text)">{lab0}: {v0}</text>
+                      </>}
+                      {v1 != null && <>
+                        <circle cx={tx2+10} cy={ty2+42} r={3.5} fill="var(--chart-bruntorange)"/>
+                        <text x={tx2+20} y={ty2+46} fontSize={9} fontWeight={600} fill="var(--text)">{lab1}: {v1}</text>
+                      </>}
                     </g>
                   );
                 })()}
 
                 {/* X-axis labels */}
-                {CHART_DATES.map((d, i) => (
-                  <text key={i} x={xAt(i)} y={svgH - 6} textAnchor="middle" fontSize={9} fill="var(--text-muted)">{d}</text>
+                {chartDates.map((d, i) => (
+                  <text key={i} x={xAt(i)} y={svgH-6} textAnchor="middle" fontSize={9} fill="var(--text-muted)">{d}</text>
                 ))}
               </svg>
             </div>
           </div>
 
-          {/* ─ Bottom Tabs ─ */}
-          <div style={{ margin:'16px 24px 0', flex:1 }}>
-            {/* Tab strip */}
-            <div style={{ display:'flex', borderBottom:'2px solid var(--border)', marginBottom:16 }}>
+          {/* ── Bottom Tabs ── */}
+          <div style={{ flex:1 }}>
+            {/* Tab strip — ARIA tablist */}
+            <div role="tablist" aria-label="Cohort analytics sections" style={{ display:'flex', borderBottom:'2px solid var(--border)', marginBottom:16, gap:2 }}>
               {TABS.map(t => (
-                <button key={t.key} onClick={() => setActiveTab(t.key)}
-                  style={{ padding:'8px 16px', fontSize:11, fontWeight:700, border:'none', background:'transparent', cursor:'pointer', color: activeTab===t.key ? 'var(--primary)' : 'var(--text-muted)', borderBottom: activeTab===t.key ? '2px solid var(--primary)' : '2px solid transparent', marginBottom:'-2px', letterSpacing:'0.04em', textTransform:'uppercase', whiteSpace:'nowrap', transition:'color 0.12s' }}>
+                <button
+                  key={t.key}
+                  role="tab"
+                  aria-selected={activeTab === t.key}
+                  onClick={() => setActiveTab(t.key)}
+                  style={{
+                    display:'flex', alignItems:'center', gap:6,
+                    padding:'10px 18px',
+                    fontSize:12, fontWeight:600,
+                    border:'none', background:'transparent', cursor:'pointer',
+                    color: activeTab===t.key ? 'var(--primary)' : 'var(--text-muted)',
+                    borderBottom: activeTab===t.key ? '3px solid var(--primary)' : '3px solid transparent',
+                    marginBottom:'-2px',
+                    whiteSpace:'nowrap',
+                    transition:'color 0.12s',
+                    minHeight:44,          /* WCAG 2.5.5 — 44px touch target */
+                  }}
+                >
                   {t.label}
+                  {t.count !== null && (
+                    <span style={{ fontSize:10, fontWeight:700, background: activeTab===t.key ? 'var(--primary-tint-1)' : 'var(--surface-2)', color: activeTab===t.key ? 'var(--primary)' : 'var(--text-muted)', padding:'1px 6px', borderRadius:10 }}>
+                      {t.count}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
 
             {/* Tab content */}
-            <div style={{ paddingBottom:32 }}>
+            <div role="tabpanel" style={{ paddingBottom:32 }}>
 
-              {/* OVERVIEW TAB */}
+              {/* OVERVIEW */}
               {activeTab === 'overview' && (
                 <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
                   {/* Spend by Channel */}
                   <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'16px 18px', background:'var(--bg-screen)' }}>
-                    <div style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)', marginBottom:14, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                      Spend by Channel
+                    <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
+                      <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Spend by Channel</span>
                       <span style={{ fontSize:12, fontWeight:700, color:'var(--alert-success-primary)' }}>{cohort.spend30d}</span>
                     </div>
                     <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
-                      {cohort.spendByChannel.map(s => (
+                      {(cohort.spendByChannel || []).map(s => (
                         <div key={s.ch}>
                           <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:5 }}>
                             <span style={{ flexShrink:0 }}>{CHANNEL_ICONS[s.ch]}</span>
@@ -2413,112 +2504,131 @@ function CohortAnalyticsDrawer({ cohort, onClose }) {
                             <span style={{ fontSize:12, fontWeight:700, color:'var(--alert-success-primary)' }}>{s.amount}</span>
                             <span style={{ fontSize:11, color:'var(--text-muted)', minWidth:28, textAlign:'right' }}>{s.pct}%</span>
                           </div>
-                          <div style={{ height:6, borderRadius:3, background:'var(--border)' }}>
-                            <div style={{ width:`${s.pct}%`, height:'100%', borderRadius:3, background:s.color }} />
+                          <div style={{ height:6, borderRadius:3, background:'var(--surface-2)' }}>
+                            <div style={{ width:`${s.pct}%`, height:'100%', borderRadius:3, background:s.color, transition:'width 0.4s ease' }} />
                           </div>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Channel Distribution */}
-                  <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'16px 18px', background:'var(--bg-screen)' }}>
-                    <div style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)', marginBottom:14 }}>Channel Distribution</div>
-                    <div style={{ display:'flex', height:20, borderRadius:6, overflow:'hidden', marginBottom:14 }}>
-                      {cohort.spendByChannel.map(s => (
-                        <div key={s.ch} title={`${s.ch}: ${s.pct}%`} style={{ width:`${s.pct}%`, background:s.color, height:'100%' }} />
-                      ))}
-                    </div>
-                    <div style={{ display:'flex', flexWrap:'wrap', gap:12, marginBottom:20 }}>
-                      {cohort.spendByChannel.map(s => (
-                        <div key={s.ch} style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, color:'var(--text-muted)' }}>
-                          <span style={{ width:9, height:9, borderRadius:2, background:s.color, display:'inline-block', flexShrink:0 }} />
-                          <span style={{ fontWeight:500, color:'var(--text)' }}>{s.ch}</span>
-                          <span>{s.pct}%</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div style={{ borderTop:'1px solid var(--border)', paddingTop:14 }}>
-                      <div style={{ fontSize:11, color:'var(--text-muted)', marginBottom:8, fontWeight:600 }}>Audience Activation</div>
-                      <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-                        <div style={{ display:'flex', justifyContent:'space-between', fontSize:11 }}>
-                          <span style={{ color:'var(--text-muted)' }}>Activated Advertisers</span>
-                          <span style={{ fontWeight:700, color:'var(--text)' }}>{cohort.activatedAdvertisers} of {cohort.advertisers}</span>
-                        </div>
-                        <div style={{ display:'flex', justifyContent:'space-between', fontSize:11 }}>
-                          <span style={{ color:'var(--text-muted)' }}>Activated Channels</span>
-                          <span style={{ fontWeight:700, color:'var(--text)' }}>{cohort.activatedChannels}</span>
-                        </div>
-                        <div style={{ display:'flex', justifyContent:'space-between', fontSize:11 }}>
-                          <span style={{ color:'var(--text-muted)' }}>Running Campaigns</span>
-                          <span style={{ fontWeight:700, color:'var(--text)' }}>{cohort.campaignCount}</span>
-                        </div>
+                  {/* Audience activation summary */}
+                  <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'16px 18px', background:'var(--bg-screen)', display:'flex', flexDirection:'column', gap:16 }}>
+                    {/* Channel distribution stacked bar */}
+                    <div>
+                      <div style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)', marginBottom:10 }}>Channel Distribution</div>
+                      <div style={{ display:'flex', height:18, borderRadius:6, overflow:'hidden', marginBottom:10 }}>
+                        {(cohort.spendByChannel || []).map(s => (
+                          <div key={s.ch} title={`${s.ch}: ${s.pct}%`} style={{ width:`${s.pct}%`, background:s.color, height:'100%' }} />
+                        ))}
                       </div>
+                      <div style={{ display:'flex', flexWrap:'wrap', gap:10 }}>
+                        {(cohort.spendByChannel || []).map(s => (
+                          <div key={s.ch} style={{ display:'flex', alignItems:'center', gap:5, fontSize:11 }}>
+                            <span style={{ width:8, height:8, borderRadius:2, background:s.color, display:'inline-block', flexShrink:0 }} />
+                            <span style={{ fontWeight:500, color:'var(--text)' }}>{s.ch}</span>
+                            <span style={{ color:'var(--text-muted)' }}>{s.pct}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {/* Activation KPIs */}
+                    <div style={{ borderTop:'1px solid var(--border)', paddingTop:14, display:'flex', flexDirection:'column', gap:10 }}>
+                      {[
+                        { label:'Activated Advertisers', value:`${cohort.activatedAdvertisers} of ${cohort.advertisers}` },
+                        { label:'Active Channels',       value:String(cohort.activatedChannels || 0) },
+                        { label:'Running Campaigns',     value:String(cohort.campaignCount || 0) },
+                        { label:'Audience Size',         value:cohort.size },
+                      ].map(row => (
+                        <div key={row.label} style={{ display:'flex', justifyContent:'space-between', fontSize:11 }}>
+                          <span style={{ color:'var(--text-muted)' }}>{row.label}</span>
+                          <span style={{ fontWeight:700, color:'var(--text)' }}>{row.value}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* CAMPAIGNS TAB */}
-              {activeTab === 'campaigns' && (
-                <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', overflow:'hidden' }}>
-                  <table style={{ width:'100%', borderCollapse:'collapse', fontSize:11 }}>
-                    <thead>
-                      <tr style={{ background:'var(--surface-1)' }}>
-                        {['STATUS','CAMPAIGN','ADVERTISER','CHANNEL','SPEND · 30D'].map(h => (
-                          <th key={h} style={{ padding:'10px 12px', textAlign:'left', fontSize:9, fontWeight:700, color:'var(--text-info)', letterSpacing:'0.06em', textTransform:'uppercase', borderBottom:'1px solid var(--border)' }}>{h}</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(cohort.campaignDetails || []).map((c, i) => (
-                        <tr key={c.name} style={{ borderBottom: i < (cohort.campaignDetails.length-1) ? '1px solid var(--border)' : 'none' }}>
-                          <td style={{ padding:'11px 12px' }}>
-                            <span style={{ display:'inline-flex', alignItems:'center', gap:5 }}>
-                              <span style={{ width:6, height:6, borderRadius:'50%', background:c.status==='Active'?'var(--alert-success-primary)':'var(--text-info)', flexShrink:0 }} />
-                              <span style={{ fontSize:11, color:c.status==='Active'?'var(--alert-success-darker)':'var(--text-muted)' }}>{c.status}</span>
-                            </span>
-                          </td>
-                          <td style={{ padding:'11px 12px', fontWeight:600, color:'var(--text)', fontSize:12 }}>{c.name}</td>
-                          <td style={{ padding:'11px 12px' }}>
-                            <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}>
-                              <span style={{ width:22, height:22, borderRadius:'50%', background:c.color, display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:8, fontWeight:700, color:'#fff', flexShrink:0 }}>{c.initials}</span>
-                              <span style={{ fontSize:11, color:'var(--text-muted)' }}>{c.advertiser}</span>
-                            </span>
-                          </td>
-                          <td style={{ padding:'11px 12px' }}>
-                            <span style={{ display:'inline-flex', alignItems:'center', gap:4 }}>
-                              <span style={{ flexShrink:0 }}>{CHANNEL_ICONS[c.channel]||null}</span>
-                              <span style={{ fontSize:11, color:'var(--text-muted)' }}>{c.channel}</span>
-                            </span>
-                          </td>
-                          <td style={{ padding:'11px 12px', fontWeight:700, color:'var(--alert-success-primary)', fontSize:12 }}>{c.spend}</td>
+              {/* CAMPAIGNS */}
+              {activeTab === 'campaigns' && (() => {
+                const campaigns = cohort.campaignDetails || [];
+                if (campaigns.length === 0) return (
+                  <div style={{ textAlign:'center', padding:'48px 24px', border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)' }}>
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style={{ margin:'0 auto 12px' }}>
+                      <circle cx="20" cy="20" r="19" stroke="var(--border)" strokeWidth="1.5"/>
+                      <path d="M13 27l4-8 4 5 3-5 4 8" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <div style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)', marginBottom:6 }}>No campaigns yet</div>
+                    <div style={{ fontSize:12, color:'var(--text-muted)', maxWidth:280, margin:'0 auto 16px' }}>
+                      Share this cohort with advertisers to start seeing campaign activity here.
+                    </div>
+                    <button
+                      onClick={() => {}} // TODO: open Sharing tab
+                      style={{ padding:'8px 18px', background:'var(--primary)', color:'#fff', border:'none', borderRadius:'var(--radius-md)', fontSize:12, fontWeight:600, cursor:'pointer' }}
+                    >
+                      Manage Access
+                    </button>
+                  </div>
+                );
+                return (
+                  <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', overflow:'hidden' }}>
+                    <table style={{ width:'100%', borderCollapse:'collapse', fontSize:11 }}>
+                      <thead>
+                        <tr style={{ background:'var(--surface-1)' }}>
+                          {['STATUS','CAMPAIGN','ADVERTISER','CHANNEL','SPEND · 30D'].map(h => (
+                            <th key={h} style={{ padding:'10px 12px', textAlign:'left', fontSize:9, fontWeight:700, color:'var(--text-info)', letterSpacing:'0.06em', textTransform:'uppercase', borderBottom:'1px solid var(--border)' }}>{h}</th>
+                          ))}
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+                      </thead>
+                      <tbody>
+                        {campaigns.map((c, i) => (
+                          <tr key={c.name} style={{ borderBottom: i < campaigns.length-1 ? '1px solid var(--border)' : 'none' }}>
+                            <td style={{ padding:'11px 12px' }}>
+                              <span style={{ display:'inline-flex', alignItems:'center', gap:5 }}>
+                                <span style={{ width:6, height:6, borderRadius:'50%', background:c.status==='Active'?'var(--alert-success-primary)':'var(--text-info)', flexShrink:0 }} />
+                                <span style={{ fontSize:11, color:c.status==='Active'?'var(--alert-success-darker)':'var(--text-muted)' }}>{c.status}</span>
+                              </span>
+                            </td>
+                            <td style={{ padding:'11px 12px', fontWeight:600, color:'var(--text)', fontSize:12 }}>{c.name}</td>
+                            <td style={{ padding:'11px 12px' }}>
+                              <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}>
+                                <span style={{ width:22, height:22, borderRadius:'50%', background:c.color, display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:8, fontWeight:700, color:'#fff', flexShrink:0 }}>{c.initials}</span>
+                                <span style={{ fontSize:11, color:'var(--text-muted)' }}>{c.advertiser}</span>
+                              </span>
+                            </td>
+                            <td style={{ padding:'11px 12px' }}>
+                              <span style={{ display:'inline-flex', alignItems:'center', gap:4 }}>
+                                {CHANNEL_ICONS[c.channel] || null}
+                                <span style={{ fontSize:11, color:'var(--text-muted)' }}>{c.channel}</span>
+                              </span>
+                            </td>
+                            <td style={{ padding:'11px 12px', fontWeight:700, color:'var(--alert-success-primary)', fontSize:12 }}>{c.spend}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                );
+              })()}
 
-              {/* CHANNELS TAB */}
+              {/* CHANNELS */}
               {activeTab === 'channels' && (
-                <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
-                  {cohort.spendByChannel.map(s => (
-                    <div key={s.ch} style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'16px 20px', background:'var(--bg-screen)', display:'grid', gridTemplateColumns:'auto 1fr auto', gap:16, alignItems:'center' }}>
+                <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+                  {(cohort.spendByChannel || []).map(s => (
+                    <div key={s.ch} style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'14px 18px', background:'var(--bg-screen)', display:'grid', gridTemplateColumns:'auto 1fr auto', gap:16, alignItems:'center' }}>
                       <div style={{ display:'flex', alignItems:'center', gap:10 }}>
                         <span style={{ width:36, height:36, borderRadius:'50%', background:'var(--surface-2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18 }}>{CHANNEL_ICONS[s.ch]}</span>
                         <div>
-                          <div style={{ fontSize:13, fontWeight:700, color:'var(--text)' }}>{s.ch}</div>
-                          <div style={{ fontSize:11, color:'var(--text-muted)' }}>{s.pct}% of total spend</div>
+                          <div style={{ fontSize:12, fontWeight:700, color:'var(--text)' }}>{s.ch}</div>
+                          <div style={{ fontSize:11, color:'var(--text-muted)' }}>{s.pct}% of spend</div>
                         </div>
                       </div>
-                      <div>
-                        <div style={{ height:8, borderRadius:4, background:'var(--border)' }}>
-                          <div style={{ width:`${s.pct}%`, height:'100%', borderRadius:4, background:s.color }} />
-                        </div>
+                      <div style={{ height:7, borderRadius:4, background:'var(--surface-2)' }}>
+                        <div style={{ width:`${s.pct}%`, height:'100%', borderRadius:4, background:s.color, transition:'width 0.4s ease' }} />
                       </div>
-                      <div style={{ textAlign:'right' }}>
-                        <div style={{ fontSize:16, fontWeight:700, color:'var(--alert-success-primary)' }}>{s.amount}</div>
+                      <div style={{ textAlign:'right', minWidth:80 }}>
+                        <div style={{ fontSize:15, fontWeight:700, color:'var(--alert-success-primary)' }}>{s.amount}</div>
                         <div style={{ fontSize:10, color:'var(--text-muted)' }}>30-day spend</div>
                       </div>
                     </div>
@@ -2526,23 +2636,32 @@ function CohortAnalyticsDrawer({ cohort, onClose }) {
                 </div>
               )}
 
-              {/* ADVERTISERS TAB */}
-              {activeTab === 'advertisers' && (
-                <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-                  {(cohort.sharingAdvertisers || []).map((adv, i) => (
-                    <div key={adv} style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'14px 18px', background:'var(--bg-screen)', display:'flex', alignItems:'center', gap:14, justifyContent:'space-between' }}>
-                      <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                        <span style={{ width:32, height:32, borderRadius:'50%', background:`hsl(${i*80},55%,55%)`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#fff', flexShrink:0 }}>{adv.slice(0,2).toUpperCase()}</span>
-                        <div>
-                          <div style={{ fontSize:12, fontWeight:600, color:'var(--text)' }}>{adv}</div>
-                          <div style={{ fontSize:10, color:'var(--text-muted)' }}>Has access · Active</div>
+              {/* ADVERTISERS */}
+              {activeTab === 'advertisers' && (() => {
+                const advs = cohort.sharingAdvertisers || [];
+                if (advs.length === 0) return (
+                  <div style={{ textAlign:'center', padding:'48px 24px', border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)' }}>
+                    <div style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)', marginBottom:6 }}>No advertisers with access</div>
+                    <div style={{ fontSize:12, color:'var(--text-muted)', maxWidth:280, margin:'0 auto' }}>Add advertisers in the Sharing tab to grant cohort access.</div>
+                  </div>
+                );
+                return (
+                  <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                    {advs.map((adv, i) => (
+                      <div key={adv} style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'12px 18px', background:'var(--bg-screen)', display:'flex', alignItems:'center', gap:12, justifyContent:'space-between' }}>
+                        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                          <span style={{ width:32, height:32, borderRadius:'50%', background:`hsl(${i*80+200},50%,55%)`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#fff', flexShrink:0 }}>{adv.slice(0,2).toUpperCase()}</span>
+                          <div>
+                            <div style={{ fontSize:12, fontWeight:600, color:'var(--text)' }}>{adv}</div>
+                            <div style={{ fontSize:10, color:'var(--text-muted)' }}>Has access · Active</div>
+                          </div>
                         </div>
+                        <span style={{ fontSize:10, fontWeight:600, background:'var(--alert-success-bg)', color:'var(--alert-success-darker)', padding:'3px 10px', borderRadius:'var(--radius-sm)', flexShrink:0 }}>Active</span>
                       </div>
-                      <span style={{ fontSize:10, fontWeight:600, background:'var(--alert-success-bg)', color:'var(--alert-success-darker)', padding:'3px 10px', borderRadius:'var(--radius-sm)' }}>Active</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+                    ))}
+                  </div>
+                );
+              })()}
 
             </div>
           </div>
