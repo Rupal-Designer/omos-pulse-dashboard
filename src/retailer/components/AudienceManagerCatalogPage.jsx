@@ -2360,6 +2360,7 @@ export default function AudienceManagerCatalogPage() {
   const [selectedReview, setSelectedReview] = useState(null);
   const [editTarget,     setEditTarget]     = useState(null);   // Option 2 — EditCohortDrawer
   const [analyticsTarget,setAnalyticsTarget]= useState(null);   // Option 2 — CohortAnalyticsDrawer
+  const [viewMode,       setViewMode]       = useState(2);      // 1 = Option 1 (CohortReviewModal), 2 = Option 2 (EditCohortDrawer)
   const [showCreate,     setShowCreate]     = useState(false);
   const [toast,          setToast]          = useState(null);
   const [highlightId,    setHighlightId]    = useState(null);
@@ -2525,7 +2526,21 @@ export default function AudienceManagerCatalogPage() {
 
           {/* ── Title + actions row ── */}
           <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:20 }}>
-            <h1 style={{ margin:0, fontSize:20, fontWeight:700, color:'var(--text)' }}>Audience Cohort</h1>
+            <div style={{ display:'flex', alignItems:'center', gap:14 }}>
+              <h1 style={{ margin:0, fontSize:20, fontWeight:700, color:'var(--text)' }}>Audience Cohort</h1>
+              {/* Option switcher */}
+              <div style={{ display:'inline-flex', alignItems:'center', background:'var(--surface-1)', borderRadius:'var(--radius-md)', padding:3, gap:2, border:'1px solid var(--border)' }}>
+                {[{ n:1, label:'Option 1' },{ n:2, label:'Option 2' }].map(({ n, label }) => {
+                  const active = viewMode === n;
+                  return (
+                    <button key={n} onClick={() => setViewMode(n)}
+                      style={{ padding:'4px 12px', borderRadius:6, border:'none', cursor:'pointer', fontSize:11, fontWeight:active?700:500, color:active?'var(--primary)':'var(--text-muted)', background:active?'var(--primary-bg)':'transparent', transition:'all 0.15s', whiteSpace:'nowrap' }}>
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
             <div style={{ display:'flex', gap:8, flexShrink:0, alignItems:'center' }}>
               <div style={{ position:'relative' }}>
                 <svg style={{ position:'absolute', left:10, top:'50%', transform:'translateY(-50%)', color:'var(--text-info)', pointerEvents:'none' }} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -2630,12 +2645,12 @@ export default function AudienceManagerCatalogPage() {
                 <button onClick={clearFilters} style={{ padding:'8px 18px', borderRadius:'var(--radius-md)', border:'1px solid var(--primary)', background:'transparent', color:'var(--primary)', fontSize:13, fontWeight:600, cursor:'pointer' }}>Clear filters</button>
               </div>
             ) : filtered.map((cohort, i) => {
-              const isSelected = editTarget?.id === cohort.id;
+              const isSelected = viewMode === 1 ? selectedReview?.id === cohort.id : editTarget?.id === cohort.id;
               const isBulkSelected = selectedIds.has(cohort.id);
               return (
                 <div
                   key={cohort.id}
-                  onClick={() => { setEditTarget(cohort); setMenuOpenId(null); }}
+                  onClick={() => { if (viewMode === 1) { setSelectedReview(cohort); } else { setEditTarget(cohort); } setMenuOpenId(null); }}
                   style={{
                     display:'grid', gridTemplateColumns:TABLE_COLS,
                     borderBottom: i < filtered.length-1 ? '1px solid var(--border)' : 'none',
@@ -2781,10 +2796,10 @@ export default function AudienceManagerCatalogPage() {
         <CohortDrawer cohort={selectedCohort} onClose={() => setSelectedCohort(null)} onDeactivated={handleDeactivated} />
       )}
 
-      {/* Full Review modal (Option 1 — preserved but row click now opens Option 2) */}
-      {/* {selectedReview && (
+      {/* Full Review modal — Option 1 */}
+      {viewMode === 1 && selectedReview && (
         <CohortReviewModal cohort={selectedReview} onClose={() => setSelectedReview(null)} onDeactivated={handleDeactivated} onSaved={(msg) => setToast({ msg, type:'success' })} />
-      )} */}
+      )}
 
       {/* Option 2 — Edit Cohort drawer */}
       {editTarget && (
