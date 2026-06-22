@@ -140,8 +140,8 @@ const NAV_SECTIONS = [
       </>
     ),
     subnav: [
-      { id: 'audience-catalog',    label: 'Catalog Mapping', group: 'Cohort Management' },
-      { id: 'audience-analytics',  label: 'Analytics',       group: 'Analytics' },
+      { id: 'audience-catalog',    label: 'Catalog Mapping' },
+      { id: 'audience-analytics',  label: 'Analytics' },
     ],
   },
   {

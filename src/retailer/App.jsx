@@ -75,15 +75,12 @@ function AnalyticsDashboard({ bare = false }) {
     );
   }
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: 0 }}>
       <TopBar section="Analytics" page="Sponsored Ads" />
-      <main style={{ flex: 1, padding: '24px 24px 40px', overflowY: 'auto' }}>
+      <main style={{ flex: 1, padding: '24px 24px 40px', overflowY: 'auto', minHeight: 0 }}>
         <StatCards />
         <Charts />
         <CampaignsTable />
-        <DeviceTable />
-        <ReferrerTable />
-        <GeoTable />
       </main>
     </div>
   );

@@ -1,5 +1,329 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 
+/* ─── OsmosSelect — standard dropdown component ─────────────────── */
+/*
+ * Props:
+ *   value       – currently selected value string
+ *   onChange    – (value) => void
+ *   options     – [{ value, label, icon? }]  icon = React node
+ *   placeholder – shown when no value selected
+ */
+function OsmosSelect({ value, onChange, options = [], placeholder = 'Select…' }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  /* close on outside click */
+  useEffect(() => {
+    const handler = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const selected = options.find(o => o.value === value);
+
+  return (
+    <div ref={ref} style={{ position:'relative', display:'inline-block', minWidth:120 }}>
+      {/* Trigger */}
+      <button
+        onClick={() => setOpen(v => !v)}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          width: '100%', padding: '7px 12px',
+          border: `1px solid ${open ? 'var(--primary)' : 'var(--border)'}`,
+          borderRadius: 'var(--radius-md)',
+          background: 'var(--bg-screen)',
+          cursor: 'pointer',
+          outline: open ? `2px solid var(--primary-tint-1)` : 'none',
+          outlineOffset: 0,
+          boxShadow: open ? '0 0 0 3px var(--primary-tint-1)' : 'none',
+          transition: 'border-color 0.15s, box-shadow 0.15s',
+        }}
+      >
+        {selected?.icon && (
+          <span style={{ lineHeight: 0, flexShrink: 0 }}>{selected.icon}</span>
+        )}
+        <span style={{ flex: 1, fontSize: 12, fontWeight: 500, color: selected ? 'var(--text)' : 'var(--text-muted)', textAlign: 'left', whiteSpace: 'nowrap' }}>
+          {selected ? selected.label : placeholder}
+        </span>
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ flexShrink: 0, color: 'var(--text-muted)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}>
+          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+
+      {/* Dropdown list */}
+      {open && (
+        <div style={{
+          position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0,
+          background: 'var(--bg-screen)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-md)',
+          boxShadow: 'var(--shadow-card)',
+          zIndex: 100,
+          overflow: 'hidden',
+        }}>
+          {options.map(opt => (
+            <button
+              key={opt.value}
+              onClick={() => { onChange(opt.value); setOpen(false); }}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                width: '100%', padding: '10px 14px',
+                border: 'none', background: opt.value === value ? 'var(--primary-bg)' : 'transparent',
+                cursor: 'pointer', fontSize: 13, fontWeight: opt.value === value ? 600 : 400,
+                color: opt.value === value ? 'var(--primary)' : 'var(--text)',
+                textAlign: 'left',
+                transition: 'background 0.1s',
+              }}
+              onMouseEnter={e => { if (opt.value !== value) e.currentTarget.style.background = 'var(--surface-1)'; }}
+              onMouseLeave={e => { if (opt.value !== value) e.currentTarget.style.background = 'transparent'; }}
+            >
+              {opt.icon && <span style={{ lineHeight: 0, flexShrink: 0 }}>{opt.icon}</span>}
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── OsmosTable — standard table component ─────────────────────── */
+/*
+ * Props:
+ *   columns           – [{ key, label, width?, align? }]
+ *   rows              – array of objects; each value is a React node
+ *   footer            – optional object keyed by column.key for totals row
+ *   title             – topbar title string (also activates card border)
+ *   searchPlaceholder – placeholder text for search input
+ *   filterable        – show "+ Add a Filter" row
+ *   kebab             – add ⋮ action column
+ */
+const ColInfoIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style={{ flexShrink:0, opacity:0.38 }}>
+    <circle cx="6.5" cy="6.5" r="5.75" stroke="currentColor" strokeWidth="1.1"/>
+    <path d="M6.5 5.5v3.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+    <circle cx="6.5" cy="4" r="0.6" fill="currentColor"/>
+  </svg>
+);
+
+const ColSortIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style={{ flexShrink:0, opacity:0.38 }}>
+    <path d="M2 4h9M3.5 6.5h6M5 9h3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+  </svg>
+);
+
+/* Topbar icon button — shared style for refresh / column-picker / download */
+const TbBtn = ({ children, title: t }) => (
+  <button title={t} style={{ display:'flex', alignItems:'center', justifyContent:'center', height:32, minWidth:32, padding:'0 8px', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', background:'var(--bg-screen)', cursor:'pointer', color:'var(--text-muted)', gap:4, flexShrink:0 }}>
+    {children}
+  </button>
+);
+
+function OsmosTable({ columns = [], rows = [], footer, title, searchPlaceholder = 'Search…', filterable, kebab }) {
+  const [query, setQuery] = useState('');
+
+  const visibleRows = query
+    ? rows.filter(row =>
+        columns.some(col => {
+          const val = row[col.key];
+          return typeof val === 'string' && val.toLowerCase().includes(query.toLowerCase());
+        })
+      )
+    : rows;
+
+  const allColumns = kebab
+    ? [...columns, { key:'__kebab', label:'', width:40 }]
+    : columns;
+
+  const cardStyle = title
+    ? { border:'1px solid var(--border)', borderRadius:'var(--radius-md)', overflow:'hidden', background:'var(--bg-screen)' }
+    : {};
+
+  return (
+    <div style={{ width:'100%', ...cardStyle }}>
+
+      {/* ── Topbar ── */}
+      {title && (
+        <div style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 16px' }}>
+
+          {/* Chart icon */}
+          <div style={{ width:34, height:34, borderRadius:8, background:'var(--primary-bg)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <rect x="2" y="9" width="3" height="7" rx="1" fill="var(--primary)"/>
+              <rect x="7" y="5" width="3" height="11" rx="1" fill="var(--primary)"/>
+              <rect x="12" y="2" width="3" height="14" rx="1" fill="var(--primary)" fillOpacity="0.5"/>
+            </svg>
+          </div>
+
+          {/* Title + info */}
+          <span style={{ fontSize:14, fontWeight:700, color:'var(--text-strong)' }}>{title}</span>
+          <ColInfoIcon />
+
+          <span style={{ flex:1 }} />
+
+          {/* Refresh */}
+          <TbBtn title="Refresh">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M12.5 2.5A6 6 0 1 1 7 1M7 1l2.5 2.5M7 1 4.5 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </TbBtn>
+
+          {/* Column picker */}
+          <TbBtn title="Column picker">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <rect x="1.5" y="1.5" width="4" height="11" rx="1" stroke="currentColor" strokeWidth="1.2"/>
+              <rect x="8.5" y="1.5" width="4" height="11" rx="1" stroke="currentColor" strokeWidth="1.2"/>
+            </svg>
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+              <path d="M1.5 3l3 3 3-3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </TbBtn>
+
+          {/* Search */}
+          <div style={{ display:'flex', alignItems:'center', gap:6, padding:'5px 10px', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', background:'var(--bg-screen)', minWidth:180, height:32 }}>
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style={{ color:'var(--text-muted)', flexShrink:0 }}>
+              <circle cx="5.5" cy="5.5" r="4" stroke="currentColor" strokeWidth="1.2"/>
+              <path d="M9 9l2.5 2.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+            </svg>
+            <input
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder={searchPlaceholder}
+              style={{ border:'none', outline:'none', background:'transparent', fontSize:12, color:'var(--text)', width:'100%' }}
+            />
+          </div>
+
+          {/* Download */}
+          <TbBtn title="Download">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M7 1.5v8M4.5 7l2.5 2.5L9.5 7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M1.5 12h11" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+            </svg>
+          </TbBtn>
+        </div>
+      )}
+
+      {/* ── Filter row ── */}
+      {filterable && (
+        <div style={{ padding:'8px 16px' }}>
+          <button style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'5px 14px', border:'1px solid var(--border)', borderRadius:20, background:'var(--bg-screen)', cursor:'pointer', fontSize:12, fontWeight:500, color:'var(--text-muted)' }}>
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
+            Add a Filter
+          </button>
+        </div>
+      )}
+
+      {/* ── Table ── */}
+      <div style={{ padding: title ? '10px 16px 16px' : 0 }}>
+        <div style={{ border: title ? '1px solid var(--border)' : 'none', borderRadius: title ? 'var(--radius-md)' : 0, overflow:'hidden' }}>
+          <div style={{ overflowX:'auto' }}>
+            <table style={{ width:'100%', borderCollapse:'collapse', tableLayout:'auto' }}>
+              <thead>
+                <tr style={{ background:'var(--bg-screen)' }}>
+                  {allColumns.map((col, ci) => (
+                    <th
+                      key={col.key}
+                      style={{
+                        padding: col.key === '__kebab' ? '14px 8px' : '14px 16px',
+                        textAlign: col.align || 'left',
+                        fontSize: 13, fontWeight: 700,
+                        color: 'var(--text-strong)',
+                        whiteSpace: 'nowrap',
+                        borderRight: ci < allColumns.length - 1 ? '1px dashed var(--border-table)' : 'none',
+                        borderBottom: ci === 0
+                          ? '2px solid var(--text-strong)'
+                          : '1px solid var(--border-table)',
+                        width: col.key === '__kebab' ? 48 : (col.width || 'auto'),
+                        verticalAlign: 'bottom',
+                        paddingBottom: ci === 0 ? 12 : 14,
+                        ...(col.key === '__kebab' ? {
+                          position: 'sticky', right: 0,
+                          background: 'var(--bg-screen)', zIndex: 2,
+                          boxShadow: '-1px 0 0 var(--border-table)',
+                        } : {}),
+                      }}
+                    >
+                      {col.key === '__kebab' ? null : col.label ? (
+                        <span style={{ display:'inline-flex', alignItems:'center', gap:5 }}>
+                          {col.label}
+                          <ColInfoIcon />
+                          {ci === 0 && <ColSortIcon />}
+                        </span>
+                      ) : null}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {visibleRows.map((row, ri) => (
+                  <tr
+                    key={ri}
+                    style={{ borderBottom:'1px solid var(--border-table)', transition:'background 0.1s', background: row.__rowBg || '' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'var(--surface-1)'; e.currentTarget.querySelectorAll('td[data-sticky]').forEach(td => td.style.background = 'var(--surface-1)'); }}
+                    onMouseLeave={e => { const bg = row.__rowBg || ''; e.currentTarget.style.background = bg; e.currentTarget.querySelectorAll('td[data-sticky]').forEach(td => td.style.background = bg || 'var(--bg-screen)'); }}
+                  >
+                    {allColumns.map((col, ci) => (
+                      <td
+                        key={col.key}
+                        data-sticky={col.key === '__kebab' ? true : undefined}
+                        style={{
+                          padding: col.key === '__kebab' ? '10px 8px' : '12px 16px',
+                          fontSize: 12,
+                          color: 'var(--text)',
+                          textAlign: col.align || (col.key === '__kebab' ? 'center' : 'left'),
+                          borderRight: ci < allColumns.length - 1 ? '1px dashed var(--border-table)' : 'none',
+                          verticalAlign: 'middle',
+                          width: col.key === '__kebab' ? 48 : 'auto',
+                          ...(col.key === '__kebab' ? {
+                            position: 'sticky', right: 0,
+                            background: 'var(--bg-screen)', zIndex: 1,
+                            boxShadow: '-1px 0 0 var(--border-table)',
+                          } : {}),
+                        }}
+                      >
+                        {col.key === '__kebab' ? (
+                          <button style={{ display:'flex', alignItems:'center', justifyContent:'center', width:28, height:28, border:'none', borderRadius:'var(--radius-sm)', background:'transparent', cursor:'pointer', color:'var(--text-muted)', margin:'0 auto' }}>
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                              <circle cx="7" cy="2.5" r="1.2" fill="currentColor"/>
+                              <circle cx="7" cy="7" r="1.2" fill="currentColor"/>
+                              <circle cx="7" cy="11.5" r="1.2" fill="currentColor"/>
+                            </svg>
+                          </button>
+                        ) : row[col.key]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+              {footer && (
+                <tfoot>
+                  <tr style={{ background:'var(--surface-1)', borderTop:'1px solid var(--border-table)' }}>
+                    {allColumns.map((col, ci) => (
+                      <td
+                        key={col.key}
+                        style={{
+                          padding: '11px 16px',
+                          fontSize: 12, fontWeight: 500,
+                          color: 'var(--text-muted)',
+                          textAlign: 'center',
+                          borderRight: ci < allColumns.length - 1 ? '1px dashed var(--border-table)' : 'none',
+                          ...(col.key === '__kebab' ? { position:'sticky', right:0, background:'var(--surface-1)', zIndex:1 } : {}),
+                        }}
+                      >
+                        {col.key === '__kebab' ? null : (footer[col.key] ?? '')}
+                      </td>
+                    ))}
+                  </tr>
+                </tfoot>
+              )}
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── mock data ─────────────────────────────────────────────────── */
 const COHORTS = [
   {
@@ -22,10 +346,10 @@ const COHORTS = [
     spendByChannel: [{ ch: 'Meta', label: 'Meta', amount: '₹2.21L', pct: 48, color: '#1877F2' }, { ch: 'Google', label: 'Google', amount: '₹2.43L', pct: 52, color: '#34A853' }],
     campaignCount: 4,
     campaignDetails: [
-      { status:'Paused',  name:'Lip Bar Launch',    advertiser:'Colorbar',        initials:'CB', color:'#E91E63', channel:'Meta',   spend:'₹99.2K'  },
-      { status:'Active',  name:'New Drop · Vegan',  advertiser:'Sugar Cosmetics', initials:'SG', color:'#4CAF50', channel:'Google', spend:'₹110.3K' },
-      { status:'Active',  name:'Influencer Collab', advertiser:'Renee Cosmetics', initials:'RC', color:'#9C27B0', channel:'Meta',   spend:'₹112K'   },
-      { status:'Active',  name:'Summer Glow',       advertiser:'Colorbar',        initials:'CB', color:'#E91E63', channel:'Google', spend:'₹84.7K'  },
+      { status:'Paused',  name:'Lip Bar Launch',    advertiser:'Colorbar',        initials:'CB', color:'#E91E63', channel:'Meta',   spend:'₹99.2K',  impressions:'87K',  ctr:'0.89%', lastActive:'2h ago'  },
+      { status:'Active',  name:'New Drop · Vegan',  advertiser:'Sugar Cosmetics', initials:'SG', color:'#4CAF50', channel:'Google', spend:'₹110.3K', impressions:'97K',  ctr:'3.88%', lastActive:'today'   },
+      { status:'Active',  name:'Influencer Collab', advertiser:'Renee Cosmetics', initials:'RC', color:'#9C27B0', channel:'Meta',   spend:'₹112K',   impressions:'108K', ctr:'2.66%', lastActive:'1d ago'  },
+      { status:'Active',  name:'Summer Glow',       advertiser:'Colorbar',        initials:'CB', color:'#E91E63', channel:'Google', spend:'₹84.7K',  impressions:'74K',  ctr:'1.92%', lastActive:'today'   },
     ],
   },
   {
@@ -48,8 +372,8 @@ const COHORTS = [
     spendByChannel: [{ ch: 'DV360', label: 'DV360', amount: '₹2.1L', pct: 100, color: '#1A73E8' }],
     campaignCount: 2,
     campaignDetails: [
-      { status:'Active', name:'Baby Care Q1',  advertiser:'MamaEarth', initials:'ME', color:'#4CAF50', channel:'DV360', spend:'₹1.1L' },
-      { status:'Active', name:'Kids Bundle',   advertiser:'Himalaya',  initials:'HI', color:'#2196F3', channel:'DV360', spend:'₹1.0L' },
+      { status:'Active', name:'Baby Care Q1',  advertiser:'MamaEarth', initials:'ME', color:'#4CAF50', channel:'DV360', spend:'₹1.1L', impressions:'52K',  ctr:'1.45%', lastActive:'today'  },
+      { status:'Active', name:'Kids Bundle',   advertiser:'Himalaya',  initials:'HI', color:'#2196F3', channel:'DV360', spend:'₹1.0L', impressions:'48K',  ctr:'2.10%', lastActive:'3h ago' },
     ],
   },
   {
@@ -72,8 +396,8 @@ const COHORTS = [
     spendByChannel: [{ ch: 'Meta', label: 'Meta', amount: '₹55K', pct: 61, color: '#1877F2' }, { ch: 'TikTok', label: 'TikTok', amount: '₹35K', pct: 39, color: '#000' }],
     campaignCount: 2,
     campaignDetails: [
-      { status:'Active', name:'Win Back Sale',    advertiser:'Nykaa', initials:'NY', color:'#E91E63', channel:'Meta',   spend:'₹55K' },
-      { status:'Active', name:'Re-engage TikTok', advertiser:'Nykaa', initials:'NY', color:'#E91E63', channel:'TikTok', spend:'₹35K' },
+      { status:'Active', name:'Win Back Sale',    advertiser:'Nykaa', initials:'NY', color:'#E91E63', channel:'Meta',   spend:'₹55K', impressions:'31K', ctr:'2.20%', lastActive:'today'  },
+      { status:'Active', name:'Re-engage TikTok', advertiser:'Nykaa', initials:'NY', color:'#E91E63', channel:'TikTok', spend:'₹35K', impressions:'22K', ctr:'1.75%', lastActive:'1d ago' },
     ],
   },
   {
@@ -96,9 +420,9 @@ const COHORTS = [
     spendByChannel: [{ ch: 'Meta', label: 'Meta', amount: '₹3.2L', pct: 62, color: '#1877F2' }, { ch: 'Google', label: 'Google', amount: '₹2.0L', pct: 38, color: '#34A853' }],
     campaignCount: 3,
     campaignDetails: [
-      { status:'Active', name:'Premium Launch', advertiser:'Colorbar',        initials:'CB', color:'#E91E63', channel:'Meta',   spend:'₹1.8L' },
-      { status:'Active', name:'Vegan Glow',     advertiser:'Sugar Cosmetics', initials:'SG', color:'#4CAF50', channel:'Google', spend:'₹2.0L' },
-      { status:'Paused', name:'Lookalike Push', advertiser:'Colorbar',        initials:'CB', color:'#E91E63', channel:'Meta',   spend:'₹1.4L' },
+      { status:'Active', name:'Premium Launch', advertiser:'Colorbar',        initials:'CB', color:'#E91E63', channel:'Meta',   spend:'₹1.8L', impressions:'115K', ctr:'3.10%', lastActive:'today'  },
+      { status:'Active', name:'Vegan Glow',     advertiser:'Sugar Cosmetics', initials:'SG', color:'#4CAF50', channel:'Google', spend:'₹2.0L', impressions:'132K', ctr:'2.85%', lastActive:'2h ago' },
+      { status:'Paused', name:'Lookalike Push', advertiser:'Colorbar',        initials:'CB', color:'#E91E63', channel:'Meta',   spend:'₹1.4L', impressions:'68K',  ctr:'1.20%', lastActive:'3d ago' },
     ],
   },
 ];
@@ -223,7 +547,7 @@ function SparkHeatmap({ heatmap }) {
   );
 }
 
-/* ─── Heatmap row ────────────────────────────────────────────────── */
+/* ─── Heatmap row (used in catalog table preview) ───────────────── */
 function HeatmapRow({ label, values }) {
   const max = Math.max(...values, 1);
   const colors = { Meta:'#1877F2', Google:'#34A853', DV360:'#1a73e8', TikTok:'var(--text-strong)', Display:'#8B5CF6', ProductAds:'#F97316' };
@@ -1147,47 +1471,39 @@ function CohortReviewModal({ cohort, onClose, onDeactivated, onSaved }) {
         </div>
 
         {/* Campaigns table */}
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
-          <div style={{ fontSize:13, fontWeight:600, color:'var(--text-strong)' }}>Campaigns activating this audience</div>
-          <span style={{ fontSize:11, color:'var(--text-muted)' }}>{cohort.campaignDetails?.length || 0} campaigns</span>
-        </div>
-        <div style={{ borderRadius:8, border:'1px solid var(--border-table)', overflow:'hidden' }}>
-          <table style={{ width:'100%', borderCollapse:'collapse', fontSize:11 }}>
-            <thead>
-              <tr style={{ background:'var(--surface-1)' }}>
-                {['STATUS','CAMPAIGN','ADVERTISER','CHANNEL','SPEND · 30D'].map(h => (
-                  <th key={h} style={{ padding:'6px 8px', textAlign:'left', fontSize:9, fontWeight:700, color:'var(--text-info)', letterSpacing:'0.06em', textTransform:'uppercase', borderBottom:'1px solid var(--border)' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {(cohort.campaignDetails || []).map((c, i) => (
-                <tr key={c.name} style={{ borderBottom: i < (cohort.campaignDetails.length-1) ? '1px solid var(--border)' : 'none' }}>
-                  <td style={{ padding:'8px' }}>
-                    <span style={{ display:'inline-flex', alignItems:'center', gap:4 }}>
-                      <span style={{ width:6, height:6, borderRadius:'50%', background: c.status==='Active' ? 'var(--alert-success-primary)' : 'var(--text-info)' }} />
-                      <span style={{ fontSize:11, color: c.status==='Active' ? 'var(--alert-success-darker)' : 'var(--text-muted)' }}>{c.status}</span>
-                    </span>
-                  </td>
-                  <td style={{ padding:'8px', fontWeight:500, color:'var(--text)', fontSize:12 }}>{c.name}</td>
-                  <td style={{ padding:'8px' }}>
-                    <span style={{ display:'inline-flex', alignItems:'center', gap:5 }}>
-                      <span style={{ width:20, height:20, borderRadius:'50%', background:c.color, display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:8, fontWeight:700, color:'#fff', flexShrink:0 }}>{c.initials}</span>
-                      <span style={{ fontSize:11, color:'var(--text-muted)' }}>{c.advertiser}</span>
-                    </span>
-                  </td>
-                  <td style={{ padding:'8px' }}>
-                    <span style={{ display:'inline-flex', alignItems:'center', gap:4 }}>
-                      <span style={{ flexShrink:0 }}>{CHANNEL_ICONS[c.channel]||null}</span>
-                      <span style={{ fontSize:11, color:'var(--text-muted)' }}>{c.channel}</span>
-                    </span>
-                  </td>
-                  <td style={{ padding:'8px', fontWeight:600, color:'var(--alert-success-primary)', fontSize:12 }}>{c.spend}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <OsmosTable
+          title="Campaigns activating this audience"
+          kebab
+          columns={[
+            { key:'status',     label:'Status' },
+            { key:'campaign',   label:'Campaign' },
+            { key:'advertiser', label:'Advertiser' },
+            { key:'channel',    label:'Channel' },
+            { key:'spend',      label:'Spend · 30D', align:'right' },
+          ]}
+          rows={(cohort.campaignDetails || []).map(c => ({
+            status: (
+              <span style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:3 }}>
+                <span style={{ width:8, height:8, borderRadius:'50%', background: c.status==='Active' ? 'var(--alert-success-primary)' : 'var(--text-info)', flexShrink:0 }} />
+                <span style={{ fontSize:11, fontWeight:600, color: c.status==='Active' ? 'var(--alert-success-darker)' : 'var(--text-muted)' }}>{c.status}</span>
+              </span>
+            ),
+            campaign: <span style={{ fontWeight:600, color:'var(--text)' }}>{c.name}</span>,
+            advertiser: (
+              <span style={{ display:'inline-flex', alignItems:'center', gap:8 }}>
+                <span style={{ width:24, height:24, borderRadius:'50%', background:c.color, display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:9, fontWeight:700, color:'#fff', flexShrink:0 }}>{c.initials}</span>
+                <span style={{ color:'var(--text-muted)' }}>{c.advertiser}</span>
+              </span>
+            ),
+            channel: (
+              <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}>
+                {CHANNEL_ICONS[c.channel] || null}
+                <span style={{ color:'var(--text-muted)' }}>{c.channel}</span>
+              </span>
+            ),
+            spend: <span style={{ fontWeight:700, color:'var(--alert-success-primary)' }}>{c.spend}</span>,
+          }))}
+        />
       </div>
     );
   }
@@ -1727,66 +2043,55 @@ function CreateCohortDrawer({ onClose, onCreate }) {
               <div>
                 <label style={{ fontSize:12, fontWeight:700, color:'var(--text)', display:'block', marginBottom:4 }}>Assign Advertisers<CCReq /></label>
                 <p style={{ margin:'0 0 12px', fontSize:11, color:'var(--text-muted)' }}>Select advertisers who can access this audience cohort.</p>
-                <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', overflow:'hidden' }}>
-                  <table style={{ width:'100%', borderCollapse:'collapse' }}>
-                    <thead>
-                      <tr style={{ background:'var(--surface-1)' }}>
-                        <th style={{ width:40, padding:'10px 12px', textAlign:'left' }}>
-                          <input type="checkbox" checked={selAdvertisers.size===CC_ADVERTISERS.length} onChange={e=>setSelAdvertisers(e.target.checked?new Set(CC_ADVERTISERS.map(a=>a.id)):new Set())} style={{ cursor:'pointer' }} />
-                        </th>
-                        <th style={{ padding:'10px 12px', textAlign:'left', fontSize:11, fontWeight:600, color:'var(--text)', borderBottom:'1px solid var(--border)' }}>Advertiser</th>
-                        <th style={{ padding:'10px 12px', textAlign:'left', fontSize:11, fontWeight:600, color:'var(--text)', borderBottom:'1px solid var(--border)' }}>Category</th>
-                        <th style={{ padding:'10px 12px', textAlign:'left', fontSize:11, fontWeight:600, color:'var(--text)', borderBottom:'1px solid var(--border)', width:130 }}>
-                          CPM Override
-                          <div style={{ fontSize:10, fontWeight:400, color:'var(--text-muted)', marginTop:1 }}>per 1K impressions</div>
-                        </th>
-                        <th style={{ padding:'10px 12px', textAlign:'left', fontSize:11, fontWeight:600, color:'var(--text)', borderBottom:'1px solid var(--border)', width:130 }}>
-                          CPE Override
-                          <div style={{ fontSize:10, fontWeight:400, color:'var(--text-muted)', marginTop:1 }}>cost per 1000 entries</div>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {CC_ADVERTISERS.map((adv,i)=>{
-                        const sel = selAdvertisers.has(adv.id);
-                        const ov  = advOverrides[adv.id] || {};
-                        return (
-                          <tr key={adv.id} style={{ background:sel?'var(--primary-bg)':'var(--surface-3)', borderBottom:i<CC_ADVERTISERS.length-1?'1px solid var(--border)':'none' }}>
-                            <td style={{ padding:'10px 12px' }} onClick={()=>toggleAdv(adv.id)}>
-                              <input type="checkbox" checked={sel} onChange={()=>{}} style={{ cursor:'pointer' }} />
-                            </td>
-                            <td style={{ padding:'10px 12px', fontSize:13, fontWeight:500, color:'var(--text)', cursor:'pointer' }} onClick={()=>toggleAdv(adv.id)}>{adv.name}</td>
-                            <td style={{ padding:'10px 12px', fontSize:12, color:'var(--text-muted)', cursor:'pointer' }} onClick={()=>toggleAdv(adv.id)}>{adv.type}</td>
-                            <td style={{ padding:'6px 10px' }} onClick={e=>e.stopPropagation()}>
-                              <div style={{ position:'relative', display:'flex', alignItems:'center' }}>
-                                <span style={{ position:'absolute', left:8, fontSize:12, color:'var(--text-muted)', pointerEvents:'none' }}>$</span>
-                                <input type="number" min="0" step="0.01"
-                                  value={ov.cpm??''} onChange={e=>setOverride(adv.id,'cpm',e.target.value)}
-                                  placeholder={adv.defaultCpm} disabled={!sel}
-                                  style={{ width:'100%', padding:'5px 8px 5px 18px', fontSize:12, borderRadius:6, border:'1px solid var(--border)', background:sel?'var(--bg-screen)':'var(--surface-1)', color:'var(--text)', outline:'none', opacity:sel?1:0.45, cursor:sel?'text':'not-allowed' }}
-                                  onFocus={e=>e.target.style.borderColor='var(--primary)'}
-                                  onBlur={e=>e.target.style.borderColor='var(--border)'}
-                                />
-                              </div>
-                            </td>
-                            <td style={{ padding:'6px 10px' }} onClick={e=>e.stopPropagation()}>
-                              <div style={{ position:'relative', display:'flex', alignItems:'center' }}>
-                                <span style={{ position:'absolute', left:8, fontSize:12, color:'var(--text-muted)', pointerEvents:'none' }}>$</span>
-                                <input type="number" min="0" step="0.01"
-                                  value={ov.cpe??''} onChange={e=>setOverride(adv.id,'cpe',e.target.value)}
-                                  placeholder={adv.defaultCpe} disabled={!sel}
-                                  style={{ width:'100%', padding:'5px 8px 5px 18px', fontSize:12, borderRadius:6, border:'1px solid var(--border)', background:sel?'var(--bg-screen)':'var(--surface-1)', color:'var(--text)', outline:'none', opacity:sel?1:0.45, cursor:sel?'text':'not-allowed' }}
-                                  onFocus={e=>e.target.style.borderColor='var(--primary)'}
-                                  onBlur={e=>e.target.style.borderColor='var(--border)'}
-                                />
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                <OsmosTable
+                  columns={[
+                    { key:'select',   label:'', width:40 },
+                    { key:'advertiser', label:'Advertiser' },
+                    { key:'category',   label:'Category' },
+                    { key:'cpm',        label:'CPM Override' },
+                    { key:'cpe',        label:'CPE Override' },
+                  ]}
+                  rows={CC_ADVERTISERS.map(adv => {
+                    const sel = selAdvertisers.has(adv.id);
+                    const ov  = advOverrides[adv.id] || {};
+                    return {
+                      __rowBg: sel ? 'var(--primary-bg)' : undefined,
+                      select: (
+                        <input type="checkbox" checked={sel} onChange={() => toggleAdv(adv.id)} style={{ cursor:'pointer' }} />
+                      ),
+                      advertiser: (
+                        <span style={{ fontSize:13, fontWeight:500, color:'var(--text)', cursor:'pointer' }} onClick={() => toggleAdv(adv.id)}>{adv.name}</span>
+                      ),
+                      category: (
+                        <span style={{ fontSize:12, color:'var(--text-muted)', cursor:'pointer' }} onClick={() => toggleAdv(adv.id)}>{adv.type}</span>
+                      ),
+                      cpm: (
+                        <div style={{ position:'relative', display:'flex', alignItems:'center' }} onClick={e => e.stopPropagation()}>
+                          <span style={{ position:'absolute', left:8, fontSize:12, color:'var(--text-muted)', pointerEvents:'none' }}>$</span>
+                          <input type="number" min="0" step="0.01"
+                            value={ov.cpm??''} onChange={e => setOverride(adv.id,'cpm',e.target.value)}
+                            placeholder={adv.defaultCpm} disabled={!sel}
+                            style={{ width:'100%', padding:'5px 8px 5px 18px', fontSize:12, borderRadius:6, border:'1px solid var(--border)', background:sel?'var(--bg-screen)':'var(--surface-1)', color:'var(--text)', outline:'none', opacity:sel?1:0.45, cursor:sel?'text':'not-allowed' }}
+                            onFocus={e => e.target.style.borderColor='var(--primary)'}
+                            onBlur={e => e.target.style.borderColor='var(--border)'}
+                          />
+                        </div>
+                      ),
+                      cpe: (
+                        <div style={{ position:'relative', display:'flex', alignItems:'center' }} onClick={e => e.stopPropagation()}>
+                          <span style={{ position:'absolute', left:8, fontSize:12, color:'var(--text-muted)', pointerEvents:'none' }}>$</span>
+                          <input type="number" min="0" step="0.01"
+                            value={ov.cpe??''} onChange={e => setOverride(adv.id,'cpe',e.target.value)}
+                            placeholder={adv.defaultCpe} disabled={!sel}
+                            style={{ width:'100%', padding:'5px 8px 5px 18px', fontSize:12, borderRadius:6, border:'1px solid var(--border)', background:sel?'var(--bg-screen)':'var(--surface-1)', color:'var(--text)', outline:'none', opacity:sel?1:0.45, cursor:sel?'text':'not-allowed' }}
+                            onFocus={e => e.target.style.borderColor='var(--primary)'}
+                            onBlur={e => e.target.style.borderColor='var(--border)'}
+                          />
+                        </div>
+                      ),
+                    };
+                  })}
+                />
                 {selAdvertisers.size>0 && <p style={{ margin:'8px 0 0', fontSize:11, color:'var(--text-muted)' }}>{selAdvertisers.size} advertiser{selAdvertisers.size>1?'s':''} selected</p>}
               </div>
             </>)}
@@ -2309,10 +2614,161 @@ function scaleToTarget(arr, target) {
   return arr.map(v => parseFloat((v / mx * target).toFixed(2)));
 }
 
+/* ─── Activation Heatmap Card ────────────────────────────────────── */
+const HEATMAP_COLORS = {
+  Meta: '#1877F2', Google: '#34A853', DV360: '#1a73e8',
+  TikTok: '#010101', Display: '#8B5CF6', ProductAds: '#F97316',
+};
+const INTENSITY_LABEL = ['None', 'Low', 'Medium', 'High', 'Peak'];
+const DAY_ABBR = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTH_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function ActivationHeatmapCard({ heatmap }) {
+  const channels = Object.keys(heatmap || {});
+  const [selCh, setSelCh] = useState(channels[0] || '');
+  const [hoverIdx, setHoverIdx] = useState(null);
+
+  const activeChannel = selCh || channels[0] || '';
+  const values = heatmap[activeChannel] || [];
+  const max = Math.max(...values, 1);
+  const cellColor = HEATMAP_COLORS[activeChannel] || '#4361EE';
+
+  /* Generate last 14 calendar dates */
+  const dates = Array.from({ length: 14 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - 13 + i);
+    return { day: DAY_ABBR[d.getDay()], label: `${d.getDate()} ${MONTH_ABBR[d.getMonth()]}` };
+  });
+
+  /* Opacity from 5 discrete levels */
+  const opacityFor = v => {
+    const pct = v / max;
+    if (pct === 0)   return 0.06;
+    if (pct <= 0.25) return 0.22;
+    if (pct <= 0.50) return 0.44;
+    if (pct <= 0.75) return 0.68;
+    return 0.90;
+  };
+
+  const intensityFor = v => {
+    const pct = v / max;
+    if (pct === 0)   return INTENSITY_LABEL[0];
+    if (pct <= 0.25) return INTENSITY_LABEL[1];
+    if (pct <= 0.50) return INTENSITY_LABEL[2];
+    if (pct <= 0.75) return INTENSITY_LABEL[3];
+    return INTENSITY_LABEL[4];
+  };
+
+  if (!channels.length) return null;
+
+  return (
+    <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
+      {/* Header */}
+      <div style={{ padding:'12px 18px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Activation Heatmap</span>
+        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+          {/* Channel dropdown */}
+          <OsmosSelect
+            value={activeChannel}
+            onChange={setSelCh}
+            options={channels.map(ch => ({ value: ch, label: ch, icon: CHANNEL_ICONS[ch] || null }))}
+          />
+          <span style={{ fontSize:11, color:'var(--text-muted)', whiteSpace:'nowrap' }}>Last 14 days</span>
+        </div>
+      </div>
+
+      {/* Heatmap body */}
+      <div style={{ padding:'16px 20px 14px' }}>
+        {/* Day-of-week labels */}
+        <div style={{ display:'flex', gap:3, marginBottom:5 }}>
+          {dates.map((d, i) => (
+            <div key={i} style={{ flex:1, textAlign:'center', fontSize:9, fontWeight:600, color:'var(--text-info)', letterSpacing:'0.04em', userSelect:'none' }}>
+              {d.day}
+            </div>
+          ))}
+        </div>
+
+        {/* Cells */}
+        <div style={{ display:'flex', gap:3, position:'relative' }}>
+          {values.map((v, i) => {
+            const op = opacityFor(v);
+            const isHov = hoverIdx === i;
+            return (
+              <div key={i} style={{ flex:1, position:'relative' }}>
+                <div
+                  onMouseEnter={() => setHoverIdx(i)}
+                  onMouseLeave={() => setHoverIdx(null)}
+                  style={{
+                    height: 34,
+                    borderRadius: 4,
+                    background: cellColor,
+                    opacity: op,
+                    cursor: 'default',
+                    outline: isHov ? `2px solid ${cellColor}` : 'none',
+                    outlineOffset: 1,
+                    transition: 'opacity 0.12s',
+                  }}
+                />
+                {/* Tooltip */}
+                {isHov && (
+                  <div style={{
+                    position: 'absolute',
+                    bottom: 'calc(100% + 7px)',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    background: 'var(--surface-1)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 6,
+                    padding: '7px 11px',
+                    whiteSpace: 'nowrap',
+                    zIndex: 20,
+                    pointerEvents: 'none',
+                    boxShadow: 'var(--shadow-raised)',
+                    minWidth: 130,
+                  }}>
+                    <div style={{ fontSize:10, fontWeight:700, color:'var(--text-strong)', marginBottom:3 }}>
+                      {dates[i].day}, {dates[i].label}
+                    </div>
+                    <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+                      <div style={{ width:8, height:8, borderRadius:2, background:cellColor, opacity:op, flexShrink:0 }} />
+                      <span style={{ fontSize:10, color:'var(--text-muted)' }}>
+                        Impression share: <span style={{ color:'var(--text-strong)', fontWeight:600 }}>{intensityFor(v)}</span>
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Date labels (every other) */}
+        <div style={{ display:'flex', gap:3, marginTop:6 }}>
+          {dates.map((d, i) => (
+            <div key={i} style={{ flex:1, textAlign:'center', fontSize:9, color:'var(--text-muted)', userSelect:'none' }}>
+              {i % 2 === 0 ? d.label : ''}
+            </div>
+          ))}
+        </div>
+
+        {/* Legend */}
+        <div style={{ display:'flex', alignItems:'center', gap:6, marginTop:14, paddingTop:10, borderTop:'1px solid var(--border)' }}>
+          <span style={{ fontSize:10, color:'var(--text-muted)' }}>Less active</span>
+          {[0.06, 0.22, 0.44, 0.68, 0.90].map((op, i) => (
+            <div key={i} style={{ width:14, height:14, borderRadius:3, background:cellColor, opacity:op }} />
+          ))}
+          <span style={{ fontSize:10, color:'var(--text-muted)' }}>More active</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CohortAnalyticsDrawer({ cohort, onClose }) {
   const [sel, setSel]           = useState(['spend','impressions']);
   const [gran, setGran]         = useState('D');
   const [activeTab, setActiveTab] = useState('overview');
+  const [openAccordion, setOpenAccordion] = useState('channels');
   const [hoverIdx, setHoverIdx] = useState(null);
 
   /* ── Derive metric card values from cohort ── */
@@ -2446,215 +2902,89 @@ function CohortAnalyticsDrawer({ cohort, onClose }) {
         {/* ── Scrollable body ── */}
         <div style={{ flex:1, overflowY:'auto', padding:'20px 24px', display:'flex', flexDirection:'column', gap:20 }}>
 
-          {/* ── Metric Selector Cards ── */}
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:8 }}>
-            {ANALYTICS_METRIC_DEFS.map(m => {
-              const slotIdx   = sel.indexOf(m.key);
-              const isSelected = slotIdx !== -1;
-              const slotColor  = isSelected ? METRIC_SLOT_COLOR[slotIdx] : null;
-              const slotBg     = isSelected ? METRIC_SLOT_BG[slotIdx]    : 'var(--bg-screen)';
-              const mv         = metricValues[m.key];
-              return (
-                <button
-                  key={m.key}
-                  onClick={() => toggleMetric(m.key)}
-                  aria-pressed={isSelected}
-                  style={{
-                    textAlign:'left', cursor:'pointer',
-                    padding:'12px 13px',
-                    borderRadius:'var(--radius-md)',
-                    border:`1px solid ${isSelected ? slotColor : 'var(--border)'}`,
-                    borderLeft:`${isSelected ? 4 : 1}px solid ${isSelected ? slotColor : 'var(--border)'}`,
-                    background: slotBg,
-                    boxShadow: isSelected ? 'var(--shadow-card)' : 'none',
-                    transition:'background 0.15s, border-color 0.15s, box-shadow 0.15s',
-                  }}
-                >
-                  {/* Label row */}
-                  <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:7 }}>
-                    <span style={{ fontSize:10, fontWeight:600, color: isSelected ? slotColor : 'var(--text-muted)', letterSpacing:'0.03em' }}>{m.label}</span>
-                    <div style={{ display:'flex', gap:3, alignItems:'center', opacity:0.5 }}>
-                      {/* ⓘ icon */}
-                      <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-                        <circle cx="5.5" cy="5.5" r="4.5" stroke="currentColor" strokeWidth="1.1"/>
-                        <path d="M5.5 5v3M5.5 3.5v.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-                      </svg>
-                      {/* ▾ chevron */}
-                      <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
-                        <path d="M2 3.2L4.5 5.8L7 3.2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
+          {/* ── Audience KPI Cards (funnel card style) ── */}
+          <div style={{ display:'flex', gap:10 }}>
+            {[
+              {
+                label: 'Audience Size',
+                value: cohort.size,
+                sub: 'profiles',
+              },
+              {
+                label: 'Visibility',
+                value: cohort.visibility,
+                sub: `${cohort.advertisers || 3} advertisers`,
+              },
+              {
+                label: 'Spend · 30D',
+                value: cohort.spend30d,
+                sub: `${cohort.activatedChannels || 2} channels`,
+              },
+              {
+                label: 'Activated Advertisers',
+                value: String(cohort.activatedAdvertisers || 3),
+                sub: `of ${cohort.advertisers || 3} with access`,
+              },
+              {
+                label: 'Activated Channels',
+                value: String(cohort.activatedChannels || 2),
+                sub: `of ${cohort.totalChannels || (cohort.spendByChannel || []).length || 2} channels`,
+              },
+            ].map(card => (
+              <div key={card.label} style={{
+                flex: 1,
+                background: 'var(--osmos-colors-bg-card, #fff)',
+                borderRadius: 'var(--osmos-radii-lg, 8px)',
+                border: '1px solid var(--osmos-colors-border, #dedede)',
+                boxShadow: 'var(--osmos-shadows-sm)',
+                overflow: 'hidden',
+                minWidth: 0,
+              }}>
+                {/* Header: label + ▼ | ⓘ */}
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'10px 12px 4px' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:3, minWidth:0 }}>
+                    <span style={{
+                      fontSize: 11,
+                      fontWeight: 500,
+                      color: 'var(--osmos-colors-fg-muted, #7b7b7b)',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}>{card.label}</span>
                   </div>
-                  {/* Value */}
-                  <div style={{ fontSize:17, fontWeight:700, color: isSelected ? slotColor : 'var(--text-strong)', lineHeight:1, marginBottom:6 }}>
-                    {mv?.value ?? '—'}
-                  </div>
-                  {/* Delta badge — green tint for up, neutral gray for down (not alert-error) */}
-                  <span style={{
-                    fontSize:10, fontWeight:600,
-                    padding:'2px 6px', borderRadius:'var(--radius-sm)',
-                    background: mv?.up ? 'var(--alert-success-bg)' : 'var(--surface-2)',
-                    color:       mv?.up ? 'var(--alert-success-darker)' : 'var(--text-muted)',
-                  }}>
-                    {mv?.up ? '▲' : '▼'} vs prev period
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* ── Performance Summary Chart ── */}
-          <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
-
-            {/* Toolbar: title (left) | controls (right) */}
-            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'12px 18px', borderBottom:'1px solid var(--border)' }}>
-              <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
-                  <polyline points="1,12 4,7 7,9 10,4 14,7" stroke="var(--primary)" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <span style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)' }}>Performance Summary</span>
-                {/* Legend inline with title */}
-                <div style={{ display:'flex', gap:14, marginLeft:8 }}>
-                  {sel.map((key, si) => (
-                    <div key={key} style={{ display:'flex', alignItems:'center', gap:5 }}>
-                      <span style={{ display:'inline-block', width:20, height:2.5, borderRadius:2, background: METRIC_SLOT_COLOR[si] }} />
-                      <span style={{ fontSize:11, color:'var(--text-muted)' }}>{ANALYTICS_METRIC_DEFS.find(x=>x.key===key)?.label}</span>
-                    </div>
-                  ))}
+                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none" style={{ opacity:0.35, flexShrink:0, marginLeft:4 }}>
+                    <circle cx="7" cy="7" r="6" stroke="var(--osmos-colors-fg-muted, #7b7b7b)" strokeWidth="1.2"/>
+                    <path d="M7 6.5v3M7 4.5v.5" stroke="var(--osmos-colors-fg-muted, #7b7b7b)" strokeWidth="1.3" strokeLinecap="round"/>
+                  </svg>
+                </div>
+                {/* Value */}
+                <div style={{
+                  padding: '2px 12px 4px',
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: 'var(--osmos-colors-fg, #404040)',
+                  lineHeight: 1.15,
+                }}>
+                  {card.value}
+                </div>
+                {/* Sub-label */}
+                <div style={{
+                  padding: '0 12px 10px',
+                  fontSize: 11,
+                  color: 'var(--osmos-colors-fg-muted, #7b7b7b)',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}>
+                  {card.sub}
                 </div>
               </div>
-
-              {/* Controls group */}
-              <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                {/* D / W / M granularity */}
-                <div role="group" aria-label="Chart granularity" style={{ display:'flex', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', overflow:'hidden' }}>
-                  {['D','W','M'].map((g, gi) => (
-                    <button key={g} onClick={() => setGran(g)}
-                      aria-pressed={gran === g}
-                      title={g === 'D' ? 'Daily' : g === 'W' ? 'Weekly' : 'Monthly'}
-                      style={{ padding:'5px 11px', fontSize:11, fontWeight:600, border:'none', cursor:'pointer', background: gran===g ? 'var(--primary-bg)' : 'transparent', color: gran===g ? 'var(--primary)' : 'var(--text-muted)', borderRight: gi < 2 ? '1px solid var(--border)' : 'none', transition:'background 0.12s, color 0.12s' }}>
-                      {g}
-                    </button>
-                  ))}
-                </div>
-                {/* Date range */}
-                <button style={{ display:'flex', alignItems:'center', gap:6, padding:'5px 10px', border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', background:'transparent', cursor:'pointer', fontSize:11, fontWeight:500, color:'var(--text-muted)', whiteSpace:'nowrap' }}>
-                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-                    <rect x="0.5" y="1.5" width="10" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.1"/>
-                    <line x1="0.5" y1="4.5" x2="10.5" y2="4.5" stroke="currentColor" strokeWidth="1.1"/>
-                    <line x1="3.5" y1="0.5" x2="3.5" y2="3" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round"/>
-                    <line x1="7.5" y1="0.5" x2="7.5" y2="3" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round"/>
-                  </svg>
-                  {dateRange}
-                </button>
-                {/* Download */}
-                <button
-                  aria-label="Download chart data"
-                  style={{ width:30, height:30, border:'1px solid var(--border)', borderRadius:'var(--radius-sm)', background:'transparent', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'var(--text-muted)', flexShrink:0 }}
-                >
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path d="M6 1.5v6M3.5 5.5l2.5 2.5 2.5-2.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M1.5 10h9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            {/* Dual-axis SVG chart with HTML y-axis labels (avoids rotated SVG text blurriness) */}
-            <div style={{ padding:'12px 18px 12px', position:'relative' }} onMouseLeave={() => setHoverIdx(null)}>
-
-              {/* Y-axis labels rendered in HTML (crisp on retina) */}
-              <div style={{ position:'absolute', left:0, top:12, bottom:36, width:18+padL, pointerEvents:'none' }}>
-                {leftTicks.map((t, i) => (
-                  <div key={i} style={{ position:'absolute', right:padL - 40 + 18, top: t.y - 6, fontSize:9, color:'var(--text-muted)', fontWeight:500, whiteSpace:'nowrap', textAlign:'right' }}>{t.label}</div>
-                ))}
-              </div>
-              <div style={{ position:'absolute', right:0, top:12, bottom:36, width:padR+14, pointerEvents:'none' }}>
-                {rightTicks.map((t, i) => (
-                  <div key={i} style={{ position:'absolute', left:4, top: t.y - 6, fontSize:9, color:'var(--chart-bruntorange)', fontWeight:500, whiteSpace:'nowrap' }}>{t.label}</div>
-                ))}
-              </div>
-
-              <svg viewBox={`0 0 ${svgW} ${svgH}`} width="100%" height={svgH} style={{ overflow:'visible', display:'block' }}>
-                <defs>
-                  <linearGradient id="cadGrad0" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.14"/>
-                    <stop offset="100%" stopColor="var(--primary)" stopOpacity="0"/>
-                  </linearGradient>
-                  <linearGradient id="cadGrad1" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--chart-bruntorange)" stopOpacity="0.11"/>
-                    <stop offset="100%" stopColor="var(--chart-bruntorange)" stopOpacity="0"/>
-                  </linearGradient>
-                </defs>
-
-                {/* Gridlines */}
-                {[0,0.25,0.5,0.75,1].map((t,i) => (
-                  <line key={i} x1={padL} y1={padT + cH*(1-t)} x2={svgW-padR} y2={padT + cH*(1-t)} stroke="var(--border)" strokeWidth="0.7" strokeDasharray="4 3"/>
-                ))}
-
-                {/* Area fills */}
-                <polygon points={area(sel[0], ax0)} fill="url(#cadGrad0)"/>
-                <polygon points={area(sel[1], ax1)} fill="url(#cadGrad1)"/>
-
-                {/* Lines */}
-                <polyline points={pts(sel[0], ax0)} fill="none" stroke="var(--primary)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                <polyline points={pts(sel[1], ax1)} fill="none" stroke="var(--chart-bruntorange)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-
-                {/* Hover rule */}
-                {hoverIdx !== null && (
-                  <line x1={xAt(hoverIdx)} y1={padT} x2={xAt(hoverIdx)} y2={padT+cH} stroke="var(--border-strong)" strokeWidth="1" strokeDasharray="3 3"/>
-                )}
-
-                {/* Invisible hit-targets + dots */}
-                {chartDates.map((_, i) => {
-                  const v0 = (metricSeries[sel[0]] || [])[i];
-                  const v1 = (metricSeries[sel[1]] || [])[i];
-                  return (
-                    <g key={i}>
-                      <rect x={xAt(i)-14} y={padT} width={28} height={cH} fill="transparent" onMouseEnter={() => setHoverIdx(i)} style={{ cursor:'crosshair' }}/>
-                      {v0 != null && <circle cx={xAt(i)} cy={ax0.yAt(v0)} r={hoverIdx===i?5:3.5} fill="var(--primary)" stroke="var(--bg-screen)" strokeWidth="1.5"/>}
-                      {v1 != null && <circle cx={xAt(i)} cy={ax1.yAt(v1)} r={hoverIdx===i?5:3.5} fill="var(--chart-bruntorange)" stroke="var(--bg-screen)" strokeWidth="1.5"/>}
-                    </g>
-                  );
-                })}
-
-                {/* Tooltip — clamped so it never clips either edge */}
-                {hoverIdx !== null && (() => {
-                  const tx     = xAt(hoverIdx);
-                  const tw     = 148, th = 54;
-                  const margin = 8;
-                  const tx2    = Math.min(Math.max(tx - tw/2, padL), svgW - padR - tw);
-                  const ty2    = padT + 4;
-                  const v0     = (metricSeries[sel[0]] || [])[hoverIdx];
-                  const v1     = (metricSeries[sel[1]] || [])[hoverIdx];
-                  const lab0   = ANALYTICS_METRIC_DEFS.find(x=>x.key===sel[0])?.label;
-                  const lab1   = ANALYTICS_METRIC_DEFS.find(x=>x.key===sel[1])?.label;
-                  return (
-                    <g style={{ pointerEvents:'none' }}>
-                      <rect x={tx2} y={ty2} width={tw} height={th} rx={6} fill="var(--surface-1)" stroke="var(--border)" strokeWidth="1"/>
-                      <text x={tx2+10} y={ty2+14} fontSize={9} fontWeight={700} fill="var(--text-muted)">{chartDates[hoverIdx]}</text>
-                      {v0 != null && <>
-                        <circle cx={tx2+10} cy={ty2+27} r={3.5} fill="var(--primary)"/>
-                        <text x={tx2+20} y={ty2+31} fontSize={9} fontWeight={600} fill="var(--text)">{lab0}: {v0}</text>
-                      </>}
-                      {v1 != null && <>
-                        <circle cx={tx2+10} cy={ty2+42} r={3.5} fill="var(--chart-bruntorange)"/>
-                        <text x={tx2+20} y={ty2+46} fontSize={9} fontWeight={600} fill="var(--text)">{lab1}: {v1}</text>
-                      </>}
-                    </g>
-                  );
-                })()}
-
-                {/* X-axis labels */}
-                {chartDates.map((d, i) => (
-                  <text key={i} x={xAt(i)} y={svgH-6} textAnchor="middle" fontSize={9} fill="var(--text-muted)">{d}</text>
-                ))}
-              </svg>
-            </div>
+            ))}
           </div>
+
 
           {/* ── Sections (no tabs — all stacked) ── */}
-          <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
+          <div style={{ display:'flex', flexDirection:'column', gap:20 }}>
             {/* Tab strip — ARIA tablist */}
             <div role="tablist" aria-label="Cohort analytics sections" style={{ display:'none', borderBottom:'2px solid var(--border)', marginBottom:16, gap:2 }}>
               {TABS.map(t => (
@@ -2686,92 +3016,19 @@ function CohortAnalyticsDrawer({ cohort, onClose }) {
               ))}
             </div>
 
-            {/* ── Section A: Key Metrics 2×3 grid ── */}
-            <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
-              <div style={{ padding:'12px 18px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Key Metrics</span>
-                <span style={{ fontSize:11, color:'var(--text-muted)' }}>Last 30 days</span>
-              </div>
-              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', borderTop:'none' }}>
-                {ANALYTICS_METRIC_DEFS.map((def, i) => {
-                  const mv = metricValues[def.key];
-                  const isSelected = sel.includes(def.key);
-                  const col = i % 3;
-                  const row = Math.floor(i / 3);
-                  const isLastRow = row === 1;
-                  const isLastCol = col === 2;
-                  return (
-                    <div
-                      key={def.key}
-                      style={{
-                        padding:'16px 20px',
-                        borderBottom: isLastRow ? 'none' : '1px solid var(--border)',
-                        borderRight: isLastCol ? 'none' : '1px solid var(--border)',
-                        background: isSelected ? 'var(--primary-bg)' : 'var(--bg-screen)',
-                        transition:'background 0.15s',
-                      }}
-                    >
-                      <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:8 }}>
-                        {isSelected && (
-                          <span style={{ width:3, height:12, borderRadius:2, background: METRIC_SLOT_COLOR[sel.indexOf(def.key)], flexShrink:0 }} />
-                        )}
-                        <span style={{ fontSize:11, fontWeight:600, color: isSelected ? METRIC_SLOT_COLOR[sel.indexOf(def.key)] : 'var(--text-muted)', letterSpacing:'0.02em' }}>{def.label}</span>
-                      </div>
-                      <div style={{ display:'flex', alignItems:'baseline', gap:10 }}>
-                        <span style={{ fontSize:18, fontWeight:700, color:'var(--text-strong)', lineHeight:1 }}>{mv?.value ?? '—'}</span>
-                        <span style={{
-                          fontSize:10, fontWeight:700, padding:'2px 6px', borderRadius:10, flexShrink:0,
-                          background: mv?.up ? 'var(--alert-success-bg)' : 'var(--surface-2)',
-                          color:      mv?.up ? 'var(--alert-success-darker)' : 'var(--text-muted)',
-                        }}>
-                          {mv?.up ? '↑ +8%' : '↓ −3%'}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            {/* ── Section A: Activation Heatmap ── */}
+            {cohort.heatmap && Object.keys(cohort.heatmap).length > 0 && (
+              <ActivationHeatmapCard heatmap={cohort.heatmap} />
+            )}
 
-            {/* ── Section B: Spend by Channel + Donut ── */}
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
-              <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'16px 18px', background:'var(--bg-screen)' }}>
-                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
-                  <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Spend by Channel</span>
-                  <span style={{ fontSize:12, fontWeight:700, color:'var(--alert-success-primary)' }}>{cohort.spend30d}</span>
-                </div>
-                <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
-                  {(cohort.spendByChannel || []).map(s => (
-                    <div key={s.ch}>
-                      <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:5 }}>
-                        <span style={{ flexShrink:0 }}>{CHANNEL_ICONS[s.ch]}</span>
-                        <span style={{ fontSize:12, fontWeight:500, flex:1, color:'var(--text)' }}>{s.ch}</span>
-                        <span style={{ fontSize:12, fontWeight:700, color:'var(--alert-success-primary)' }}>{s.amount}</span>
-                        <span style={{ fontSize:11, color:'var(--text-muted)', minWidth:28, textAlign:'right' }}>{s.pct}%</span>
-                      </div>
-                      <div style={{ height:6, borderRadius:3, background:'var(--surface-2)' }}>
-                        <div style={{ width:`${s.pct}%`, height:'100%', borderRadius:3, background:s.color, transition:'width 0.4s ease' }} />
-                      </div>
-                    </div>
-                  ))}
-                  {(cohort.spendByChannel || []).length === 0 && (
-                    <div style={{ textAlign:'center', padding:'24px 0', color:'var(--text-muted)', fontSize:12 }}>No channel data</div>
-                  )}
-                </div>
-              </div>
-              <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', padding:'16px 18px', background:'var(--bg-screen)' }}>
-                <div style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)', marginBottom:14 }}>Channel Distribution</div>
-                <SpendPieChart channels={cohort.spendByChannel || []} />
-              </div>
-            </div>
 
-            {/* ── Section C: Campaigns table ── */}
-            <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
-              <div style={{ padding:'12px 18px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Campaigns</span>
-                <span style={{ fontSize:11, color:'var(--text-muted)' }}>{(cohort.campaignDetails || []).length} total</span>
-              </div>
-              {(cohort.campaignDetails || []).length === 0 ? (
+            {/* ── Section D: Campaigns table ── */}
+            {(cohort.campaignDetails || []).length === 0 ? (
+              <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
+                <div style={{ padding:'12px 18px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                  <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Campaigns</span>
+                  <span style={{ fontSize:11, color:'var(--text-muted)' }}>0 total</span>
+                </div>
                 <div style={{ textAlign:'center', padding:'40px 24px' }}>
                   <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style={{ margin:'0 auto 12px', display:'block' }}>
                     <circle cx="18" cy="18" r="17" stroke="var(--border)" strokeWidth="1.5"/>
@@ -2780,133 +3037,80 @@ function CohortAnalyticsDrawer({ cohort, onClose }) {
                   <div style={{ fontSize:13, fontWeight:700, color:'var(--text-strong)', marginBottom:4 }}>No campaigns yet</div>
                   <div style={{ fontSize:11, color:'var(--text-muted)', maxWidth:260, margin:'0 auto' }}>Share this cohort with advertisers to see campaign activity.</div>
                 </div>
-              ) : (
-                <table style={{ width:'100%', borderCollapse:'collapse' }}>
-                  <thead>
-                    <tr style={{ background:'var(--surface-1)' }}>
-                      {['STATUS','CAMPAIGN','ADVERTISER','CHANNEL','SPEND · 30D'].map(h => (
-                        <th key={h} style={{ padding:'10px 16px', textAlign:'left', fontSize:10, fontWeight:700, color:'var(--text-info)', letterSpacing:'0.06em', textTransform:'uppercase', borderBottom:'1px solid var(--border-table)' }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(cohort.campaignDetails || []).map((c, i) => (
-                      <tr key={c.name} style={{ borderBottom:'1px solid var(--border-table)', transition:'background 0.1s' }}
-                        onMouseEnter={e => e.currentTarget.style.background='var(--surface-1)'}
-                        onMouseLeave={e => e.currentTarget.style.background=''}
-                      >
-                        <td style={{ padding:'12px 16px' }}>
-                          <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}>
-                            <span style={{ width:7, height:7, borderRadius:'50%', background:c.status==='Active'?'var(--alert-success-primary)':'var(--text-info)', flexShrink:0 }} />
-                            <span style={{ fontSize:11, fontWeight:600, color:c.status==='Active'?'var(--alert-success-darker)':'var(--text-muted)' }}>{c.status}</span>
-                          </span>
-                        </td>
-                        <td style={{ padding:'12px 16px', fontWeight:600, color:'var(--text)', fontSize:12 }}>{c.name}</td>
-                        <td style={{ padding:'12px 16px' }}>
-                          <span style={{ display:'inline-flex', alignItems:'center', gap:8 }}>
-                            <span style={{ width:24, height:24, borderRadius:'50%', background:c.color, display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:9, fontWeight:700, color:'#fff', flexShrink:0 }}>{c.initials}</span>
-                            <span style={{ fontSize:11, color:'var(--text-muted)' }}>{c.advertiser}</span>
-                          </span>
-                        </td>
-                        <td style={{ padding:'12px 16px' }}>
-                          <span style={{ display:'inline-flex', alignItems:'center', gap:5 }}>
-                            {CHANNEL_ICONS[c.channel] || null}
-                            <span style={{ fontSize:11, color:'var(--text-muted)' }}>{c.channel}</span>
-                          </span>
-                        </td>
-                        <td style={{ padding:'12px 16px', fontWeight:700, color:'var(--alert-success-primary)', fontSize:12 }}>{c.spend}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
+              </div>
+            ) : (
+                <OsmosTable
+                  title="Campaigns"
+                  searchPlaceholder="Search campaigns…"
+                  filterable
+                  kebab
+                  columns={[
+                    { key:'status',      label:'Status',       width:80 },
+                    { key:'campaign',    label:'Campaign' },
+                    { key:'advertiser',  label:'Advertiser' },
+                    { key:'channel',     label:'Channel' },
+                    { key:'spend',       label:'Spend · 30D',  align:'right' },
+                    { key:'impressions', label:'Impressions',  align:'right' },
+                    { key:'ctr',         label:'CTR',          align:'right' },
+                    { key:'lastActive',  label:'Last Active',  align:'right' },
+                  ]}
+                  rows={(cohort.campaignDetails || []).map(c => ({
+                    status: (
+                      <span style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:3 }}>
+                        <span style={{ width:8, height:8, borderRadius:'50%', background:c.status==='Active'?'var(--alert-success-primary)':'var(--text-info)', flexShrink:0 }} />
+                        <span style={{ fontSize:11, fontWeight:600, color:c.status==='Active'?'var(--alert-success-darker)':'var(--text-muted)' }}>{c.status}</span>
+                      </span>
+                    ),
+                    campaign: <span style={{ fontWeight:600, color:'var(--text)' }}>{c.name}</span>,
+                    advertiser: (
+                      <span style={{ display:'inline-flex', alignItems:'center', gap:8 }}>
+                        <span style={{ width:24, height:24, borderRadius:'50%', background:c.color, display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:9, fontWeight:700, color:'#fff', flexShrink:0 }}>{c.initials}</span>
+                        <span style={{ color:'var(--text-muted)' }}>{c.advertiser}</span>
+                      </span>
+                    ),
+                    channel: (
+                      <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}>
+                        {CHANNEL_ICONS[c.channel] || null}
+                        <span style={{ color:'var(--text-muted)' }}>{c.channel}</span>
+                      </span>
+                    ),
+                    spend:       <span style={{ fontWeight:700, color:'var(--alert-success-primary)' }}>{c.spend}</span>,
+                    impressions: <span style={{ color:'var(--text-muted)' }}>{c.impressions}</span>,
+                    ctr:         <span style={{ fontWeight:600, color:'var(--text)' }}>{c.ctr}</span>,
+                    lastActive:  <span style={{ color:'var(--text-muted)' }}>{c.lastActive}</span>,
+                  }))}
+                />
+            )}
 
             {/* ── Section D: Channels ── */}
-            <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
-              <div style={{ padding:'12px 18px', borderBottom:'1px solid var(--border)' }}>
-                <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Channels</span>
-              </div>
-              {(cohort.spendByChannel || []).length === 0 ? (
-                <div style={{ padding:'32px 24px', textAlign:'center', color:'var(--text-muted)', fontSize:12 }}>No channels active</div>
-              ) : (
-                <table style={{ width:'100%', borderCollapse:'collapse' }}>
-                  <thead>
-                    <tr style={{ background:'var(--surface-1)' }}>
-                      {['CHANNEL','SPEND SHARE','SPEND · 30D'].map(h => (
-                        <th key={h} style={{ padding:'10px 16px', textAlign:'left', fontSize:10, fontWeight:700, color:'var(--text-info)', letterSpacing:'0.06em', textTransform:'uppercase', borderBottom:'1px solid var(--border-table)' }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(cohort.spendByChannel || []).map((s, i) => (
-                      <tr key={s.ch} style={{ borderBottom: i < (cohort.spendByChannel||[]).length-1 ? '1px solid var(--border-table)' : 'none', transition:'background 0.1s' }}
-                        onMouseEnter={e => e.currentTarget.style.background='var(--surface-1)'}
-                        onMouseLeave={e => e.currentTarget.style.background=''}
-                      >
-                        <td style={{ padding:'12px 16px' }}>
-                          <span style={{ display:'inline-flex', alignItems:'center', gap:10 }}>
-                            <span style={{ width:32, height:32, borderRadius:'50%', background:'var(--surface-2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, flexShrink:0 }}>{CHANNEL_ICONS[s.ch]}</span>
-                            <span style={{ fontSize:12, fontWeight:600, color:'var(--text)' }}>{s.ch}</span>
-                          </span>
-                        </td>
-                        <td style={{ padding:'12px 16px', minWidth:180 }}>
-                          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                            <div style={{ flex:1, height:7, borderRadius:4, background:'var(--surface-2)' }}>
-                              <div style={{ width:`${s.pct}%`, height:'100%', borderRadius:4, background:s.color, transition:'width 0.4s ease' }} />
-                            </div>
-                            <span style={{ fontSize:11, fontWeight:700, color:'var(--text)', minWidth:30, textAlign:'right' }}>{s.pct}%</span>
-                          </div>
-                        </td>
-                        <td style={{ padding:'12px 16px', fontWeight:700, color:'var(--alert-success-primary)', fontSize:12 }}>{s.amount}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-
-            {/* ── Section E: Advertisers ── */}
-            <div style={{ border:'1px solid var(--border)', borderRadius:'var(--radius-md)', background:'var(--bg-screen)', overflow:'hidden' }}>
-              <div style={{ padding:'12px 18px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                <span style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)' }}>Advertisers with Access</span>
-                <span style={{ fontSize:11, color:'var(--text-muted)' }}>{(cohort.sharingAdvertisers || []).length} advertisers</span>
-              </div>
-              {(cohort.sharingAdvertisers || []).length === 0 ? (
-                <div style={{ padding:'36px 24px', textAlign:'center' }}>
-                  <div style={{ fontSize:12, fontWeight:700, color:'var(--text-strong)', marginBottom:4 }}>No advertisers with access</div>
-                  <div style={{ fontSize:11, color:'var(--text-muted)' }}>Add advertisers in the Sharing tab to grant cohort access.</div>
-                </div>
-              ) : (
-                <table style={{ width:'100%', borderCollapse:'collapse' }}>
-                  <thead>
-                    <tr style={{ background:'var(--surface-1)' }}>
-                      {['ADVERTISER','STATUS'].map(h => (
-                        <th key={h} style={{ padding:'10px 16px', textAlign:'left', fontSize:10, fontWeight:700, color:'var(--text-info)', letterSpacing:'0.06em', textTransform:'uppercase', borderBottom:'1px solid var(--border-table)' }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(cohort.sharingAdvertisers || []).map((adv, i) => (
-                      <tr key={adv} style={{ borderBottom: i < (cohort.sharingAdvertisers||[]).length-1 ? '1px solid var(--border-table)' : 'none', transition:'background 0.1s' }}
-                        onMouseEnter={e => e.currentTarget.style.background='var(--surface-1)'}
-                        onMouseLeave={e => e.currentTarget.style.background=''}
-                      >
-                        <td style={{ padding:'12px 16px' }}>
-                          <span style={{ display:'inline-flex', alignItems:'center', gap:10 }}>
-                            <span style={{ width:32, height:32, borderRadius:'50%', background:`hsl(${i*80+200},50%,55%)`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#fff', flexShrink:0 }}>{adv.slice(0,2).toUpperCase()}</span>
-                            <span style={{ fontSize:12, fontWeight:600, color:'var(--text)' }}>{adv}</span>
-                          </span>
-                        </td>
-                        <td style={{ padding:'12px 16px' }}>
-                          <span style={{ fontSize:10, fontWeight:600, background:'var(--alert-success-bg)', color:'var(--alert-success-darker)', padding:'3px 10px', borderRadius:'var(--radius-sm)' }}>Active</span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
+            {(cohort.spendByChannel||[]).length > 0 && (
+              <OsmosTable
+                title="Channels"
+                kebab
+                columns={[
+                  { key:'channel',    label:'Channel' },
+                  { key:'spendShare', label:'Spend Share' },
+                  { key:'spend',      label:'Spend · 30D', align:'right' },
+                ]}
+                rows={(cohort.spendByChannel||[]).map(s => ({
+                  channel: (
+                    <span style={{ display:'inline-flex', alignItems:'center', gap:10 }}>
+                      <span style={{ width:26, height:26, borderRadius:'50%', background:'var(--surface-2)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>{CHANNEL_ICONS[s.ch]}</span>
+                      <span style={{ fontWeight:600 }}>{s.ch}</span>
+                    </span>
+                  ),
+                  spendShare: (
+                    <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                      <div style={{ flex:1, height:6, borderRadius:3, background:'var(--surface-2)', minWidth:80 }}>
+                        <div style={{ width:`${s.pct}%`, height:'100%', borderRadius:3, background:s.color }} />
+                      </div>
+                      <span style={{ fontSize:11, fontWeight:700, minWidth:30, textAlign:'right' }}>{s.pct}%</span>
+                    </div>
+                  ),
+                  spend: <span style={{ fontWeight:700, color:'var(--alert-success-primary)' }}>{s.amount}</span>,
+                }))}
+              />
+            )}
 
           </div>{/* /sections */}
 

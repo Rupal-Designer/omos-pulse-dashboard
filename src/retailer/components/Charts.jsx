@@ -1,178 +1,224 @@
 import React, { useState } from 'react';
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, Legend,
-} from 'recharts';
-import { ChevronDownIcon, DownloadIcon } from '../../ui/atoms/Icon';
+import { LineChart, Line, ResponsiveContainer, Tooltip } from 'recharts';
 
-const dates = ['05/08','05/09','05/10','05/11','05/12','05/13','05/14'];
-
-const clicksData = [
-  { date: '05/08', clicks: 12000, views: 8000 },
-  { date: '05/09', clicks: 18000, views: 13000 },
-  { date: '05/10', clicks: 26000, views: 22000 },
-  { date: '05/11', clicks: 22000, views: 19000 },
-  { date: '05/12', clicks: 17000, views: 15000 },
-  { date: '05/13', clicks: 14000, views: 11000 },
-  { date: '05/14', clicks: 10000, views: 8500 },
+/* ── Sparkline data ─────────────────────────────────────────────── */
+const impressionsSpark = [
+  { v: 392 }, { v: 415 }, { v: 465 }, { v: 504 },
+  { v: 487 }, { v: 481 }, { v: 433 },
+];
+const revenueSpark = [
+  { v: 3193 }, { v: 4308 }, { v: 4973 }, { v: 5894 },
+  { v: 6001 }, { v: 4858 }, { v: 4264 },
 ];
 
-const cartOrdersData = [
-  { date: '05/08', carts: 4200, orders: 1800 },
-  { date: '05/09', carts: 5100, orders: 2200 },
-  { date: '05/10', carts: 7800, orders: 3100 },
-  { date: '05/11', carts: 6500, orders: 2900 },
-  { date: '05/12', carts: 5200, orders: 2100 },
-  { date: '05/13', carts: 4100, orders: 1700 },
-  { date: '05/14', carts: 3800, orders: 1500 },
+/* ── Table data ─────────────────────────────────────────────────── */
+const TABLE_DATA = [
+  { date: '09 Jun', impressions: '433K', impDod: '-48K',   revenue: '$4,264', revDod: '+$594'   },
+  { date: '08 Jun', impressions: '481K', impDod: '-5K',    revenue: '$4,858', revDod: '$1,143'  },
+  { date: '07 Jun', impressions: '487K', impDod: '-18K',   revenue: '$6,001', revDod: '+$107'   },
+  { date: '06 Jun', impressions: '504K', impDod: '+40K',   revenue: '$5,894', revDod: '+$921'   },
+  { date: '05 Jun', impressions: '465K', impDod: '+49K',   revenue: '$4,973', revDod: '+$665'   },
+  { date: '04 Jun', impressions: '415K', impDod: '+23K',   revenue: '$4,308', revDod: '+$1,115' },
+  { date: '03 Jun', impressions: '392K', impDod: '+18K',   revenue: '$3,193', revDod: '$161'    },
 ];
 
-function formatYAxis(val) {
-  if (val >= 1000) return `${(val/1000).toFixed(0)}K`;
-  return val;
-}
+const TABS = ['Overall', 'Cohort', 'Advertiser', 'Source'];
 
-function formatYAxisM(val) {
-  if (val >= 1000) return `${(val/1000).toFixed(1)}K`;
-  return val;
-}
-
-function ChevronDown({ color = '#555' }) {
-  return <ChevronDownIcon size={11} color={color} strokeWidth={2.5} />;
-}
-
-function MetricTag({ color, label }) {
+function Sparkline({ data, color = '#ef4444' }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer' }}>
-      <div style={{ width: 10, height: 10, borderRadius: '50%', background: color }}/>
-      <span style={{ fontSize: 11, color: 'var(--osmos-fg)', fontWeight: 500 }}>{label}</span>
-      <ChevronDown />
-    </div>
+    <ResponsiveContainer width="100%" height={48}>
+      <LineChart data={data} margin={{ top: 4, right: 0, left: 0, bottom: 4 }}>
+        <Tooltip
+          content={({ active, payload }) =>
+            active && payload?.length ? (
+              <div style={{ background: '#fff', border: '1px solid #eee', borderRadius: 6, padding: '4px 8px', fontSize: 11 }}>
+                {payload[0].value}K
+              </div>
+            ) : null
+          }
+        />
+        <Line
+          type="monotone" dataKey="v" stroke={color}
+          strokeWidth={1.5} dot={false}
+          activeDot={{ r: 3, fill: color, strokeWidth: 0 }}
+        />
+      </LineChart>
+    </ResponsiveContainer>
   );
 }
 
-const CustomTooltip = ({ active, payload, label }) => {
-  if (!active || !payload?.length) return null;
-  return (
-    <div style={{
-      background: '#fff', border: '1px solid var(--osmos-border)', borderRadius: 8,
-      padding: '10px 14px', boxShadow: '0 4px 16px rgba(0,0,0,0.10)', minWidth: 160,
-    }}>
-      <div style={{ fontSize: 10, color: 'var(--osmos-fg-subtle)', marginBottom: 8, fontWeight: 500 }}>{label}</div>
-      {payload.map((p, i) => (
-        <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: i < payload.length - 1 ? 6 : 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div style={{ width: 8, height: 2, background: p.color, borderRadius: 2 }}/>
-            <span style={{ fontSize: 11, color: 'var(--osmos-fg-muted)' }}>{p.name}</span>
-          </div>
-          <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--osmos-fg)' }}>
-            {p.value >= 1000000
-              ? `${(p.value / 1000000).toFixed(1)}M`
-              : p.value >= 1000
-              ? `${(p.value / 1000).toFixed(1)}K`
-              : p.value}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-function ChartCard({ title, children, leftMetrics, rightMetric }) {
-  return (
-    <div style={{
-      background: '#fff', borderRadius: 8, flex: 1,
-      border: '1px solid var(--osmos-border)', overflow: 'hidden',
-    }}>
-      {/* Header */}
-      <div style={{
-        padding: '14px 16px 10px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        borderBottom: '1px solid var(--osmos-border)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{
-            width: 28, height: 28, background: 'var(--osmos-bg-muted)', borderRadius: 6,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-              stroke="var(--osmos-brand-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-            </svg>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            {leftMetrics}
-            <span style={{ color: '#CCC', fontSize: 12 }}>Vs</span>
-            {rightMetric}
-          </div>
-        </div>
-        <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }} aria-label="Download chart data">
-          <DownloadIcon />
-        </button>
-      </div>
-      {/* Chart */}
-      <div style={{ padding: '12px 8px 8px' }}>
-        {children}
-      </div>
-      <div style={{ padding: '4px 16px 10px', fontSize: 10, color: 'var(--osmos-fg-subtle)', textAlign: 'right' }}>
-        1 Filter Applicable: <span style={{ color: 'var(--osmos-brand-primary)', fontWeight: 500 }}>Date</span>
-      </div>
-    </div>
-  );
+function DodCell({ value }) {
+  const isPos = value.startsWith('+');
+  const isNeg = value.startsWith('-');
+  const color = isPos ? '#16a34a' : isNeg ? '#ef4444' : '#ef4444';
+  return <span style={{ color, fontWeight: 500 }}>{value}</span>;
 }
 
 export default function Charts() {
-  return (
-    <div style={{ display: 'flex', gap: 16, marginBottom: 20 }}>
-      {/* Chart 1: Link Clicks vs Landing Page views */}
-      <ChartCard
-        leftMetrics={<MetricTag color="var(--osmos-brand-primary)" label="Link Clicks" />}
-        rightMetric={<MetricTag color="var(--osmos-brand-amber)" label="Landing Page views" />}
-      >
-        <ResponsiveContainer width="100%" height={200}>
-          <LineChart data={clicksData} margin={{ top: 4, right: 8, left: -10, bottom: 0 }}
-            aria-label="Line chart showing Link Clicks vs Landing Page Views over the selected date range">
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--osmos-border)" vertical={false} />
-            <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--osmos-fg-subtle)' }} axisLine={false} tickLine={false} />
-            <YAxis tickFormatter={formatYAxis} tick={{ fontSize: 11, fill: 'var(--osmos-fg-subtle)' }} axisLine={false} tickLine={false} />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend
-              verticalAlign="bottom" height={28} iconType="plainline"
-              formatter={(val) => <span style={{ fontSize: 11, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>{val}</span>}
-            />
-            <Line type="monotone" dataKey="clicks" stroke="var(--osmos-brand-primary)" strokeWidth={2}
-              dot={false} activeDot={{ r: 4, fill: 'var(--osmos-brand-primary)' }} name="Link Clicks" />
-            <Line type="monotone" dataKey="views" stroke="var(--osmos-brand-amber)" strokeWidth={2}
-              strokeDasharray="5 3"
-              dot={false} activeDot={{ r: 4, fill: 'var(--osmos-brand-amber)' }} name="Landing Page views" />
-          </LineChart>
-        </ResponsiveContainer>
-      </ChartCard>
+  const [activeTab, setActiveTab] = useState('Overall');
+  const [view, setView] = useState('Day-on-Day');
+  const [search, setSearch] = useState('');
 
-      {/* Chart 2: Overall Add to Carts vs Orders */}
-      <ChartCard
-        leftMetrics={<MetricTag color="var(--osmos-brand-primary)" label="Overall Add to Carts" />}
-        rightMetric={<MetricTag color="var(--osmos-brand-amber)" label="Orders" />}
-      >
-        <ResponsiveContainer width="100%" height={200}>
-          <LineChart data={cartOrdersData} margin={{ top: 4, right: 8, left: -10, bottom: 0 }}
-            aria-label="Line chart showing Overall Add to Carts vs Orders over the selected date range">
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--osmos-border)" vertical={false} />
-            <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--osmos-fg-subtle)' }} axisLine={false} tickLine={false} />
-            <YAxis tickFormatter={formatYAxisM} tick={{ fontSize: 11, fill: 'var(--osmos-fg-subtle)' }} axisLine={false} tickLine={false} />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend
-              verticalAlign="bottom" height={28} iconType="plainline"
-              formatter={(val) => <span style={{ fontSize: 11, color: 'var(--osmos-fg-muted)', fontFamily: "'Open Sans', sans-serif" }}>{val}</span>}
-            />
-            <Line type="monotone" dataKey="carts" stroke="var(--osmos-brand-primary)" strokeWidth={2}
-              dot={false} activeDot={{ r: 5, fill: 'var(--osmos-brand-primary)' }} name="Overall Add to Carts" />
-            <Line type="monotone" dataKey="orders" stroke="var(--osmos-brand-amber)" strokeWidth={2}
-              strokeDasharray="5 3"
-              dot={false} activeDot={{ r: 5, fill: 'var(--osmos-brand-amber)' }} name="Orders" />
-          </LineChart>
-        </ResponsiveContainer>
-      </ChartCard>
+  const filtered = TABLE_DATA.filter(r =>
+    r.date.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div style={{
+      background: '#fff',
+      border: '1px solid var(--border)',
+      borderRadius: 10,
+      overflow: 'hidden',
+      marginBottom: 20,
+    }}>
+      {/* ── Header ── */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '16px 20px',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+          <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-strong)' }}>Performance Report</span>
+        </div>
+        <div style={{ display: 'flex', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden' }}>
+          {['Day-on-Day', 'By Source'].map(v => (
+            <button
+              key={v}
+              onClick={() => setView(v)}
+              style={{
+                padding: '6px 14px', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                border: 'none', background: view === v ? 'var(--surface-1)' : 'transparent',
+                color: view === v ? 'var(--text-strong)' : 'var(--text-muted)',
+              }}
+            >
+              {v}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Sparkline cards ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, padding: '0 20px' }}>
+        {[
+          { label: 'Impressions', value: '44K', comp: '40K', pct: '-4%', spark: impressionsSpark },
+          { label: 'Revenue',     value: '$4.3K', comp: '$4.9K', pct: '-12%', spark: revenueSpark },
+        ].map((card) => (
+          <div
+            key={card.label}
+            style={{
+              background: '#fff',
+              border: '1px solid var(--border)',
+              borderRadius: 10,
+              padding: '16px 20px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+              <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 500 }}>{card.label}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{card.comp}</span>
+                <span style={{
+                  fontSize: 11, fontWeight: 600, padding: '2px 6px', borderRadius: 4,
+                  background: '#fef2f2', color: '#ef4444',
+                  display: 'inline-flex', alignItems: 'center', gap: 2,
+                }}>
+                  ↓ {card.pct}
+                </span>
+                <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>vs yesterday</span>
+              </div>
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-strong)', lineHeight: 1.2, marginBottom: 8 }}>{card.value}</div>
+            <Sparkline data={card.spark} />
+          </div>
+        ))}
+      </div>
+
+      {/* ── Tabs + Search ── */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '12px 20px',
+      }}>
+        <div style={{
+          display: 'flex', gap: 2, padding: 4,
+          background: 'var(--tab-bg)', borderRadius: 10,
+        }}>
+          {TABS.map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              style={{
+                padding: '6px 16px', fontSize: 13, cursor: 'pointer',
+                border: 'none', borderRadius: 7,
+                background: activeTab === tab ? '#fff' : 'transparent',
+                color: activeTab === tab ? 'var(--text-strong)' : 'var(--text-muted)',
+                fontWeight: activeTab === tab ? 700 : 500,
+                boxShadow: activeTab === tab ? '0 1px 3px rgba(0,0,0,0.12)' : 'none',
+                transition: 'all 0.15s',
+              }}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 6,
+          border: '1px solid var(--border)', borderRadius: 8,
+          padding: '6px 12px', minWidth: 200,
+        }}>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <circle cx="5.5" cy="5.5" r="4" stroke="var(--text-muted)" strokeWidth="1.2"/>
+            <path d="M9 9l2.5 2.5" stroke="var(--text-muted)" strokeWidth="1.2" strokeLinecap="round"/>
+          </svg>
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search..."
+            style={{ border: 'none', outline: 'none', background: 'transparent', fontSize: 12, color: 'var(--text)', width: '100%' }}
+          />
+        </div>
+      </div>
+
+      {/* ── Table ── */}
+      <div style={{ padding: '0 20px 16px' }}>
+      <div style={{ overflowX: 'auto', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ background: 'var(--surface-1)' }}>
+              {['Date', 'Impressions', 'DOD', 'Revenue', 'DOD'].map((h, i) => (
+                <th
+                  key={i}
+                  style={{
+                    padding: '10px 20px', textAlign: i === 0 ? 'left' : 'right',
+                    fontSize: 12, fontWeight: 600, color: 'var(--text-muted)',
+                    borderBottom: '1px solid var(--border)',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((row, ri) => (
+              <tr
+                key={ri}
+                style={{ borderBottom: '1px solid var(--border)' }}
+                onMouseEnter={e => e.currentTarget.style.background = 'var(--surface-1)'}
+                onMouseLeave={e => e.currentTarget.style.background = ''}
+              >
+                <td style={{ padding: '12px 20px', fontSize: 13, color: 'var(--text-muted)' }}>{row.date}</td>
+                <td style={{ padding: '12px 20px', fontSize: 13, color: 'var(--text)', textAlign: 'right' }}>{row.impressions}</td>
+                <td style={{ padding: '12px 20px', fontSize: 13, textAlign: 'right' }}><DodCell value={row.impDod} /></td>
+                <td style={{ padding: '12px 20px', fontSize: 13, color: '#16a34a', textAlign: 'right', fontWeight: 600 }}>{row.revenue}</td>
+                <td style={{ padding: '12px 20px', fontSize: 13, textAlign: 'right' }}><DodCell value={row.revDod} /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      </div>
     </div>
   );
 }
